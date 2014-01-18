@@ -31,6 +31,8 @@ private:
 	ScopedPointer<TextEditor> taxText;
 	ScopedPointer<TextEditor> descriptionText;
 
+	ScopedPointer<ComboBox> transactionTypeComboBox;
+
 	ScopedPointer<TextButton> saveButton;
 	ScopedPointer<TextButton> discardButton;
 	ScopedPointer<TextButton> balanceButton;

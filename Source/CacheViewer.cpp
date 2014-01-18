@@ -12,6 +12,17 @@ CacheViewer::CacheViewer()
 	debtLabel = new Label(String::empty, L"ΠΙΣΤΩΣΗ");
 	invoiceLabel = new Label(String::empty, L"ΠΑΡΑΣΤΑΤΙΚΟ");
 
+	transactionTypeComboBox = new ComboBox();
+	transactionTypeComboBox->setTextWhenNoChoicesAvailable(L"Καμία επιλογή");
+	transactionTypeComboBox->setTextWhenNothingSelected(L"Επιλέξτε τύπο κίνησης");
+	transactionTypeComboBox->setEditableText(false);
+	transactionTypeComboBox->addItem(L"Συμψηφιστική", 1);
+	transactionTypeComboBox->addItem(L"Ισολογισμού", 2);
+	transactionTypeComboBox->addItem(L"Μεταφορά", 3);
+	transactionTypeComboBox->addItem(L"Πληρωμή", 4);
+	transactionTypeComboBox->addItem(L"Είσπραξη", 5);
+	transactionTypeComboBox->addItem(L"Απογραφή", 6);
+
 	transactionTypeLabel->setEditable(false);
 	dateLabel->setEditable(false);
 	articleNumberLabel->setEditable(false);
@@ -26,8 +37,10 @@ CacheViewer::CacheViewer()
 	articleNumberText = new TextEditor();
 	invoiceText = new TextEditor();
 	generalCommentsText = new TextEditor();
+	generalCommentsText->setTextToShowWhenEmpty(L"ΓΕΝΙΚΑ ΣΧΟΛΙΑ", Colours::grey);
 	taxText = new TextEditor();
 	descriptionText = new TextEditor();
+	descriptionText->setTextToShowWhenEmpty(L"Αιτιολογία", Colours::grey);
 
 	saveButton = new TextButton(L"Αποθήκευση");
 	discardButton = new TextButton(L"Επαναφορά");
@@ -42,6 +55,8 @@ CacheViewer::CacheViewer()
 	addAndMakeVisible(creditLabel);
 	addAndMakeVisible(debtLabel);
 	addAndMakeVisible(invoiceLabel);
+
+	addAndMakeVisible(transactionTypeComboBox);
 
 	addAndMakeVisible(dateText);
 	addAndMakeVisible(articleNumberText);
@@ -86,6 +101,9 @@ void CacheViewer::resized()
 	creditLabel->setBoundsRelative(padH + gridSizeH * 11.0f, padV + gridSizeV * 9, gridSizeH * 2, gridSizeV * 2);
 	debtLabel->setBoundsRelative(padH + gridSizeH * 17.0f, padV + gridSizeV * 9, gridSizeH * 2, gridSizeV * 2);
 	invoiceLabel->setBoundsRelative(padH, padV + gridSizeV * 4 + hr * 2, gridSizeH * 2, gridSizeV * 2);
+
+	// combobox
+	transactionTypeComboBox->setBoundsRelative(padH + gridSizeH * 2.0f + vr, padV, gridSizeH * 6, gridSizeV * 2);
 
 	// text edits
 	dateText->setBoundsRelative(padH + gridSizeH * 14.0f + vr, padV, gridSizeH * 6, gridSizeV * 2);
