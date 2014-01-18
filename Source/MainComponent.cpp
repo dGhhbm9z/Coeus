@@ -40,35 +40,14 @@ MainComponent::MainComponent ()
     
     comp->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
     
-    comp->addAndMakeVisible (helloWorldLabel = new Label (String::empty,
-                                                    "Theme test"));
-    helloWorldLabel->setFont (Font (40.00f, Font::bold));
-    helloWorldLabel->setJustificationType (Justification::centred);
-    helloWorldLabel->setEditable (false, false, false);
-    helloWorldLabel->setColour (Label::textColourId, Colours::black);
-    helloWorldLabel->setColour (TextEditor::textColourId, Colours::black);
-    helloWorldLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+	listBox = new ListBox(String::empty, this);
+	listBox->setRowHeight(420);
+    comp->addAndMakeVisible (listBox);
     
-    comp->addAndMakeVisible (quitButton = new TextButton (String::empty));
-    quitButton->setButtonText ("Quit");
-    quitButton->addListener (this);
-    
-	addAndMakeVisible (toggleButton = new ToggleButton (String::empty));
-    toggleButton->setButtonText ("ToggleButton");
-    toggleButton->addListener (this);
-    
-	comp->addAndMakeVisible (comboBox = new ComboBox());
-    
-	comp->addAndMakeVisible (listBox = new ListBox (String::empty, this));
-	//listBox->setColour (ListBox::backgroundColourId, Colours::black);
-    
-	comp->addAndMakeVisible (te = new TextEditor ());
-
-    //[UserPreSize]
+	//[UserPreSize]
     //[/UserPreSize]
 
-    setSize (800, 600);
-
+	setSize(getParentWidth(), getParentHeight());
 
     //[Constructor] You can add your own custom stuff here..
     //[/Constructor]
@@ -79,14 +58,8 @@ MainComponent::~MainComponent()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
-    helloWorldLabel = nullptr;
-    quitButton = nullptr;
 	listBox = nullptr;
 	tabs = nullptr;
-	te = nullptr;
-	toggleButton = nullptr;
-	comboBox = nullptr;
-
 
     //[Destructor]. You can add your own custom destruction code here..
     //[/Destructor]
@@ -106,15 +79,8 @@ void MainComponent::paint (Graphics& g)
 
 void MainComponent::resized()
 {
-    helloWorldLabel->setBounds (250, 100, 296, 48);
-    quitButton->setBounds (100, 100, 150, 42);
-	toggleButton->setBounds(100, 50, 120, 32);
-	comboBox->setBounds(250, 50, 100, 30);
-	listBox->setBounds(100, 170, 300, 400);
-	listBox->updateContent();
-	tabs->setBounds(0, 0, getWidth(), getHeight());
-	te->setBounds(500, 10, 250, 150);
-	
+	tabs->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
+	listBox->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
@@ -125,14 +91,6 @@ void MainComponent::buttonClicked (Button* buttonThatWasClicked)
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if (buttonThatWasClicked == quitButton)
-    {
-        //[UserButtonCode_quitButton] -- add your button handler code here..
-
-        JUCEApplication::quit();
-
-        //[/UserButtonCode_quitButton]
-    }
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
@@ -140,16 +98,29 @@ void MainComponent::buttonClicked (Button* buttonThatWasClicked)
 
 int MainComponent::getNumRows ()
 {
-	return 45;
+	return 8;
 }
 
 void MainComponent::paintListBoxItem (int rowNumber, Graphics &g, int width, int height, bool rowIsSelected)
 {
-	g.fillAll(Colours::grey);
+	/*g.fillAll(Colours::grey);
 	g.setColour(Colours::black);
 	g.drawRect(Rectangle<float>(0,0,width+1,height+1));
 	g.setColour(Colours::azure);
-	g.drawText(String(rowNumber), Rectangle<int>(0,0,width,height), Justification::centred, false);
+	g.drawText(String(rowNumber), Rectangle<int>(0,0,width,height), Justification::centred, false);*/
+}
+
+Component* MainComponent::refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate)
+{
+	// create
+	if (existingComponentToUpdate == nullptr) {
+		Component *newComponent = (Component *) new CacheViewer();
+		return newComponent;
+	}
+	// update
+	else {
+		return existingComponentToUpdate;
+	}
 }
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...

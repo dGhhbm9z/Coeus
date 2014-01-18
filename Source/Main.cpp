@@ -30,8 +30,8 @@ public:
         // Create an instance of our main content component, and add it to our window..
         setContentOwned (new MainComponent(), true);
 
-        // Centre the window on the screen
-        centreWithSize (getWidth(), getHeight());
+		// Centre the window on the screen
+		centreWithSize(800, 600);
 
         // And show it!
         setVisible (true);

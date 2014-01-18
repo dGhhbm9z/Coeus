@@ -13,30 +13,29 @@ const Colour sideBarLeftFill = Colour(0xff3c3c37);
 const Colour sideBarRightFill = Colour(0xff3c3c37);
 const Colour workSpaceFill = Colour(0xffffffff);
 
-Path createRectPath(int x, int y, int w, int h)
+Path Theme::createRectPath(int x, int y, int w, int h, int pad, int padB, int cDist)
 {
-	const float cDist = 5;
 	const float width = w;
 	const float height = h;
 
 	Path rect;
-	rect.startNewSubPath(x+cDist, y);
-	rect.lineTo(width-cDist, y);
-	rect.quadraticTo(width, y, width, y+cDist);
-	rect.lineTo(width, height-cDist);
-	rect.quadraticTo(width, height, width-cDist, height);
-	rect.lineTo(x+cDist, height);
-	rect.quadraticTo(x, height, x, height-cDist);
-	rect.lineTo(x, y+cDist);
-	rect.quadraticTo(x, y, x+cDist, y);
-	rect.closeSubPath();
+	rect.startNewSubPath(pad, height - cDist - padB);
+	rect.lineTo(pad, cDist + pad);
+	rect.quadraticTo(pad, pad, cDist + pad, pad);
+	rect.lineTo(width - cDist - pad, pad);
+	rect.quadraticTo(width - pad, pad, width - pad, cDist + pad);
+	rect.lineTo(width - pad, height - cDist - padB);
+	rect.quadraticTo(width - pad, height - padB, width - cDist - pad, height - padB);
+	rect.lineTo(cDist + pad, height - padB);
+	rect.quadraticTo(pad, height - padB, pad, height - cDist - padB);
+
 	return rect;
 }
 
 // Button stuff
 void Theme::drawButtonBackground (Graphics &g, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown)
 {
-	Path rect = createRectPath(2, 2, button.getWidth()-4, button.getHeight()-4);
+	Path rect = createRectPath(2, 2, button.getWidth()-4, button.getHeight()-4, 1, 1, 5);
 
 	ColourGradient cG = ColourGradient(Colour(0xffdddddd), 0, 0, Colour(0xffdddddd), 0, button.getHeight(), false);
 	cG.addColour(0.3f, Colour(0xffffffff));
@@ -149,7 +148,7 @@ void Theme::drawTabButton(TabBarButton &tabButton, Graphics &g, bool isMouseOver
 		g.strokePath(rect, PathStrokeType(0.5));
 
 		g.setColour(Colour(0xffd3d3d3).darker());
-		g.drawLine(0, tabButton.getHeight(), tabButton.getWidth(), tabButton.getHeight(), 1.0f);
+		g.drawLine(2, tabButton.getHeight(), tabButton.getWidth()-2, tabButton.getHeight(), 0.4f);
 	}
 
 	g.setFont(Font(12));
@@ -180,7 +179,7 @@ void Theme::drawTabbedButtonBarBackground (TabbedButtonBar &tabButton, Graphics 
 //	g.setColour(Colour(0xffaaaaaa));
 //	g.strokePath(rect, PathStrokeType(2.0f));
 
-	rect = createRectPath(5, 5, tabButton.getWidth()-5, tabButton.getHeight());
+	rect = createRectPath(0, 0, tabButton.getWidth(), tabButton.getHeight(), 5, 0, 5);
 	ColourGradient cG = ColourGradient(Colour(0xffe3e3e3), 0, 0, Colour(0xffcccccc), 0, tabButton.getHeight(), false);
 	g.setGradientFill(cG);
 	g.fillPath(rect);
@@ -190,6 +189,11 @@ void Theme::drawTabbedButtonBarBackground (TabbedButtonBar &tabButton, Graphics 
 
 void Theme::drawTabAreaBehindFrontButton (TabbedButtonBar &tabBar, Graphics &g, int w, int h)
 {
+}
+
+bool Theme::areScrollbarButtonsVisible()
+{
+	return false;
 }
 
 CoeusTabbedComponent::CoeusTabbedComponent()
@@ -219,4 +223,5 @@ void CoeusTabbedComponent::paint (Graphics& g)
 	g.setColour(Colour(0xffaaaaaa));
 	g.strokePath(rect, PathStrokeType(1.0f));
 }
+
 

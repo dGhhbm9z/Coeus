@@ -6,6 +6,7 @@
 
 class Theme	:	public LookAndFeel_V2
 {
+public:
 	// Button stuff
 	void drawButtonBackground (Graphics &, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown); 
 	Font getTextButtonFont (TextButton &button);
@@ -24,6 +25,11 @@ class Theme	:	public LookAndFeel_V2
 	void drawTabButtonText (TabBarButton &, Graphics &, bool isMouseOver, bool isMouseDown);
 	void drawTabbedButtonBarBackground (TabbedButtonBar &, Graphics &);
 	void drawTabAreaBehindFrontButton (TabbedButtonBar &, Graphics &, int w, int h);
+
+	static Path createRectPath(int x, int y, int w, int h, int pad, int padB, int cDist);
+
+	// scrollbars
+	bool areScrollbarButtonsVisible() override;
 };
 
 

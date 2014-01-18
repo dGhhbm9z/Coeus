@@ -23,6 +23,7 @@
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Theme.h"
+#include "CacheViewer.h"
 //[/Headers]
 
 
@@ -55,21 +56,17 @@ public:
 	// ListBoxModel
 	int getNumRows ();
 	void paintListBoxItem (int rowNumber, Graphics &g, int width, int height, bool rowIsSelected);
+	Component* refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate) override;
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Label> helloWorldLabel;
-    ScopedPointer<TextButton> quitButton;
-	ScopedPointer<ToggleButton> toggleButton;
-	ScopedPointer<ComboBox > comboBox;
+
 	ScopedPointer<ListBox> listBox;
 	ScopedPointer<TabbedComponent> tabs;
-	ScopedPointer<TextEditor> te;
 	Theme theme;
-
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)

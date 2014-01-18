@@ -1419,6 +1419,9 @@
     <ClCompile Include="..\..\Source\Main.cpp">
       <Filter>Coeus\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\CacheViewer.cpp">
+      <Filter>Coeus\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h">
@@ -2733,6 +2736,9 @@
       <Filter>Coeus\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\WorkspaceView.h">
+      <Filter>Coeus\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\CacheViewer.h">
       <Filter>Coeus\Source</Filter>
     </ClInclude>
   </ItemGroup>
