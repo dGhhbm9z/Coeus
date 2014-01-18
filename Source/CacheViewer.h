@@ -38,6 +38,8 @@ private:
 
 	ScopedPointer<ComboBox> transactionTypeComboBox;
 
+	ScopedPointer<ListBox> accountTransactions;
+
 	ScopedPointer<TextButton> saveButton;
 	ScopedPointer<TextButton> discardButton;
 	ScopedPointer<TextButton> balanceButton;

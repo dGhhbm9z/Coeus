@@ -3,8 +3,28 @@
 class AccountQuickView : public Component
 {
 public:
-	AccountQuickView();
-	~AccountQuickView();
+	AccountQuickView::AccountQuickView() {
+		accountText = new TextEditor();
+		debtText = new TextEditor();
+		creditText = new TextEditor();
+
+		addAndMakeVisible(accountText);
+		addAndMakeVisible(debtText);
+		addAndMakeVisible(creditText);
+	}
+
+	AccountQuickView::~AccountQuickView() {
+
+	}
+
+	void AccountQuickView::resized() override {
+		const float padH = 0.01f;
+		const float padV = 0.2f;
+
+		accountText->setBoundsRelative(0 + padH, padV, 0.20f, 1 - 2 * padV);
+		debtText->setBoundsRelative(0.4f, padV, 0.25f, 1 - 2 * padV);
+		creditText->setBoundsRelative(0.7f, padV, 0.25f, 1 - 2 * padV);
+	}
 
 private:
 	ScopedPointer<TextEditor> accountText;
@@ -45,6 +65,8 @@ CacheViewer::CacheViewer()
 	debtLabel->setEditable(false);
 	invoiceLabel->setEditable(false);
 
+	accountTransactions = new ListBox(String::empty, this);
+
 	dateText = new TextEditor();
 	articleNumberText = new TextEditor();
 	invoiceText = new TextEditor();
@@ -69,6 +91,8 @@ CacheViewer::CacheViewer()
 	addAndMakeVisible(invoiceLabel);
 
 	addAndMakeVisible(transactionTypeComboBox);
+
+	addAndMakeVisible(accountTransactions);
 
 	addAndMakeVisible(dateText);
 	addAndMakeVisible(articleNumberText);
@@ -125,6 +149,10 @@ void CacheViewer::resized()
 	generalCommentsText->setBoundsRelative(padH + gridSizeH * 12.0f, padV + gridSizeV * 4 + 2 * hr, gridSizeH * 8 + vr, gridSizeV * 2);
 	descriptionText->setBoundsRelative(padH, 1.0f - padV - gridSizeV * 6 - hr * 2, 1 - padH * 2, gridSizeV * 2);
 
+	// transactions
+	accountTransactions->setRowHeight(getHeight() / 12.0f);
+	accountTransactions->setBoundsRelative(padH, padV + gridSizeV * 11 + hr, 1 - padH * 2, (1.0f - padV - gridSizeV * 6 - hr * 2) - (padV + gridSizeV * 11 + 2*hr));
+
 	// buttons
 	saveButton->setBoundsRelative(1.0f - padH - gridSizeH * 2.0f, 1.0f - padV - gridSizeV*2, gridSizeH*2, gridSizeV * 2);
 	discardButton->setBoundsRelative(1.0f - padH - gridSizeH * 4.0f - vr/4, 1.0f - padV - gridSizeV * 2, gridSizeH * 2, gridSizeV * 2);
@@ -145,7 +173,7 @@ Component* CacheViewer::refreshComponentForRow(int rowNumber, bool isRowSelected
 {
 	// create
 	if (existingComponentToUpdate == nullptr) {
-		Component *newComponent = (Component *) new CacheViewer();
+		Component *newComponent = (Component *) new AccountQuickView();
 		return newComponent;
 	}
 	// update
