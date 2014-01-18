@@ -24,6 +24,13 @@ private:
 	ScopedPointer<Label> debtLabel;
 	ScopedPointer<Label> invoiceLabel;
 
+	ScopedPointer<TextEditor> dateText;
+	ScopedPointer<TextEditor> articleNumberText;
+	ScopedPointer<TextEditor> invoiceText;
+	ScopedPointer<TextEditor> generalCommentsText;
+	ScopedPointer<TextEditor> taxText;
+	ScopedPointer<TextEditor> descriptionText;
+
 	ScopedPointer<TextButton> saveButton;
 	ScopedPointer<TextButton> discardButton;
 	ScopedPointer<TextButton> balanceButton;

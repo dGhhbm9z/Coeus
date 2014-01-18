@@ -35,7 +35,7 @@ public:
 		title->setFont(Font(22));
 		title->setJustificationType(Justification::centred);
 		listBox = new ListBox(String::empty, this);
-		listBox->setRowHeight(420);
+		listBox->setRowHeight(620);
 		
 		addAndMakeVisible(listBox);
 		addAndMakeVisible(title);
