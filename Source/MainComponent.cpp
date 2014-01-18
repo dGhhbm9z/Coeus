@@ -33,6 +33,7 @@ public:
 	CustomTabComponent() {
 		title = new Label(String::empty, L"Λογιστικά Άρθρα");
 		title->setFont(Font(22));
+		title->setJustificationType(Justification::centred);
 		listBox = new ListBox(String::empty, this);
 		listBox->setRowHeight(420);
 		
