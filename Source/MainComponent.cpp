@@ -26,10 +26,68 @@
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
 
+class CustomTabComponent :	public Component,
+							public ListBoxModel
+{
+public:
+	CustomTabComponent() {
+		title = new Label(String::empty, L"Λογιστικά Άρθρα");
+		title->setFont(Font(22));
+		listBox = new ListBox(String::empty, this);
+		listBox->setRowHeight(420);
+		
+		addAndMakeVisible(listBox);
+		addAndMakeVisible(title);
+	}
+
+	~CustomTabComponent() {
+		title = nullptr;
+		listBox = nullptr;
+	}
+
+	void resized() override {
+		const float width = getWidth();
+		const float height = getHeight();
+		title->setBoundsRelative(0.5f - 0.125f , 0, 0.25f, 0.05f);
+		listBox->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
+	}
+
+	int CustomTabComponent::getNumRows() override
+	{
+		return 8;
+	}
+
+	void CustomTabComponent::paintListBoxItem(int rowNumber, Graphics &g, int width, int height, bool rowIsSelected) override
+	{
+		/*g.fillAll(Colours::grey);
+		g.setColour(Colours::black);
+		g.drawRect(Rectangle<float>(0,0,width+1,height+1));
+		g.setColour(Colours::azure);
+		g.drawText(String(rowNumber), Rectangle<int>(0,0,width,height), Justification::centred, false);*/
+	}
+
+	Component* CustomTabComponent::refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate) override
+	{
+		// create
+		if (existingComponentToUpdate == nullptr) {
+			Component *newComponent = (Component *) new CacheViewer();
+			return newComponent;
+		}
+		// update
+		else {
+			return existingComponentToUpdate;
+		}
+	}
+
+private:
+	ScopedPointer<Label> title;
+	ScopedPointer<ListBox> listBox;
+};
+
 //==============================================================================
 MainComponent::MainComponent ()
 {
-    Component *comp = new Component();
+	Component *comp = new CustomTabComponent();
 	LookAndFeel::setDefaultLookAndFeel(&theme);
 
 	addAndMakeVisible (tabs = new CoeusTabbedComponent());
@@ -39,10 +97,6 @@ MainComponent::MainComponent ()
 	tabs->addTab(String("Tab Three"), Colours::orange, nullptr, false);
     
     comp->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
-    
-	listBox = new ListBox(String::empty, this);
-	listBox->setRowHeight(420);
-    comp->addAndMakeVisible (listBox);
     
 	//[UserPreSize]
     //[/UserPreSize]
@@ -58,7 +112,6 @@ MainComponent::~MainComponent()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
-	listBox = nullptr;
 	tabs = nullptr;
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -80,9 +133,8 @@ void MainComponent::paint (Graphics& g)
 void MainComponent::resized()
 {
 	tabs->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
-	listBox->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 
-    //[UserResized] Add your own custom resize handling here..
+	//[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
 
@@ -96,32 +148,7 @@ void MainComponent::buttonClicked (Button* buttonThatWasClicked)
     //[/UserbuttonClicked_Post]
 }
 
-int MainComponent::getNumRows ()
-{
-	return 8;
-}
 
-void MainComponent::paintListBoxItem (int rowNumber, Graphics &g, int width, int height, bool rowIsSelected)
-{
-	/*g.fillAll(Colours::grey);
-	g.setColour(Colours::black);
-	g.drawRect(Rectangle<float>(0,0,width+1,height+1));
-	g.setColour(Colours::azure);
-	g.drawText(String(rowNumber), Rectangle<int>(0,0,width,height), Justification::centred, false);*/
-}
-
-Component* MainComponent::refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate)
-{
-	// create
-	if (existingComponentToUpdate == nullptr) {
-		Component *newComponent = (Component *) new CacheViewer();
-		return newComponent;
-	}
-	// update
-	else {
-		return existingComponentToUpdate;
-	}
-}
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 //[/MiscUserCode]

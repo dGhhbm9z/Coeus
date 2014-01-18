@@ -37,8 +37,7 @@
                                                                     //[/Comments]
 */
 class MainComponent  :	public Component,
-						public ButtonListener,
-						public ListBoxModel
+						public ButtonListener
 {
 public:
     //==============================================================================
@@ -53,18 +52,12 @@ public:
     void resized();
     void buttonClicked (Button* buttonThatWasClicked);
 
-	// ListBoxModel
-	int getNumRows ();
-	void paintListBoxItem (int rowNumber, Graphics &g, int width, int height, bool rowIsSelected);
-	Component* refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate) override;
-
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     //[/UserVariables]
 
     //==============================================================================
 
-	ScopedPointer<ListBox> listBox;
 	ScopedPointer<TabbedComponent> tabs;
 	Theme theme;
 
