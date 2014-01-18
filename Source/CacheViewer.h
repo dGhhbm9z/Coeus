@@ -4,7 +4,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Theme.h"
 
-class CacheViewer : public Component
+class CacheViewer : public Component,
+					public ListBoxModel
 {
 public:
 	CacheViewer();
@@ -12,6 +13,10 @@ public:
 
 	void paint(Graphics &g) override;
 	void resized() override;
+
+	int getNumRows() override;
+	void paintListBoxItem(int rowNumber, Graphics &g, int width, int height, bool rowIsSelected) override;
+	Component* refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate) override;
 
 private:
 	ScopedPointer<Label> transactionTypeLabel;

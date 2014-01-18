@@ -1,5 +1,17 @@
 #include "CacheViewer.h"
 
+class AccountQuickView : public Component
+{
+public:
+	AccountQuickView();
+	~AccountQuickView();
+
+private:
+	ScopedPointer<TextEditor> accountText;
+	ScopedPointer<TextEditor> debtText;
+	ScopedPointer<TextEditor> creditText;
+};
+
 CacheViewer::CacheViewer()
 {
 	transactionTypeLabel = new Label(String::empty, L"ÔÕÐÏÓ ÊÉÍÇÓÇÓ");
@@ -117,4 +129,27 @@ void CacheViewer::resized()
 	saveButton->setBoundsRelative(1.0f - padH - gridSizeH * 2.0f, 1.0f - padV - gridSizeV*2, gridSizeH*2, gridSizeV * 2);
 	discardButton->setBoundsRelative(1.0f - padH - gridSizeH * 4.0f - vr/4, 1.0f - padV - gridSizeV * 2, gridSizeH * 2, gridSizeV * 2);
 	balanceButton->setBoundsRelative(1.0f - padH - gridSizeH * 6.0f - vr, 1.0f - padV - gridSizeV * 2, gridSizeH * 2, gridSizeV *2);
+}
+
+int CacheViewer::getNumRows()
+{
+	return 8;
+}
+
+void CacheViewer::paintListBoxItem(int rowNumber, Graphics &g, int width, int height, bool rowIsSelected)
+{
+
+}
+
+Component* CacheViewer::refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate)
+{
+	// create
+	if (existingComponentToUpdate == nullptr) {
+		Component *newComponent = (Component *) new CacheViewer();
+		return newComponent;
+	}
+	// update
+	else {
+		return existingComponentToUpdate;
+	}
 }
