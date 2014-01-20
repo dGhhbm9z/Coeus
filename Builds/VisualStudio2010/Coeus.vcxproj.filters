@@ -2741,6 +2741,9 @@
     <ClInclude Include="..\..\Source\CacheViewer.h">
       <Filter>Coeus\Source</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\CoeusCommandIDs.h">
+      <Filter>Coeus\Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\Coeus\JuceLibraryCode\modules\juce_audio_basics\juce_module_info">

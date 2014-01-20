@@ -24,6 +24,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Theme.h"
 #include "CacheViewer.h"
+#include "CoeusCommandIDs.h"
+
 //[/Headers]
 
 
@@ -37,7 +39,8 @@
                                                                     //[/Comments]
 */
 class MainComponent  :	public Component,
-						public ButtonListener
+						public ButtonListener,
+						public ApplicationCommandTarget
 {
 public:
     //==============================================================================
@@ -51,6 +54,12 @@ public:
     void paint (Graphics& g);
     void resized();
     void buttonClicked (Button* buttonThatWasClicked);
+
+	// command target
+	ApplicationCommandTarget * 	getNextCommandTarget() override;
+	void getAllCommands(Array< CommandID > &commands) override;
+	void getCommandInfo(CommandID commandID, ApplicationCommandInfo &result) override;
+	bool perform(const InvocationInfo &info) override;
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.

@@ -1655,6 +1655,7 @@
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h" />
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h" />
     <ClInclude Include="..\..\Source\CacheViewer.h" />
+    <ClInclude Include="..\..\Source\CoeusCommandIDs.h" />
     <ClInclude Include="..\..\Source\MainComponent.h" />
     <ClInclude Include="..\..\Source\Theme.h" />
     <ClInclude Include="..\..\Source\WorkspaceView.h" />

@@ -55,7 +55,7 @@ public:
 
 	int CustomTabComponent::getNumRows() override
 	{
-		return 8;
+		return 800;
 	}
 
 	void CustomTabComponent::paintListBoxItem(int rowNumber, Graphics &g, int width, int height, bool rowIsSelected) override
@@ -153,6 +153,85 @@ void MainComponent::buttonClicked (Button* buttonThatWasClicked)
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 //[/MiscUserCode]
+
+ApplicationCommandTarget * MainComponent::getNextCommandTarget()
+{
+	return findFirstTargetParentComponent();
+}
+
+void MainComponent::getAllCommands(Array< CommandID > &commands)
+{
+	// this returns the set of all commands that this target can perform.. 
+	const CommandID ids[] = { CoeusCommandIDs::ConnectToServerDialog,
+		CoeusCommandIDs::SelectCompanyDialog,
+		CoeusCommandIDs::SyncWithServer,
+		CoeusCommandIDs::NewTab,
+		CoeusCommandIDs::CloseTab,
+		CoeusCommandIDs::QuitProgram
+	};
+	commands.addArray(ids, numElementsInArray(ids));
+}
+
+void MainComponent::getCommandInfo(CommandID commandID, ApplicationCommandInfo &result)
+{
+	const String generalCategory("General");
+	switch (commandID)
+	{
+	case CoeusCommandIDs::ConnectToServerDialog :
+		result.setInfo("Connet to server", "Connet to server", generalCategory, 0);
+		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
+		break;
+	case CoeusCommandIDs::SelectCompanyDialog:
+		result.setInfo("Select Company", "Select Company", generalCategory, 0);
+		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
+		break;
+	case CoeusCommandIDs::SyncWithServer:
+		result.setInfo("Sync with server", "Sync with server", generalCategory, 0);
+		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
+		break;
+	case CoeusCommandIDs::NewTab:
+		result.setInfo("Open a new Tab", "Open a new Tab", generalCategory, 0);
+		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
+		break;
+	case CoeusCommandIDs::CloseTab:
+		result.setInfo("Close Current Tab", "Close Current Tab", generalCategory, 0);
+		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
+		break;
+	case CoeusCommandIDs::QuitProgram:
+		result.setInfo("Quit App", "Quit App", generalCategory, 0);
+		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
+		break;
+	default:
+		break;
+	};
+}
+
+bool MainComponent::perform(const InvocationInfo &info)
+{
+	if (info.commandID != CoeusCommandIDs::QuitProgram) {
+		return true;
+	}
+
+	switch (info.commandID)
+	{
+	case CoeusCommandIDs::ConnectToServerDialog:
+		break;
+	case CoeusCommandIDs::SelectCompanyDialog :
+		break;
+	case CoeusCommandIDs::SyncWithServer :
+		break;
+	case CoeusCommandIDs::NewTab :
+		break;
+	case CoeusCommandIDs::CloseTab :
+		break;
+	case CoeusCommandIDs::QuitProgram :
+		break;
+	default:
+		break;
+	};
+
+	return true;
+}
 
 
 //==============================================================================

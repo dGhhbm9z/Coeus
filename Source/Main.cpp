@@ -22,7 +22,7 @@ class HelloWorldWindow  : public DocumentWindow
 public:
     //==============================================================================
     HelloWorldWindow()
-        : DocumentWindow ("JUCE Hello World!",
+        : DocumentWindow ("Coeus Logistics",
                           Colours::lightgrey,
                           DocumentWindow::allButtons,
                           true)
