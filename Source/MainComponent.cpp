@@ -91,6 +91,9 @@ MainComponent::MainComponent ()
 {
 	LookAndFeel::setDefaultLookAndFeel(&theme);
 
+	addAndMakeVisible (tabs = new CoeusTabbedComponent());
+	tabs->setTabBarDepth(50);
+ 
 	//[UserPreSize]
     //[/UserPreSize]
 
@@ -98,14 +101,12 @@ MainComponent::MainComponent ()
 	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::NewTab, KeyPress('t', ModifierKeys::commandModifier, juce_wchar('t')));
 	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::CloseTab, KeyPress('w', ModifierKeys::commandModifier, juce_wchar('w')));
 	addKeyListener(commandManager.getKeyMappings());
+	tabs->addKeyListener(commandManager.getKeyMappings());
 	commandManager.setFirstCommandTarget(this);
 
 	commandManager.invokeDirectly(CoeusCommandIDs::NewTab, true);
 
 	setSize(getParentWidth(), getParentHeight());
-
-	addAndMakeVisible(tabs = new CoeusTabbedComponent());
-	tabs->setTabBarDepth(50);
 
     //[Constructor] You can add your own custom stuff here..
     //[/Constructor]
