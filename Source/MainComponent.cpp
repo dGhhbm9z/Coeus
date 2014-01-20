@@ -101,7 +101,7 @@ MainComponent::MainComponent ()
 	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::NewTab, KeyPress('t', ModifierKeys::commandModifier, juce_wchar('t')));
 	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::CloseTab, KeyPress('w', ModifierKeys::commandModifier, juce_wchar('w')));
 	addKeyListener(commandManager.getKeyMappings());
-	tabs->addKeyListener(commandManager.getKeyMappings());
+	
 	commandManager.setFirstCommandTarget(this);
 
 	commandManager.invokeDirectly(CoeusCommandIDs::NewTab, true);
