@@ -27,14 +27,15 @@ public:
                           DocumentWindow::allButtons,
                           true)
     {
-        // Create an instance of our main content component, and add it to our window..
-        setContentOwned (new MainComponent(), true);
-
 		// Centre the window on the screen
 		centreWithSize(800, 600);
 
+        // Create an instance of our main content component, and add it to our window..
+        setContentOwned (new MainComponent(), true);
+
         // And show it!
         setVisible (true);
+		setResizable(true, false);
     }
 
     ~HelloWorldWindow()

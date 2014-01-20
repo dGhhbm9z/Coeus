@@ -31,6 +31,7 @@ class CustomTabComponent :	public Component,
 {
 public:
 	CustomTabComponent() {
+		setWantsKeyboardFocus(false);
 		title = new Label(String::empty, L"Λογιστικά Άρθρα");
 		title->setFont(Font(22));
 		title->setJustificationType(Justification::centred);
@@ -88,21 +89,23 @@ private:
 //==============================================================================
 MainComponent::MainComponent ()
 {
-	Component *comp = new CustomTabComponent();
 	LookAndFeel::setDefaultLookAndFeel(&theme);
 
-	addAndMakeVisible (tabs = new CoeusTabbedComponent());
-	tabs->setTabBarDepth(50);
-	tabs->addTab(String("Tab One"), Colours::beige, comp, true);
-	tabs->addTab(String("Tab Two"), Colours::cornsilk, nullptr, false);
-	tabs->addTab(String("Tab Three"), Colours::orange, nullptr, false);
-    
-    comp->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
-    
 	//[UserPreSize]
     //[/UserPreSize]
 
+	commandManager.registerAllCommandsForTarget(this);
+	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::NewTab, KeyPress('t', ModifierKeys::commandModifier, juce_wchar('t')));
+	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::CloseTab, KeyPress('w', ModifierKeys::commandModifier, juce_wchar('w')));
+	addKeyListener(commandManager.getKeyMappings());
+	commandManager.setFirstCommandTarget(this);
+
+	commandManager.invokeDirectly(CoeusCommandIDs::NewTab, true);
+
 	setSize(getParentWidth(), getParentHeight());
+
+	addAndMakeVisible(tabs = new CoeusTabbedComponent());
+	tabs->setTabBarDepth(50);
 
     //[Constructor] You can add your own custom stuff here..
     //[/Constructor]
@@ -179,27 +182,27 @@ void MainComponent::getCommandInfo(CommandID commandID, ApplicationCommandInfo &
 	{
 	case CoeusCommandIDs::ConnectToServerDialog :
 		result.setInfo("Connet to server", "Connet to server", generalCategory, 0);
-		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
+//		result.addDefaultKeypress('C', ModifierKeys::commandModifier);
 		break;
 	case CoeusCommandIDs::SelectCompanyDialog:
 		result.setInfo("Select Company", "Select Company", generalCategory, 0);
-		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
+		result.addDefaultKeypress('o', ModifierKeys::commandModifier);
 		break;
 	case CoeusCommandIDs::SyncWithServer:
 		result.setInfo("Sync with server", "Sync with server", generalCategory, 0);
-		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
+		result.addDefaultKeypress('s', ModifierKeys::commandModifier);
 		break;
 	case CoeusCommandIDs::NewTab:
 		result.setInfo("Open a new Tab", "Open a new Tab", generalCategory, 0);
-		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
+		result.addDefaultKeypress('t', ModifierKeys::commandModifier);
 		break;
 	case CoeusCommandIDs::CloseTab:
 		result.setInfo("Close Current Tab", "Close Current Tab", generalCategory, 0);
-		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
+		result.addDefaultKeypress('w', ModifierKeys::commandModifier);
 		break;
 	case CoeusCommandIDs::QuitProgram:
 		result.setInfo("Quit App", "Quit App", generalCategory, 0);
-		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
+//		result.addDefaultKeypress('q', ModifierKeys::commandModifier);
 		break;
 	default:
 		break;
@@ -208,22 +211,24 @@ void MainComponent::getCommandInfo(CommandID commandID, ApplicationCommandInfo &
 
 bool MainComponent::perform(const InvocationInfo &info)
 {
-	if (info.commandID != CoeusCommandIDs::QuitProgram) {
-		return true;
-	}
 
 	switch (info.commandID)
 	{
-	case CoeusCommandIDs::ConnectToServerDialog:
+	case CoeusCommandIDs::ConnectToServerDialog :
 		break;
 	case CoeusCommandIDs::SelectCompanyDialog :
 		break;
 	case CoeusCommandIDs::SyncWithServer :
 		break;
-	case CoeusCommandIDs::NewTab :
+	case CoeusCommandIDs::NewTab: {
+									  Component *comp = new CustomTabComponent();
+									  tabs->addTab(String("Main"), Colours::beige, comp, true);
+									  break;
+	}
+	case CoeusCommandIDs::CloseTab: {
+										tabs->removeTab(tabs->getCurrentTabIndex());
 		break;
-	case CoeusCommandIDs::CloseTab :
-		break;
+	}
 	case CoeusCommandIDs::QuitProgram :
 		break;
 	default:
