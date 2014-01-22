@@ -68,6 +68,7 @@ private:
     //==============================================================================
 
 	ScopedPointer<TabbedComponent> tabs;
+	ScopedPointer<ThemeComponent> tc;
 	Theme theme;
 	ApplicationCommandManager commandManager;
 

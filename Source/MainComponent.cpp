@@ -94,12 +94,20 @@ MainComponent::MainComponent ()
 	addAndMakeVisible (tabs = new CoeusTabbedComponent());
 	tabs->setTabBarDepth(50);
  
+	tc = new ThemeComponent();
+	tc->setOpaque(true);
+	tc->addToDesktop(ComponentPeer::StyleFlags::windowHasCloseButton | ComponentPeer::StyleFlags::windowIsResizable | ComponentPeer::StyleFlags::windowHasTitleBar);
+	tc->centreWithSize(400, 300);
+	tc->setVisible(true);
+	tc->setAlwaysOnTop(true);
+
 	//[UserPreSize]
     //[/UserPreSize]
 
 	commandManager.registerAllCommandsForTarget(this);
 	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::NewTab, KeyPress('t', ModifierKeys::commandModifier, juce_wchar('t')));
 	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::CloseTab, KeyPress('w', ModifierKeys::commandModifier, juce_wchar('w')));
+	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::OpenThemeSettingsDialog, KeyPress('o', ModifierKeys::commandModifier, juce_wchar('o')));
 	addKeyListener(commandManager.getKeyMappings());
 	
 	commandManager.setFirstCommandTarget(this);
@@ -171,7 +179,8 @@ void MainComponent::getAllCommands(Array< CommandID > &commands)
 		CoeusCommandIDs::SyncWithServer,
 		CoeusCommandIDs::NewTab,
 		CoeusCommandIDs::CloseTab,
-		CoeusCommandIDs::QuitProgram
+		CoeusCommandIDs::QuitProgram,
+		CoeusCommandIDs::OpenThemeSettingsDialog
 	};
 	commands.addArray(ids, numElementsInArray(ids));
 }
@@ -205,6 +214,10 @@ void MainComponent::getCommandInfo(CommandID commandID, ApplicationCommandInfo &
 		result.setInfo("Quit App", "Quit App", generalCategory, 0);
 //		result.addDefaultKeypress('q', ModifierKeys::commandModifier);
 		break;
+	case CoeusCommandIDs::OpenThemeSettingsDialog:
+		result.setInfo("Theme settings", "Theme settings", generalCategory, 0);
+		//		result.addDefaultKeypress('q', ModifierKeys::commandModifier);
+		break;
 	default:
 		break;
 	};
@@ -232,6 +245,9 @@ bool MainComponent::perform(const InvocationInfo &info)
 	}
 	case CoeusCommandIDs::QuitProgram :
 		break;
+	case CoeusCommandIDs::OpenThemeSettingsDialog: {
+	   break;
+	}
 	default:
 		break;
 	};

@@ -3,6 +3,70 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+class ThemeButton : public TextButton
+{
+public:
+	void paint(Graphics &g) override {
+
+		if (isMouseButtonDown()) {
+			g.setColour(infoColour);
+		}
+		else {
+			g.setColour(infoColour.darker());
+		}
+		g.fillAll();
+
+		if (isMouseOver()) {
+			g.setColour(infoColour.brighter().brighter());
+			g.drawRect(0, 0, getWidth(), getHeight(), 2);
+		}
+	};
+
+	void setInfoColour(Colour &colour) {
+		infoColour = colour;
+	};
+
+private:
+	Colour infoColour;
+};
+
+class ThemeComponent	:	public Component,
+							public ButtonListener
+{
+public:
+	ThemeComponent();
+	~ThemeComponent();
+
+	void resized() override;
+
+	void buttonClicked(Button *buttonThatWasClicked) override;
+
+	void paint(Graphics &g) override;
+
+private:
+	ScopedPointer<Label> tabButtonBackgroundWhenSelectedLabel;
+	ScopedPointer<Label> tabButtonBackgroundLabel;
+	ScopedPointer<Label> tabButtonTextWhenSelectedLabel;
+	ScopedPointer<Label> tabButtonTextMouseOverLabel;
+	ScopedPointer<Label> tabButtonTextOnClickLabel;
+	ScopedPointer<Label> tabLineFillLabel;
+	ScopedPointer<Label> aboveTabBarFillLabel;
+	ScopedPointer<Label> sideBarLeftFillLabel;
+	ScopedPointer<Label> sideBarRightFillLabel;
+	ScopedPointer<Label> workSpaceFillLabel;
+
+	ScopedPointer<ThemeButton> tabButtonBackgroundWhenSelectedButton;
+	ScopedPointer<ThemeButton> tabButtonBackgroundButton;
+	ScopedPointer<ThemeButton> tabButtonTextWhenSelectedButton;
+	ScopedPointer<ThemeButton> tabButtonTextMouseOverButton;
+	ScopedPointer<ThemeButton> tabButtonTextOnClickButton;
+	ScopedPointer<ThemeButton> tabLineFillButton;
+	ScopedPointer<ThemeButton> aboveTabBarFillButton;
+	ScopedPointer<ThemeButton> sideBarLeftFillButton;
+	ScopedPointer<ThemeButton> sideBarRightFillButton;
+	ScopedPointer<ThemeButton> workSpaceFillButton;
+
+};
 
 class Theme	:	public LookAndFeel_V2
 {

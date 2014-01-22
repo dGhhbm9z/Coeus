@@ -13,6 +13,131 @@ const Colour sideBarLeftFill = Colour(0xff3c3c37);
 const Colour sideBarRightFill = Colour(0xff3c3c37);
 const Colour workSpaceFill = Colour(0xffffffff);
 
+ThemeComponent::ThemeComponent()
+{
+	tabButtonBackgroundWhenSelectedLabel = new Label(String::empty, L"tabButtonBackgroundWhenSelected");
+	tabButtonBackgroundLabel = new Label(String::empty, L"tabButtonBackground");
+	tabButtonTextWhenSelectedLabel = new Label(String::empty, L"tabButtonTextWhenSelected");
+	tabButtonTextMouseOverLabel = new Label(String::empty, L"tabButtonTextMouseOver");
+	tabButtonTextOnClickLabel = new Label(String::empty, L"tabButtonTextOnClick");
+	tabLineFillLabel = new Label(String::empty, L"tabLineFill");
+	aboveTabBarFillLabel = new Label(String::empty, L"aboveTabBarFill");
+	sideBarLeftFillLabel = new Label(String::empty, L"sideBarLeftFill");
+	sideBarRightFillLabel = new Label(String::empty, L"sideBarRightFill");
+	workSpaceFillLabel = new Label(String::empty, L"workSpaceFill");
+
+	tabButtonBackgroundWhenSelectedButton = new ThemeButton();
+	tabButtonBackgroundButton = new ThemeButton();
+	tabButtonTextWhenSelectedButton = new ThemeButton();
+	tabButtonTextMouseOverButton = new ThemeButton();
+	tabButtonTextOnClickButton = new ThemeButton();
+	tabLineFillButton = new ThemeButton();
+	aboveTabBarFillButton = new ThemeButton();
+	sideBarLeftFillButton = new ThemeButton();
+	sideBarRightFillButton = new ThemeButton();
+	workSpaceFillButton = new ThemeButton();
+
+	tabButtonBackgroundWhenSelectedButton->addListener(this);
+	tabButtonBackgroundButton->addListener(this);
+	tabButtonTextWhenSelectedButton->addListener(this);
+	tabButtonTextMouseOverButton->addListener(this);
+	tabButtonTextOnClickButton->addListener(this);
+	tabLineFillButton->addListener(this);
+	aboveTabBarFillButton->addListener(this);
+	sideBarLeftFillButton->addListener(this);
+	sideBarRightFillButton->addListener(this);
+	workSpaceFillButton->addListener(this);
+
+	addAndMakeVisible(tabButtonBackgroundWhenSelectedLabel);
+	addAndMakeVisible(tabButtonBackgroundLabel);
+	addAndMakeVisible(tabButtonTextWhenSelectedLabel);
+	addAndMakeVisible(tabButtonTextMouseOverLabel);
+	addAndMakeVisible(tabButtonTextOnClickLabel);
+	addAndMakeVisible(tabLineFillLabel);
+	addAndMakeVisible(aboveTabBarFillLabel);
+	addAndMakeVisible(sideBarLeftFillLabel);
+	addAndMakeVisible(sideBarRightFillLabel);
+	addAndMakeVisible(workSpaceFillLabel);
+
+	addAndMakeVisible(tabButtonBackgroundWhenSelectedButton);
+	addAndMakeVisible(tabButtonBackgroundButton);
+	addAndMakeVisible(tabButtonTextWhenSelectedButton);
+	addAndMakeVisible(tabButtonTextMouseOverButton);
+	addAndMakeVisible(tabButtonTextOnClickButton);
+	addAndMakeVisible(tabLineFillButton);
+	addAndMakeVisible(aboveTabBarFillButton);
+	addAndMakeVisible(sideBarLeftFillButton);
+	addAndMakeVisible(sideBarRightFillButton);
+	addAndMakeVisible(workSpaceFillButton);
+
+}
+
+ThemeComponent::~ThemeComponent()
+{
+
+}
+
+void ThemeComponent::resized()
+{
+	const float vsz = 1 / 12;
+	float vs = 0.05f;
+	float hs = 0.05f;
+	float hsz = 0.4f;
+
+	tabButtonBackgroundWhenSelectedLabel->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	tabButtonBackgroundLabel->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	tabButtonTextWhenSelectedLabel->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	tabButtonTextMouseOverLabel->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	tabButtonTextOnClickLabel->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	tabLineFillLabel->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	aboveTabBarFillLabel->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	sideBarLeftFillLabel->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	sideBarRightFillLabel->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	workSpaceFillLabel->setBounds(hs, vs, hsz, vsz);
+
+	hs = 0.55f;
+	vs = 0.05f;
+	tabButtonBackgroundWhenSelectedButton->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	tabButtonBackgroundButton->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	tabButtonTextWhenSelectedButton->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	tabButtonTextMouseOverButton->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	tabButtonTextOnClickButton->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	tabLineFillButton->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	aboveTabBarFillButton->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	sideBarLeftFillButton->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	sideBarRightFillButton->setBounds(hs, vs, hsz, vsz);
+	vs += vsz;
+	workSpaceFillButton->setBounds(hs, vs, hsz, vsz);
+}
+
+void ThemeComponent::buttonClicked(Button *buttonThatWasClicked)
+{
+
+	//((ThemeButton *)buttonThatWasClicked)->setInfoColour();
+}
+
+void ThemeComponent::paint(Graphics &g)
+{
+	g.fillAll(workSpaceFill);
+}
+
 Path Theme::createRectPath(int x, int y, int w, int h, int pad, int padB, int cDist)
 {
 	const float width = w;

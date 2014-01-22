@@ -24,7 +24,8 @@ public:
 		SyncWithServer = 0x0012,
 		NewTab = 0x0021,
 		CloseTab = 0x0022,
-		QuitProgram = 0x0023
+		QuitProgram = 0x0023,
+		OpenThemeSettingsDialog = 0x0030
 	};
 };
 
