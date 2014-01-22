@@ -6,6 +6,10 @@
 class ThemeButton : public TextButton
 {
 public:
+	ThemeButton() {
+		infoColour = Colours::black;
+	};
+
 	void paint(Graphics &g) override {
 
 		if (isMouseButtonDown()) {
