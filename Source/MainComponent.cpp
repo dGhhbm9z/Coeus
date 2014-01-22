@@ -99,7 +99,6 @@ MainComponent::MainComponent ()
 	tc->addToDesktop(ComponentPeer::StyleFlags::windowHasCloseButton | ComponentPeer::StyleFlags::windowIsResizable | ComponentPeer::StyleFlags::windowHasTitleBar);
 	tc->centreWithSize(400, 300);
 	tc->setVisible(true);
-	tc->setAlwaysOnTop(true);
 
 	//[UserPreSize]
     //[/UserPreSize]
