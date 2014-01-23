@@ -95,13 +95,11 @@ MainComponent::MainComponent ()
 	addAndMakeVisible (tabs = new CoeusTabbedComponent());
 	tabs->setTabBarDepth(50);
  
-	tc = new ThemeComponent();
+	tc = new ThemeComponent(*this);
 	tc->setOpaque(true);
 	tc->addToDesktop(ComponentPeer::StyleFlags::windowHasCloseButton | ComponentPeer::StyleFlags::windowIsResizable | ComponentPeer::StyleFlags::windowHasTitleBar);
 	tc->centreWithSize(800, 600);
-	tc->setVisible(true);
-	tc->toFront(true);
-	tc->grabKeyboardFocus();
+	tc->setVisible(false);
 
 	//[UserPreSize]
     //[/UserPreSize]
@@ -116,7 +114,7 @@ MainComponent::MainComponent ()
 
 	commandManager.invokeDirectly(CoeusCommandIDs::NewTab, true);
 
-	setSize(getParentWidth(), getParentHeight());
+	this->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
 
     //[Constructor] You can add your own custom stuff here..
     //[/Constructor]

@@ -29,7 +29,8 @@ public:
     {
 		setWantsKeyboardFocus(false);
 		// Centre the window on the screen
-		centreWithSize(800, 600);
+		Rectangle<int> r = Desktop::getInstance().getDisplays().getMainDisplay().userArea;
+		centreWithSize(r.getWidth(), r.getHeight());
 
         // Create an instance of our main content component, and add it to our window..
         setContentOwned (new MainComponent(), true);

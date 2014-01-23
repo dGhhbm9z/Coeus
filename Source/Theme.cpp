@@ -1,54 +1,101 @@
 #include "Theme.h"
 
-const Colour tabButtonBackgroundWhenSelected = Colour(0xffffffff);
+Colour tabButtonBackgroundWhenSelected = Colour(0xffffffff);
 //Gradient from 0xffd3d3d3 to 0xffd7d7d7
-const Colour tabButtonBackground = Colour(0xffd3d3d3);
-const Colour tabButtonTextWhenSelected = Colour(0xffd3d3d3);
-const Colour tabButtonTextMouseOver = Colour(0xff000000);
-const Colour tabButtonTextOnClick = Colour(0xff486c7b);
+Colour tabButtonBackground = Colour(0xffd3d3d3);
+Colour tabButtonTextWhenSelected = Colour(0xffd3d3d3);
+Colour tabButtonTextMouseOver = Colour(0xff000000);
+Colour tabButtonTextOnClick = Colour(0xff486c7b);
 //Gradient from 0xff3c3c37 to 0xff486c7b
-const Colour tabLineFill = Colour(0xff3c3c37);
-const Colour aboveTabBarFill = Colour(0xff486c7b);
-const Colour sideBarLeftFill = Colour(0xff3c3c37);
-const Colour sideBarRightFill = Colour(0xff3c3c37);
-const Colour workSpaceFill = Colour(0xffffffff);
+Colour tabLineFill = Colour(0xff3c3c37);
+Colour aboveTabBarFill = Colour(0xff486c7b);
+Colour sideBarLeftFill = Colour(0xff3c3c37);
+Colour sideBarRightFill = Colour(0xff3c3c37);
+Colour workSpaceFill = Colour(0xffffffff);
 
-ThemeComponent::ThemeComponent()
+Colour buttonGr1 = Colour(0xffdddddd);
+Colour buttonGr2 = Colour(0xffdddddd);
+Colour buttonGr3 = Colour(0xffffffff);
+Colour buttonOutlineHover = Colour(0xff545454);
+Colour buttonOutline = Colour(0xffd3d3d3);
+Colour buttonTextDown = Colour(0xb2002828);
+Colour buttonTextOver = Colour(0xff000000);
+Colour buttonText = Colour(0xff808080);
+Colour tabButtonBarGr1 = Colour(0xffe3e3e3);
+Colour tabButtonBarGr2 = Colour(0xffcccccc);
+Colour tabButtonBarOutline = Colour(0xff545454);
+Colour tabButtonFrontTab = Colour(0xfffefefe);
+Colour tabButtonFrontTabOutline = Colour(0xffaaaaaa);
+Colour tabButtonBG1 = Colour(0xfff5f5f5);
+Colour tabButtonBG2 = Colour(0xffe6e6e6);
+Colour tabButtonOutline = Colour(0xff5c5c5c);
+
+ThemeComponent::ThemeComponent(Component &compToRefresh_)
+: compToRefresh(compToRefresh_)
 {
-	tabButtonBackgroundWhenSelectedLabel = new Label(String::empty, L"tabButtonBackgroundWhenSelected");
-	tabButtonBackgroundLabel = new Label(String::empty, L"tabButtonBackground");
-	tabButtonTextWhenSelectedLabel = new Label(String::empty, L"tabButtonTextWhenSelected");
-	tabButtonTextMouseOverLabel = new Label(String::empty, L"tabButtonTextMouseOver");
-	tabButtonTextOnClickLabel = new Label(String::empty, L"tabButtonTextOnClick");
-	tabLineFillLabel = new Label(String::empty, L"tabLineFill");
-	aboveTabBarFillLabel = new Label(String::empty, L"aboveTabBarFill");
-	sideBarLeftFillLabel = new Label(String::empty, L"sideBarLeftFill");
-	sideBarRightFillLabel = new Label(String::empty, L"sideBarRightFill");
-	workSpaceFillLabel = new Label(String::empty, L"workSpaceFill");
+	buttonGr1ButtonButton = new ThemeButton(buttonGr1, L"buttonGr1");
+	buttonGr2ButtonButton = new ThemeButton(buttonGr2, L"buttonGr2");
+	buttonGr3ButtonButton = new ThemeButton(buttonGr3, L"buttonGr3");
+	buttonOutlineHoverButton = new ThemeButton(buttonOutlineHover, L"buttonOutlineHover");
+	buttonOutlineButton = new ThemeButton(buttonOutline, L"buttonOutline");
+	buttonTextDownButton = new ThemeButton(buttonTextDown, L"buttonTextDown");
+	buttonTextOverButton = new ThemeButton(buttonTextOver, L"buttonTextOver");
+	buttonTextButton = new ThemeButton(buttonText, L"buttonText");
+	tabButtonBarGr1Button = new ThemeButton(tabButtonBarGr1, L"tabButtonBarGr1");
+	tabButtonBarGr2Button = new ThemeButton(tabButtonBarGr2, L"tabButtonBarGr2");
+	tabButtonBarOutlineButton = new ThemeButton(tabButtonBarOutline, L"tabButtonBarOutline");
+	tabButtonFrontTabButton = new ThemeButton(tabButtonFrontTab, L"tabButtonFrontTab");
+	tabButtonFrontTabOutlineButton = new ThemeButton(tabButtonFrontTabOutline, L"tabButtonFrontTabOutline");
+	tabButtonBG1Button = new ThemeButton(tabButtonBG1, L"tabButtonBG1");
+	tabButtonBG2Button = new ThemeButton(tabButtonBG2, L"tabButtonBG2");
+	tabButtonOutlineButton = new ThemeButton(tabButtonOutline, L"tabButtonOutline");
 
-	tabButtonBackgroundWhenSelectedLabel->setEditable(false);
-	tabButtonBackgroundLabel->setEditable(false);
-	tabButtonTextWhenSelectedLabel->setEditable(false);
-	tabButtonTextMouseOverLabel->setEditable(false);
-	tabButtonTextOnClickLabel->setEditable(false);
-	tabLineFillLabel->setEditable(false);
-	aboveTabBarFillLabel->setEditable(false);
-	sideBarLeftFillLabel->setEditable(false);
-	sideBarRightFillLabel->setEditable(false);
-	workSpaceFillLabel->setEditable(false);
-
-	tabButtonBackgroundWhenSelectedButton = new ThemeButton();
-	tabButtonBackgroundButton = new ThemeButton();
-	tabButtonTextWhenSelectedButton = new ThemeButton();
-	tabButtonTextMouseOverButton = new ThemeButton();
-	tabButtonTextOnClickButton = new ThemeButton();
-	tabLineFillButton = new ThemeButton();
-	aboveTabBarFillButton = new ThemeButton();
-	sideBarLeftFillButton = new ThemeButton();
-	sideBarRightFillButton = new ThemeButton();
-	workSpaceFillButton = new ThemeButton();
+	tabButtonBackgroundWhenSelectedButton = new ThemeButton(tabButtonBackgroundWhenSelected, L"tabButtonBackgroundWhenSelected");
+	tabButtonBackgroundButton = new ThemeButton(tabButtonBackground, L"tabButtonBackground");
+	tabButtonTextWhenSelectedButton = new ThemeButton(tabButtonTextWhenSelected, L"tabButtonTextMouseOver");
+	tabButtonTextMouseOverButton = new ThemeButton(tabButtonTextMouseOver, L"tabButtonTextOnClick");
+	tabButtonTextOnClickButton = new ThemeButton(tabButtonTextOnClick, L"tabLineFill");
+	tabLineFillButton = new ThemeButton(tabLineFill, L"aboveTabBarFill");
+	aboveTabBarFillButton = new ThemeButton(aboveTabBarFill, L"aboveTabBarFill");
+	sideBarLeftFillButton = new ThemeButton(sideBarLeftFill, L"sideBarLeftFill");
+	sideBarRightFillButton = new ThemeButton(sideBarRightFill, L"sideBarRightFill");
+	workSpaceFillButton = new ThemeButton(workSpaceFill, L"workSpaceFill");
 
 	cs = new ColourSelector();
+
+	buttonGr1ButtonButton->addListener(this);
+	buttonGr2ButtonButton->addListener(this);
+	buttonGr3ButtonButton->addListener(this);
+	buttonOutlineHoverButton->addListener(this);
+	buttonOutlineButton->addListener(this);
+	buttonTextDownButton->addListener(this);
+	buttonTextOverButton->addListener(this);
+	buttonTextButton->addListener(this);
+	tabButtonBarGr1Button->addListener(this);
+	tabButtonBarGr2Button->addListener(this);
+	tabButtonBarOutlineButton->addListener(this);
+	tabButtonFrontTabButton->addListener(this);
+	tabButtonFrontTabOutlineButton->addListener(this);
+	tabButtonBG1Button->addListener(this);
+	tabButtonBG2Button->addListener(this);
+	tabButtonOutlineButton->addListener(this);
+
+	addAndMakeVisible(buttonGr1ButtonButton);
+	addAndMakeVisible(buttonGr2ButtonButton);
+	addAndMakeVisible(buttonGr3ButtonButton);
+	addAndMakeVisible(buttonOutlineHoverButton);
+	addAndMakeVisible(buttonOutlineButton);
+	addAndMakeVisible(buttonTextDownButton);
+	addAndMakeVisible(buttonTextOverButton);
+	addAndMakeVisible(buttonTextButton);
+	addAndMakeVisible(tabButtonBarGr1Button);
+	addAndMakeVisible(tabButtonBarGr2Button);
+	addAndMakeVisible(tabButtonBarOutlineButton);
+	addAndMakeVisible(tabButtonFrontTabButton);
+	addAndMakeVisible(tabButtonFrontTabOutlineButton);
+	addAndMakeVisible(tabButtonBG1Button);
+	addAndMakeVisible(tabButtonBG2Button);
+	addAndMakeVisible(tabButtonOutlineButton);
 
 	tabButtonBackgroundWhenSelectedButton->addListener(this);
 	tabButtonBackgroundButton->addListener(this);
@@ -60,17 +107,6 @@ ThemeComponent::ThemeComponent()
 	sideBarLeftFillButton->addListener(this);
 	sideBarRightFillButton->addListener(this);
 	workSpaceFillButton->addListener(this);
-
-	addAndMakeVisible(tabButtonBackgroundWhenSelectedLabel);
-	addAndMakeVisible(tabButtonBackgroundLabel);
-	addAndMakeVisible(tabButtonTextWhenSelectedLabel);
-	addAndMakeVisible(tabButtonTextMouseOverLabel);
-	addAndMakeVisible(tabButtonTextOnClickLabel);
-	addAndMakeVisible(tabLineFillLabel);
-	addAndMakeVisible(aboveTabBarFillLabel);
-	addAndMakeVisible(sideBarLeftFillLabel);
-	addAndMakeVisible(sideBarRightFillLabel);
-	addAndMakeVisible(workSpaceFillLabel);
 
 	addAndMakeVisible(tabButtonBackgroundWhenSelectedButton);
 	addAndMakeVisible(tabButtonBackgroundButton);
@@ -93,30 +129,27 @@ ThemeComponent::~ThemeComponent()
 
 void ThemeComponent::resized()
 {
-	float vsz = (1 - 0.1f) / 12.0f;
+	float vsz = (1 - 0.1f) / 18.0f;
 	float vs = 0.05f;
 	float hs = 0.05f;
 	float hsz = 0.3f;
 
-	tabButtonBackgroundWhenSelectedLabel->setBoundsRelative(hs, vs, hsz, vsz);
-	vs += vsz;
-	tabButtonBackgroundLabel->setBoundsRelative(hs, vs, hsz, vsz);
-	vs += vsz;
-	tabButtonTextWhenSelectedLabel->setBoundsRelative(hs, vs, hsz, vsz);
-	vs += vsz;
-	tabButtonTextMouseOverLabel->setBoundsRelative(hs, vs, hsz, vsz);
-	vs += vsz;
-	tabButtonTextOnClickLabel->setBoundsRelative(hs, vs, hsz, vsz);
-	vs += vsz;
-	tabLineFillLabel->setBoundsRelative(hs, vs, hsz, vsz);
-	vs += vsz;
-	aboveTabBarFillLabel->setBoundsRelative(hs, vs, hsz, vsz);
-	vs += vsz;
-	sideBarLeftFillLabel->setBoundsRelative(hs, vs, hsz, vsz);
-	vs += vsz;
-	sideBarRightFillLabel->setBoundsRelative(hs, vs, hsz, vsz);
-	vs += vsz;
-	workSpaceFillLabel->setBoundsRelative(hs, vs, hsz, vsz);
+	buttonGr1ButtonButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	buttonGr2ButtonButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	buttonGr3ButtonButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	buttonOutlineHoverButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	buttonOutlineButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	buttonTextDownButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	buttonTextOverButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	buttonTextButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	tabButtonBarGr1Button->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	tabButtonBarGr2Button->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	tabButtonBarOutlineButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	tabButtonFrontTabButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	tabButtonFrontTabOutlineButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	tabButtonBG1Button->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	tabButtonBG2Button->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	tabButtonOutlineButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
 
 	hs = 0.35f;
 	vs = 0.05f;
@@ -150,6 +183,39 @@ void ThemeComponent::resized()
 void ThemeComponent::buttonClicked(Button *buttonThatWasClicked)
 {
 	((ThemeButton *)buttonThatWasClicked)->setInfoColour(cs->getCurrentColour());
+
+	if (buttonThatWasClicked == tabButtonBackgroundWhenSelectedButton) {
+		tabButtonBackgroundWhenSelected = cs->getCurrentColour();
+	}
+	else if (buttonThatWasClicked == tabButtonBackgroundButton) {
+		tabButtonBackground = cs->getCurrentColour();
+	}
+	else if (buttonThatWasClicked == tabButtonTextWhenSelectedButton) {
+		tabButtonTextWhenSelected = cs->getCurrentColour();
+	}
+	else if (buttonThatWasClicked == tabButtonTextMouseOverButton) {
+		tabButtonTextMouseOver = cs->getCurrentColour();
+	}
+	else if (buttonThatWasClicked == tabButtonTextOnClickButton) {
+		tabButtonTextOnClick = cs->getCurrentColour();
+	}
+	else if (buttonThatWasClicked == tabLineFillButton) {
+		tabLineFill = cs->getCurrentColour();
+	}
+	else if (buttonThatWasClicked == aboveTabBarFillButton) {
+		aboveTabBarFill = cs->getCurrentColour();
+	}
+	else if (buttonThatWasClicked == sideBarLeftFillButton) {
+		sideBarLeftFill = cs->getCurrentColour();
+	}
+	else if (buttonThatWasClicked == sideBarRightFillButton) {
+		sideBarRightFill = cs->getCurrentColour();
+	}
+	else if (buttonThatWasClicked == workSpaceFillButton) {
+		workSpaceFill = cs->getCurrentColour();
+	}
+
+	compToRefresh.repaint();
 }
 
 void ThemeComponent::paint(Graphics &g)
@@ -186,14 +252,14 @@ void Theme::drawButtonBackground (Graphics &g, Button &button, const Colour &bac
 {
 	Path rect = createRectPath(2, 2, button.getWidth()-4, button.getHeight()-4, 1, 1, 5);
 
-	ColourGradient cG = ColourGradient(Colour(0xffdddddd), 0, 0, Colour(0xffdddddd), 0, button.getHeight(), false);
-	cG.addColour(0.3f, Colour(0xffffffff));
+	ColourGradient cG = ColourGradient(buttonGr1, 0, 0, buttonGr2, 0, button.getHeight(), false);
+	cG.addColour(0.3f, buttonGr3);
 	g.setGradientFill(cG);
 	if (!isButtonDown) {
         g.fillPath(rect);
     }
 
-	g.setColour(isMouseOverButton ?  Colour(0xffd3d3d3).darker() : Colour(0xffd3d3d3));
+	g.setColour(isMouseOverButton ? buttonOutlineHover : buttonOutline);
 	g.strokePath(rect, PathStrokeType(1.5f));
 }
 
@@ -207,13 +273,13 @@ void Theme::drawButtonText (Graphics &g, TextButton &button, bool isMouseOverBut
 	Colour c;
 
 	if (isButtonDown) {
-		c = (Colours::aqua).darker().darker().withAlpha(0.7f);
+		c = buttonTextDown;
 	}
 	else if (isMouseOverButton) {
-		c = Colours::black;
+		c = buttonTextOver;
 	}
 	else {
-		c = Colours::grey.darker();
+		c = buttonText;
 	}
 
 	g.setColour(c);
@@ -280,23 +346,23 @@ void Theme::drawTabButton(TabBarButton &tabButton, Graphics &g, bool isMouseOver
 	rect.lineTo(rightX1, bottomY1);
 
 	if (tabButton.isFrontTab()) {
-		g.setColour(Colour(0xfffefefe));
+		g.setColour(tabButtonFrontTab);
 		g.fillPath(rect);
 
-		g.setColour(Colour(0xffaaaaaa));
+		g.setColour(tabButtonFrontTabOutline);
 		g.strokePath(rect, PathStrokeType(0.5));
 	}
 	else {
-		g.setColour(Colour(0xffe6e6e6).brighter().brighter());
+		g.setColour(tabButtonBG1);
 		g.fillPath(rect);
 
-		g.setColour(Colour(0xffe6e6e6));
+		g.setColour(tabButtonBG2);
 		g.fillRect(leftX1, topY1+(bottomY1 - topY1) / 2, rightX1 - leftX1, (bottomY1 - topY1) / 2 - 1);
 
-		g.setColour(Colour(0xffe6e6e6).darker());
+		g.setColour(tabButtonOutline);
 		g.strokePath(rect, PathStrokeType(0.5));
 
-		g.setColour(Colour(0xffd3d3d3).darker());
+		g.setColour(tabButtonBarOutline);
 		g.drawLine(2, tabButton.getHeight(), tabButton.getWidth()-2, tabButton.getHeight(), 0.4f);
 	}
 
@@ -312,27 +378,12 @@ void Theme::drawTabButtonText (TabBarButton &tabButton, Graphics &g, bool isMous
 
 void Theme::drawTabbedButtonBarBackground (TabbedButtonBar &tabButton, Graphics &g)
 {
-	const float pad = 1;
-//	const float cDist = 5+pad;
-//	const float width = tabButton.getWidth()-2*pad;
-//	const float height = tabButton.getHeight();
-
 	Path rect;
-//	rect.startNewSubPath(pad, height);
-//	rect.lineTo(pad, cDist);
-//	rect.quadraticTo(pad, pad, cDist, pad);
-//	rect.lineTo(width-cDist, pad);
-//	rect.quadraticTo(width, pad, width, cDist);
-//	rect.lineTo(width, height);
-//
-//	g.setColour(Colour(0xffaaaaaa));
-//	g.strokePath(rect, PathStrokeType(2.0f));
-
 	rect = createRectPath(0, 0, tabButton.getWidth(), tabButton.getHeight(), 5, 0, 5);
-	ColourGradient cG = ColourGradient(Colour(0xffe3e3e3), 0, 0, Colour(0xffcccccc), 0, tabButton.getHeight(), false);
+	ColourGradient cG = ColourGradient(tabButtonBarGr1, 0, 0, tabButtonBarGr2, 0, tabButton.getHeight(), false);
 	g.setGradientFill(cG);
 	g.fillPath(rect);
-	g.setColour(Colour(0xffd3d3d3).darker());
+	g.setColour(tabButtonBarOutline);
 	g.strokePath(rect, PathStrokeType(0.4f));
 }
 
@@ -353,24 +404,6 @@ CoeusTabbedComponent::CoeusTabbedComponent()
 
 void CoeusTabbedComponent::paint (Graphics& g)
 {
-    const float pad = 1;
-	const float cDist = 5;
-	const float width = getWidth();
-	const float height = getHeight();
-    
-	Path rect;
-	rect.startNewSubPath(pad, height-cDist-pad);
-	rect.lineTo(pad, cDist+pad);
-	rect.quadraticTo(pad, pad, cDist+pad, pad);
-	rect.lineTo(width-cDist-pad, pad);
-	rect.quadraticTo(width-pad, pad, width-pad, cDist+pad);
-	rect.lineTo(width-pad, height-cDist-pad);
-	rect.quadraticTo(width-pad, height-pad, width-cDist-pad, height-pad);
-	rect.lineTo(cDist+pad, height-pad);
-	rect.quadraticTo(pad, height-pad, pad, height-cDist-pad);
-    
-	g.setColour(Colour(0xffaaaaaa));
-	g.strokePath(rect, PathStrokeType(1.0f));
 }
 
 

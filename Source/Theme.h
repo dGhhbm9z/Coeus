@@ -6,24 +6,27 @@
 class ThemeButton : public TextButton
 {
 public:
-	ThemeButton() {
-		infoColour = Colours::black;
+	ThemeButton(Colour &info, String txt) : infoColour(info) {
+		text = String(txt);
 	};
 
 	void paint(Graphics &g) override {
 
 		if (isMouseButtonDown()) {
-			g.setColour(infoColour);
+			g.setColour(infoColour.contrasting());
 		}
 		else {
-			g.setColour(infoColour.darker());
+			g.setColour(infoColour);
 		}
 		g.fillAll();
 
 		if (isMouseOver()) {
-			g.setColour(infoColour.brighter().brighter());
+			g.setColour(infoColour.contrasting());
 			g.drawRect(0, 0, getWidth(), getHeight(), 2);
 		}
+
+		g.setColour(infoColour.contrasting());
+		g.drawText(text, 0, 0, getWidth(), getHeight(), Justification::centred, true);
 	};
 
 	void setInfoColour(Colour &colour) {
@@ -31,14 +34,15 @@ public:
 	};
 
 private:
-	Colour infoColour;
+	Colour &infoColour;
+	String text;
 };
 
 class ThemeComponent	:	public Component,
 							public ButtonListener
 {
 public:
-	ThemeComponent();
+	ThemeComponent(Component &compToRefresh_);
 	~ThemeComponent();
 
 	void resized() override;
@@ -50,16 +54,24 @@ public:
 	void userTriedToCloseWindow() override;
 
 private:
-	ScopedPointer<Label> tabButtonBackgroundWhenSelectedLabel;
-	ScopedPointer<Label> tabButtonBackgroundLabel;
-	ScopedPointer<Label> tabButtonTextWhenSelectedLabel;
-	ScopedPointer<Label> tabButtonTextMouseOverLabel;
-	ScopedPointer<Label> tabButtonTextOnClickLabel;
-	ScopedPointer<Label> tabLineFillLabel;
-	ScopedPointer<Label> aboveTabBarFillLabel;
-	ScopedPointer<Label> sideBarLeftFillLabel;
-	ScopedPointer<Label> sideBarRightFillLabel;
-	ScopedPointer<Label> workSpaceFillLabel;
+	Component &compToRefresh;
+
+	ScopedPointer<ThemeButton> buttonGr1ButtonButton;
+	ScopedPointer<ThemeButton> buttonGr2ButtonButton;
+	ScopedPointer<ThemeButton> buttonGr3ButtonButton;
+	ScopedPointer<ThemeButton> buttonOutlineHoverButton;
+	ScopedPointer<ThemeButton> buttonOutlineButton;
+	ScopedPointer<ThemeButton> buttonTextDownButton;
+	ScopedPointer<ThemeButton> buttonTextOverButton;
+	ScopedPointer<ThemeButton> buttonTextButton;
+	ScopedPointer<ThemeButton> tabButtonBarGr1Button;
+	ScopedPointer<ThemeButton> tabButtonBarGr2Button;
+	ScopedPointer<ThemeButton> tabButtonBarOutlineButton;
+	ScopedPointer<ThemeButton> tabButtonFrontTabButton;
+	ScopedPointer<ThemeButton> tabButtonFrontTabOutlineButton;
+	ScopedPointer<ThemeButton> tabButtonBG1Button;
+	ScopedPointer<ThemeButton> tabButtonBG2Button;
+	ScopedPointer<ThemeButton> tabButtonOutlineButton;
 
 	ScopedPointer<ThemeButton> tabButtonBackgroundWhenSelectedButton;
 	ScopedPointer<ThemeButton> tabButtonBackgroundButton;
