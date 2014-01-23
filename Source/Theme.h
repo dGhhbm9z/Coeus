@@ -47,6 +47,8 @@ public:
 
 	void paint(Graphics &g) override;
 
+	void userTriedToCloseWindow() override;
+
 private:
 	ScopedPointer<Label> tabButtonBackgroundWhenSelectedLabel;
 	ScopedPointer<Label> tabButtonBackgroundLabel;
@@ -70,6 +72,7 @@ private:
 	ScopedPointer<ThemeButton> sideBarRightFillButton;
 	ScopedPointer<ThemeButton> workSpaceFillButton;
 
+	ScopedPointer<ColourSelector> cs;
 };
 
 class Theme	:	public LookAndFeel_V2

@@ -26,6 +26,17 @@ ThemeComponent::ThemeComponent()
 	sideBarRightFillLabel = new Label(String::empty, L"sideBarRightFill");
 	workSpaceFillLabel = new Label(String::empty, L"workSpaceFill");
 
+	tabButtonBackgroundWhenSelectedLabel->setEditable(false);
+	tabButtonBackgroundLabel->setEditable(false);
+	tabButtonTextWhenSelectedLabel->setEditable(false);
+	tabButtonTextMouseOverLabel->setEditable(false);
+	tabButtonTextOnClickLabel->setEditable(false);
+	tabLineFillLabel->setEditable(false);
+	aboveTabBarFillLabel->setEditable(false);
+	sideBarLeftFillLabel->setEditable(false);
+	sideBarRightFillLabel->setEditable(false);
+	workSpaceFillLabel->setEditable(false);
+
 	tabButtonBackgroundWhenSelectedButton = new ThemeButton();
 	tabButtonBackgroundButton = new ThemeButton();
 	tabButtonTextWhenSelectedButton = new ThemeButton();
@@ -36,6 +47,8 @@ ThemeComponent::ThemeComponent()
 	sideBarLeftFillButton = new ThemeButton();
 	sideBarRightFillButton = new ThemeButton();
 	workSpaceFillButton = new ThemeButton();
+
+	cs = new ColourSelector();
 
 	tabButtonBackgroundWhenSelectedButton->addListener(this);
 	tabButtonBackgroundButton->addListener(this);
@@ -70,6 +83,7 @@ ThemeComponent::ThemeComponent()
 	addAndMakeVisible(sideBarRightFillButton);
 	addAndMakeVisible(workSpaceFillButton);
 
+	addAndMakeVisible(cs);
 }
 
 ThemeComponent::~ThemeComponent()
@@ -79,63 +93,73 @@ ThemeComponent::~ThemeComponent()
 
 void ThemeComponent::resized()
 {
-	const float vsz = 1 / 12;
+	float vsz = (1 - 0.1f) / 12.0f;
 	float vs = 0.05f;
 	float hs = 0.05f;
-	float hsz = 0.4f;
+	float hsz = 0.3f;
 
-	tabButtonBackgroundWhenSelectedLabel->setBounds(hs, vs, hsz, vsz);
+	tabButtonBackgroundWhenSelectedLabel->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	tabButtonBackgroundLabel->setBounds(hs, vs, hsz, vsz);
+	tabButtonBackgroundLabel->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	tabButtonTextWhenSelectedLabel->setBounds(hs, vs, hsz, vsz);
+	tabButtonTextWhenSelectedLabel->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	tabButtonTextMouseOverLabel->setBounds(hs, vs, hsz, vsz);
+	tabButtonTextMouseOverLabel->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	tabButtonTextOnClickLabel->setBounds(hs, vs, hsz, vsz);
+	tabButtonTextOnClickLabel->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	tabLineFillLabel->setBounds(hs, vs, hsz, vsz);
+	tabLineFillLabel->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	aboveTabBarFillLabel->setBounds(hs, vs, hsz, vsz);
+	aboveTabBarFillLabel->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	sideBarLeftFillLabel->setBounds(hs, vs, hsz, vsz);
+	sideBarLeftFillLabel->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	sideBarRightFillLabel->setBounds(hs, vs, hsz, vsz);
+	sideBarRightFillLabel->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	workSpaceFillLabel->setBounds(hs, vs, hsz, vsz);
+	workSpaceFillLabel->setBoundsRelative(hs, vs, hsz, vsz);
 
-	hs = 0.55f;
+	hs = 0.35f;
 	vs = 0.05f;
-	tabButtonBackgroundWhenSelectedButton->setBounds(hs, vs, hsz, vsz);
+	tabButtonBackgroundWhenSelectedButton->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	tabButtonBackgroundButton->setBounds(hs, vs, hsz, vsz);
+	tabButtonBackgroundButton->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	tabButtonTextWhenSelectedButton->setBounds(hs, vs, hsz, vsz);
+	tabButtonTextWhenSelectedButton->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	tabButtonTextMouseOverButton->setBounds(hs, vs, hsz, vsz);
+	tabButtonTextMouseOverButton->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	tabButtonTextOnClickButton->setBounds(hs, vs, hsz, vsz);
+	tabButtonTextOnClickButton->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	tabLineFillButton->setBounds(hs, vs, hsz, vsz);
+	tabLineFillButton->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	aboveTabBarFillButton->setBounds(hs, vs, hsz, vsz);
+	aboveTabBarFillButton->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	sideBarLeftFillButton->setBounds(hs, vs, hsz, vsz);
+	sideBarLeftFillButton->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	sideBarRightFillButton->setBounds(hs, vs, hsz, vsz);
+	sideBarRightFillButton->setBoundsRelative(hs, vs, hsz, vsz);
 	vs += vsz;
-	workSpaceFillButton->setBounds(hs, vs, hsz, vsz);
+	workSpaceFillButton->setBoundsRelative(hs, vs, hsz, vsz);
+
+	vsz = vs + vsz;
+	hs = 0.65f;
+	vs = 0.05f;
+	hsz = 0.3f;
+	cs->setBoundsRelative(hs, vs, hsz, vsz);
 }
 
 void ThemeComponent::buttonClicked(Button *buttonThatWasClicked)
 {
-
-	//((ThemeButton *)buttonThatWasClicked)->setInfoColour();
+	((ThemeButton *)buttonThatWasClicked)->setInfoColour(cs->getCurrentColour());
 }
 
 void ThemeComponent::paint(Graphics &g)
 {
 	g.fillAll(workSpaceFill);
+}
+
+void ThemeComponent::userTriedToCloseWindow()
+{
+	this->setVisible(false);
 }
 
 Path Theme::createRectPath(int x, int y, int w, int h, int pad, int padB, int cDist)

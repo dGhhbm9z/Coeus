@@ -89,6 +89,7 @@ private:
 //==============================================================================
 MainComponent::MainComponent ()
 {
+	setWantsKeyboardFocus(true);
 	LookAndFeel::setDefaultLookAndFeel(&theme);
 
 	addAndMakeVisible (tabs = new CoeusTabbedComponent());
@@ -97,8 +98,10 @@ MainComponent::MainComponent ()
 	tc = new ThemeComponent();
 	tc->setOpaque(true);
 	tc->addToDesktop(ComponentPeer::StyleFlags::windowHasCloseButton | ComponentPeer::StyleFlags::windowIsResizable | ComponentPeer::StyleFlags::windowHasTitleBar);
-	tc->centreWithSize(400, 300);
+	tc->centreWithSize(800, 600);
 	tc->setVisible(true);
+	tc->toFront(true);
+	tc->grabKeyboardFocus();
 
 	//[UserPreSize]
     //[/UserPreSize]
@@ -106,7 +109,7 @@ MainComponent::MainComponent ()
 	commandManager.registerAllCommandsForTarget(this);
 	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::NewTab, KeyPress('t', ModifierKeys::commandModifier, juce_wchar('t')));
 	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::CloseTab, KeyPress('w', ModifierKeys::commandModifier, juce_wchar('w')));
-	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::OpenThemeSettingsDialog, KeyPress('o', ModifierKeys::commandModifier, juce_wchar('o')));
+	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::OpenThemeSettingsDialog, KeyPress('e', ModifierKeys::commandModifier, juce_wchar('e')));
 	addKeyListener(commandManager.getKeyMappings());
 	
 	commandManager.setFirstCommandTarget(this);
@@ -227,25 +230,32 @@ bool MainComponent::perform(const InvocationInfo &info)
 
 	switch (info.commandID)
 	{
-	case CoeusCommandIDs::ConnectToServerDialog :
+	case CoeusCommandIDs::ConnectToServerDialog: {
 		break;
-	case CoeusCommandIDs::SelectCompanyDialog :
+	}
+	case CoeusCommandIDs::SelectCompanyDialog: {
 		break;
-	case CoeusCommandIDs::SyncWithServer :
+	}
+	case CoeusCommandIDs::SyncWithServer: {
 		break;
+	}
 	case CoeusCommandIDs::NewTab: {
-									  Component *comp = new CustomTabComponent();
-									  tabs->addTab(String("Main"), Colours::beige, comp, true);
-									  break;
+		Component *comp = new CustomTabComponent();
+		tabs->addTab(String("Main"), Colours::beige, comp, true);
+		break;
 	}
 	case CoeusCommandIDs::CloseTab: {
-										tabs->removeTab(tabs->getCurrentTabIndex());
+		tabs->removeTab(tabs->getCurrentTabIndex());
 		break;
 	}
-	case CoeusCommandIDs::QuitProgram :
-		break;
+	case CoeusCommandIDs::QuitProgram: {
+		 break;
+	}
 	case CoeusCommandIDs::OpenThemeSettingsDialog: {
-	   break;
+		tc->setVisible(true);
+		tc->toFront(true);
+		tc->grabKeyboardFocus();
+		break;
 	}
 	default:
 		break;

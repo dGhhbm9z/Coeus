@@ -27,6 +27,7 @@ public:
                           DocumentWindow::allButtons,
                           true)
     {
+		setWantsKeyboardFocus(false);
 		// Centre the window on the screen
 		centreWithSize(800, 600);
 
