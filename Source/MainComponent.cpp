@@ -26,8 +26,16 @@
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
 
+class CustomTabbedButtonBar : public TabbedButtonBar
+{
+public:
+	CustomTabbedButtonBar() : TabbedButtonBar(TabbedButtonBar::Orientation::TabsAtLeft) {}
+
+};
+
 class CustomTabComponent :	public Component,
-							public ListBoxModel
+							public ListBoxModel,
+							public Timer
 {
 public:
 	CustomTabComponent() {
@@ -37,9 +45,16 @@ public:
 		title->setJustificationType(Justification::centred);
 		listBox = new ListBox(String::empty, this);
 		listBox->setRowHeight(620);
-		
+		tabButtons = new CustomTabbedButtonBar();
+		tabButtons->addTab(L"1", Colours::white, 0);
+		tabButtons->addTab(L"2", Colours::white, 1);
+		tabButtons->addTab(L"3", Colours::white, 2);
+
 		addAndMakeVisible(listBox);
 		addAndMakeVisible(title);
+		addAndMakeVisible(tabButtons);
+
+		startTimer(100);
 	}
 
 	~CustomTabComponent() {
@@ -52,6 +67,7 @@ public:
 		const float height = getHeight();
 		title->setBoundsRelative(0.5f - 0.125f , 0, 0.25f, 0.05f);
 		listBox->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
+		tabButtons->setBoundsRelative(0.0f, 0.05f, 0.05f, 0.94f);
 	}
 
 	int CustomTabComponent::getNumRows() override
@@ -81,9 +97,25 @@ public:
 		}
 	}
 
+	void CustomTabComponent::timerCallback() override {
+		ComponentAnimator &an = Desktop::getInstance().getAnimator();
+		Rectangle<int> finalBoundsVisible = Rectangle<int>(0, tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
+		Rectangle<int> finalBoundsHidden = Rectangle<int>(-tabButtons->getWidth(), tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
+
+		if (getMouseXYRelative().getX() > 0 && getMouseXYRelative().getX() < tabButtons->getWidth()*0.8f && tabButtons->getX() < 0 && an.getComponentDestination(tabButtons) == finalBoundsHidden) {
+			an.cancelAnimation(tabButtons, false);
+			an.animateComponent(tabButtons, finalBoundsVisible, 1.0f, 400, false, 0.0f, 1.0f);
+		}
+		else if (getMouseXYRelative().getX() > 0 && getMouseXYRelative().getX() > tabButtons->getWidth() && tabButtons->getX() == 0) {
+			an.cancelAnimation(tabButtons, false);
+			an.animateComponent(tabButtons, finalBoundsHidden, 1.0f, 400, false, 0.0f, 1.0f);
+		}
+	}
+
 private:
 	ScopedPointer<Label> title;
 	ScopedPointer<ListBox> listBox;
+	ScopedPointer<CustomTabbedButtonBar> tabButtons;
 };
 
 //==============================================================================
