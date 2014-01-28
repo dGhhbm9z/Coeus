@@ -297,7 +297,6 @@ void ThemeComponent::buttonClicked(Button *buttonThatWasClicked)
 	else if (buttonThatWasClicked == tabButtonFrontTabButton) {
 		cs->setCurrentColour(tabButtonFrontTab);
 	}
-
 	else if (buttonThatWasClicked == tabButtonFrontTabOutlineButton) {
 		cs->setCurrentColour(tabButtonFrontTabOutline);
 	}
@@ -312,20 +311,50 @@ void ThemeComponent::buttonClicked(Button *buttonThatWasClicked)
 	}
 	else if (buttonThatWasClicked == saveButton) {
 		// open dialog - get file name
+		FileChooser fc("Choose a file to open...",
+			File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory),
+			"*.theme",
+			true);
+		if (fc.browseForFileToOpen())
+		{
+			// recreate file
+			String fname = String(fc.getResult().getFullPathName());
+			if (!fname.endsWith(String(L".theme"))) {
+				fname.append(L".theme", 6);
+			}
+			File themeFile = File(fname);
+			if (themeFile.existsAsFile()) {
+				themeFile.deleteFile();
+				themeFile.create();
+			}
+			else {
+				themeFile.create();
+			}
 
-		// recreate file
-
-		// write data
-
+			// write data
+			saveData(themeFile.createOutputStream());
+		}
 	}
 	else if (buttonThatWasClicked == loadButton) {
 		// open dialog - get file name
-
-		// recreate file
-
-		// write data
+		FileChooser fc("Choose a file to open...",
+			File::getSpecialLocation(File::SpecialLocationType::userDocumentsDirectory),
+			"*.theme",
+			true);
+		if (fc.browseForFileToOpen())
+		{
+			// recreate file
+			File themeFile = fc.getResult();
+			
+			if (themeFile.existsAsFile()) {
+				// read data
+				loadData(themeFile.createInputStream());
+				repaint();
+				compToRefresh.repaint();
+			}
+		}
 	}
-
+	
 	repaint();
 }
 
@@ -385,11 +414,68 @@ void ThemeComponent::saveData(OutputStream *os)
 	os->write(&buffer, sizeof(uint32));
 	buffer = tabButtonOutline.getARGB();
 	os->write(&buffer, sizeof(uint32));
+
+	deleteAndZero(os);
 }
 
 void ThemeComponent::loadData(InputStream *is)
 {
+	uint32 buffer;
 
+	is->read(&buffer, sizeof(uint32));
+	tabButtonBackgroundWhenSelected = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	tabButtonBackground = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	tabButtonTextWhenSelected = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	tabButtonTextMouseOver = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	tabButtonTextOnClick = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	tabLineFill = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	aboveTabBarFill = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	sideBarLeftFill = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	sideBarRightFill = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	workSpaceFill = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	buttonGr1 = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	buttonGr2 = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	buttonGr3 = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	buttonOutlineHover = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	buttonOutline = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	buttonTextDown = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	buttonTextOver = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	buttonText = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	tabButtonBarGr1 = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	tabButtonBarGr2 = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	tabButtonBarOutline = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	tabButtonFrontTab = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	tabButtonFrontTabOutline = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	tabButtonBG1 = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	tabButtonBG2 = Colour(buffer);
+	is->read(&buffer, sizeof(uint32));
+	tabButtonOutline = Colour(buffer);
+
+	deleteAndZero(is);
 }
 
 void ThemeComponent::paint(Graphics &g)
