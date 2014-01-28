@@ -33,9 +33,10 @@ Colour tabButtonOutline = Colour(0xff5c5c5c);
 ThemeComponent::ThemeComponent(Component &compToRefresh_)
 : compToRefresh(compToRefresh_)
 {
-	buttonGr1ButtonButton = new ThemeButton(buttonGr1, L"buttonGr1");
-	buttonGr2ButtonButton = new ThemeButton(buttonGr2, L"buttonGr2");
-	buttonGr3ButtonButton = new ThemeButton(buttonGr3, L"buttonGr3");
+	buttonGr1Button = new ThemeButton(buttonGr1, L"buttonGr1");
+	lastButtonThatWasClicked = buttonGr1Button;
+	buttonGr2Button = new ThemeButton(buttonGr2, L"buttonGr2");
+	buttonGr3Button = new ThemeButton(buttonGr3, L"buttonGr3");
 	buttonOutlineHoverButton = new ThemeButton(buttonOutlineHover, L"buttonOutlineHover");
 	buttonOutlineButton = new ThemeButton(buttonOutline, L"buttonOutline");
 	buttonTextDownButton = new ThemeButton(buttonTextDown, L"buttonTextDown");
@@ -61,11 +62,15 @@ ThemeComponent::ThemeComponent(Component &compToRefresh_)
 	sideBarRightFillButton = new ThemeButton(sideBarRightFill, L"sideBarRightFill");
 	workSpaceFillButton = new ThemeButton(workSpaceFill, L"workSpaceFill");
 
-	cs = new ColourSelector();
+	saveButton = new TextButton(L"save");
+	loadButton = new TextButton(L"load");
 
-	buttonGr1ButtonButton->addListener(this);
-	buttonGr2ButtonButton->addListener(this);
-	buttonGr3ButtonButton->addListener(this);
+	cs = new ColourSelector();
+	cs->addChangeListener(this);
+
+	buttonGr1Button->addListener(this);
+	buttonGr2Button->addListener(this);
+	buttonGr3Button->addListener(this);
 	buttonOutlineHoverButton->addListener(this);
 	buttonOutlineButton->addListener(this);
 	buttonTextDownButton->addListener(this);
@@ -80,9 +85,26 @@ ThemeComponent::ThemeComponent(Component &compToRefresh_)
 	tabButtonBG2Button->addListener(this);
 	tabButtonOutlineButton->addListener(this);
 
-	addAndMakeVisible(buttonGr1ButtonButton);
-	addAndMakeVisible(buttonGr2ButtonButton);
-	addAndMakeVisible(buttonGr3ButtonButton);
+	buttonGr1Button->setRadioGroupId(1);
+	buttonGr2Button->setRadioGroupId(1);
+	buttonGr3Button->setRadioGroupId(1);
+	buttonOutlineHoverButton->setRadioGroupId(1);
+	buttonOutlineButton->setRadioGroupId(1);
+	buttonTextDownButton->setRadioGroupId(1);
+	buttonTextOverButton->setRadioGroupId(1);
+	buttonTextButton->setRadioGroupId(1);
+	tabButtonBarGr1Button->setRadioGroupId(1);
+	tabButtonBarGr2Button->setRadioGroupId(1);
+	tabButtonBarOutlineButton->setRadioGroupId(1);
+	tabButtonFrontTabButton->setRadioGroupId(1);
+	tabButtonFrontTabOutlineButton->setRadioGroupId(1);
+	tabButtonBG1Button->setRadioGroupId(1);
+	tabButtonBG2Button->setRadioGroupId(1);
+	tabButtonOutlineButton->setRadioGroupId(1);
+
+	addAndMakeVisible(buttonGr1Button);
+	addAndMakeVisible(buttonGr2Button);
+	addAndMakeVisible(buttonGr3Button);
 	addAndMakeVisible(buttonOutlineHoverButton);
 	addAndMakeVisible(buttonOutlineButton);
 	addAndMakeVisible(buttonTextDownButton);
@@ -97,6 +119,7 @@ ThemeComponent::ThemeComponent(Component &compToRefresh_)
 	addAndMakeVisible(tabButtonBG2Button);
 	addAndMakeVisible(tabButtonOutlineButton);
 
+
 	tabButtonBackgroundWhenSelectedButton->addListener(this);
 	tabButtonBackgroundButton->addListener(this);
 	tabButtonTextWhenSelectedButton->addListener(this);
@@ -108,6 +131,17 @@ ThemeComponent::ThemeComponent(Component &compToRefresh_)
 	sideBarRightFillButton->addListener(this);
 	workSpaceFillButton->addListener(this);
 
+	tabButtonBackgroundWhenSelectedButton->setRadioGroupId(1);
+	tabButtonBackgroundButton->setRadioGroupId(1);
+	tabButtonTextWhenSelectedButton->setRadioGroupId(1);
+	tabButtonTextMouseOverButton->setRadioGroupId(1);
+	tabButtonTextOnClickButton->setRadioGroupId(1);
+	tabLineFillButton->setRadioGroupId(1);
+	aboveTabBarFillButton->setRadioGroupId(1);
+	sideBarLeftFillButton->setRadioGroupId(1);
+	sideBarRightFillButton->setRadioGroupId(1);
+	workSpaceFillButton->setRadioGroupId(1);
+
 	addAndMakeVisible(tabButtonBackgroundWhenSelectedButton);
 	addAndMakeVisible(tabButtonBackgroundButton);
 	addAndMakeVisible(tabButtonTextWhenSelectedButton);
@@ -118,6 +152,13 @@ ThemeComponent::ThemeComponent(Component &compToRefresh_)
 	addAndMakeVisible(sideBarLeftFillButton);
 	addAndMakeVisible(sideBarRightFillButton);
 	addAndMakeVisible(workSpaceFillButton);
+
+
+	saveButton->addListener(this);
+	loadButton->addListener(this);
+
+	addAndMakeVisible(saveButton);
+	addAndMakeVisible(loadButton);
 
 	addAndMakeVisible(cs);
 }
@@ -134,9 +175,9 @@ void ThemeComponent::resized()
 	float hs = 0.05f;
 	float hsz = 0.3f;
 
-	buttonGr1ButtonButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
-	buttonGr2ButtonButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
-	buttonGr3ButtonButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	buttonGr1Button->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	buttonGr2Button->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
+	buttonGr3Button->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
 	buttonOutlineHoverButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
 	buttonOutlineButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
 	buttonTextDownButton->setBoundsRelative(hs, vs, hsz, vsz);	vs += vsz;
@@ -178,44 +219,114 @@ void ThemeComponent::resized()
 	vs = 0.05f;
 	hsz = 0.3f;
 	cs->setBoundsRelative(hs, vs, hsz, vsz);
+	vs += vsz;
+	vsz = (1 - 0.1f) / 18.0f;
+	vs += vsz;
+	loadButton->setBoundsRelative(hs, vs, hsz, vsz);
+	vs += vsz;
+	saveButton->setBoundsRelative(hs, vs, hsz, vsz);
 }
 
 void ThemeComponent::buttonClicked(Button *buttonThatWasClicked)
 {
-	((ThemeButton *)buttonThatWasClicked)->setInfoColour(cs->getCurrentColour());
+	lastButtonThatWasClicked = (ThemeButton *) buttonThatWasClicked;
 
 	if (buttonThatWasClicked == tabButtonBackgroundWhenSelectedButton) {
-		tabButtonBackgroundWhenSelected = cs->getCurrentColour();
+		cs->setCurrentColour(tabButtonBackgroundWhenSelected);
 	}
 	else if (buttonThatWasClicked == tabButtonBackgroundButton) {
-		tabButtonBackground = cs->getCurrentColour();
+		cs->setCurrentColour(tabButtonBackground);
 	}
 	else if (buttonThatWasClicked == tabButtonTextWhenSelectedButton) {
-		tabButtonTextWhenSelected = cs->getCurrentColour();
+		cs->setCurrentColour(tabButtonTextWhenSelected);
 	}
 	else if (buttonThatWasClicked == tabButtonTextMouseOverButton) {
-		tabButtonTextMouseOver = cs->getCurrentColour();
+		cs->setCurrentColour(tabButtonTextMouseOver);
 	}
 	else if (buttonThatWasClicked == tabButtonTextOnClickButton) {
-		tabButtonTextOnClick = cs->getCurrentColour();
+		cs->setCurrentColour(tabButtonTextOnClick);
 	}
 	else if (buttonThatWasClicked == tabLineFillButton) {
-		tabLineFill = cs->getCurrentColour();
+		cs->setCurrentColour(tabLineFill);
 	}
 	else if (buttonThatWasClicked == aboveTabBarFillButton) {
-		aboveTabBarFill = cs->getCurrentColour();
+		cs->setCurrentColour(aboveTabBarFill);
 	}
 	else if (buttonThatWasClicked == sideBarLeftFillButton) {
-		sideBarLeftFill = cs->getCurrentColour();
+		cs->setCurrentColour(sideBarLeftFill);
 	}
 	else if (buttonThatWasClicked == sideBarRightFillButton) {
-		sideBarRightFill = cs->getCurrentColour();
+		cs->setCurrentColour(sideBarRightFill);
 	}
 	else if (buttonThatWasClicked == workSpaceFillButton) {
-		workSpaceFill = cs->getCurrentColour();
+		cs->setCurrentColour(workSpaceFill);
+	}
+	else if (buttonThatWasClicked == buttonGr1Button) {
+		cs->setCurrentColour(buttonGr1);
+	}
+	else if (buttonThatWasClicked == buttonGr2Button) {
+		cs->setCurrentColour(buttonGr2);
+	}
+	else if (buttonThatWasClicked == buttonGr3Button) {
+		cs->setCurrentColour(buttonGr3);
+	}
+	else if (buttonThatWasClicked == buttonOutlineHoverButton) {
+		cs->setCurrentColour(buttonOutlineHover);
+	}
+	else if (buttonThatWasClicked == buttonOutlineButton) {
+		cs->setCurrentColour(buttonOutline);
+	}
+	else if (buttonThatWasClicked == buttonTextDownButton) {
+		cs->setCurrentColour(buttonTextDown);
+	}
+	else if (buttonThatWasClicked == buttonTextOverButton) {
+		cs->setCurrentColour(buttonTextOver);
+	}
+	else if (buttonThatWasClicked == buttonTextButton) {
+		cs->setCurrentColour(buttonText);
+	}
+	else if (buttonThatWasClicked == tabButtonBarGr1Button) {
+		cs->setCurrentColour(tabButtonBarGr1);
+	}
+	else if (buttonThatWasClicked == tabButtonBarGr2Button) {
+		cs->setCurrentColour(tabButtonBarGr2);
+	}
+	else if (buttonThatWasClicked == tabButtonBarOutlineButton) {
+		cs->setCurrentColour(tabButtonBarOutline);
+	}
+	else if (buttonThatWasClicked == tabButtonFrontTabButton) {
+		cs->setCurrentColour(tabButtonFrontTab);
 	}
 
-	compToRefresh.repaint();
+	else if (buttonThatWasClicked == tabButtonFrontTabOutlineButton) {
+		cs->setCurrentColour(tabButtonFrontTabOutline);
+	}
+	else if (buttonThatWasClicked == tabButtonBG1Button) {
+		cs->setCurrentColour(tabButtonBG1);
+	}
+	else if (buttonThatWasClicked == tabButtonBG2Button) {
+		cs->setCurrentColour(tabButtonBG2);
+	}
+	else if (buttonThatWasClicked == tabButtonOutlineButton) {
+		cs->setCurrentColour(tabButtonOutline);
+	}
+	else if (buttonThatWasClicked == saveButton) {
+		// open dialog - get file name
+
+		// recreate file
+
+		// write data
+
+	}
+	else if (buttonThatWasClicked == loadButton) {
+		// open dialog - get file name
+
+		// recreate file
+
+		// write data
+	}
+
+	repaint();
 }
 
 void ThemeComponent::paint(Graphics &g)
@@ -226,6 +337,48 @@ void ThemeComponent::paint(Graphics &g)
 void ThemeComponent::userTriedToCloseWindow()
 {
 	this->setVisible(false);
+}
+
+void ThemeComponent::changeListenerCallback(ChangeBroadcaster *broadcaster)
+{
+	if (broadcaster != cs) {
+		return;
+	}
+	((ThemeButton *)lastButtonThatWasClicked)->setInfoColour(cs->getCurrentColour());
+
+	if (lastButtonThatWasClicked == tabButtonBackgroundWhenSelectedButton) {
+		tabButtonBackgroundWhenSelected = cs->getCurrentColour();
+	}
+	else if (lastButtonThatWasClicked == tabButtonBackgroundButton) {
+		tabButtonBackground = cs->getCurrentColour();
+	}
+	else if (lastButtonThatWasClicked == tabButtonTextWhenSelectedButton) {
+		tabButtonTextWhenSelected = cs->getCurrentColour();
+	}
+	else if (lastButtonThatWasClicked == tabButtonTextMouseOverButton) {
+		tabButtonTextMouseOver = cs->getCurrentColour();
+	}
+	else if (lastButtonThatWasClicked == tabButtonTextOnClickButton) {
+		tabButtonTextOnClick = cs->getCurrentColour();
+	}
+	else if (lastButtonThatWasClicked == tabLineFillButton) {
+		tabLineFill = cs->getCurrentColour();
+	}
+	else if (lastButtonThatWasClicked == aboveTabBarFillButton) {
+		aboveTabBarFill = cs->getCurrentColour();
+	}
+	else if (lastButtonThatWasClicked == sideBarLeftFillButton) {
+		sideBarLeftFill = cs->getCurrentColour();
+	}
+	else if (lastButtonThatWasClicked == sideBarRightFillButton) {
+		sideBarRightFill = cs->getCurrentColour();
+	}
+	else if (lastButtonThatWasClicked == workSpaceFillButton) {
+		workSpaceFill = cs->getCurrentColour();
+	}
+
+	repaint();
+	compToRefresh.repaint();
 }
 
 Path Theme::createRectPath(int x, int y, int w, int h, int pad, int padB, int cDist)

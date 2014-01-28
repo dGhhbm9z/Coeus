@@ -3,25 +3,24 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-class ThemeButton : public TextButton
+class ThemeButton : public ToggleButton
 {
 public:
 	ThemeButton(Colour &info, String txt) : infoColour(info) {
 		text = String(txt);
 	};
 
-	void paint(Graphics &g) override {
+	void paintButton(Graphics &g, bool isMouseOverButton, bool isButtonDown) override {
 
-		if (isMouseButtonDown()) {
-			g.setColour(infoColour.contrasting());
-		}
-		else {
-			g.setColour(infoColour);
-		}
+		g.setColour(infoColour);
 		g.fillAll();
 
-		if (isMouseOver()) {
+		if (isButtonDown || getToggleState()) {
 			g.setColour(infoColour.contrasting());
+			g.drawRect(0, 0, getWidth(), getHeight(), 2);
+		}
+		else if (isMouseOverButton) {
+			g.setColour(infoColour.contrasting(0.4));
 			g.drawRect(0, 0, getWidth(), getHeight(), 2);
 		}
 
@@ -39,7 +38,8 @@ private:
 };
 
 class ThemeComponent	:	public Component,
-							public ButtonListener
+							public ButtonListener,
+							public ChangeListener
 {
 public:
 	ThemeComponent(Component &compToRefresh_);
@@ -53,12 +53,14 @@ public:
 
 	void userTriedToCloseWindow() override;
 
+	void changeListenerCallback(ChangeBroadcaster *broadcaster);
+
 private:
 	Component &compToRefresh;
 
-	ScopedPointer<ThemeButton> buttonGr1ButtonButton;
-	ScopedPointer<ThemeButton> buttonGr2ButtonButton;
-	ScopedPointer<ThemeButton> buttonGr3ButtonButton;
+	ScopedPointer<ThemeButton> buttonGr1Button;
+	ScopedPointer<ThemeButton> buttonGr2Button;
+	ScopedPointer<ThemeButton> buttonGr3Button;
 	ScopedPointer<ThemeButton> buttonOutlineHoverButton;
 	ScopedPointer<ThemeButton> buttonOutlineButton;
 	ScopedPointer<ThemeButton> buttonTextDownButton;
@@ -85,6 +87,11 @@ private:
 	ScopedPointer<ThemeButton> workSpaceFillButton;
 
 	ScopedPointer<ColourSelector> cs;
+
+	ScopedPointer<TextButton> saveButton;
+	ScopedPointer<TextButton> loadButton;
+
+	ThemeButton *lastButtonThatWasClicked;
 };
 
 class Theme	:	public LookAndFeel_V2
