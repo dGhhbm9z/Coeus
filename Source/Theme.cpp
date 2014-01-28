@@ -329,6 +329,69 @@ void ThemeComponent::buttonClicked(Button *buttonThatWasClicked)
 	repaint();
 }
 
+void ThemeComponent::saveData(OutputStream *os)
+{
+	uint32 buffer;
+
+	buffer = tabButtonBackgroundWhenSelected.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = tabButtonBackground.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = tabButtonTextWhenSelected.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = tabButtonTextMouseOver.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = tabButtonTextOnClick.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = tabLineFill.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = aboveTabBarFill.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = sideBarLeftFill.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = sideBarRightFill.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = workSpaceFill.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = buttonGr1.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = buttonGr2.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = buttonGr3.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = buttonOutlineHover.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = buttonOutline.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = buttonTextDown.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = buttonTextOver.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = buttonText.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = tabButtonBarGr1.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = tabButtonBarGr2.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = tabButtonBarOutline.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = tabButtonFrontTab.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = tabButtonFrontTabOutline.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = tabButtonBG1.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = tabButtonBG2.getARGB();
+	os->write(&buffer, sizeof(uint32));
+	buffer = tabButtonOutline.getARGB();
+	os->write(&buffer, sizeof(uint32));
+}
+
+void ThemeComponent::loadData(InputStream *is)
+{
+
+}
+
 void ThemeComponent::paint(Graphics &g)
 {
 	g.fillAll(workSpaceFill);

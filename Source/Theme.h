@@ -55,6 +55,10 @@ public:
 
 	void changeListenerCallback(ChangeBroadcaster *broadcaster);
 
+	void saveData(OutputStream *os);
+
+	void loadData(InputStream *is);
+
 private:
 	Component &compToRefresh;
 
