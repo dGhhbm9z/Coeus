@@ -425,7 +425,7 @@ void TabbedButtonBar::updateTabPositions (bool animate)
         scale = jmax (minimumScale, length / (double) totalLength);
 
     const bool isTooBig = (int) (totalLength * scale) > length;
-    int tabsButtonPos = 0;
+    int tabsButtonPos = 10;
 
     if (isTooBig)
     {
@@ -451,7 +451,7 @@ void TabbedButtonBar::updateTabPositions (bool animate)
             extraTabsButton->setCentrePosition (tabsButtonPos, getHeight() / 2);
         }
 
-        totalLength = 0;
+        totalLength = 10;
 
         for (int i = 0; i < tabs.size(); ++i)
         {

@@ -4,7 +4,21 @@
               bundleIdentifier="com.yourcompany.Coeus" includeBinaryInAppConfig="1"
               jucerVersion="3.1.0">
   <MAINGROUP id="WU2z1W" name="Coeus">
-    <GROUP id="{64667E0B-0D83-13E7-5350-8644B7BB1ADE}" name="Source"/>
+    <GROUP id="{64667E0B-0D83-13E7-5350-8644B7BB1ADE}" name="Source">
+      <FILE id="NLa9bN" name="CacheViewer.cpp" compile="1" resource="0" file="Source/CacheViewer.cpp"/>
+      <FILE id="Psw3ZG" name="CacheViewer.h" compile="0" resource="0" file="Source/CacheViewer.h"/>
+      <FILE id="mkYBTd" name="CoeusCommandIDs.h" compile="0" resource="0"
+            file="Source/CoeusCommandIDs.h"/>
+      <FILE id="vEpxPX" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="ajIcZ6" name="MainComponent.cpp" compile="1" resource="0"
+            file="Source/MainComponent.cpp"/>
+      <FILE id="G7ezTs" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="i6Gtba" name="Theme.cpp" compile="1" resource="0" file="Source/Theme.cpp"/>
+      <FILE id="LG2Hzm" name="Theme.h" compile="0" resource="0" file="Source/Theme.h"/>
+      <FILE id="RQzBRJ" name="WorkspaceView.cpp" compile="1" resource="0"
+            file="Source/WorkspaceView.cpp"/>
+      <FILE id="acEFtS" name="WorkspaceView.h" compile="0" resource="0" file="Source/WorkspaceView.h"/>
+    </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">
@@ -15,21 +29,67 @@
                        isDebug="0" optimisation="2" targetName="Coeus"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_core" path="../JUCE-3.0.1/modules"/>
-        <MODULEPATH id="juce_events" path="../JUCE-3.0.1/modules"/>
-        <MODULEPATH id="juce_graphics" path="../JUCE-3.0.1/modules"/>
-        <MODULEPATH id="juce_data_structures" path="../JUCE-3.0.1/modules"/>
-        <MODULEPATH id="juce_gui_basics" path="../JUCE-3.0.1/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="../JUCE-3.0.1/modules"/>
-        <MODULEPATH id="juce_cryptography" path="../JUCE-3.0.1/modules"/>
-        <MODULEPATH id="juce_video" path="../JUCE-3.0.1/modules"/>
-        <MODULEPATH id="juce_opengl" path="../JUCE-3.0.1/modules"/>
-        <MODULEPATH id="juce_audio_basics" path="../JUCE-3.0.1/modules"/>
-        <MODULEPATH id="juce_audio_devices" path="../JUCE-3.0.1/modules"/>
-        <MODULEPATH id="juce_audio_formats" path="../JUCE-3.0.1/modules"/>
-        <MODULEPATH id="juce_audio_processors" path="../JUCE-3.0.1/modules"/>
+        <MODULEPATH id="juce_core" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
+    <VS2013 targetFolder="Builds/VisualStudio2013">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="Coeus"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="2" targetName="Coeus"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_video" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2013>
+    <LINUX_MAKE targetFolder="Builds/Linux">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="Coeus"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="2"
+                       targetName="Coeus"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_video" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../JUCE/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
   </EXPORTFORMATS>
   <MODULES>
     <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="1"/>

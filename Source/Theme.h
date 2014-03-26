@@ -28,7 +28,7 @@ public:
 		g.drawText(text, 0, 0, getWidth(), getHeight(), Justification::centred, true);
 	};
 
-	void setInfoColour(Colour &colour) {
+	void setInfoColour(Colour colour) {
 		infoColour = colour;
 	};
 

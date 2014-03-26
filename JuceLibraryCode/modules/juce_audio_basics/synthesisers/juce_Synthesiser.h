@@ -199,6 +199,9 @@ public:
     /** Returns true if the sostenuto pedal is currently active for this voice. */
     bool isSostenutoPedalDown() const noexcept                  { return sostenutoPedalDown; }
 
+    /** Returns true if this voice started playing its current note before the other voice did. */
+    bool wasStartedBefore (const SynthesiserVoice& other) const noexcept;
+
 protected:
     //==============================================================================
     /** Returns the current target sample rate at which rendering is being done.
@@ -420,6 +423,7 @@ public:
         renderNextBlock(), but may be called explicitly too.
 
         @param midiChannel          the midi channel, from 1 to 16 inclusive
+        @param midiNoteNumber       the midi note number, 0 to 127
         @param aftertouchValue      the aftertouch value, between 0 and 127,
                                     as returned by MidiMessage::getAftertouchValue()
     */
@@ -479,6 +483,12 @@ protected:
     */
     virtual SynthesiserVoice* findFreeVoice (SynthesiserSound* soundToPlay,
                                              const bool stealIfNoneAvailable) const;
+
+    /** Chooses a voice that is most suitable for being re-used.
+        The default method returns the one that has been playing for the longest, but
+        you may want to override this and do something more cunning instead.
+    */
+    virtual SynthesiserVoice* findVoiceToSteal (SynthesiserSound* soundToPlay) const;
 
     /** Starts a specified voice playing a particular sound.
 

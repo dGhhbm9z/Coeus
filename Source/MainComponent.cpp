@@ -40,7 +40,7 @@ class CustomTabComponent :	public Component,
 public:
 	CustomTabComponent() {
 		setWantsKeyboardFocus(false);
-		title = new Label(String::empty, L"ËïãéóôéêÜ ¢ñèñá");
+		title = new Label(String::empty, L"Î›Î¿Î³Î¹ÏƒÏ„Î¹ÎºÎ¬ Î†ÏÎ¸ÏÎ±");
 		title->setFont(Font(22));
 		title->setJustificationType(Justification::centred);
 		listBox = new ListBox(String::empty, this);
@@ -70,12 +70,12 @@ public:
 		tabButtons->setBoundsRelative(0.0f, 0.05f, 0.05f, 0.94f);
 	}
 
-	int CustomTabComponent::getNumRows() override
+	int getNumRows() override
 	{
-		return 800;
+		return 80;
 	}
 
-	void CustomTabComponent::paintListBoxItem(int rowNumber, Graphics &g, int width, int height, bool rowIsSelected) override
+	void paintListBoxItem(int rowNumber, Graphics &g, int width, int height, bool rowIsSelected) override
 	{
 		/*g.fillAll(Colours::grey);
 		g.setColour(Colours::black);
@@ -84,7 +84,7 @@ public:
 		g.drawText(String(rowNumber), Rectangle<int>(0,0,width,height), Justification::centred, false);*/
 	}
 
-	Component* CustomTabComponent::refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate) override
+	Component* refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate) override
 	{
 		// create
 		if (existingComponentToUpdate == nullptr) {
@@ -97,7 +97,7 @@ public:
 		}
 	}
 
-	void CustomTabComponent::timerCallback() override {
+	void timerCallback() override {
 		ComponentAnimator &an = Desktop::getInstance().getAnimator();
 		Rectangle<int> finalBoundsVisible = Rectangle<int>(0, tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
 		Rectangle<int> finalBoundsHidden = Rectangle<int>(-tabButtons->getWidth(), tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());

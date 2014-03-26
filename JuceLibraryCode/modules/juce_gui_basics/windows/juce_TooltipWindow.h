@@ -42,7 +42,7 @@
     @see TooltipClient, SettableTooltipClient
 */
 class JUCE_API  TooltipWindow  : public Component,
-                                 private Timer
+                                 virtual private Timer
 {
 public:
     //==============================================================================

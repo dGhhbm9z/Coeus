@@ -3,7 +3,7 @@
 class AccountQuickView : public Component
 {
 public:
-	AccountQuickView::AccountQuickView() {
+    AccountQuickView() {
 		accountText = new TextEditor();
 		debtText = new TextEditor();
 		creditText = new TextEditor();
@@ -13,11 +13,11 @@ public:
 		addAndMakeVisible(creditText);
 	}
 
-	AccountQuickView::~AccountQuickView() {
+	~AccountQuickView() {
 
 	}
 
-	void AccountQuickView::resized() override {
+	void resized() override {
 		const float padH = 0.01f;
 		const float padV = 0.2f;
 
@@ -115,7 +115,7 @@ void CacheViewer::paint(Graphics &g)
 {
 	Path p = Theme::createRectPath(0, 0, getWidth(), getHeight(), 15, 15, 5);
 	g.setColour(Colours::black);
-	g.strokePath(p, PathStrokeType::beveled);
+	g.strokePath(p, PathStrokeType(1.0f));
 }
 
 void CacheViewer::resized()
