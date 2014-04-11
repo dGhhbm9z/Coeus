@@ -104,6 +104,8 @@ CacheViewer::CacheViewer()
 	addAndMakeVisible(saveButton);
 	addAndMakeVisible(discardButton);
 	addAndMakeVisible(balanceButton);
+
+	cache.connectToServer();
 }
 
 CacheViewer::~CacheViewer()

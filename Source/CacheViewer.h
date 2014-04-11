@@ -1,8 +1,10 @@
 #ifndef CacheViewerGuard
 #define CacheViewerGuard
 
+#include "CacheSystem.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Theme.h"
+
 
 class CacheViewer : public Component,
 					public ListBoxModel
@@ -43,6 +45,8 @@ private:
 	ScopedPointer<TextButton> saveButton;
 	ScopedPointer<TextButton> discardButton;
 	ScopedPointer<TextButton> balanceButton;
+
+	CacheSystem cache;
 };
 
 

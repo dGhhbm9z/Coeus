@@ -5,6 +5,8 @@
               jucerVersion="3.1.0">
   <MAINGROUP id="WU2z1W" name="Coeus">
     <GROUP id="{64667E0B-0D83-13E7-5350-8644B7BB1ADE}" name="Source">
+      <FILE id="fUutoB" name="CacheSystem.cpp" compile="1" resource="0" file="Source/CacheSystem.cpp"/>
+      <FILE id="Ks3tJn" name="CacheSystem.h" compile="0" resource="0" file="Source/CacheSystem.h"/>
       <FILE id="NLa9bN" name="CacheViewer.cpp" compile="1" resource="0" file="Source/CacheViewer.cpp"/>
       <FILE id="Psw3ZG" name="CacheViewer.h" compile="0" resource="0" file="Source/CacheViewer.h"/>
       <FILE id="mkYBTd" name="CoeusCommandIDs.h" compile="0" resource="0"
@@ -44,12 +46,15 @@
         <MODULEPATH id="juce_audio_processors" path="../JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
-    <VS2013 targetFolder="Builds/VisualStudio2013">
+    <VS2013 targetFolder="Builds/VisualStudio2013" extraCompilerFlags=""
+            extraLinkerFlags="" externalLibraries="mariadbclient.lib">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="Coeus"/>
+                       isDebug="1" optimisation="1" targetName="Coeus" headerPath="..\..\..\mariadb_client\mariadbclient\include"
+                       libraryPath="..\..\..\mariadb_client\lib" useRuntimeLibDLL="1"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="2" targetName="Coeus"/>
+                       isDebug="0" optimisation="2" targetName="Coeus" headerPath="..\..\..\mariadb_client\mariadbclient\include"
+                       libraryPath="..\..\..\mariadb_client\lib" useRuntimeLibDLL="1"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_video" path="../JUCE/modules"/>
