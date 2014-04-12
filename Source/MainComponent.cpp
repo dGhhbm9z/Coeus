@@ -127,16 +127,22 @@ public:
 		if (source == tabButtons) {
 			switch (tabButtons->getCurrentTabIndex()) {
 			case 0:
+				accountChart->setVisible(false);
 				break;
 			case 1:
+				accountChart->setVisible(false);
 				break;
 			case 2:
+				accountChart->setVisible(false);
 				break;
 			case 3:
+				accountChart->setVisible(false);
 				break;
 			case 4:
+				accountChart->setVisible(true);
 				break;
 			case 5:
+				accountChart->setVisible(false);
 				break;
 
 			default:
