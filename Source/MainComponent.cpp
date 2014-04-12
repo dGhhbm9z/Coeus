@@ -686,7 +686,7 @@ public:
 		accountsComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 		suppliersComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 		customersComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
-		tabButtons->setBounds(0, 10, 120, 575);
+		tabButtons->setBounds(0, 0.12f*getHeight(), 120, 575);
 	}
 
 	void timerCallback() override {
