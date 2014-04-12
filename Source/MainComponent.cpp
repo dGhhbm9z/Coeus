@@ -26,6 +26,32 @@
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
 
+
+class ComboBoxFocusReport : public ComboBox,
+							public ChangeBroadcaster
+{
+public:
+	void focusGained(FocusChangeType cause) {
+		sendChangeMessage();
+	}
+
+	int rowIndex;
+};
+
+//=======================================================================================================
+
+class TextEditFocusReport : public TextEditor,
+							public ChangeBroadcaster
+{
+public:
+	void focusGained(FocusChangeType cause) {
+		sendChangeMessage();
+	}
+
+	int rowIndex;
+};
+
+//=======================================================================================================
 class MarginComponent : public Component
 {
 public:
@@ -131,14 +157,23 @@ public:
 		remove->setBoundsRelative(0.66f, 0.1f, 0.33f, 0.9f);
 	}
 
+	int rowIndex;
+
 private:
+
 	ScopedPointer<TextButton> save;
 	ScopedPointer<TextButton> restore;
 	ScopedPointer<TextButton> remove;
 };
 //=======================================================================================================
-class AccountsTableListBoxModel : public TableListBoxModel
+class AccountsTableListBoxModel	:	public TableListBox,
+									public TableListBoxModel,
+									public ChangeListener
+
 {
+public:
+	AccountsTableListBoxModel() : TableListBox(String::empty, this) {}
+
 	int getNumRows() override
 	{
 		return 8;
@@ -164,19 +199,24 @@ class AccountsTableListBoxModel : public TableListBoxModel
 		// create
 		if (existingComponentToUpdate == nullptr) {
 			if (columnId == 1) {
-				TextEditor *payload = new TextEditor();
+				TextEditFocusReport *payload = new TextEditFocusReport();
+				payload->rowIndex = rowNumber;
 				payload->setText(L"00.00.00.00");
+				payload->addChangeListener(this);
 				MarginComponent *newComponent = new MarginComponent(payload);
 				return (Component *)newComponent;
 			}
 			else if (columnId == 2) {
-				TextEditor *payload = new TextEditor();
+				TextEditFocusReport *payload = new TextEditFocusReport();
+				payload->rowIndex = rowNumber;
 				payload->setText(L"Πολύ βασικός");
+				payload->addChangeListener(this);
 				MarginComponent *newComponent = new MarginComponent(payload);
 				return (Component *)newComponent;
 			}
 			else if (columnId == 3) {
-				ComboBox *payload = new ComboBox();
+				ComboBoxFocusReport *payload = new ComboBoxFocusReport();
+				payload->rowIndex = rowNumber;
 				payload->addItem(L"Type I", 1);
 				payload->addItem(L"Type II", 2);
 				payload->addItem(L"Type III", 3);
@@ -188,6 +228,7 @@ class AccountsTableListBoxModel : public TableListBoxModel
 			else if (columnId == 5 && isRowSelected) {
 				AccountCellButtons *newComponent = new AccountCellButtons();
 				newComponent->setVisible(isRowSelected);
+				newComponent->rowIndex = rowNumber;
 				return (Component *)newComponent;
 			}
 
@@ -196,22 +237,57 @@ class AccountsTableListBoxModel : public TableListBoxModel
 		// update
 		else {
 			if (columnId == 1) {
-
+				MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
+				if (newComponent) {
+					TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(newComponent->getEnclosedComp());
+					if (tefr) {
+						tefr->rowIndex = rowNumber;
+					}
+				}
 			}
 			else if (columnId == 2) {
-
+				MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
+				if (newComponent) {
+					TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(newComponent->getEnclosedComp());
+					if (tefr) {
+						tefr->rowIndex = rowNumber;
+					}
+				}
 			}
 			else if (columnId == 3) {
-
+				MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
+				if (newComponent) {
+					ComboBoxFocusReport *cbfr = dynamic_cast<ComboBoxFocusReport *>(newComponent->getEnclosedComp());
+					if (cbfr) {
+						cbfr->rowIndex = rowNumber;
+					}
+				}
 			}
 			else if (columnId == 5) {
 				if (!isRowSelected) {
 					delete existingComponentToUpdate;
 					return nullptr;
 				}
+
+				AccountCellButtons *newComponent = dynamic_cast<AccountCellButtons *>(existingComponentToUpdate);
+				if (newComponent) {
+					newComponent->rowIndex = rowNumber;
+				}
 			}
 
 			return existingComponentToUpdate;
+		}
+	}
+
+	void changeListenerCallback(ChangeBroadcaster *source) {
+		TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(source);
+		ComboBoxFocusReport *cbfr = dynamic_cast<ComboBoxFocusReport *>(source);
+
+		if (tefr) {
+			selectRow(tefr->rowIndex);
+		}
+		else if (cbfr) {
+			selectRow(cbfr->rowIndex);
 		}
 	}
 };
@@ -228,8 +304,7 @@ public:
 		accountsHeaderComponent->addColumn(L"Υπόλοιπο Λογαριασμού", 4, 250, 100, 250);
 		accountsHeaderComponent->addColumn(L"", 5, 200, 100, 250);
 
-		accountsTableListBoxModel = new AccountsTableListBoxModel();
-		accounts = new TableListBox(String::empty, accountsTableListBoxModel);
+		accounts = new AccountsTableListBoxModel();
 		accounts->setRowHeight(40);
 		accounts->setHeader(accountsHeaderComponent);
 		accounts->setHeaderHeight(40);
@@ -246,8 +321,7 @@ public:
 	}
 
 private:
-	ScopedPointer<TableListBox> accounts;
-	ScopedPointer<AccountsTableListBoxModel> accountsTableListBoxModel;
+	ScopedPointer<AccountsTableListBoxModel> accounts;
 };
 
 
