@@ -75,8 +75,13 @@ public:
 		title->setJustificationType(Justification::centred);
 
 		accountChartListBoxModel = new AccountsListBoxModel();
+
 		accountChart = new ListBox(String::empty, accountChartListBoxModel);
 		accountChart->setRowHeight(620);
+
+		accounts = new ListBox(String::empty, accountsListBoxModel);
+		accounts->setRowHeight(620);
+
 		tabButtons = new CustomTabbedButtonBar();
 		tabButtons->setLookAndFeel(&themeAlt);
 		tabButtons->addTab(L"Reporting", Colours::white, 0);
@@ -87,7 +92,13 @@ public:
 		tabButtons->addTab(L"Accounts", Colours::white, 5);
 		tabButtons->addChangeListener(this);
 
-		addAndMakeVisible(accountChart);
+		addChildComponent(accountChart);
+		addChildComponent(accounts);
+		//addChildComponent(accountChart);
+		//addChildComponent(accountChart);
+		//addChildComponent(accountChart);
+		//addChildComponent(accountChart);
+
 		addAndMakeVisible(title);
 		addAndMakeVisible(tabButtons);
 
@@ -97,6 +108,7 @@ public:
 	~CustomTabComponent() {
 		title = nullptr;
 		accountChart = nullptr;
+		accounts = nullptr;
 	}
 
 	void resized() override {
@@ -104,6 +116,7 @@ public:
 		const float height = getHeight();
 		title->setBoundsRelative(0.5f - 0.125f , 0, 0.25f, 0.05f);
 		accountChart->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
+		accounts->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 		tabButtons->setBoundsRelative(0.0f, 0.05f, 0.05f, 0.74f);
 	}
 
@@ -128,21 +141,27 @@ public:
 			switch (tabButtons->getCurrentTabIndex()) {
 			case 0:
 				accountChart->setVisible(false);
+				accounts->setVisible(false);
 				break;
 			case 1:
 				accountChart->setVisible(false);
+				accounts->setVisible(false);
 				break;
 			case 2:
 				accountChart->setVisible(false);
+				accounts->setVisible(false);
 				break;
 			case 3:
 				accountChart->setVisible(false);
+				accounts->setVisible(false);
 				break;
 			case 4:
 				accountChart->setVisible(true);
+				accounts->setVisible(false);
 				break;
 			case 5:
 				accountChart->setVisible(false);
+				accounts->setVisible(true);
 				break;
 
 			default:

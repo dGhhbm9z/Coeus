@@ -1,23 +1,8 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.5.36-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win64
--- HeidiSQL Version:             8.0.0.4396
--- --------------------------------------------------------
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-
--- Dumping database structure for com_coeus
 DROP DATABASE IF EXISTS `com_coeus`;
-CREATE DATABASE IF NOT EXISTS `com_coeus` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE IF NOT EXISTS `com_coeus` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `com_coeus`;
 
 
--- Dumping structure for table com_coeus.accounts
-DROP TABLE IF EXISTS `accounts`;
 CREATE TABLE IF NOT EXISTS `accounts` (
   `VAT` varchar(30) NOT NULL,
   `Code` varchar(30) NOT NULL,
@@ -27,13 +12,9 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   `XreosPist` varchar(255) NOT NULL,
   PRIMARY KEY (`VAT`,`Code`),
   CONSTRAINT `accounts_ibfk_1` FOREIGN KEY (`VAT`) REFERENCES `companies` (`VAT`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- Data exporting was unselected.
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
--- Dumping structure for table com_coeus.companies
-DROP TABLE IF EXISTS `companies`;
 CREATE TABLE IF NOT EXISTS `companies` (
   `VAT` varchar(30) NOT NULL,
   `IRS` varchar(100) NOT NULL,
@@ -47,13 +28,9 @@ CREATE TABLE IF NOT EXISTS `companies` (
   `StartDate` date NOT NULL,
   `Comments` text,
   PRIMARY KEY (`VAT`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- Data exporting was unselected.
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
--- Dumping structure for table com_coeus.customers
-DROP TABLE IF EXISTS `customers`;
 CREATE TABLE IF NOT EXISTS `customers` (
   `CustomerCode` varchar(20) NOT NULL,
   `CompanyVAT` varchar(10) NOT NULL,
@@ -76,13 +53,9 @@ CREATE TABLE IF NOT EXISTS `customers` (
   PRIMARY KEY (`CustomerCode`,`CustomerVAT`),
   KEY `CompanyVAT` (`CompanyVAT`),
   CONSTRAINT `customers_ibfk_1` FOREIGN KEY (`CompanyVAT`) REFERENCES `companies` (`VAT`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- Data exporting was unselected.
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
--- Dumping structure for table com_coeus.events
-DROP TABLE IF EXISTS `events`;
 CREATE TABLE IF NOT EXISTS `events` (
   `VAT` varchar(30) NOT NULL,
   `Invoice` varchar(100) NOT NULL,
@@ -92,13 +65,9 @@ CREATE TABLE IF NOT EXISTS `events` (
   `Reasoning` varchar(255) NOT NULL,
   PRIMARY KEY (`VAT`,`Invoice`),
   CONSTRAINT `events_ibfk_1` FOREIGN KEY (`VAT`) REFERENCES `companies` (`VAT`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- Data exporting was unselected.
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
--- Dumping structure for table com_coeus.events2accounts
-DROP TABLE IF EXISTS `events2accounts`;
 CREATE TABLE IF NOT EXISTS `events2accounts` (
   `VAT` varchar(30) NOT NULL,
   `Code` varchar(30) NOT NULL,
@@ -109,13 +78,9 @@ CREATE TABLE IF NOT EXISTS `events2accounts` (
   KEY `VAT` (`VAT`,`Invoice`),
   CONSTRAINT `events2accounts_ibfk_1` FOREIGN KEY (`VAT`, `Code`) REFERENCES `accounts` (`VAT`, `Code`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `events2accounts_ibfk_2` FOREIGN KEY (`VAT`, `Invoice`) REFERENCES `events` (`VAT`, `Invoice`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- Data exporting was unselected.
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
--- Dumping structure for table com_coeus.personel
-DROP TABLE IF EXISTS `personel`;
 CREATE TABLE IF NOT EXISTS `personel` (
   `CompanyVAT` varchar(30) NOT NULL,
   `Code` varchar(30) NOT NULL,
@@ -138,13 +103,8 @@ CREATE TABLE IF NOT EXISTS `personel` (
   `Department` varchar(255) NOT NULL,
   PRIMARY KEY (`CompanyVAT`,`Code`,`PersonalVAT`),
   CONSTRAINT `personel_ibfk_1` FOREIGN KEY (`CompanyVAT`, `Code`) REFERENCES `accounts` (`VAT`, `Code`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table com_coeus.suppliers
-DROP TABLE IF EXISTS `suppliers`;
 CREATE TABLE IF NOT EXISTS `suppliers` (
   `SupplierCode` varchar(20) NOT NULL,
   `CompanyVAT` varchar(10) NOT NULL,
@@ -166,9 +126,6 @@ CREATE TABLE IF NOT EXISTS `suppliers` (
   PRIMARY KEY (`SupplierCode`,`SupplierVAT`),
   KEY `CompanyVAT` (`CompanyVAT`),
   CONSTRAINT `suppliers_ibfk_1` FOREIGN KEY (`CompanyVAT`) REFERENCES `companies` (`VAT`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+
