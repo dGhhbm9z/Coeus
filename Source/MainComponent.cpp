@@ -647,9 +647,9 @@ class CustomTabComponent :	public Component,
 public:
 	CustomTabComponent() {
 		setWantsKeyboardFocus(false);
-		title = new Label(String::empty, L"Λογιστικά Άρθρα");
-		title->setFont(Font(22));
-		title->setJustificationType(Justification::centred);
+		search = new TextEditor();
+		search->setFont(Font(22));
+		search->setTextToShowWhenEmpty(L"Enter Search Keyword", Colours::black.withAlpha(0.5f));
 
 		accountChartComponent = new AccountChartComponent();
 		accountsComponent = new AccountsComponent();
@@ -664,14 +664,14 @@ public:
 		addChildComponent(suppliersComponent);
 		addChildComponent(customersComponent);
 
-		addAndMakeVisible(title);
+		addAndMakeVisible(search);
 		addAndMakeVisible(tabButtons);
 
 		startTimer(100);
 	}
 
 	~CustomTabComponent() {
-		title = nullptr;
+		search = nullptr;
 		accountChartComponent = nullptr;
 		accountsComponent = nullptr;
 		suppliersComponent = nullptr;
@@ -681,7 +681,7 @@ public:
 	void resized() override {
 		const float width = getWidth();
 		const float height = getHeight();
-		title->setBoundsRelative(0.5f - 0.125f , 0, 0.25f, 0.05f);
+		search->setBoundsRelative(0.5f - 0.125f, 0.01, 0.25f, 0.05f);
 		accountChartComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 		accountsComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 		suppliersComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
@@ -752,7 +752,7 @@ public:
 	}
 
 private:
-	ScopedPointer<Label> title;
+	ScopedPointer<TextEditor> search;
 	ScopedPointer<AccountChartComponent> accountChartComponent;
 	ScopedPointer<AccountsComponent> accountsComponent;
 	ScopedPointer<SuppliersComponent> suppliersComponent;
