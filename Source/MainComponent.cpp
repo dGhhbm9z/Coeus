@@ -222,6 +222,7 @@ public:
 				payload->addItem(L"Type III", 3);
 				payload->addItem(L"Type IV", 4);
 				payload->addItem(L"Type V", 5);
+				payload->addChangeListener(this);
 				MarginComponent *newComponent = new MarginComponent(payload);
 				return (Component *)newComponent;
 			}
