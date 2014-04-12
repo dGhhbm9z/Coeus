@@ -27,6 +27,30 @@
 //[/MiscUserDefs]
 
 
+class CustomMenuBarButton : public TextButton
+{
+public:
+	CustomMenuBarButton(String name) : TextButton(name) {}
+
+	void paint(Graphics &g) {
+		Path rect = Theme::createRectPath(0, 0, getWidth(), getHeight(), 0, 0, 10);
+
+		if (isMouseButtonDown()) {
+			g.setColour(Colour(0xff434343));
+		}
+		else {
+			g.setColour(Colour(0xff2b2b2b));
+		}
+
+		g.fillPath(rect);
+
+		LookAndFeel &lnf = getLookAndFeel();
+		lnf.drawButtonText(g, *this, this->isMouseOver(), this->isMouseButtonDown());
+	}
+};
+
+//=======================================================================================================
+
 class ComboBoxFocusReport : public ComboBox,
 							public ChangeBroadcaster
 {
@@ -558,30 +582,41 @@ public:
 		suppliers = new TextButton(L"Suppliers");
 		accountChart = new TextButton(L"Account Chart");
 		accounts = new TextButton(L"Accounts");
+		reporting = new CustomMenuBarButton(L"Reporting");
+		accounting = new CustomMenuBarButton(L"Accounting");
+		logout = new CustomMenuBarButton(L"Logout");
 
 		customers->addListener(this);
 		suppliers->addListener(this);
 		accountChart->addListener(this);
 		accounts->addListener(this);
+		reporting->addListener(this);
+		accounting->addListener(this);
+		logout->addListener(this);
 
 		customers->setLookAndFeel(&themeAlt);
 		suppliers->setLookAndFeel(&themeAlt);
 		accountChart->setLookAndFeel(&themeAlt);
 		accounts->setLookAndFeel(&themeAlt);
 
+
 		addAndMakeVisible(customers);
 		addAndMakeVisible(suppliers);
 		addAndMakeVisible(accountChart);
 		addAndMakeVisible(accounts);
+		addAndMakeVisible(reporting);
+		addAndMakeVisible(accounting);
+		addAndMakeVisible(logout);
 	}
 
 	~CustomTabbedButtonBar() {
 		reporting = nullptr;
-		businessPlan = nullptr;
+		accounting = nullptr;
 		customers = nullptr;
 		suppliers = nullptr;
 		accountChart = nullptr;
 		accounts = nullptr;
+		logout = nullptr;
 	}
 
 	void paint(Graphics &g) override {
@@ -596,6 +631,9 @@ public:
 		suppliers->setBounds(0, 167, getWidth(), 75);
 		accountChart->setBounds(0, 267, getWidth(), 75);
 		accounts->setBounds(0, 367, getWidth(), 75);
+		reporting->setBounds(54, 0, 66, 28);
+		accounting->setBounds(0, 0, 66, 28);
+		logout->setBounds(0, getHeight()-34, 120, 34);
 	}
 
 	int getCurrentTabIndex() const {
@@ -606,7 +644,7 @@ public:
 		if (buttonThatWasClicked == reporting) {
 			index = 0;
 		}
-		else if (buttonThatWasClicked == businessPlan) {
+		else if (buttonThatWasClicked == accounting) {
 			index = 1;
 		}
 		else if (buttonThatWasClicked == customers) {
@@ -621,6 +659,9 @@ public:
 		else if (buttonThatWasClicked == accounts) {
 			index = 5;
 		}
+		else if (buttonThatWasClicked == logout) {
+			index = 6;
+		}
 		else {
 			index = -1;
 		}
@@ -630,8 +671,9 @@ public:
 private:
 	int index;
 
-	ScopedPointer<TextButton> reporting;
-	ScopedPointer<TextButton> businessPlan;
+	ScopedPointer<CustomMenuBarButton> reporting;
+	ScopedPointer<CustomMenuBarButton> accounting;
+	ScopedPointer<CustomMenuBarButton> logout;
 	ScopedPointer<TextButton> customers;
 	ScopedPointer<TextButton> suppliers;
 	ScopedPointer<TextButton> accountChart;

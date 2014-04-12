@@ -727,7 +727,7 @@ void ThemeAlt::drawButtonText(Graphics &g, TextButton &button, bool isMouseOverB
 		c = buttonTextOver;
 	}
 	else {
-		c = buttonText;
+		c = Colour(0xff148373);
 	}
 
 	g.setColour(c);
