@@ -1,4 +1,4 @@
-/*
+﻿/*
   ==============================================================================
 
   This is an automatically generated GUI class created by the Introjucer!
@@ -46,9 +46,13 @@ public:
 		listBox = new ListBox(String::empty, this);
 		listBox->setRowHeight(620);
 		tabButtons = new CustomTabbedButtonBar();
-		tabButtons->addTab(L"1", Colours::white, 0);
-		tabButtons->addTab(L"2", Colours::white, 1);
-		tabButtons->addTab(L"3", Colours::white, 2);
+		tabButtons->setLookAndFeel(&themeAlt);
+		tabButtons->addTab(L"Reporting", Colours::white, 0);
+		tabButtons->addTab(L"Business Plan", Colours::white, 1);
+		tabButtons->addTab(L"Customers", Colours::white, 2);
+		tabButtons->addTab(L"Suppliers", Colours::white, 3);
+		tabButtons->addTab(L"Account Chart", Colours::white, 4);
+		tabButtons->addTab(L"Accounts", Colours::white, 5);
 
 		addAndMakeVisible(listBox);
 		addAndMakeVisible(title);
@@ -67,12 +71,12 @@ public:
 		const float height = getHeight();
 		title->setBoundsRelative(0.5f - 0.125f , 0, 0.25f, 0.05f);
 		listBox->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
-		tabButtons->setBoundsRelative(0.0f, 0.05f, 0.05f, 0.94f);
+		tabButtons->setBoundsRelative(0.0f, 0.05f, 0.05f, 0.54f);
 	}
 
 	int getNumRows() override
 	{
-		return 80;
+		return 8;
 	}
 
 	void paintListBoxItem(int rowNumber, Graphics &g, int width, int height, bool rowIsSelected) override
@@ -116,6 +120,7 @@ private:
 	ScopedPointer<Label> title;
 	ScopedPointer<ListBox> listBox;
 	ScopedPointer<CustomTabbedButtonBar> tabButtons;
+	ThemeAlt themeAlt;
 };
 
 //==============================================================================
@@ -299,5 +304,5 @@ bool MainComponent::perform(const InvocationInfo &info)
 
 
 
-//[EndFile] You can add extra defines here...
+//[EndFile] You can add extra defines here...Transform
 //[/EndFile]

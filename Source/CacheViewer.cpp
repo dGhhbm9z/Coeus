@@ -163,7 +163,7 @@ void CacheViewer::resized()
 
 int CacheViewer::getNumRows()
 {
-	return 8;
+	return 1;
 }
 
 void CacheViewer::paintListBoxItem(int rowNumber, Graphics &g, int width, int height, bool rowIsSelected)

@@ -30,6 +30,9 @@ Colour tabButtonBG1 = Colour(0xfff5f5f5);
 Colour tabButtonBG2 = Colour(0xffe6e6e6);
 Colour tabButtonOutline = Colour(0xff5c5c5c);
 
+//---------------------------------------------------------------------
+// 
+
 ThemeComponent::ThemeComponent(Component &compToRefresh_)
 : compToRefresh(compToRefresh_)
 {
@@ -226,6 +229,7 @@ void ThemeComponent::resized()
 	vs += vsz;
 	saveButton->setBoundsRelative(hs, vs, hsz, vsz);
 }
+
 
 void ThemeComponent::buttonClicked(Button *buttonThatWasClicked)
 {
@@ -530,6 +534,8 @@ void ThemeComponent::changeListenerCallback(ChangeBroadcaster *broadcaster)
 	compToRefresh.repaint();
 }
 
+//---------------------------------------------------------------------
+// buttons
 Path Theme::createRectPath(int x, int y, int w, int h, int pad, int padB, int cDist)
 {
 	const float width = w;
@@ -549,6 +555,7 @@ Path Theme::createRectPath(int x, int y, int w, int h, int pad, int padB, int cD
 	return rect;
 }
 
+//---------------------------------------------------------------------
 // Button stuff
 void Theme::drawButtonBackground (Graphics &g, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown)
 {
@@ -604,6 +611,7 @@ void Theme::drawDrawableButton (Graphics &, DrawableButton &, bool isMouseOverBu
 {
 }
 
+//---------------------------------------------------------------------
 // tabs
 
 int Theme::getTabButtonSpaceAroundImage ()
@@ -693,6 +701,77 @@ void Theme::drawTabAreaBehindFrontButton (TabbedButtonBar &tabBar, Graphics &g, 
 {
 }
 
+//---------------------------------------------------------------------
+// theme alt
+int ThemeAlt::getTabButtonSpaceAroundImage()
+{
+	return 0;
+}
+
+int ThemeAlt::getTabButtonOverlap(int tabDepth)
+{
+	return -5;
+}
+
+int ThemeAlt::getTabButtonBestWidth(TabBarButton &tabButton, int tabDepth)
+{
+	return tabDepth+8;
+}
+
+void ThemeAlt::drawTabButton(TabBarButton &tabButton, Graphics &g, bool isMouseOver, bool isMouseDown)
+{
+	if (tabButton.isFrontTab()) {
+		if (isMouseOver) {
+			g.setColour(tabButtonBG2.withAlpha(0.8f));
+		}
+		else {
+			g.setColour(tabButtonBG2);
+		}
+	}
+	else {
+		if (isMouseOver) {
+			g.setColour(tabButtonBG2.darker().withAlpha(0.8f));
+		}
+		else {
+			g.setColour(tabButtonBG2.darker());
+		}
+	}
+	g.fillAll();
+
+
+	Colour c;
+
+	if (isMouseDown) {
+		c = (Colours::aqua).darker().darker().withAlpha(0.7f);
+	}
+	else if (isMouseOver) {
+		c = Colours::black;
+	}
+	else {
+		c = Colours::grey.darker();
+	}
+
+	g.setFont(Font(12));
+	g.setColour(c);
+	g.drawText(tabButton.getButtonText(), 0, 0, tabButton.getWidth(), tabButton.getHeight(), Justification::centred, true);
+}
+
+void ThemeAlt::drawTabButtonText(TabBarButton &tabButton, Graphics &g, bool isMouseOver, bool isMouseDown)
+{
+
+}
+
+void ThemeAlt::drawTabbedButtonBarBackground(TabbedButtonBar &tabButton, Graphics &g)
+{
+	
+}
+
+void ThemeAlt::drawTabAreaBehindFrontButton(TabbedButtonBar &tabBar, Graphics &g, int w, int h)
+{
+}
+
+
+//-----------------------------------------------------------------------
 bool Theme::areScrollbarButtonsVisible()
 {
 	return false;

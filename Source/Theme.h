@@ -127,6 +127,19 @@ public:
 };
 
 
+class ThemeAlt : public LookAndFeel_V2
+{
+public:
+	// tabs stuff
+	int getTabButtonSpaceAroundImage();
+	int getTabButtonOverlap(int tabDepth);
+	int getTabButtonBestWidth(TabBarButton &, int tabDepth);
+	void drawTabButton(TabBarButton &, Graphics &, bool isMouseOver, bool isMouseDown);
+	void drawTabButtonText(TabBarButton &, Graphics &, bool isMouseOver, bool isMouseDown);
+	void drawTabbedButtonBarBackground(TabbedButtonBar &, Graphics &);
+	void drawTabAreaBehindFrontButton(TabbedButtonBar &, Graphics &, int w, int h);
+};
+
 class CoeusTabbedComponent :   public TabbedComponent
 {
 public:
