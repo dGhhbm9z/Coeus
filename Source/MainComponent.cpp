@@ -82,6 +82,30 @@ class AccountChartsListBoxModel : public ListBoxModel
 	}
 };
 
+class AccountChartComponent : public Component
+{
+public:
+	AccountChartComponent() {
+		accountChartListBoxModel = new AccountChartsListBoxModel();
+		accountChart = new ListBox(String::empty, accountChartListBoxModel);
+		accountChart->setRowHeight(620);
+
+		addAndMakeVisible(accountChart);
+	}
+
+	~AccountChartComponent() {
+		accountChart = nullptr;
+	}
+
+	void resized() override {
+		accountChart->setBoundsRelative(0.08f, 0.05f, 0.9f, 0.94f);
+	}
+
+private:
+	ScopedPointer<ListBox> accountChart;
+	ScopedPointer<AccountChartsListBoxModel> accountChartListBoxModel;
+};
+
 //=======================================================================================================
 class AccountCellButtons : public Component
 {
@@ -552,11 +576,7 @@ public:
 		title->setFont(Font(22));
 		title->setJustificationType(Justification::centred);
 
-		accountChartListBoxModel = new AccountChartsListBoxModel();
-		
-
-		accountChart = new ListBox(String::empty, accountChartListBoxModel);
-		accountChart->setRowHeight(620);
+		accountChartComponent = new AccountChartComponent();
 		accountsComponent = new AccountsComponent();
 		suppliersComponent = new SuppliersComponent();
 		customersComponent = new CustomersComponent();
@@ -564,11 +584,10 @@ public:
 		tabButtons = new CustomTabbedButtonBar();
 		tabButtons->addChangeListener(this);
 
-		addChildComponent(accountChart);
+		addChildComponent(accountChartComponent);
 		addChildComponent(accountsComponent);
 		addChildComponent(suppliersComponent);
 		addChildComponent(customersComponent);
-		//addChildComponent(accountChart);
 
 		addAndMakeVisible(title);
 		addAndMakeVisible(tabButtons);
@@ -578,7 +597,7 @@ public:
 
 	~CustomTabComponent() {
 		title = nullptr;
-		accountChart = nullptr;
+		accountChartComponent = nullptr;
 		accountsComponent = nullptr;
 		suppliersComponent = nullptr;
 		customersComponent = nullptr;
@@ -588,7 +607,7 @@ public:
 		const float width = getWidth();
 		const float height = getHeight();
 		title->setBoundsRelative(0.5f - 0.125f , 0, 0.25f, 0.05f);
-		accountChart->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
+		accountChartComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 		accountsComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 		suppliersComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 		customersComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
@@ -615,37 +634,37 @@ public:
 		if (source == tabButtons) {
 			switch (tabButtons->getCurrentTabIndex()) {
 			case 0:
-				accountChart->setVisible(false);
+				accountChartComponent->setVisible(false);
 				accountsComponent->setVisible(false);
 				suppliersComponent->setVisible(false);
 				customersComponent->setVisible(false);
 				break;
 			case 1:
-				accountChart->setVisible(false);
+				accountChartComponent->setVisible(false);
 				accountsComponent->setVisible(false);
 				suppliersComponent->setVisible(false);
 				customersComponent->setVisible(false);
 				break;
 			case 2:
-				accountChart->setVisible(false);
+				accountChartComponent->setVisible(false);
 				accountsComponent->setVisible(false);
 				suppliersComponent->setVisible(false);
 				customersComponent->setVisible(true);
 				break;
 			case 3:
-				accountChart->setVisible(false);
+				accountChartComponent->setVisible(false);
 				accountsComponent->setVisible(false);
 				suppliersComponent->setVisible(true);
 				customersComponent->setVisible(false);
 				break;
 			case 4:
-				accountChart->setVisible(true);
+				accountChartComponent->setVisible(true);
 				accountsComponent->setVisible(false);
 				suppliersComponent->setVisible(false);
 				customersComponent->setVisible(false);
 				break;
 			case 5:
-				accountChart->setVisible(false);
+				accountChartComponent->setVisible(false);
 				accountsComponent->setVisible(true);
 				suppliersComponent->setVisible(false);
 				customersComponent->setVisible(false);
@@ -659,8 +678,7 @@ public:
 
 private:
 	ScopedPointer<Label> title;
-	ScopedPointer<ListBox> accountChart;
-	ScopedPointer<AccountChartsListBoxModel> accountChartListBoxModel;
+	ScopedPointer<AccountChartComponent> accountChartComponent;
 	ScopedPointer<AccountsComponent> accountsComponent;
 	ScopedPointer<SuppliersComponent> suppliersComponent;
 	ScopedPointer<CustomersComponent> customersComponent;
