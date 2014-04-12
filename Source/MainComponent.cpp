@@ -51,6 +51,7 @@ private:
 	ScopedPointer<Component> comp;
 };
 
+//=======================================================================================================
 class AccountChartsListBoxModel : public ListBoxModel
 {
 	int getNumRows() override
@@ -81,6 +82,7 @@ class AccountChartsListBoxModel : public ListBoxModel
 	}
 };
 
+//=======================================================================================================
 class AccountCellButtons : public Component
 {
 public:
@@ -110,7 +112,7 @@ private:
 	ScopedPointer<TextButton> restore;
 	ScopedPointer<TextButton> remove;
 };
-
+//=======================================================================================================
 class AccountsTableListBoxModel : public TableListBoxModel
 {
 	int getNumRows() override
@@ -170,13 +172,13 @@ class AccountsTableListBoxModel : public TableListBoxModel
 		// update
 		else {
 			if (columnId == 1) {
-				
+
 			}
 			else if (columnId == 2) {
-				
+
 			}
 			else if (columnId == 3) {
-				
+
 			}
 			else if (columnId == 5) {
 				if (!isRowSelected) {
@@ -190,7 +192,7 @@ class AccountsTableListBoxModel : public TableListBoxModel
 	}
 };
 
-
+//=======================================================================================================
 class AccountsComponent : public Component
 {
 public:
@@ -224,6 +226,120 @@ private:
 	ScopedPointer<AccountsTableListBoxModel> accountsTableListBoxModel;
 };
 
+
+//=======================================================================================================
+//=======================================================================================================
+class SuppliersTableListBoxModel : public TableListBoxModel
+{
+	int getNumRows() override
+	{
+		return 8;
+	}
+
+	void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) {
+		if (rowIsSelected) {
+			g.setColour(Colours::grey.brighter().brighter());
+			g.fillAll();
+		}
+	}
+
+	void paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
+	{
+		if (columnId == 4) {
+			g.setColour(Colours::black);
+			g.drawText(L"133", 0, 0, width, height, Justification::centred, false);
+		}
+	}
+
+	Component * refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate)
+	{
+		// create
+		if (existingComponentToUpdate == nullptr) {
+			if (columnId == 1) {
+				TextEditor *payload = new TextEditor();
+				payload->setText(L"Σπύρος Τομπούλογλου");
+				MarginComponent *newComponent = new MarginComponent(payload);
+				return (Component *)newComponent;
+			}
+			else if (columnId == 2) {
+				TextEditor *payload = new TextEditor();
+				payload->setText(L"Μαξιλάρια Α.Ε.");
+				MarginComponent *newComponent = new MarginComponent(payload);
+				return (Component *)newComponent;
+			}
+			else if (columnId == 3) {
+				TextEditor *payload = new TextEditor();
+				payload->setText(L"6972009460");
+				MarginComponent *newComponent = new MarginComponent(payload);
+				return (Component *)newComponent;
+			}
+			else if (columnId == 5 && isRowSelected) {
+				AccountCellButtons *newComponent = new AccountCellButtons();
+				newComponent->setVisible(isRowSelected);
+				return (Component *)newComponent;
+			}
+
+			return nullptr;
+		}
+		// update
+		else {
+			if (columnId == 1) {
+				
+			}
+			else if (columnId == 2) {
+				
+			}
+			else if (columnId == 3) {
+				
+			}
+			else if (columnId == 5) {
+				if (!isRowSelected) {
+					delete existingComponentToUpdate;
+					return nullptr;
+				}
+			}
+
+			return existingComponentToUpdate;
+		}
+	}
+};
+
+//=======================================================================================================
+class SuppliersComponent : public Component
+{
+public:
+	SuppliersComponent() {
+		TableHeaderComponent *accountsHeaderComponent = new TableHeaderComponent();
+		accountsHeaderComponent->addColumn(L"Ονοματεπώνυμο προμηθευτή", 1, 250, 100, 250);
+		accountsHeaderComponent->addColumn(L"Επωνυμία", 2, 250, 100, 250);
+		accountsHeaderComponent->addColumn(L"Τηλέφωνο", 3, 150, 100, 250);
+		accountsHeaderComponent->addColumn(L"Υπόλοιπο", 4, 250, 100, 250);
+		accountsHeaderComponent->addColumn(L"", 5, 200, 100, 250);
+
+		suppliersTableListBoxModel = new SuppliersTableListBoxModel();
+		accounts = new TableListBox(String::empty, suppliersTableListBoxModel);
+		accounts->setRowHeight(40);
+		accounts->setHeader(accountsHeaderComponent);
+		accounts->setHeaderHeight(40);
+
+		addAndMakeVisible(accounts);
+	}
+
+	~SuppliersComponent() {
+		accounts = nullptr;
+	}
+
+	void resized() override {
+		accounts->setBoundsRelative(0.08f, 0.05f, 0.9f, 0.94f);
+	}
+
+private:
+	ScopedPointer<TableListBox> accounts;
+	ScopedPointer<SuppliersTableListBoxModel> suppliersTableListBoxModel;
+};
+
+
+//=======================================================================================================
 class CustomTabbedButtonBar : public TabbedButtonBar
 {
 public:
@@ -248,6 +364,7 @@ public:
 		accountChart = new ListBox(String::empty, accountChartListBoxModel);
 		accountChart->setRowHeight(620);
 		accountsComponent = new AccountsComponent();
+		suppliersComponent = new SuppliersComponent();
 
 		tabButtons = new CustomTabbedButtonBar();
 		tabButtons->setLookAndFeel(&themeAlt);
@@ -261,7 +378,7 @@ public:
 
 		addChildComponent(accountChart);
 		addChildComponent(accountsComponent);
-		//addChildComponent(accountChart);
+		addChildComponent(suppliersComponent);
 		//addChildComponent(accountChart);
 		//addChildComponent(accountChart);
 
@@ -275,6 +392,7 @@ public:
 		title = nullptr;
 		accountChart = nullptr;
 		accountsComponent = nullptr;
+		suppliersComponent = nullptr;
 	}
 
 	void resized() override {
@@ -283,6 +401,7 @@ public:
 		title->setBoundsRelative(0.5f - 0.125f , 0, 0.25f, 0.05f);
 		accountChart->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 		accountsComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
+		suppliersComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 		tabButtons->setBoundsRelative(0.0f, 0.05f, 0.05f, 0.74f);
 	}
 
@@ -308,26 +427,32 @@ public:
 			case 0:
 				accountChart->setVisible(false);
 				accountsComponent->setVisible(false);
+				suppliersComponent->setVisible(false);
 				break;
 			case 1:
 				accountChart->setVisible(false);
 				accountsComponent->setVisible(false);
+				suppliersComponent->setVisible(false);
 				break;
 			case 2:
 				accountChart->setVisible(false);
 				accountsComponent->setVisible(false);
+				suppliersComponent->setVisible(false);
 				break;
 			case 3:
 				accountChart->setVisible(false);
 				accountsComponent->setVisible(false);
+				suppliersComponent->setVisible(true);
 				break;
 			case 4:
 				accountChart->setVisible(true);
 				accountsComponent->setVisible(false);
+				suppliersComponent->setVisible(false);
 				break;
 			case 5:
 				accountChart->setVisible(false);
 				accountsComponent->setVisible(true);
+				suppliersComponent->setVisible(false);
 				break;
 
 			default:
@@ -341,8 +466,7 @@ private:
 	ScopedPointer<ListBox> accountChart;
 	ScopedPointer<AccountChartsListBoxModel> accountChartListBoxModel;
 	ScopedPointer<AccountsComponent> accountsComponent;
-	ScopedPointer<ListBox> suppliers;
-	ScopedPointer<ListBoxModel> suppliersListBoxModel;
+	ScopedPointer<SuppliersComponent> suppliersComponent;
 	ScopedPointer<ListBox> personel;
 	ScopedPointer<ListBoxModel> personelListBoxModel;
 
