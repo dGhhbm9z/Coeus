@@ -702,6 +702,39 @@ void Theme::drawTabAreaBehindFrontButton (TabbedButtonBar &tabBar, Graphics &g, 
 }
 
 //---------------------------------------------------------------------
+// Button stuff
+void ThemeAlt::drawButtonBackground(Graphics &g, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown)
+{
+	g.setColour(Colour(0xff3b393a));
+	g.fillAll();
+	g.setColour(Colour(0xff148373));
+	g.fillRect(0, 0, 7, button.getHeight());
+}
+
+Font ThemeAlt::getTextButtonFont(TextButton &button)
+{
+	return Font();
+}
+
+void ThemeAlt::drawButtonText(Graphics &g, TextButton &button, bool isMouseOverButton, bool isButtonDown)
+{
+	Colour c;
+
+	if (isButtonDown) {
+		c = buttonTextDown;
+	}
+	else if (isMouseOverButton) {
+		c = buttonTextOver;
+	}
+	else {
+		c = buttonText;
+	}
+
+	g.setColour(c);
+	g.drawText(button.getButtonText(), 0, 0, button.getWidth(), button.getHeight() - 4, Justification::centred, true);
+}
+
+//---------------------------------------------------------------------
 // theme alt
 int ThemeAlt::getTabButtonSpaceAroundImage()
 {

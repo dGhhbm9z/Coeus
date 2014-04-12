@@ -449,10 +449,95 @@ private:
 };
 
 //=======================================================================================================
-class CustomTabbedButtonBar : public TabbedButtonBar
+class CustomTabbedButtonBar :	public Component,
+								public ChangeBroadcaster,
+								public ButtonListener
 {
 public:
-	CustomTabbedButtonBar() : TabbedButtonBar(TabbedButtonBar::Orientation::TabsAtLeft) {}
+	CustomTabbedButtonBar() : index(-1) {
+		customers = new TextButton(L"Customers");
+		suppliers = new TextButton(L"Suppliers");
+		accountChart = new TextButton(L"Account Chart");
+		accounts = new TextButton(L"Accounts");
+
+		customers->addListener(this);
+		suppliers->addListener(this);
+		accountChart->addListener(this);
+		accounts->addListener(this);
+
+		customers->setLookAndFeel(&themeAlt);
+		suppliers->setLookAndFeel(&themeAlt);
+		accountChart->setLookAndFeel(&themeAlt);
+		accounts->setLookAndFeel(&themeAlt);
+
+		addAndMakeVisible(customers);
+		addAndMakeVisible(suppliers);
+		addAndMakeVisible(accountChart);
+		addAndMakeVisible(accounts);
+	}
+
+	~CustomTabbedButtonBar() {
+		reporting = nullptr;
+		businessPlan = nullptr;
+		customers = nullptr;
+		suppliers = nullptr;
+		accountChart = nullptr;
+		accounts = nullptr;
+	}
+
+	void paint(Graphics &g) override {
+		Path rect = Theme::createRectPath(0, 0, getWidth(), getHeight(), 0, 0, 10);
+
+		g.setColour(Colours::grey);
+		g.fillPath(rect);
+	}
+
+	void resized() override {
+		customers->setBounds(0, 67, getWidth(), 75);
+		suppliers->setBounds(0, 167, getWidth(), 75);
+		accountChart->setBounds(0, 267, getWidth(), 75);
+		accounts->setBounds(0, 367, getWidth(), 75);
+	}
+
+	int getCurrentTabIndex() const {
+		return index;
+	}
+
+	void buttonClicked(Button* buttonThatWasClicked) {
+		if (buttonThatWasClicked == reporting) {
+			index = 0;
+		}
+		else if (buttonThatWasClicked == businessPlan) {
+			index = 1;
+		}
+		else if (buttonThatWasClicked == customers) {
+			index = 2;
+		}
+		else if (buttonThatWasClicked == suppliers) {
+			index = 3;
+		}
+		else if (buttonThatWasClicked == accountChart) {
+			index = 4;
+		}
+		else if (buttonThatWasClicked == accounts) {
+			index = 5;
+		}
+		else {
+			index = -1;
+		}
+		sendChangeMessage();
+	}
+
+private:
+	int index;
+
+	ScopedPointer<TextButton> reporting;
+	ScopedPointer<TextButton> businessPlan;
+	ScopedPointer<TextButton> customers;
+	ScopedPointer<TextButton> suppliers;
+	ScopedPointer<TextButton> accountChart;
+	ScopedPointer<TextButton> accounts;
+	ThemeAlt themeAlt;
 
 };
 
@@ -477,13 +562,6 @@ public:
 		customersComponent = new CustomersComponent();
 
 		tabButtons = new CustomTabbedButtonBar();
-		tabButtons->setLookAndFeel(&themeAlt);
-		tabButtons->addTab(L"Reporting", Colours::white, 0);
-		tabButtons->addTab(L"Business Plan", Colours::white, 1);
-		tabButtons->addTab(L"Customers", Colours::white, 2);
-		tabButtons->addTab(L"Suppliers", Colours::white, 3);
-		tabButtons->addTab(L"Account Chart", Colours::white, 4);
-		tabButtons->addTab(L"Accounts", Colours::white, 5);
 		tabButtons->addChangeListener(this);
 
 		addChildComponent(accountChart);
@@ -514,7 +592,7 @@ public:
 		accountsComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 		suppliersComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 		customersComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
-		tabButtons->setBoundsRelative(0.0f, 0.05f, 0.05f, 0.74f);
+		tabButtons->setBounds(0, 10, 120, 575);
 	}
 
 	void timerCallback() override {
@@ -588,7 +666,6 @@ private:
 	ScopedPointer<CustomersComponent> customersComponent;
 
 	ScopedPointer<CustomTabbedButtonBar> tabButtons;
-	ThemeAlt themeAlt;
 };
 
 //==============================================================================

@@ -130,6 +130,11 @@ public:
 class ThemeAlt : public LookAndFeel_V2
 {
 public:
+	// Button stuff
+	void drawButtonBackground(Graphics &, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown);
+	Font getTextButtonFont(TextButton &button);
+	void drawButtonText(Graphics &, TextButton &, bool isMouseOverButton, bool isButtonDown);
+
 	// tabs stuff
 	int getTabButtonSpaceAroundImage();
 	int getTabButtonOverlap(int tabDepth);
