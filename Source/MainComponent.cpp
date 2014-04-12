@@ -26,7 +26,32 @@
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
 
-class AccountsListBoxModel : public ListBoxModel
+class MarginComponent : public Component
+{
+public:
+	MarginComponent(Component *comp_) : comp(comp_) {
+		if (comp) {
+			addAndMakeVisible(comp);
+		}
+	}
+
+	~MarginComponent() {
+		comp = nullptr;
+	}
+
+	void resized() override {
+		comp->setBounds(4, 4, getWidth()-8, getHeight()-8);
+	}
+
+	Component *getEnclosedComp() {
+		return comp;
+	}
+
+private:
+	ScopedPointer<Component> comp;
+};
+
+class AccountChartsListBoxModel : public ListBoxModel
 {
 	int getNumRows() override
 	{
@@ -56,6 +81,149 @@ class AccountsListBoxModel : public ListBoxModel
 	}
 };
 
+class AccountCellButtons : public Component
+{
+public:
+	AccountCellButtons() {
+		save = new TextButton(L"save");
+		restore = new TextButton(L"restore");
+		remove = new TextButton(L"remove");
+		addAndMakeVisible(save);
+		addAndMakeVisible(restore);
+		addAndMakeVisible(remove);
+	}
+
+	~AccountCellButtons() {
+		save = nullptr;
+		restore = nullptr;
+		remove = nullptr;
+	}
+
+	void resized() override {
+		save->setBoundsRelative(0.0f, 0.1f, 0.33f, 0.9f);
+		restore->setBoundsRelative(0.33f, 0.1f, 0.33f, 0.9f);
+		remove->setBoundsRelative(0.66f, 0.1f, 0.33f, 0.9f);
+	}
+
+private:
+	ScopedPointer<TextButton> save;
+	ScopedPointer<TextButton> restore;
+	ScopedPointer<TextButton> remove;
+};
+
+class AccountsTableListBoxModel : public TableListBoxModel
+{
+	int getNumRows() override
+	{
+		return 8;
+	}
+
+	void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) {
+		if (rowIsSelected) {
+			g.setColour(Colours::grey.brighter().brighter());
+			g.fillAll();
+		}
+	}
+
+	void paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
+	{
+		if (columnId == 4) {
+			g.setColour(Colours::black);
+			g.drawText(L"133", 0, 0, width, height, Justification::centred, false);
+		}
+	}
+
+	Component * refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate)
+	{
+		// create
+		if (existingComponentToUpdate == nullptr) {
+			if (columnId == 1) {
+				TextEditor *payload = new TextEditor();
+				payload->setText(L"00.00.00.00");
+				MarginComponent *newComponent = new MarginComponent(payload);
+				return (Component *)newComponent;
+			}
+			else if (columnId == 2) {
+				TextEditor *payload = new TextEditor();
+				payload->setText(L"Πολύ βασικός");
+				MarginComponent *newComponent = new MarginComponent(payload);
+				return (Component *)newComponent;
+			}
+			else if (columnId == 3) {
+				ComboBox *payload = new ComboBox();
+				payload->addItem(L"Type I", 1);
+				payload->addItem(L"Type II", 2);
+				payload->addItem(L"Type III", 3);
+				payload->addItem(L"Type IV", 4);
+				payload->addItem(L"Type V", 5);
+				MarginComponent *newComponent = new MarginComponent(payload);
+				return (Component *)newComponent;
+			}
+			else if (columnId == 5 && isRowSelected) {
+				AccountCellButtons *newComponent = new AccountCellButtons();
+				newComponent->setVisible(isRowSelected);
+				return (Component *)newComponent;
+			}
+
+			return nullptr;
+		}
+		// update
+		else {
+			if (columnId == 1) {
+				
+			}
+			else if (columnId == 2) {
+				
+			}
+			else if (columnId == 3) {
+				
+			}
+			else if (columnId == 5) {
+				if (!isRowSelected) {
+					delete existingComponentToUpdate;
+					return nullptr;
+				}
+			}
+
+			return existingComponentToUpdate;
+		}
+	}
+};
+
+
+class AccountsComponent : public Component
+{
+public:
+	AccountsComponent() {
+		TableHeaderComponent *accountsHeaderComponent = new TableHeaderComponent();
+		accountsHeaderComponent->addColumn(L"Κωδικός Λογαριασμού", 1, 250, 100, 250);
+		accountsHeaderComponent->addColumn(L"Ονομασία Λογαριασμού", 2, 250, 100, 250);
+		accountsHeaderComponent->addColumn(L"Είδος Λογαριασμού", 3, 150, 100, 250);
+		accountsHeaderComponent->addColumn(L"Υπόλοιπο Λογαριασμού", 4, 250, 100, 250);
+		accountsHeaderComponent->addColumn(L"", 5, 200, 100, 250);
+
+		accountsTableListBoxModel = new AccountsTableListBoxModel();
+		accounts = new TableListBox(String::empty, accountsTableListBoxModel);
+		accounts->setRowHeight(40);
+		accounts->setHeader(accountsHeaderComponent);
+		accounts->setHeaderHeight(40);
+
+		addAndMakeVisible(accounts);
+	}
+
+	~AccountsComponent() {
+		accounts = nullptr;
+	}
+
+	void resized() override {
+		accounts->setBoundsRelative(0.08f, 0.05f, 0.9f, 0.94f);
+	}
+
+private:
+	ScopedPointer<TableListBox> accounts;
+	ScopedPointer<AccountsTableListBoxModel> accountsTableListBoxModel;
+};
+
 class CustomTabbedButtonBar : public TabbedButtonBar
 {
 public:
@@ -74,13 +242,12 @@ public:
 		title->setFont(Font(22));
 		title->setJustificationType(Justification::centred);
 
-		accountChartListBoxModel = new AccountsListBoxModel();
+		accountChartListBoxModel = new AccountChartsListBoxModel();
+		
 
 		accountChart = new ListBox(String::empty, accountChartListBoxModel);
 		accountChart->setRowHeight(620);
-
-		accounts = new ListBox(String::empty, accountsListBoxModel);
-		accounts->setRowHeight(620);
+		accountsComponent = new AccountsComponent();
 
 		tabButtons = new CustomTabbedButtonBar();
 		tabButtons->setLookAndFeel(&themeAlt);
@@ -93,8 +260,7 @@ public:
 		tabButtons->addChangeListener(this);
 
 		addChildComponent(accountChart);
-		addChildComponent(accounts);
-		//addChildComponent(accountChart);
+		addChildComponent(accountsComponent);
 		//addChildComponent(accountChart);
 		//addChildComponent(accountChart);
 		//addChildComponent(accountChart);
@@ -108,7 +274,7 @@ public:
 	~CustomTabComponent() {
 		title = nullptr;
 		accountChart = nullptr;
-		accounts = nullptr;
+		accountsComponent = nullptr;
 	}
 
 	void resized() override {
@@ -116,7 +282,7 @@ public:
 		const float height = getHeight();
 		title->setBoundsRelative(0.5f - 0.125f , 0, 0.25f, 0.05f);
 		accountChart->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
-		accounts->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
+		accountsComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
 		tabButtons->setBoundsRelative(0.0f, 0.05f, 0.05f, 0.74f);
 	}
 
@@ -141,27 +307,27 @@ public:
 			switch (tabButtons->getCurrentTabIndex()) {
 			case 0:
 				accountChart->setVisible(false);
-				accounts->setVisible(false);
+				accountsComponent->setVisible(false);
 				break;
 			case 1:
 				accountChart->setVisible(false);
-				accounts->setVisible(false);
+				accountsComponent->setVisible(false);
 				break;
 			case 2:
 				accountChart->setVisible(false);
-				accounts->setVisible(false);
+				accountsComponent->setVisible(false);
 				break;
 			case 3:
 				accountChart->setVisible(false);
-				accounts->setVisible(false);
+				accountsComponent->setVisible(false);
 				break;
 			case 4:
 				accountChart->setVisible(true);
-				accounts->setVisible(false);
+				accountsComponent->setVisible(false);
 				break;
 			case 5:
 				accountChart->setVisible(false);
-				accounts->setVisible(true);
+				accountsComponent->setVisible(true);
 				break;
 
 			default:
@@ -173,9 +339,8 @@ public:
 private:
 	ScopedPointer<Label> title;
 	ScopedPointer<ListBox> accountChart;
-	ScopedPointer<AccountsListBoxModel> accountChartListBoxModel;
-	ScopedPointer<ListBox> accounts;
-	ScopedPointer<ListBoxModel> accountsListBoxModel;
+	ScopedPointer<AccountChartsListBoxModel> accountChartListBoxModel;
+	ScopedPointer<AccountsComponent> accountsComponent;
 	ScopedPointer<ListBox> suppliers;
 	ScopedPointer<ListBoxModel> suppliersListBoxModel;
 	ScopedPointer<ListBox> personel;
