@@ -738,9 +738,7 @@ void ThemeAlt::drawTabButton(TabBarButton &tabButton, Graphics &g, bool isMouseO
 	}
 	g.fillAll();
 
-
 	Colour c;
-
 	if (isMouseDown) {
 		c = (Colours::aqua).darker().darker().withAlpha(0.7f);
 	}

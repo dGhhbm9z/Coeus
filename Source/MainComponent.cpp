@@ -26,54 +26,8 @@
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
 
-class CustomTabbedButtonBar : public TabbedButtonBar
+class AccountsListBoxModel : public ListBoxModel
 {
-public:
-	CustomTabbedButtonBar() : TabbedButtonBar(TabbedButtonBar::Orientation::TabsAtLeft) {}
-
-};
-
-class CustomTabComponent :	public Component,
-							public ListBoxModel,
-							public Timer
-{
-public:
-	CustomTabComponent() {
-		setWantsKeyboardFocus(false);
-		title = new Label(String::empty, L"Λογιστικά Άρθρα");
-		title->setFont(Font(22));
-		title->setJustificationType(Justification::centred);
-		listBox = new ListBox(String::empty, this);
-		listBox->setRowHeight(620);
-		tabButtons = new CustomTabbedButtonBar();
-		tabButtons->setLookAndFeel(&themeAlt);
-		tabButtons->addTab(L"Reporting", Colours::white, 0);
-		tabButtons->addTab(L"Business Plan", Colours::white, 1);
-		tabButtons->addTab(L"Customers", Colours::white, 2);
-		tabButtons->addTab(L"Suppliers", Colours::white, 3);
-		tabButtons->addTab(L"Account Chart", Colours::white, 4);
-		tabButtons->addTab(L"Accounts", Colours::white, 5);
-
-		addAndMakeVisible(listBox);
-		addAndMakeVisible(title);
-		addAndMakeVisible(tabButtons);
-
-		startTimer(100);
-	}
-
-	~CustomTabComponent() {
-		title = nullptr;
-		listBox = nullptr;
-	}
-
-	void resized() override {
-		const float width = getWidth();
-		const float height = getHeight();
-		title->setBoundsRelative(0.5f - 0.125f , 0, 0.25f, 0.05f);
-		listBox->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
-		tabButtons->setBoundsRelative(0.0f, 0.05f, 0.05f, 0.54f);
-	}
-
 	int getNumRows() override
 	{
 		return 8;
@@ -100,6 +54,58 @@ public:
 			return existingComponentToUpdate;
 		}
 	}
+};
+
+class CustomTabbedButtonBar : public TabbedButtonBar
+{
+public:
+	CustomTabbedButtonBar() : TabbedButtonBar(TabbedButtonBar::Orientation::TabsAtLeft) {}
+
+};
+
+class CustomTabComponent :	public Component,
+							public ChangeListener,
+							public Timer
+{
+public:
+	CustomTabComponent() {
+		setWantsKeyboardFocus(false);
+		title = new Label(String::empty, L"Λογιστικά Άρθρα");
+		title->setFont(Font(22));
+		title->setJustificationType(Justification::centred);
+
+		accountChartListBoxModel = new AccountsListBoxModel();
+		accountChart = new ListBox(String::empty, accountChartListBoxModel);
+		accountChart->setRowHeight(620);
+		tabButtons = new CustomTabbedButtonBar();
+		tabButtons->setLookAndFeel(&themeAlt);
+		tabButtons->addTab(L"Reporting", Colours::white, 0);
+		tabButtons->addTab(L"Business Plan", Colours::white, 1);
+		tabButtons->addTab(L"Customers", Colours::white, 2);
+		tabButtons->addTab(L"Suppliers", Colours::white, 3);
+		tabButtons->addTab(L"Account Chart", Colours::white, 4);
+		tabButtons->addTab(L"Accounts", Colours::white, 5);
+		tabButtons->addChangeListener(this);
+
+		addAndMakeVisible(accountChart);
+		addAndMakeVisible(title);
+		addAndMakeVisible(tabButtons);
+
+		startTimer(100);
+	}
+
+	~CustomTabComponent() {
+		title = nullptr;
+		accountChart = nullptr;
+	}
+
+	void resized() override {
+		const float width = getWidth();
+		const float height = getHeight();
+		title->setBoundsRelative(0.5f - 0.125f , 0, 0.25f, 0.05f);
+		accountChart->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
+		tabButtons->setBoundsRelative(0.0f, 0.05f, 0.05f, 0.74f);
+	}
 
 	void timerCallback() override {
 		ComponentAnimator &an = Desktop::getInstance().getAnimator();
@@ -116,9 +122,40 @@ public:
 		}
 	}
 
+	void changeListenerCallback(ChangeBroadcaster *source)
+	{
+		if (source == tabButtons) {
+			switch (tabButtons->getCurrentTabIndex()) {
+			case 0:
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 5:
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
+
 private:
 	ScopedPointer<Label> title;
-	ScopedPointer<ListBox> listBox;
+	ScopedPointer<ListBox> accountChart;
+	ScopedPointer<AccountsListBoxModel> accountChartListBoxModel;
+	ScopedPointer<ListBox> accounts;
+	ScopedPointer<ListBoxModel> accountsListBoxModel;
+	ScopedPointer<ListBox> suppliers;
+	ScopedPointer<ListBoxModel> suppliersListBoxModel;
+	ScopedPointer<ListBox> personel;
+	ScopedPointer<ListBoxModel> personelListBoxModel;
+
 	ScopedPointer<CustomTabbedButtonBar> tabButtons;
 	ThemeAlt themeAlt;
 };
