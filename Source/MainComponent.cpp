@@ -577,7 +577,7 @@ class CustomTabbedButtonBar :	public Component,
 								public ButtonListener
 {
 public:
-	CustomTabbedButtonBar() : index(-1) {
+	CustomTabbedButtonBar() : index(5) {
 		customers = new TextButton(L"Customers");
 		suppliers = new TextButton(L"Suppliers");
 		accountChart = new TextButton(L"Account Chart");
@@ -663,7 +663,7 @@ public:
 			index = 6;
 		}
 		else {
-			index = -1;
+			index = 5;
 		}
 		sendChangeMessage();
 	}
@@ -700,6 +700,7 @@ public:
 
 		tabButtons = new CustomTabbedButtonBar();
 		tabButtons->addChangeListener(this);
+		tabButtons->sendChangeMessage();
 
 		addChildComponent(accountChartComponent);
 		addChildComponent(accountsComponent);

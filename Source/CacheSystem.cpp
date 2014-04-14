@@ -39,3 +39,38 @@ bool CacheSystem::connectToServer()
 
 	return true;
 }
+
+bool CacheSystem::setUserName()
+{
+	username = L"root";
+	return true;
+}
+
+bool CacheSystem::setPassword()
+{
+	password = L"k41n0ur10p4ss";
+	return true;
+}
+
+bool CacheSystem::setServer(String &address_, uint32 port_)
+{
+	address = L"localhost";
+	return true;
+}
+
+void CacheSystem::getResultsFor(String &str, CacheSystemClient *client)
+{
+	// lock
+	// store results to process later
+	// unlock
+}
+
+int CacheSystem::fetchResultsFor(String &str)
+{
+	// lock
+	// get request
+	// unlock
+
+	// process request
+	// post message
+}
