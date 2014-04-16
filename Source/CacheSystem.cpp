@@ -73,4 +73,6 @@ int CacheSystem::fetchResultsFor(String &str)
 
 	// process request
 	// post message
+
+	return 0;
 }
