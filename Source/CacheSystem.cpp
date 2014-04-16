@@ -18,6 +18,7 @@ bool CacheSystem::connectToServer()
 	if (con == NULL)
 	{
 		fprintf(stderr, "%s\n", mysql_error(con));
+		return false;
 	}
 
 	if (mysql_real_connect(con, "localhost", "root", "k41n0ur10p4ss",
