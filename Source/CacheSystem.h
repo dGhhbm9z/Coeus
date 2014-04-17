@@ -25,21 +25,23 @@ private:
 class CacheSystem
 {
 public:
-	CacheSystem();
 	~CacheSystem();
 
 	bool setUserName();
 	bool setPassword();
 	bool setServer(String &address_, uint32 port_);
-
-
 	bool connectToServer();
-
 	void getResultsFor(String &str, CacheSystemClient *client);
 
-private:
+	static CacheSystem *getInstance();
 
+private:
 	int fetchResultsFor(String &str);
+
+	CacheSystem();
+	CacheSystem(CacheSystem const&){};             // copy constructor is private
+	CacheSystem& operator=(CacheSystem const&){};  // assignment operator is private
+	static CacheSystem* instancePointer;
 
 	String username;
 	String password;

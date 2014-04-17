@@ -45,8 +45,6 @@ private:
 	ScopedPointer<TextButton> saveButton;
 	ScopedPointer<TextButton> discardButton;
 	ScopedPointer<TextButton> balanceButton;
-
-	CacheSystem cache;
 };
 
 

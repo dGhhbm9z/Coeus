@@ -835,6 +835,8 @@ MainComponent::MainComponent ()
 	this->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
 
     //[Constructor] You can add your own custom stuff here..
+
+
     //[/Constructor]
 }
 
