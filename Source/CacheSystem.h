@@ -48,7 +48,6 @@ private:
 class CacheSystem
 {
 public:
-	CacheSystem();
 	~CacheSystem();
 
 	bool setUserName();
@@ -57,10 +56,16 @@ public:
 
 	void getResultsFor(String &str, CacheSystemClient *client);
 
-private:
+	static CacheSystem *getInstance();
 
 	void serveNextQuery();
 	MYSQL *initialiseConnection();
+
+private:
+	CacheSystem();
+	CacheSystem(CacheSystem const&){};             // copy constructor is private
+	CacheSystem& operator=(CacheSystem const&){};  // assignment operator is private
+	static CacheSystem* instancePointer;
 
 	String username;
 	String password;

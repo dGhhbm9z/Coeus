@@ -3,18 +3,6 @@ CREATE DATABASE IF NOT EXISTS `com_coeus` /*!40100 DEFAULT CHARACTER SET utf8 */
 USE `com_coeus`;
 
 
-CREATE TABLE IF NOT EXISTS `accounts` (
-  `VAT` varchar(30) NOT NULL,
-  `Code` varchar(30) NOT NULL,
-  `Name` varchar(100) NOT NULL,
-  `ShortName` varchar(10) NOT NULL,
-  `AccountType` varchar(255) NOT NULL,
-  `XreosPist` varchar(255) NOT NULL,
-  PRIMARY KEY (`VAT`,`Code`),
-  CONSTRAINT `accounts_ibfk_1` FOREIGN KEY (`VAT`) REFERENCES `companies` (`VAT`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 CREATE TABLE IF NOT EXISTS `companies` (
   `VAT` varchar(30) NOT NULL,
   `IRS` varchar(100) NOT NULL,
@@ -30,6 +18,16 @@ CREATE TABLE IF NOT EXISTS `companies` (
   PRIMARY KEY (`VAT`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `accounts` (
+  `VAT` varchar(30) NOT NULL,
+  `Code` varchar(30) NOT NULL,
+  `Name` varchar(100) NOT NULL,
+  `ShortName` varchar(10) NOT NULL,
+  `AccountType` varchar(255) NOT NULL,
+  `XreosPist` varchar(255) NOT NULL,
+  PRIMARY KEY (`VAT`,`Code`),
+  CONSTRAINT `accounts_ibfk_1` FOREIGN KEY (`VAT`) REFERENCES `companies` (`VAT`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `customers` (
   `CustomerCode` varchar(20) NOT NULL,
