@@ -1,5 +1,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
+#define QUERYBLOCKSIZE (1024 * 1024 * 2)
+
 class CacheSystemClient
 {
 public:
@@ -21,6 +23,27 @@ private:
 	CacheSystemClient *client;
 };
 
+class QueryEntry{
+public:
+	QueryEntry() : result(nullptr), size(0) {
+	}
+
+	~QueryEntry() {
+		if (result != nullptr) {
+			free(result);
+		}
+	}
+
+	String request;
+	Array<WeakReference<CacheSystemClient>> clientList;
+	void *result;
+	Array<int> fieldSizes;
+	unsigned long size;
+	unsigned long usedSpace;
+
+private:
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(QueryEntry)
+};
 
 class CacheSystem
 {
@@ -32,18 +55,18 @@ public:
 	bool setPassword();
 	bool setServer(String &address_, uint32 port_);
 
-
-	bool connectToServer();
-
 	void getResultsFor(String &str, CacheSystemClient *client);
 
 private:
 
-	int fetchResultsFor(String &str);
+	void serveNextQuery();
+	MYSQL *initialiseConnection();
 
 	String username;
 	String password;
 	String address;
 	uint32 port;
 
+	OwnedArray<QueryEntry> queries;
+	CriticalSection querySection;
 };
