@@ -75,7 +75,7 @@ class HelloWorldWindow  : public DocumentWindow
 public:
     //==============================================================================
     HelloWorldWindow()
-        : DocumentWindow ("Coeus Logistics",
+        : DocumentWindow ("Coeus Finance",
                           Colours::lightgrey,
                           DocumentWindow::allButtons,
                           true)
