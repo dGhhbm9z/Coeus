@@ -27,26 +27,114 @@
 //[/MiscUserDefs]
 
 
+#define WINDOWS_RESOURCE_FILE( X ) File::getSpecialLocation(File::currentExecutableFile).getParentDirectory().getChildFile( X )
+#define MAC_RESOURCE_FILE( X ) File::getSpecialLocation(File::currentExecutableFile).getParentDirectory().getParentDirectory().getChildFile( X )
+
+#ifdef __APPLE__
+	#define RESOURCE_FILE( X ) MAC_RESOURCE_FILE( X )
+#else
+	#define RESOURCE_FILE( X ) WINDOWS_RESOURCE_FILE( X )
+#endif
+
+
 class CustomMenuBarButton : public TextButton
 {
 public:
-	CustomMenuBarButton(String name) : TextButton(name) {}
+	enum ButtonType {AccountChartType, CompaniesType, CustomersType, EventsType, SuppliersType,
+					BusinessModelType, BusinessPlanType, FinancialRatiosType, OpenSourceInnovationType, ReportGeneratorTytpe,
+					LogoutType, AccountingTabType, ReportingTabType};
+
+	CustomMenuBarButton(ButtonType btntype) {
+		switch (btntype) {
+		case AccountChartType:
+			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/normal/AccountChart.png"));
+			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseOver/AccountChart.png"));
+			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseClicked/AccountChart.png"));
+			break;
+		case CompaniesType:
+			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/normal/Companies.png"));
+			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseOver/Companies.png"));
+			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseClicked/Companies.png"));
+			break;
+		case CustomersType:
+			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/normal/Customers.png"));
+			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseOver/Customers.png"));
+			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseClicked/Customers.png"));
+			break;
+		case EventsType:
+			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/normal/Events.png"));
+			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseOver/Events.png"));
+			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseClicked/Events.png"));
+			break;
+		case SuppliersType:
+			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/normal/Suppliers.png"));
+			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseOver/Suppliers.png"));
+			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseClicked/Suppliers.png"));
+			break;
+		case BusinessModelType:
+			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/normal/BusinessModelCanvas.png"));
+			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseOver/BusinessModelCanvas.png"));
+			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseClicked/BusinessModelCanvas.png"));
+			break;
+		case BusinessPlanType:
+			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/normal/BusinessPlan.png"));
+			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseOver/BusinessPlan.png"));
+			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseClicked/BusinessPlan.png"));
+			break;
+		case FinancialRatiosType:
+			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/normal/FinancialRatios.png"));
+			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseOver/FinancialRatios.png"));
+			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseClicked/FinancialRatios.png"));
+			break;
+		case OpenSourceInnovationType:
+			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/normal/OpenSourceInno.png"));
+			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseOver/OpenSourceInno.png"));
+			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseClicked/OpenSourceInno.png"));
+			break;
+		case ReportGeneratorTytpe:
+			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/normal/ReportGenerator.png"));
+			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseOver/ReportGenerator.png"));
+			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseClicked/ReportGenerator.png"));
+			break;
+		case LogoutType:
+			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Logout/LogoutNormal.png"));
+			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Logout/MouseOver.png"));
+			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Logout/MouseClick.png"));
+			break;
+		case AccountingTabType:
+			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Tabs/Accounting/AccountingTabNormal.png"));
+			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Tabs/Accounting/AccountingTabNormalMouseOver.png"));
+			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Tabs/Accounting/AccountingTabSelected.png"));
+			break;
+		case ReportingTabType:
+			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Tabs/Reporting/ReportingTabNormal.png"));
+			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Tabs/Reporting/ReportingTabNormalMouseOver.png"));
+			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Tabs/Reporting/ReportingTabSelected.png"));
+			break;
+		default:
+			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/normal/Suppliers.png"));
+			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseOver/Suppliers.png"));
+			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseClicked/Suppliers.png"));
+		}
+	}
 
 	void paint(Graphics &g) {
-		Path rect = Theme::createRectPath(0, 0, getWidth(), getHeight(), 0, 0, 10);
 
 		if (isMouseButtonDown()) {
-			g.setColour(Colour(0xff434343));
+			g.drawImage(imageMouseDown, 0, 0, getWidth(), getHeight(), 0, 0, imageMouseDown.getWidth(), imageMouseDown.getHeight());
+		}
+		else if (isMouseOver()) {
+			g.drawImage(imageMouseOver, 0, 0, getWidth(), getHeight(), 0, 0, imageMouseOver.getWidth(), imageMouseOver.getHeight());
 		}
 		else {
-			g.setColour(Colour(0xff2b2b2b));
+			g.drawImage(imageNormal, 0, 0, getWidth(), getHeight(), 0, 0, imageNormal.getWidth(), imageNormal.getHeight());
 		}
-
-		g.fillPath(rect);
-
-		LookAndFeel &lnf = getLookAndFeel();
-		lnf.drawButtonText(g, *this, this->isMouseOver(), this->isMouseButtonDown());
 	}
+
+private:
+	Image imageNormal;
+	Image imageMouseOver;
+	Image imageMouseDown;
 };
 
 //=======================================================================================================
@@ -102,6 +190,7 @@ private:
 };
 
 //=======================================================================================================
+
 
 
 
@@ -583,13 +672,14 @@ class CustomTabbedButtonBar :	public Component,
 {
 public:
 	CustomTabbedButtonBar() : index(5) {
-		customers = new TextButton(L"Customers");
-		suppliers = new TextButton(L"Suppliers");
-		accountChart = new TextButton(L"Account Chart");
-		accounts = new TextButton(L"Accounts");
-		reporting = new CustomMenuBarButton(L"Reporting");
-		accounting = new CustomMenuBarButton(L"Accounting");
-		logout = new CustomMenuBarButton(L"Logout");
+		customers = new CustomMenuBarButton(CustomMenuBarButton::CustomersType);
+		suppliers = new CustomMenuBarButton(CustomMenuBarButton::SuppliersType);
+		accountChart = new CustomMenuBarButton(CustomMenuBarButton::EventsType);
+		accounts = new CustomMenuBarButton(CustomMenuBarButton::AccountChartType);
+
+		reporting = new CustomMenuBarButton(CustomMenuBarButton::ReportingTabType);
+		accounting = new CustomMenuBarButton(CustomMenuBarButton::AccountingTabType);
+		logout = new CustomMenuBarButton(CustomMenuBarButton::LogoutType);
 
 		customers->addListener(this);
 		suppliers->addListener(this);
@@ -598,12 +688,11 @@ public:
 		reporting->addListener(this);
 		accounting->addListener(this);
 		logout->addListener(this);
-
-		customers->setLookAndFeel(&themeAlt);
-		suppliers->setLookAndFeel(&themeAlt);
-		accountChart->setLookAndFeel(&themeAlt);
-		accounts->setLookAndFeel(&themeAlt);
-
+		businessModel->addListener(this);
+		businessPlan->addListener(this);
+		financialRatios->addListener(this);
+		openSourceInnovation->addListener(this);
+		reportGenerator->addListener(this);
 
 		addAndMakeVisible(customers);
 		addAndMakeVisible(suppliers);
@@ -611,7 +700,13 @@ public:
 		addAndMakeVisible(accounts);
 		addAndMakeVisible(reporting);
 		addAndMakeVisible(accounting);
+		addAndMakeVisible(companies);
 		addAndMakeVisible(logout);
+		addChildComponent(businessModel);
+		addChildComponent(businessPlan);
+		addChildComponent(financialRatios);
+		addChildComponent(openSourceInnovation);
+		addChildComponent(reportGenerator);
 	}
 
 	~CustomTabbedButtonBar() {
@@ -621,7 +716,13 @@ public:
 		suppliers = nullptr;
 		accountChart = nullptr;
 		accounts = nullptr;
+		companies = nullptr;
 		logout = nullptr;
+		businessModel = nullptr;
+		businessPlan = nullptr;
+		financialRatios = nullptr;
+		openSourceInnovation = nullptr;
+		reportGenerator = nullptr;
 	}
 
 	void paint(Graphics &g) override {
@@ -636,8 +737,17 @@ public:
 		suppliers->setBounds(0, 167, getWidth(), 75);
 		accountChart->setBounds(0, 267, getWidth(), 75);
 		accounts->setBounds(0, 367, getWidth(), 75);
+		companies->setBounds(0, 467, getWidth(), 75);
+
+		businessModel->setBounds(0, 67, getWidth(), 75);
+		businessPlan->setBounds(0, 167, getWidth(), 75);
+		financialRatios->setBounds(0, 267, getWidth(), 75);
+		openSourceInnovation->setBounds(0, 367, getWidth(), 75);
+		reportGenerator->setBounds(0, 467, getWidth(), 75);
+
 		reporting->setBounds(54, 0, 66, 28);
 		accounting->setBounds(0, 0, 66, 28);
+
 		logout->setBounds(0, getHeight()-34, 120, 34);
 	}
 
@@ -647,22 +757,60 @@ public:
 
 	void buttonClicked(Button* buttonThatWasClicked) {
 		if (buttonThatWasClicked == reporting) {
-			index = 0;
+			customers->setVisible(false);
+			suppliers->setVisible(false);
+			accountChart->setVisible(false);
+			accounts->setVisible(false);
+			companies->setVisible(false);
+
+			businessModel->setVisible(true);
+			businessPlan->setVisible(true);
+			financialRatios->setVisible(true);
+			openSourceInnovation->setVisible(true);
+			reportGenerator->setVisible(true);
 		}
 		else if (buttonThatWasClicked == accounting) {
-			index = 1;
+			customers->setVisible(true);
+			suppliers->setVisible(true);
+			accountChart->setVisible(true);
+			accounts->setVisible(true);
+			companies->setVisible(true);
+
+			businessModel->setVisible(false);
+			businessPlan->setVisible(false);
+			financialRatios->setVisible(false);
+			openSourceInnovation->setVisible(false);
+			reportGenerator->setVisible(false);
 		}
 		else if (buttonThatWasClicked == customers) {
-			index = 2;
+			index = 1;
 		}
 		else if (buttonThatWasClicked == suppliers) {
-			index = 3;
+			index = 2;
 		}
 		else if (buttonThatWasClicked == accountChart) {
-			index = 4;
+			index = 3;
 		}
 		else if (buttonThatWasClicked == accounts) {
-			index = 5;
+			index = 4;
+		}
+		else if (buttonThatWasClicked == companies) {
+			index = 4;
+		}
+		else if (buttonThatWasClicked == businessModel) {
+			index = 6;
+		}
+		else if (buttonThatWasClicked == businessPlan) {
+			index = 7;
+		}
+		else if (buttonThatWasClicked == financialRatios) {
+			index = 8;
+		}
+		else if (buttonThatWasClicked == openSourceInnovation) {
+			index = 9;
+		}
+		else if (buttonThatWasClicked == reportGenerator) {
+			index = 10;
 		}
 		else if (buttonThatWasClicked == logout) {
 			index = 6;
@@ -679,12 +827,20 @@ private:
 	ScopedPointer<CustomMenuBarButton> reporting;
 	ScopedPointer<CustomMenuBarButton> accounting;
 	ScopedPointer<CustomMenuBarButton> logout;
-	ScopedPointer<TextButton> customers;
-	ScopedPointer<TextButton> suppliers;
-	ScopedPointer<TextButton> accountChart;
-	ScopedPointer<TextButton> accounts;
-	ThemeAlt themeAlt;
 
+	ScopedPointer<CustomMenuBarButton> customers;
+	ScopedPointer<CustomMenuBarButton> suppliers;
+	ScopedPointer<CustomMenuBarButton> accountChart;
+	ScopedPointer<CustomMenuBarButton> accounts;
+	ScopedPointer<CustomMenuBarButton> companies;
+
+	ScopedPointer<CustomMenuBarButton> businessModel;
+	ScopedPointer<CustomMenuBarButton> businessPlan;
+	ScopedPointer<CustomMenuBarButton> financialRatios;
+	ScopedPointer<CustomMenuBarButton> openSourceInnovation;
+	ScopedPointer<CustomMenuBarButton> reportGenerator;
+
+	ThemeAlt themeAlt;
 };
 
 class CustomTabComponent :	public Component,
