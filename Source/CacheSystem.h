@@ -64,8 +64,8 @@ public:
 
 private:
 	CacheSystem();
-	CacheSystem(CacheSystem const&){};             // copy constructor is private
-	CacheSystem& operator=(CacheSystem const&){};  // assignment operator is private
+	CacheSystem(CacheSystem const&) : CacheSystem() {};	// copy constructor is private
+	CacheSystem& operator=(CacheSystem const&){};		// assignment operator is private
 
 	void serveNextQuery();
 	void *initialiseConnection();

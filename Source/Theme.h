@@ -102,47 +102,51 @@ class Theme	:	public LookAndFeel_V2
 {
 public:
 	// Button stuff
-	void drawButtonBackground (Graphics &, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown); 
-	Font getTextButtonFont (TextButton &button);
-	void drawButtonText (Graphics &, TextButton &, bool isMouseOverButton, bool isButtonDown);
-	void drawToggleButton (Graphics &, ToggleButton &, bool isMouseOverButton, bool isButtonDown);
-	void changeToggleButtonWidthToFitText (ToggleButton &);
-	void drawTickBox (Graphics &, Component &, float x, float y, float w, float h, bool ticked, bool isEnabled, bool isMouseOverButton, bool isButtonDown);
-	void drawDrawableButton (Graphics &, DrawableButton &, bool isMouseOverButton, bool isButtonDown);
+	void drawButtonBackground (Graphics &, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown) override; 
+	Font getTextButtonFont (TextButton &button) override;
+	void drawButtonText (Graphics &, TextButton &, bool isMouseOverButton, bool isButtonDown) override;
+	void drawToggleButton (Graphics &, ToggleButton &, bool isMouseOverButton, bool isButtonDown) override;
+	void changeToggleButtonWidthToFitText (ToggleButton &) override;
+	void drawTickBox (Graphics &, Component &, float x, float y, float w, float h, bool ticked, bool isEnabled, bool isMouseOverButton, bool isButtonDown) override;
+	void drawDrawableButton (Graphics &, DrawableButton &, bool isMouseOverButton, bool isButtonDown) override;
 
 	// tabs stuff
 
-	int getTabButtonSpaceAroundImage ();
-	int getTabButtonOverlap (int tabDepth);
-	int getTabButtonBestWidth (TabBarButton &, int tabDepth);
-	void drawTabButton (TabBarButton &, Graphics &, bool isMouseOver, bool isMouseDown);
-	void drawTabButtonText (TabBarButton &, Graphics &, bool isMouseOver, bool isMouseDown);
-	void drawTabbedButtonBarBackground (TabbedButtonBar &, Graphics &);
-	void drawTabAreaBehindFrontButton (TabbedButtonBar &, Graphics &, int w, int h);
+	int getTabButtonSpaceAroundImage () override;
+	int getTabButtonOverlap (int tabDepth) override;
+	int getTabButtonBestWidth (TabBarButton &, int tabDepth) override;
+	void drawTabButton (TabBarButton &, Graphics &, bool isMouseOver, bool isMouseDown) override;
+	void drawTabButtonText (TabBarButton &, Graphics &, bool isMouseOver, bool isMouseDown) override;
+	void drawTabbedButtonBarBackground (TabbedButtonBar &, Graphics &) override;
+	void drawTabAreaBehindFrontButton (TabbedButtonBar &, Graphics &, int w, int h) override;
 
 	static Path createRectPath(int x, int y, int w, int h, int pad, int padB, int cDist);
 
 	// scrollbars
 	bool areScrollbarButtonsVisible() override;
+
+	// table header
+	void drawTableHeaderBackground(Graphics &, TableHeaderComponent &) override;
+	void drawTableHeaderColumn(Graphics &, const String &columnName, int columnId, int width, int height, bool isMouseOver, bool isMouseDown, int columnFlags) override;
 };
 
 
-class ThemeAlt : public LookAndFeel_V2
+class ThemeAlt : public Theme
 {
 public:
 	// Button stuff
-	void drawButtonBackground(Graphics &, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown);
-	Font getTextButtonFont(TextButton &button);
-	void drawButtonText(Graphics &, TextButton &, bool isMouseOverButton, bool isButtonDown);
+	void drawButtonBackground(Graphics &, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown) override;
+	Font getTextButtonFont(TextButton &button) override;
+	void drawButtonText(Graphics &, TextButton &, bool isMouseOverButton, bool isButtonDown) override;
 
 	// tabs stuff
-	int getTabButtonSpaceAroundImage();
-	int getTabButtonOverlap(int tabDepth);
-	int getTabButtonBestWidth(TabBarButton &, int tabDepth);
-	void drawTabButton(TabBarButton &, Graphics &, bool isMouseOver, bool isMouseDown);
-	void drawTabButtonText(TabBarButton &, Graphics &, bool isMouseOver, bool isMouseDown);
-	void drawTabbedButtonBarBackground(TabbedButtonBar &, Graphics &);
-	void drawTabAreaBehindFrontButton(TabbedButtonBar &, Graphics &, int w, int h);
+	int getTabButtonSpaceAroundImage() override;
+	int getTabButtonOverlap(int tabDepth) override;
+	int getTabButtonBestWidth(TabBarButton &, int tabDepth) override;
+	void drawTabButton(TabBarButton &, Graphics &, bool isMouseOver, bool isMouseDown) override;
+	void drawTabButtonText(TabBarButton &, Graphics &, bool isMouseOver, bool isMouseDown) override;
+	void drawTabbedButtonBarBackground(TabbedButtonBar &, Graphics &) override;
+	void drawTabAreaBehindFrontButton(TabbedButtonBar &, Graphics &, int w, int h) override;
 };
 
 class CoeusTabbedComponent :   public TabbedComponent

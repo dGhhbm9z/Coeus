@@ -327,7 +327,7 @@ public:
 		accountsHeaderComponent->addColumn(L"Ονομασία Λογαριασμού", 2, 250, 100, 250);
 		accountsHeaderComponent->addColumn(L"Είδος Λογαριασμού", 3, 150, 100, 250);
 		accountsHeaderComponent->addColumn(L"Υπόλοιπο Λογαριασμού", 4, 250, 100, 250);
-		accountsHeaderComponent->addColumn(L"", 5, 200, 100, 250);
+		accountsHeaderComponent->addColumn(String::empty, 5, 200, 100, 250);
 
 		accounts = new AccountsTableListBoxModel();
 		accounts->setRowHeight(40);
@@ -437,7 +437,7 @@ public:
 		accountsHeaderComponent->addColumn(L"Επωνυμία", 2, 250, 100, 250);
 		accountsHeaderComponent->addColumn(L"Τηλέφωνο", 3, 150, 100, 250);
 		accountsHeaderComponent->addColumn(L"Υπόλοιπο", 4, 250, 100, 250);
-		accountsHeaderComponent->addColumn(L"", 5, 200, 100, 250);
+		accountsHeaderComponent->addColumn(String::empty, 5, 200, 100, 250);
 
 		customersTableListBoxModel = new CustomersTableListBoxModel();
 		customers = new TableListBox(String::empty, customersTableListBoxModel);
@@ -472,6 +472,7 @@ class SuppliersTableListBoxModel : public TableListBoxModel
 	void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) {
 		if (rowIsSelected) {
 			g.setColour(Colours::grey.brighter().brighter());
+			Rectangle<int> area();
 			g.fillAll();
 		}
 	}
@@ -547,7 +548,7 @@ public:
 		accountsHeaderComponent->addColumn(L"Επωνυμία", 2, 250, 100, 250);
 		accountsHeaderComponent->addColumn(L"Τηλέφωνο", 3, 150, 100, 250);
 		accountsHeaderComponent->addColumn(L"Υπόλοιπο", 4, 250, 100, 250);
-		accountsHeaderComponent->addColumn(L"", 5, 200, 100, 250);
+		accountsHeaderComponent->addColumn(String::empty, 5, 200, 100, 250);
 
 		suppliersTableListBoxModel = new SuppliersTableListBoxModel();
 		accounts = new TableListBox(String::empty, suppliersTableListBoxModel);

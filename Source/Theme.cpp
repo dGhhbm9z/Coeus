@@ -701,6 +701,36 @@ void Theme::drawTabAreaBehindFrontButton (TabbedButtonBar &tabBar, Graphics &g, 
 {
 }
 
+void Theme::drawTableHeaderBackground(Graphics &g, TableHeaderComponent &th)
+{
+	g.fillAll(Colours::white);
+
+	for (int i = 0; i <= th.getNumColumns(true); i++) {
+		if (i <= 3) {
+			Rectangle<int> area(th.getColumnPosition(i));
+
+			area.removeFromTop(area.getHeight() / 2);
+
+			g.setGradientFill(ColourGradient(Colour(0xffe8ebf9), 0.0f, (float)area.getY(),
+				Colour(0xfff6f8f9), 0.0f, (float)area.getBottom(),
+				false));
+			g.fillRect(area);
+
+			g.setColour(Colour(0x33000000));
+			g.fillRect(area.removeFromBottom(1));
+
+			g.fillRect(th.getColumnPosition(i).removeFromRight(1));
+		}
+	}
+}
+
+void Theme::drawTableHeaderColumn(Graphics &g, const String &columnName, int columnId, int width, int height, bool isMouseOver, bool isMouseDown, int columnFlags)
+{
+	if (columnName.isNotEmpty()) {
+		LookAndFeel_V2::drawTableHeaderColumn(g, columnName, columnId, width, height, isMouseOver, isMouseDown, columnFlags);
+	}
+}
+
 //---------------------------------------------------------------------
 // Button stuff
 void ThemeAlt::drawButtonBackground(Graphics &g, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown)
