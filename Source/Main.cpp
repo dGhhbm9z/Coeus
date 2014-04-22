@@ -95,8 +95,6 @@ public:
 		#ifdef _MSC_VER
 		RedirectIOToConsole();
 		#endif
-
-		CacheSystem::getInstance()->connectToServer();
     }
 
     ~HelloWorldWindow()

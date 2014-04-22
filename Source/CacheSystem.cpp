@@ -14,16 +14,17 @@ CacheSystem *CacheSystem::getInstance()
 }
 
 CacheSystem::CacheSystem()
+: Thread("Cache System Thread")
 {
-
+	startThread();
 }
 
 CacheSystem::~CacheSystem()
 {
-
+	stopThread(10000);
 }
 
-MYSQL *CacheSystem::initialiseConnection()
+void *CacheSystem::initialiseConnection()
 {
 	// initialise
 	MYSQL *con = mysql_init(NULL);
@@ -159,7 +160,7 @@ void CacheSystem::serveNextQuery()
 	}
 
 	// process request
-	MYSQL *con = initialiseConnection();
+	MYSQL *con = (MYSQL *) initialiseConnection();
 	if (con == NULL) {
 		return;
 	}
@@ -225,10 +226,34 @@ void CacheSystem::serveNextQuery()
 		}
 	}
 
-
 	mysql_close(con);
 
-	// post message
-	// TODO
+	// post message to inform clients
+	for (int i = 0; i < query->clientList.size(); i++) {
+		CacheReadyMessage *msg = new CacheReadyMessage(query->clientList[i]);
+		msg->post();
+	}
 
+}
+
+bool CacheSystem::hasUnservedQueries() const
+{
+	for (auto q = queries.begin(); q != queries.end(); ++q) {
+		if ((*q)->result == NULL) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void CacheSystem::run() {
+	while (1) {
+		if (hasUnservedQueries()) {
+			serveNextQuery();
+		}
+		else {
+			Thread::wait(-1);
+		}
+	}
 }

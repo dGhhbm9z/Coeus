@@ -5,22 +5,26 @@
 class CacheSystemClient
 {
 public:
-	virtual void receivedNumberOfResults() = 0;
 	virtual void receivedResults() = 0;
 
 private:
-
+	WeakReference<CacheSystemClient>::Master masterReference;
+	friend class WeakReference<CacheSystemClient>;
 };
 
 class CacheReadyMessage : public CallbackMessage
 {
 public:
-	CacheReadyMessage(CacheSystemClient *client_) : client(client_) { }
+	CacheReadyMessage(WeakReference<CacheSystemClient> client_) : client(client_) { }
 
-	virtual void messageCallback() = 0;
+	virtual void messageCallback() {
+		if (client) {
+			client->receivedResults();
+		}
+	};
 
 private:
-	CacheSystemClient *client;
+	WeakReference<CacheSystemClient> client;
 };
 
 class QueryEntry{
@@ -45,7 +49,7 @@ private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(QueryEntry)
 };
 
-class CacheSystem
+class CacheSystem	:	public Thread
 {
 public:
 	~CacheSystem();
@@ -58,13 +62,16 @@ public:
 
 	static CacheSystem *getInstance();
 
-	void serveNextQuery();
-	MYSQL *initialiseConnection();
-
 private:
 	CacheSystem();
 	CacheSystem(CacheSystem const&){};             // copy constructor is private
 	CacheSystem& operator=(CacheSystem const&){};  // assignment operator is private
+
+	void serveNextQuery();
+	void *initialiseConnection();
+	bool hasUnservedQueries() const;
+	void run() override;
+
 	static CacheSystem* instancePointer;
 
 	String username;
