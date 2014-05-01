@@ -2,6 +2,8 @@
 
 #define QUERYBLOCKSIZE (1024 * 1024 * 2)
 
+class QueryEntry;
+
 class CacheSystemClient
 {
 public:
@@ -9,7 +11,7 @@ public:
 		masterReference.clear();
 	}
 
-	virtual void receivedResults() = 0;
+	virtual void receivedResults(QueryEntry *qe_) = 0;
 
 private:
 	WeakReference<CacheSystemClient>::Master masterReference;
@@ -19,21 +21,23 @@ private:
 class CacheReadyMessage : public CallbackMessage
 {
 public:
-	CacheReadyMessage(WeakReference<CacheSystemClient> client_) : client(client_) { }
+	CacheReadyMessage(WeakReference<CacheSystemClient> client_, QueryEntry *qe_)
+		: client(client_), qe(qe_) { }
 
 	virtual void messageCallback() {
 		if (client) {
-			client->receivedResults();
+			client->receivedResults(qe);
 		}
 	};
 
 private:
 	WeakReference<CacheSystemClient> client;
+	QueryEntry *qe;
 };
 
 class QueryEntry{
 public:
-	QueryEntry() : result(nullptr), size(0) {
+	QueryEntry() : result(nullptr), num_fields(0), size(0) {
 	}
 
 	~QueryEntry() {
@@ -42,9 +46,28 @@ public:
 		}
 	}
 
+	String getFieldFromRow(int row, int field) {
+		const int sz = fieldSizes[row*num_fields + field];
+		char *str = (char *) malloc(sz+1);
+		str[sz] = '\0';
+
+		int pos = 0;
+		for (int i = 0; i < row*num_fields + field; i++) {
+			pos += fieldSizes[i];
+		}
+
+		memcpy(str, (char*)result + pos, sz);
+		String res = String(CharPointer_UTF8(str));
+		free(str);
+
+		return res;
+	}
+
 	String request;
 	Array<WeakReference<CacheSystemClient>> clientList;
 	void *result;
+	int num_rows;
+	int num_fields;
 	Array<int> fieldSizes;
 	unsigned long size;
 	unsigned long usedSpace;

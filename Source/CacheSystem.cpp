@@ -132,7 +132,7 @@ void CacheSystem::getResultsFor(String &str, CacheSystemClient *client)
 
 			if (queries[i]->result != nullptr) {
 				// TODO : notify newly added client
-				CacheReadyMessage *msg = new CacheReadyMessage(client);
+				CacheReadyMessage *msg = new CacheReadyMessage(client, queries[i]);
 				msg->post();
 			}
 
@@ -145,10 +145,10 @@ void CacheSystem::getResultsFor(String &str, CacheSystemClient *client)
 		re->request = str;
 		re->clientList.addIfNotAlreadyThere(client);
 		queries.add(re);
-	}
 
-	// notify "consumer" thread in case it is waiting
-	this->notify();
+		// notify "consumer" thread in case it is waiting
+		this->notify();
+	}
 
 	// unlock
 }
@@ -180,6 +180,8 @@ void CacheSystem::serveNextQuery()
 
 	if (mysql_real_query(con, query->request.toUTF8().getAddress(), query->request.getNumBytesAsUTF8()) != 0) {
 		// TODO: failure
+		std::cout << "query failed" << std::endl;
+		mysql_close(con);
 	}
 	else {
 		// query succeded
@@ -194,7 +196,8 @@ void CacheSystem::serveNextQuery()
 		// result size estimation and allocation
 		query->size = QUERYBLOCKSIZE;
 		query->result = (void *)malloc(query->size); // 2MB
-		if (query->result == NULL) {
+		query->usedSpace = 0;
+		if (query->result == nullptr) {
 			// TODO : failed
 			std::cout << "Allocation for results failed" << std::endl;
 			mysql_close(con);
@@ -206,6 +209,7 @@ void CacheSystem::serveNextQuery()
 		unsigned int i;
 
 		num_fields = mysql_num_fields(res);
+		query->num_fields = num_fields;
 		while ((row = mysql_fetch_row(res)))
 		{
 			unsigned long *lengths;
@@ -235,8 +239,11 @@ void CacheSystem::serveNextQuery()
 			for (i = 0; i < num_fields; i++) {
 				memcpy((uint8 *)(query->result) + query->usedSpace, row[i], lengths[i]);
 				query->fieldSizes.add(lengths[i]);
+				query->usedSpace += lengths[i];
 			}
 		}
+
+		query->num_rows = mysql_num_rows(res);
 
 		// on sucess - update next query position
 		nextQueryToServeIndex = nextQuery;
@@ -246,7 +253,7 @@ void CacheSystem::serveNextQuery()
 
 	// post message to inform clients
 	for (int i = 0; i < query->clientList.size(); i++) {
-		CacheReadyMessage *msg = new CacheReadyMessage(query->clientList[i]);
+		CacheReadyMessage *msg = new CacheReadyMessage(query->clientList[i], queries[i]);
 		msg->post();
 	}
 
@@ -255,7 +262,7 @@ void CacheSystem::serveNextQuery()
 bool CacheSystem::hasUnservedQueries() const
 {
 	for (auto q = queries.begin(); q != queries.end(); ++q) {
-		if ((*q)->result == NULL) {
+		if ((*q)->result == nullptr) {
 			return true;
 		}
 	}

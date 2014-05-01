@@ -555,11 +555,19 @@ private:
 };
 
 //=======================================================================================================
-class SuppliersTableListBoxModel : public TableListBoxModel
+class SuppliersTableListBoxModel	:	public TableListBoxModel
 {
+public:
+	SuppliersTableListBoxModel() : qe(nullptr) {}
+
 	int getNumRows() override
 	{
-		return 8;
+		if (qe != nullptr) {
+			return qe->num_rows;
+		}
+		else {
+			return 0;
+		}
 	}
 
 	void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) {
@@ -574,7 +582,13 @@ class SuppliersTableListBoxModel : public TableListBoxModel
 	{
 		if (columnId == 4) {
 			g.setColour(Colours::black);
-			g.drawText(L"133", 0, 0, width, height, Justification::centred, false);
+
+			String msg;
+			if (qe != nullptr) {
+				msg = qe->getFieldFromRow(rowNumber, columnId - 1);
+			}
+			
+			g.drawText(msg, 0, 0, width, height, Justification::centred, false);
 		}
 	}
 
@@ -584,19 +598,28 @@ class SuppliersTableListBoxModel : public TableListBoxModel
 		if (existingComponentToUpdate == nullptr) {
 			if (columnId == 1) {
 				TextEditor *payload = new TextEditor();
-				payload->setText(L"Σπύρος Τομπούλογλου");
+				payload->setMultiLine(true);
+				if (qe != nullptr) {
+					payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1));
+				}
 				MarginComponent *newComponent = new MarginComponent(payload);
 				return (Component *)newComponent;
 			}
 			else if (columnId == 2) {
 				TextEditor *payload = new TextEditor();
-				payload->setText(L"Μαξιλάρια Α.Ε.");
+				payload->setMultiLine(true);
+				if (qe != nullptr) {
+					payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1));
+				}
 				MarginComponent *newComponent = new MarginComponent(payload);
 				return (Component *)newComponent;
 			}
 			else if (columnId == 3) {
 				TextEditor *payload = new TextEditor();
-				payload->setText(L"6972009460");
+				payload->setMultiLine(true);
+				if (qe != nullptr) {
+					payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1));
+				}
 				MarginComponent *newComponent = new MarginComponent(payload);
 				return (Component *)newComponent;
 			}
@@ -629,6 +652,13 @@ class SuppliersTableListBoxModel : public TableListBoxModel
 			return existingComponentToUpdate;
 		}
 	}
+
+	void setQueryEntry(QueryEntry *qe_) {
+		qe = qe_;
+	}
+
+private:
+	QueryEntry *qe;
 };
 
 //=======================================================================================================
@@ -653,7 +683,7 @@ public:
 		addAndMakeVisible(accounts);
 
 		CacheSystem *cs = CacheSystem::getInstance();
-		cs->getResultsFor(String(L"SELECT Code, Name, AccountType, XreosPist FROM accounts"), this);
+		cs->getResultsFor(String(L"SELECT SupplierCode, Name, PhoneNumber, SupplierTransactions FROM suppliers"), this);
 	}
 
 	~SuppliersComponent() {
@@ -664,13 +694,16 @@ public:
 		accounts->setBoundsRelative(0.08f, 0.05f, 0.9f, 0.94f);
 	}
 
-	void receivedResults() override {
-		jassertfalse;
+	void receivedResults(QueryEntry *qe_) override {
+		qe = qe_;
+		suppliersTableListBoxModel->setQueryEntry(qe);
+		accounts->updateContent();
 	}
 
 private:
 	ScopedPointer<TableListBox> accounts;
 	ScopedPointer<SuppliersTableListBoxModel> suppliersTableListBoxModel;
+	QueryEntry *qe;
 };
 
 //=======================================================================================================
@@ -830,10 +863,10 @@ public:
 			index = 10;
 		}
 		else if (buttonThatWasClicked == logout) {
-			index = 6;
+			index = 11;
 		}
 		else {
-			index = 5;
+			index = 1;
 		}
 		sendChangeMessage();
 	}
