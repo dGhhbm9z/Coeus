@@ -676,15 +676,23 @@ public:
 		suppliers = new CustomMenuBarButton(CustomMenuBarButton::SuppliersType);
 		accountChart = new CustomMenuBarButton(CustomMenuBarButton::EventsType);
 		accounts = new CustomMenuBarButton(CustomMenuBarButton::AccountChartType);
+		companies = new CustomMenuBarButton(CustomMenuBarButton::CompaniesType);
 
 		reporting = new CustomMenuBarButton(CustomMenuBarButton::ReportingTabType);
 		accounting = new CustomMenuBarButton(CustomMenuBarButton::AccountingTabType);
 		logout = new CustomMenuBarButton(CustomMenuBarButton::LogoutType);
 
+		businessModel = new CustomMenuBarButton(CustomMenuBarButton::BusinessModelType);
+		businessPlan = new CustomMenuBarButton(CustomMenuBarButton::BusinessPlanType);
+		financialRatios = new CustomMenuBarButton(CustomMenuBarButton::FinancialRatiosType);
+		openSourceInnovation = new CustomMenuBarButton(CustomMenuBarButton::OpenSourceInnovationType);
+		reportGenerator = new CustomMenuBarButton(CustomMenuBarButton::ReportGeneratorTytpe);
+
 		customers->addListener(this);
 		suppliers->addListener(this);
 		accountChart->addListener(this);
 		accounts->addListener(this);
+		companies->addListener(this);
 		reporting->addListener(this);
 		accounting->addListener(this);
 		logout->addListener(this);
@@ -698,6 +706,7 @@ public:
 		addAndMakeVisible(suppliers);
 		addAndMakeVisible(accountChart);
 		addAndMakeVisible(accounts);
+		addAndMakeVisible(companies);
 		addAndMakeVisible(reporting);
 		addAndMakeVisible(accounting);
 		addAndMakeVisible(companies);
