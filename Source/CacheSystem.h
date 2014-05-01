@@ -5,6 +5,10 @@
 class CacheSystemClient
 {
 public:
+	~CacheSystemClient() {
+		masterReference.clear();
+	}
+
 	virtual void receivedResults() = 0;
 
 private:
@@ -81,4 +85,5 @@ private:
 
 	OwnedArray<QueryEntry> queries;
 	CriticalSection querySection;
+	int nextQueryToServeIndex;
 };

@@ -632,7 +632,8 @@ class SuppliersTableListBoxModel : public TableListBoxModel
 };
 
 //=======================================================================================================
-class SuppliersComponent : public Component
+class SuppliersComponent :	public Component,
+							public CacheSystemClient
 {
 public:
 	SuppliersComponent() {
@@ -650,6 +651,9 @@ public:
 		accounts->setHeaderHeight(40);
 
 		addAndMakeVisible(accounts);
+
+		CacheSystem *cs = CacheSystem::getInstance();
+		cs->getResultsFor(String(L"SELECT Code, Name, AccountType, XreosPist FROM accounts"), this);
 	}
 
 	~SuppliersComponent() {
@@ -658,6 +662,10 @@ public:
 
 	void resized() override {
 		accounts->setBoundsRelative(0.08f, 0.05f, 0.9f, 0.94f);
+	}
+
+	void receivedResults() override {
+		jassertfalse;
 	}
 
 private:
@@ -1016,6 +1024,8 @@ MainComponent::~MainComponent()
     //[/Destructor_pre]
 
 	tabs = nullptr;
+
+	delete CacheSystem::getInstance();
 
     //[Destructor]. You can add your own custom destruction code here..
     //[/Destructor]

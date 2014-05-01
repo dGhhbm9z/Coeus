@@ -16,6 +16,7 @@ CacheSystem *CacheSystem::getInstance()
 CacheSystem::CacheSystem()
 : Thread("Cache System Thread")
 {
+	nextQueryToServeIndex = -1;
 	startThread();
 }
 
@@ -131,6 +132,8 @@ void CacheSystem::getResultsFor(String &str, CacheSystemClient *client)
 
 			if (queries[i]->result != nullptr) {
 				// TODO : notify newly added client
+				CacheReadyMessage *msg = new CacheReadyMessage(client);
+				msg->post();
 			}
 
 			break;
@@ -140,21 +143,31 @@ void CacheSystem::getResultsFor(String &str, CacheSystemClient *client)
 	if (!found) {
 		QueryEntry *re = new QueryEntry();
 		re->request = str;
+		re->clientList.addIfNotAlreadyThere(client);
 		queries.add(re);
 	}
+
+	// notify "consumer" thread in case it is waiting
+	this->notify();
+
 	// unlock
 }
 
 void CacheSystem::serveNextQuery()
 {
 	QueryEntry *query;
+	int nextQuery;
 
 	{
 		// lock
 		//ScopedLock requestLock(querySection);
 
 		// get request
-		query = queries[0];
+		nextQuery = nextQueryToServeIndex;
+		query = [&]()->decltype(queries[nextQuery]) {
+			while (++nextQuery < queries.size() &&  queries[nextQuery]->result != nullptr)  {}
+			return queries[nextQuery];
+		}();
 
 		// unlock
 	}
@@ -210,7 +223,7 @@ void CacheSystem::serveNextQuery()
 				if (r == NULL) {
 					// TODO: failed
 					std::cout << "Reallocation failed" << std::endl;
-					break;
+					return;
 				}
 				else {
 					query->result = r;
@@ -224,6 +237,9 @@ void CacheSystem::serveNextQuery()
 				query->fieldSizes.add(lengths[i]);
 			}
 		}
+
+		// on sucess - update next query position
+		nextQueryToServeIndex = nextQuery;
 	}
 
 	mysql_close(con);
@@ -252,8 +268,10 @@ void CacheSystem::run() {
 		if (hasUnservedQueries()) {
 			serveNextQuery();
 		}
-		else {
-			Thread::wait(-1);
+		else if (threadShouldExit()) {
+			return;
 		}
+
+		Thread::wait(500);
 	}
 }
