@@ -795,7 +795,7 @@ public:
 		openSourceInnovation->setBounds(0, 367, getWidth(), 75);
 		reportGenerator->setBounds(0, 467, getWidth(), 75);
 
-		reporting->setBounds(54, 0, 66, 28);
+		reporting->setBounds(65, 0, 56, 28);
 		accounting->setBounds(0, 0, 66, 28);
 
 		logout->setBounds(0, getHeight()-34, 120, 34);

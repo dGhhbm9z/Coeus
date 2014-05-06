@@ -17,6 +17,7 @@ CacheSystem::CacheSystem()
 : Thread("Cache System Thread")
 {
 	nextQueryToServeIndex = -1;
+	setPassword();
 	startThread();
 }
 
@@ -37,7 +38,7 @@ void *CacheSystem::initialiseConnection()
 	}
 
 	// connect
-	if (mysql_real_connect(con, "localhost", "root", "k41n0ur10p4ss",
+	if (mysql_real_connect(con, "localhost", "root", password.toUTF8(),
 		NULL, 0, NULL, 0) == NULL)
 	{
 		fprintf(stderr, "%s\n", mysql_error(con));
@@ -108,7 +109,7 @@ bool CacheSystem::setUserName()
 
 bool CacheSystem::setPassword()
 {
-	password = L"k41n0ur10p4ss";
+	password = L"panos3316";
 	return true;
 }
 

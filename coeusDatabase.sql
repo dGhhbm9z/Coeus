@@ -127,3 +127,4 @@ CREATE TABLE IF NOT EXISTS `suppliers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+companies
