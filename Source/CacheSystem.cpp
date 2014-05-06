@@ -17,6 +17,7 @@ CacheSystem::CacheSystem()
 : Thread("Cache System Thread")
 {
 	nextQueryToServeIndex = -1;
+	setPassword();
 	startThread();
 }
 
@@ -172,6 +173,10 @@ void CacheSystem::serveNextQuery()
 		// unlock
 	}
 
+	if (query == nullptr) {
+		return; // nothing to do...
+	}
+
 	// process request
 	MYSQL *con = (MYSQL *) initialiseConnection();
 	if (con == NULL) {
@@ -182,6 +187,7 @@ void CacheSystem::serveNextQuery()
 		// TODO: failure
 		std::cout << "query failed" << std::endl;
 		mysql_close(con);
+		return;
 	}
 	else {
 		// query succeded
@@ -252,8 +258,9 @@ void CacheSystem::serveNextQuery()
 	mysql_close(con);
 
 	// post message to inform clients
-	for (int i = 0; i < query->clientList.size(); i++) {
-		CacheReadyMessage *msg = new CacheReadyMessage(query->clientList[i], queries[i]);
+	const int clsz = query->clientList.size();
+	for (int i = 0; i < 1; i++) {
+		CacheReadyMessage *msg = new CacheReadyMessage(query->clientList[i], query);
 		msg->post();
 	}
 
@@ -272,11 +279,12 @@ bool CacheSystem::hasUnservedQueries() const
 
 void CacheSystem::run() {
 	while (1) {
-		if (hasUnservedQueries()) {
-			serveNextQuery();
-		}
-		else if (threadShouldExit()) {
+
+		if (threadShouldExit()) {
 			return;
+		}
+		else if (hasUnservedQueries()) {
+			serveNextQuery();
 		}
 
 		Thread::wait(500);
