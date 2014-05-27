@@ -1437,6 +1437,15 @@
     <ClCompile Include="..\..\Source\Accounts.cpp">
       <Filter>Coeus\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Customers.cpp">
+      <Filter>Coeus\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Suppliers.cpp">
+      <Filter>Coeus\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\CustomTabBar.cpp">
+      <Filter>Coeus\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\CacheSystem.h">
@@ -2781,6 +2790,15 @@
       <Filter>Coeus\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Accounts.h">
+      <Filter>Coeus\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Customers.h">
+      <Filter>Coeus\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Suppliers.h">
+      <Filter>Coeus\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\CustomTabBar.h">
       <Filter>Coeus\Source</Filter>
     </ClInclude>
   </ItemGroup>

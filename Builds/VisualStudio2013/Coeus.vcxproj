@@ -140,8 +140,11 @@
     <ClCompile Include="..\..\Source\CacheSystem.cpp" />
     <ClCompile Include="..\..\Source\CacheViewer.cpp" />
     <ClCompile Include="..\..\Source\CustomComponents.cpp" />
+    <ClCompile Include="..\..\Source\Customers.cpp" />
+    <ClCompile Include="..\..\Source\CustomTabBar.cpp" />
     <ClCompile Include="..\..\Source\Main.cpp" />
     <ClCompile Include="..\..\Source\MainComponent.cpp" />
+    <ClCompile Include="..\..\Source\Suppliers.cpp" />
     <ClCompile Include="..\..\Source\Theme.cpp" />
     <ClCompile Include="..\..\Source\WorkspaceView.cpp" />
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioDataConverters.cpp">
@@ -1242,8 +1245,11 @@
     <ClInclude Include="..\..\Source\CacheViewer.h" />
     <ClInclude Include="..\..\Source\CoeusCommandIDs.h" />
     <ClInclude Include="..\..\Source\CustomComponents.h" />
+    <ClInclude Include="..\..\Source\Customers.h" />
+    <ClInclude Include="..\..\Source\CustomTabBar.h" />
     <ClInclude Include="..\..\Source\MainComponent.h" />
     <ClInclude Include="..\..\Source\PortDefinitions.h" />
+    <ClInclude Include="..\..\Source\Suppliers.h" />
     <ClInclude Include="..\..\Source\Theme.h" />
     <ClInclude Include="..\..\Source\WorkspaceView.h" />
     <ClInclude Include="..\..\JuceLibraryCode\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h" />
