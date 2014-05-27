@@ -17,433 +17,11 @@
   ==============================================================================
 */
 
-//[Headers] You can add your own extra header files here...
-//[/Headers]
-
 #include "MainComponent.h"
+#include "CustomComponents.h"
+#include "AccountChart.h"
+#include "Accounts.h"
 
-
-//[MiscUserDefs] You can add your own user definitions and misc code here...
-//[/MiscUserDefs]
-
-
-#define WINDOWS_RESOURCE_FILE( X ) File::getSpecialLocation(File::currentExecutableFile).getParentDirectory().getChildFile( X )
-#define MAC_RESOURCE_FILE( X ) File::getSpecialLocation(File::currentExecutableFile).getParentDirectory().getParentDirectory().getChildFile( X )
-
-#ifdef __APPLE__
-	#define RESOURCE_FILE( X ) MAC_RESOURCE_FILE( X )
-#else
-	#define RESOURCE_FILE( X ) WINDOWS_RESOURCE_FILE( X )
-#endif
-
-
-class CustomMenuBarButton : public TextButton
-{
-public:
-	enum ButtonType {AccountChartType, CompaniesType, CustomersType, EventsType, SuppliersType,
-					BusinessModelType, BusinessPlanType, FinancialRatiosType, OpenSourceInnovationType, ReportGeneratorTytpe,
-					LogoutType, AccountingTabType, ReportingTabType};
-
-	CustomMenuBarButton(ButtonType btntype) {
-		switch (btntype) {
-		case AccountChartType:
-			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/normal/AccountChart.png"));
-			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseOver/AccountChart.png"));
-			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseClicked/AccountChart.png"));
-			break;
-		case CompaniesType:
-			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/normal/Companies.png"));
-			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseOver/Companies.png"));
-			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseClicked/Companies.png"));
-			break;
-		case CustomersType:
-			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/normal/Customers.png"));
-			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseOver/Customers.png"));
-			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseClicked/Customers.png"));
-			break;
-		case EventsType:
-			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/normal/Events.png"));
-			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseOver/Events.png"));
-			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseClicked/Events.png"));
-			break;
-		case SuppliersType:
-			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/normal/Suppliers.png"));
-			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseOver/Suppliers.png"));
-			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseClicked/Suppliers.png"));
-			break;
-		case BusinessModelType:
-			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/normal/BusinessModelCanvas.png"));
-			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseOver/BusinessModelCanvas.png"));
-			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseClicked/BusinessModelCanvas.png"));
-			break;
-		case BusinessPlanType:
-			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/normal/BusinessPlan.png"));
-			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseOver/BusinessPlan.png"));
-			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseClicked/BusinessPlan.png"));
-			break;
-		case FinancialRatiosType:
-			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/normal/FinancialRatios.png"));
-			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseOver/FinancialRatios.png"));
-			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseClicked/FinancialRatios.png"));
-			break;
-		case OpenSourceInnovationType:
-			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/normal/OpenSourceInno.png"));
-			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseOver/OpenSourceInno.png"));
-			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseClicked/OpenSourceInno.png"));
-			break;
-		case ReportGeneratorTytpe:
-			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/normal/ReportGenerator.png"));
-			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseOver/ReportGenerator.png"));
-			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/ReportingTab/mouseClicked/ReportGenerator.png"));
-			break;
-		case LogoutType:
-			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Logout/LogoutNormal.png"));
-			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Logout/MouseOver.png"));
-			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Logout/MouseClick.png"));
-			break;
-		case AccountingTabType:
-			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Tabs/Accounting/AccountingTabNormal.png"));
-			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Tabs/Accounting/AccountingTabNormalMouseOver.png"));
-			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Tabs/Accounting/AccountingTabSelected.png"));
-			break;
-		case ReportingTabType:
-			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Tabs/Reporting/ReportingTabNormal.png"));
-			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Tabs/Reporting/ReportingTabNormalMouseOver.png"));
-			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/Tabs/Reporting/ReportingTabSelected.png"));
-			break;
-		default:
-			imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/normal/Suppliers.png"));
-			imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseOver/Suppliers.png"));
-			imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/sidebar/AccountingTab/mouseClicked/Suppliers.png"));
-		}
-	}
-
-	void paint(Graphics &g) {
-
-		if (isMouseButtonDown()) {
-			g.drawImage(imageMouseDown, 0, 0, getWidth(), getHeight(), 0, 0, imageMouseDown.getWidth(), imageMouseDown.getHeight());
-		}
-		else if (isMouseOver()) {
-			g.drawImage(imageMouseOver, 0, 0, getWidth(), getHeight(), 0, 0, imageMouseOver.getWidth(), imageMouseOver.getHeight());
-		}
-		else {
-			g.drawImage(imageNormal, 0, 0, getWidth(), getHeight(), 0, 0, imageNormal.getWidth(), imageNormal.getHeight());
-		}
-	}
-
-private:
-	Image imageNormal;
-	Image imageMouseOver;
-	Image imageMouseDown;
-};
-
-//=======================================================================================================
-
-class ComboBoxFocusReport : public ComboBox,
-							public ChangeBroadcaster
-{
-public:
-	void focusGained(FocusChangeType cause) {
-		sendChangeMessage();
-	}
-
-	int rowIndex;
-};
-
-//=======================================================================================================
-
-class TextEditFocusReport : public TextEditor,
-							public ChangeBroadcaster
-{
-public:
-	void focusGained(FocusChangeType cause) {
-		sendChangeMessage();
-	}
-
-	int rowIndex;
-};
-
-//=======================================================================================================
-class MarginComponent : public Component
-{
-public:
-	MarginComponent(Component *comp_) : comp(comp_) {
-		if (comp) {
-			addAndMakeVisible(comp);
-		}
-	}
-
-	~MarginComponent() {
-		comp = nullptr;
-	}
-
-	void resized() override {
-		comp->setBounds(4, 4, getWidth()-8, getHeight()-8);
-	}
-
-	Component *getEnclosedComp() {
-		return comp;
-	}
-
-private:
-	ScopedPointer<Component> comp;
-};
-
-//=======================================================================================================
-
-
-
-
-//=======================================================================================================
-class AccountChartsListBoxModel : public ListBoxModel
-{
-	int getNumRows() override
-	{
-		return 8;
-	}
-
-	void paintListBoxItem(int rowNumber, Graphics &g, int width, int height, bool rowIsSelected) override
-	{
-		/*g.fillAll(Colours::grey);
-		g.setColour(Colours::black);
-		g.drawRect(Rectangle<float>(0,0,width+1,height+1));
-		g.setColour(Colours::azure);
-		g.drawText(String(rowNumber), Rectangle<int>(0,0,width,height), Justification::centred, false);*/
-	}
-
-	Component* refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate) override
-	{
-		// create
-		if (existingComponentToUpdate == nullptr) {
-			Component *newComponent = (Component *) new CacheViewer();
-			return newComponent;
-		}
-		// update
-		else {
-			return existingComponentToUpdate;
-		}
-	}
-};
-
-class AccountChartComponent : public Component
-{
-public:
-	AccountChartComponent() {
-		accountChartListBoxModel = new AccountChartsListBoxModel();
-		accountChart = new ListBox(String::empty, accountChartListBoxModel);
-		accountChart->setRowHeight(620);
-
-		addAndMakeVisible(accountChart);
-	}
-
-	~AccountChartComponent() {
-		accountChart = nullptr;
-	}
-
-	void resized() override {
-		accountChart->setBoundsRelative(0.08f, 0.05f, 0.9f, 0.94f);
-	}
-
-private:
-	ScopedPointer<ListBox> accountChart;
-	ScopedPointer<AccountChartsListBoxModel> accountChartListBoxModel;
-};
-
-//=======================================================================================================
-class AccountCellButtons : public Component
-{
-public:
-	AccountCellButtons() {
-		save = new TextButton(L"save");
-		restore = new TextButton(L"restore");
-		remove = new TextButton(L"remove");
-		addAndMakeVisible(save);
-		addAndMakeVisible(restore);
-		addAndMakeVisible(remove);
-	}
-
-	~AccountCellButtons() {
-		save = nullptr;
-		restore = nullptr;
-		remove = nullptr;
-	}
-
-	void resized() override {
-		save->setBoundsRelative(0.0f, 0.1f, 0.33f, 0.9f);
-		restore->setBoundsRelative(0.33f, 0.1f, 0.33f, 0.9f);
-		remove->setBoundsRelative(0.66f, 0.1f, 0.33f, 0.9f);
-	}
-
-	int rowIndex;
-
-private:
-
-	ScopedPointer<TextButton> save;
-	ScopedPointer<TextButton> restore;
-	ScopedPointer<TextButton> remove;
-};
-//=======================================================================================================
-class AccountsTableListBoxModel	:	public TableListBox,
-									public TableListBoxModel,
-									public ChangeListener
-
-{
-public:
-	AccountsTableListBoxModel() : TableListBox(String::empty, this) {}
-
-	int getNumRows() override
-	{
-		return 8;
-	}
-
-	void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) {
-		if (rowIsSelected) {
-			g.setColour(Colours::grey.brighter().brighter());
-			g.fillAll();
-		}
-	}
-
-	void paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
-	{
-		if (columnId == 4) {
-			g.setColour(Colours::black);
-			g.drawText(L"133", 0, 0, width, height, Justification::centred, false);
-		}
-	}
-
-	Component * refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate)
-	{
-		// create
-		if (existingComponentToUpdate == nullptr) {
-			if (columnId == 1) {
-				TextEditFocusReport *payload = new TextEditFocusReport();
-				payload->rowIndex = rowNumber;
-				payload->setText(L"00.00.00.00");
-				payload->addChangeListener(this);
-				MarginComponent *newComponent = new MarginComponent(payload);
-				return (Component *)newComponent;
-			}
-			else if (columnId == 2) {
-				TextEditFocusReport *payload = new TextEditFocusReport();
-				payload->rowIndex = rowNumber;
-				payload->setText(L"Πολύ βασικός");
-				payload->addChangeListener(this);
-				MarginComponent *newComponent = new MarginComponent(payload);
-				return (Component *)newComponent;
-			}
-			else if (columnId == 3) {
-				ComboBoxFocusReport *payload = new ComboBoxFocusReport();
-				payload->rowIndex = rowNumber;
-				payload->addItem(L"Type I", 1);
-				payload->addItem(L"Type II", 2);
-				payload->addItem(L"Type III", 3);
-				payload->addItem(L"Type IV", 4);
-				payload->addItem(L"Type V", 5);
-				payload->addChangeListener(this);
-				MarginComponent *newComponent = new MarginComponent(payload);
-				return (Component *)newComponent;
-			}
-			else if (columnId == 5 && isRowSelected) {
-				AccountCellButtons *newComponent = new AccountCellButtons();
-				newComponent->setVisible(isRowSelected);
-				newComponent->rowIndex = rowNumber;
-				return (Component *)newComponent;
-			}
-
-			return nullptr;
-		}
-		// update
-		else {
-			if (columnId == 1) {
-				MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
-				if (newComponent) {
-					TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(newComponent->getEnclosedComp());
-					if (tefr) {
-						tefr->rowIndex = rowNumber;
-					}
-				}
-			}
-			else if (columnId == 2) {
-				MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
-				if (newComponent) {
-					TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(newComponent->getEnclosedComp());
-					if (tefr) {
-						tefr->rowIndex = rowNumber;
-					}
-				}
-			}
-			else if (columnId == 3) {
-				MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
-				if (newComponent) {
-					ComboBoxFocusReport *cbfr = dynamic_cast<ComboBoxFocusReport *>(newComponent->getEnclosedComp());
-					if (cbfr) {
-						cbfr->rowIndex = rowNumber;
-					}
-				}
-			}
-			else if (columnId == 5) {
-				if (!isRowSelected) {
-					delete existingComponentToUpdate;
-					return nullptr;
-				}
-
-				AccountCellButtons *newComponent = dynamic_cast<AccountCellButtons *>(existingComponentToUpdate);
-				if (newComponent) {
-					newComponent->rowIndex = rowNumber;
-				}
-			}
-
-			return existingComponentToUpdate;
-		}
-	}
-
-	void changeListenerCallback(ChangeBroadcaster *source) {
-		TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(source);
-		ComboBoxFocusReport *cbfr = dynamic_cast<ComboBoxFocusReport *>(source);
-
-		if (tefr) {
-			selectRow(tefr->rowIndex);
-		}
-		else if (cbfr) {
-			selectRow(cbfr->rowIndex);
-		}
-	}
-};
-
-//=======================================================================================================
-class AccountsComponent : public Component
-{
-public:
-	AccountsComponent() {
-		TableHeaderComponent *accountsHeaderComponent = new TableHeaderComponent();
-		accountsHeaderComponent->addColumn(L"Κωδικός Λογαριασμού", 1, 250, 100, 250);
-		accountsHeaderComponent->addColumn(L"Ονομασία Λογαριασμού", 2, 250, 100, 250);
-		accountsHeaderComponent->addColumn(L"Είδος Λογαριασμού", 3, 150, 100, 250);
-		accountsHeaderComponent->addColumn(L"Υπόλοιπο Λογαριασμού", 4, 250, 100, 250);
-		accountsHeaderComponent->addColumn(String::empty, 5, 200, 100, 250);
-
-		accounts = new AccountsTableListBoxModel();
-		accounts->setRowHeight(40);
-		accounts->setHeader(accountsHeaderComponent);
-		accounts->setHeaderHeight(40);
-
-		addAndMakeVisible(accounts);
-	}
-
-	~AccountsComponent() {
-		accounts = nullptr;
-	}
-
-	void resized() override {
-		accounts->setBoundsRelative(0.08f, 0.05f, 0.9f, 0.94f);
-	}
-
-private:
-	ScopedPointer<AccountsTableListBoxModel> accounts;
-};
-
-
-//=======================================================================================================
 //=======================================================================================================
 class CustomersTableListBoxModel : public TableListBoxModel
 {
@@ -712,7 +290,7 @@ class CustomTabbedButtonBar :	public Component,
 								public ButtonListener
 {
 public:
-	CustomTabbedButtonBar() : index(5) {
+	CustomTabbedButtonBar() : index(1) {
 		customers = new CustomMenuBarButton(CustomMenuBarButton::CustomersType);
 		suppliers = new CustomMenuBarButton(CustomMenuBarButton::SuppliersType);
 		accountChart = new CustomMenuBarButton(CustomMenuBarButton::EventsType);
@@ -846,7 +424,7 @@ public:
 			index = 4;
 		}
 		else if (buttonThatWasClicked == companies) {
-			index = 4;
+			index = 5;
 		}
 		else if (buttonThatWasClicked == businessModel) {
 			index = 6;
@@ -964,27 +542,23 @@ public:
 		if (source == tabButtons) {
 			switch (tabButtons->getCurrentTabIndex()) {
 			case 0:
-				accountChartComponent->setVisible(false);
-				accountsComponent->setVisible(false);
-				suppliersComponent->setVisible(false);
-				customersComponent->setVisible(false);
 				break;
 			case 1:
 				accountChartComponent->setVisible(false);
 				accountsComponent->setVisible(false);
 				suppliersComponent->setVisible(false);
-				customersComponent->setVisible(false);
+				customersComponent->setVisible(true);
 				break;
 			case 2:
 				accountChartComponent->setVisible(false);
 				accountsComponent->setVisible(false);
-				suppliersComponent->setVisible(false);
-				customersComponent->setVisible(true);
+				suppliersComponent->setVisible(true);
+				customersComponent->setVisible(false);
 				break;
 			case 3:
 				accountChartComponent->setVisible(false);
 				accountsComponent->setVisible(false);
-				suppliersComponent->setVisible(true);
+				suppliersComponent->setVisible(false);
 				customersComponent->setVisible(false);
 				break;
 			case 4:
@@ -995,7 +569,13 @@ public:
 				break;
 			case 5:
 				accountChartComponent->setVisible(false);
-				accountsComponent->setVisible(true);
+				accountsComponent->setVisible(false);
+				suppliersComponent->setVisible(false);
+				customersComponent->setVisible(false);
+				break;
+			case 6:
+				accountChartComponent->setVisible(false);
+				accountsComponent->setVisible(false);
 				suppliersComponent->setVisible(false);
 				customersComponent->setVisible(false);
 				break;

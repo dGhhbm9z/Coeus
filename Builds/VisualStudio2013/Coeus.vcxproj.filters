@@ -1428,6 +1428,15 @@
     <ClCompile Include="..\..\JuceLibraryCode\modules\juce_video\juce_video.cpp">
       <Filter>Juce Library Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\CustomComponents.cpp">
+      <Filter>Coeus\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\AccountChart.cpp">
+      <Filter>Coeus\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Accounts.cpp">
+      <Filter>Coeus\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\CacheSystem.h">
@@ -2761,6 +2770,18 @@
     </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
       <Filter>Juce Library Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\CustomComponents.h">
+      <Filter>Coeus\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\PortDefinitions.h">
+      <Filter>Coeus\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\AccountChart.h">
+      <Filter>Coeus\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Accounts.h">
+      <Filter>Coeus\Source</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

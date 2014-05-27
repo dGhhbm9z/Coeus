@@ -109,7 +109,7 @@ bool CacheSystem::setUserName()
 
 bool CacheSystem::setPassword()
 {
-	password = L"panos3316";
+	password = L"k41n0ur10p4ss";
 	return true;
 }
 

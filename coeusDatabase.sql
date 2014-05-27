@@ -125,6 +125,3 @@ CREATE TABLE IF NOT EXISTS `suppliers` (
   KEY `CompanyVAT` (`CompanyVAT`),
   CONSTRAINT `suppliers_ibfk_1` FOREIGN KEY (`CompanyVAT`) REFERENCES `companies` (`VAT`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-companies

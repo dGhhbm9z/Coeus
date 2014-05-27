@@ -1,3 +1,6 @@
+#ifndef CacheSystemGuard
+#define CacheSystemGuard
+
 #include "../JuceLibraryCode/JuceHeader.h"
 
 #define QUERYBLOCKSIZE (1024 * 1024 * 2)
@@ -110,3 +113,5 @@ private:
 	CriticalSection querySection;
 	int nextQueryToServeIndex;
 };
+
+#endif
