@@ -210,11 +210,11 @@ void CustomTabComponent::resized()
 	const float width = getWidth();
 	const float height = getHeight();
 	search->setBoundsRelative(0.5f - 0.125f, 0.01, 0.25f, 0.05f);
-	accountChartComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
-	accountsComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
-	suppliersComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
-	customersComponent->setBoundsRelative(0.05f, 0.05f, 0.9f, 0.94f);
-	tabButtons->setBounds(0, 0.12f*getHeight(), 120, 575);
+	accountChartComponent->setBounds(0, 0, getWidth(), getHeight());
+	accountsComponent->setBounds(0, 0, getWidth(), getHeight());
+	suppliersComponent->setBounds(0, 0, getWidth(), getHeight());
+	customersComponent->setBounds(0, 0, getWidth(), getHeight());
+	tabButtons->setBounds(0, (getHeight()-575) / 2, 120, 575);
 }
 
 void CustomTabComponent::timerCallback()
@@ -223,7 +223,7 @@ void CustomTabComponent::timerCallback()
 	Rectangle<int> finalBoundsVisible = Rectangle<int>(0, tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
 	Rectangle<int> finalBoundsHidden = Rectangle<int>(-tabButtons->getWidth(), tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
 
-	if (getMouseXYRelative().getY() > 0 && getMouseXYRelative().getX() > 0 && getMouseXYRelative().getX() < tabButtons->getWidth()*0.8f && tabButtons->getX() < 0 && an.getComponentDestination(tabButtons) == finalBoundsHidden) {
+	if (getMouseXYRelative().getY() > 0 && getMouseXYRelative().getX() > 0 && getMouseXYRelative().getX() < getWidth()*0.01f && tabButtons->getX() < 0 && an.getComponentDestination(tabButtons) == finalBoundsHidden) {
 		an.cancelAnimation(tabButtons, false);
 		an.animateComponent(tabButtons, finalBoundsVisible, 1.0f, 400, false, 0.0f, 1.0f);
 	}

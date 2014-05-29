@@ -82,11 +82,22 @@ public:
     {
 		setWantsKeyboardFocus(false);
 		// Centre the window on the screen
+
+		/*
 		juce::Rectangle<int> r = Desktop::getInstance().getDisplays().getMainDisplay().userArea;
-		centreWithSize(r.getWidth(), r.getHeight());
+		r.setWidth(r.getWidth() - getBorderThickness().getLeft() - getBorderThickness().getRight() );
+		r.setHeight(r.getHeight() - getBorderThickness().getTop() - getBorderThickness().getBottom() - getTitleBarHeight());
+		setSize(r.getWidth(), r.getHeight());
+		setTopLeftPosition(0, 0);
+		*/
+
+		//centreWithSize(100, 100);
 
         // Create an instance of our main content component, and add it to our window..
-        setContentOwned (new MainComponent(), true);
+		Component *cmp = new MainComponent();
+		cmp->setBoundsRelative(0.1f, 0.1f, 0.8f, 0.8f);
+        setContentOwned (cmp, true);
+		setTopLeftPosition(cmp->getWidth()*0.1f / 0.8f, cmp->getHeight()*0.1f / 0.8f);
 
         // And show it!
         setVisible (true);

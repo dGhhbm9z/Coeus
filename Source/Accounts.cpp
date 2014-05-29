@@ -174,5 +174,5 @@ AccountsComponent::~AccountsComponent()
 
 void AccountsComponent::resized() 
 {
-	accounts->setBoundsRelative(0.08f, 0.05f, 0.9f, 0.94f);
+	accounts->setBounds(0.01f*getWidth(), 0.01f*getHeight(), getWidth() - 0.01f*getWidth(), getHeight() - 0.01f*getHeight());
 }

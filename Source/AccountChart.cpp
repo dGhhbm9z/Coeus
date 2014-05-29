@@ -47,5 +47,5 @@ AccountChartComponent::~AccountChartComponent()
 
 void AccountChartComponent::resized() 
 {
-	accountChart->setBoundsRelative(0.08f, 0.05f, 0.9f, 0.94f);
+	accountChart->setBounds(0.01f*getWidth(), 0.01f*getHeight(), getWidth() - 0.01f*getWidth(), getHeight() - 0.01f*getHeight());
 }

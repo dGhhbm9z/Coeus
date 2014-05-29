@@ -36,9 +36,6 @@ MainComponent::MainComponent ()
 	tc->centreWithSize(800, 600);
 	tc->setVisible(false);
 
-	//[UserPreSize]
-    //[/UserPreSize]
-
 	commandManager.registerAllCommandsForTarget(this);
 	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::NewTab, KeyPress('t', ModifierKeys::commandModifier, juce_wchar('t')));
 	commandManager.getKeyMappings()->addKeyPress(CoeusCommandIDs::CloseTab, KeyPress('w', ModifierKeys::commandModifier, juce_wchar('w')));
@@ -48,13 +45,6 @@ MainComponent::MainComponent ()
 	commandManager.setFirstCommandTarget(this);
 
 	commandManager.invokeDirectly(CoeusCommandIDs::NewTab, true);
-
-	this->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
-
-    //[Constructor] You can add your own custom stuff here..
-
-
-    //[/Constructor]
 }
 
 MainComponent::~MainComponent()
@@ -84,7 +74,7 @@ void MainComponent::paint (Graphics& g)
 
 void MainComponent::resized()
 {
-	tabs->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
+	tabs->setBounds(0, 0, getWidth(), getHeight());
 
 	//[UserResized] Add your own custom resize handling here..
     //[/UserResized]
