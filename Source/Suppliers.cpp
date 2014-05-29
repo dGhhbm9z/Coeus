@@ -41,25 +41,7 @@ Component * SuppliersTableListBoxModel::refreshComponentForCell(int rowNumber, i
 {
 	// create
 	if (existingComponentToUpdate == nullptr) {
-		if (columnId == 1) {
-			TextEditor *payload = new TextEditor();
-			payload->setMultiLine(true);
-			if (qe != nullptr) {
-				payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1));
-			}
-			MarginComponent *newComponent = new MarginComponent(payload);
-			return (Component *)newComponent;
-		}
-		else if (columnId == 2) {
-			TextEditor *payload = new TextEditor();
-			payload->setMultiLine(true);
-			if (qe != nullptr) {
-				payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1));
-			}
-			MarginComponent *newComponent = new MarginComponent(payload);
-			return (Component *)newComponent;
-		}
-		else if (columnId == 3) {
+		if (columnId >= 1 && columnId <= 4) {
 			TextEditor *payload = new TextEditor();
 			payload->setMultiLine(true);
 			if (qe != nullptr) {
@@ -78,14 +60,15 @@ Component * SuppliersTableListBoxModel::refreshComponentForCell(int rowNumber, i
 	}
 	// update
 	else {
-		if (columnId == 1) {
-
-		}
-		else if (columnId == 2) {
-
-		}
-		else if (columnId == 3) {
-
+		if (columnId >= 1 && columnId <= 4) {
+			MarginComponent *margin = dynamic_cast<MarginComponent *> (existingComponentToUpdate);
+			if (margin != nullptr) {
+				TextEditor *payload = dynamic_cast<TextEditor *> (margin->getEnclosedComp());
+					
+				if (qe != nullptr && payload != nullptr) {
+					payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1));
+				}
+			}
 		}
 		else if (columnId == 5) {
 			if (!isRowSelected) {

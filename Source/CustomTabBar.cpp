@@ -246,14 +246,14 @@ void CustomTabComponent::changeListenerCallback(ChangeBroadcaster *source)
 			customersComponent->setVisible(false);
 			break;
 		case 3:
-			accountChartComponent->setVisible(false);
+			accountChartComponent->setVisible(true);
 			accountsComponent->setVisible(false);
 			suppliersComponent->setVisible(false);
 			customersComponent->setVisible(false);
 			break;
 		case 4:
-			accountChartComponent->setVisible(true);
-			accountsComponent->setVisible(false);
+			accountChartComponent->setVisible(false);
+			accountsComponent->setVisible(true);
 			suppliersComponent->setVisible(false);
 			customersComponent->setVisible(false);
 			break;

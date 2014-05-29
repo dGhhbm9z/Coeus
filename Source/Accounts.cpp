@@ -93,30 +93,12 @@ Component * AccountsTableListBoxModel::refreshComponentForCell(int rowNumber, in
 	}
 	// update
 	else {
-		if (columnId == 1) {
+		if (columnId >= 1 && columnId <= 4) {
 			MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
 			if (newComponent) {
 				TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(newComponent->getEnclosedComp());
 				if (tefr) {
 					tefr->rowIndex = rowNumber;
-				}
-			}
-		}
-		else if (columnId == 2) {
-			MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
-			if (newComponent) {
-				TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(newComponent->getEnclosedComp());
-				if (tefr) {
-					tefr->rowIndex = rowNumber;
-				}
-			}
-		}
-		else if (columnId == 3) {
-			MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
-			if (newComponent) {
-				ComboBoxFocusReport *cbfr = dynamic_cast<ComboBoxFocusReport *>(newComponent->getEnclosedComp());
-				if (cbfr) {
-					cbfr->rowIndex = rowNumber;
 				}
 			}
 		}
