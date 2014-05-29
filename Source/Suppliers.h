@@ -3,6 +3,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "CacheSystem.h"
+#include "CustomComponents.h"
 
 //=======================================================================================================
 class SuppliersTableListBoxModel : public TableListBoxModel
@@ -21,43 +22,15 @@ private:
 };
 
 //=======================================================================================================
-class SuppliersComponent : public Component,
-	public CacheSystemClient
+class SuppliersComponent :	public CustomTabContent,
+							public CacheSystemClient
 {
 public:
-	SuppliersComponent() {
-		TableHeaderComponent *accountsHeaderComponent = new TableHeaderComponent();
-		accountsHeaderComponent->addColumn(L"Ονοματεπώνυμο προμηθευτή", 1, 250, 100, 250);
-		accountsHeaderComponent->addColumn(L"Επωνυμία", 2, 250, 100, 250);
-		accountsHeaderComponent->addColumn(L"Τηλέφωνο", 3, 150, 100, 250);
-		accountsHeaderComponent->addColumn(L"Υπόλοιπο", 4, 250, 100, 250);
-		accountsHeaderComponent->addColumn(String::empty, 5, 200, 100, 250);
+	SuppliersComponent();
+	~SuppliersComponent();
 
-		suppliersTableListBoxModel = new SuppliersTableListBoxModel();
-		accounts = new TableListBox(String::empty, suppliersTableListBoxModel);
-		accounts->setRowHeight(40);
-		accounts->setHeader(accountsHeaderComponent);
-		accounts->setHeaderHeight(40);
-
-		addAndMakeVisible(accounts);
-
-		CacheSystem *cs = CacheSystem::getInstance();
-		cs->getResultsFor(String(L"SELECT SupplierCode, Name, PhoneNumber, SupplierTransactions FROM suppliers"), this);
-	}
-
-	~SuppliersComponent() {
-		accounts = nullptr;
-	}
-
-	void resized() override {
-		accounts->setBounds(0.01f*getWidth(), 0.01f*getHeight(), getWidth() - 0.01f*getWidth(), getHeight() - 0.01f*getHeight());
-	}
-
-	void receivedResults(QueryEntry *qe_) override {
-		qe = qe_;
-		suppliersTableListBoxModel->setQueryEntry(qe);
-		accounts->updateContent();
-	}
+	void resized() override;
+	void receivedResults(QueryEntry *qe_);
 
 private:
 	ScopedPointer<TableListBox> accounts;

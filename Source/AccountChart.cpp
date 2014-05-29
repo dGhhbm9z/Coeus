@@ -47,5 +47,6 @@ AccountChartComponent::~AccountChartComponent()
 
 void AccountChartComponent::resized() 
 {
-	accountChart->setBounds(0.01f*getWidth(), 0.01f*getHeight(), getWidth() - 0.01f*getWidth(), getHeight() - 0.01f*getHeight());
+	CustomTabContent::resized();
+	accountChart->setBounds(getComponentArea());
 }

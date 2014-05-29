@@ -172,10 +172,7 @@ void CustomTabbedButtonBar::buttonClicked(Button* buttonThatWasClicked)
 CustomTabComponent::CustomTabComponent()
 {
 	setWantsKeyboardFocus(false);
-	search = new TextEditor();
-	search->setFont(Font(22));
-	search->setTextToShowWhenEmpty(L"Enter Search Keyword", Colours::black.withAlpha(0.5f));
-
+	
 	accountChartComponent = new AccountChartComponent();
 	accountsComponent = new AccountsComponent();
 	suppliersComponent = new SuppliersComponent();
@@ -190,7 +187,6 @@ CustomTabComponent::CustomTabComponent()
 	addChildComponent(suppliersComponent);
 	addChildComponent(customersComponent);
 
-	addAndMakeVisible(search);
 	addAndMakeVisible(tabButtons);
 
 	startTimer(100);
@@ -198,7 +194,6 @@ CustomTabComponent::CustomTabComponent()
 
 CustomTabComponent::~CustomTabComponent() 
 {
-	search = nullptr;
 	accountChartComponent = nullptr;
 	accountsComponent = nullptr;
 	suppliersComponent = nullptr;
@@ -209,7 +204,6 @@ void CustomTabComponent::resized()
 {
 	const float width = getWidth();
 	const float height = getHeight();
-	search->setBoundsRelative(0.5f - 0.125f, 0.01, 0.25f, 0.05f);
 	accountChartComponent->setBounds(0, 0, getWidth(), getHeight());
 	accountsComponent->setBounds(0, 0, getWidth(), getHeight());
 	suppliersComponent->setBounds(0, 0, getWidth(), getHeight());

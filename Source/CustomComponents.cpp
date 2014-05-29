@@ -87,3 +87,35 @@ void CustomMenuBarButton::paint(Graphics &g) {
 		g.drawImage(imageNormal, 0, 0, getWidth(), getHeight(), 0, 0, imageNormal.getWidth(), imageNormal.getHeight());
 	}
 }
+
+//=======================================================================================
+
+CustomTabContent::CustomTabContent() {
+	title = new Label("", "Events");
+	title->setFont(22);
+	title->setJustificationType(Justification::centred);
+
+	search = new TextEditor();
+	search->setFont(Font(22));
+	search->setTextToShowWhenEmpty(L"Enter Search Keyword", Colours::black.withAlpha(0.5f));
+
+	addAndMakeVisible(title);
+	addAndMakeVisible(search);
+}
+
+CustomTabContent::~CustomTabContent()
+{
+	title = nullptr;
+	search = nullptr;
+}
+
+void CustomTabContent::resized()
+{
+	title->setBoundsRelative(0.5f - 0.125f, 0.01, 0.25f, 0.05f);
+	search->setBoundsRelative(0.5f - 0.125f, 0.01 + 0.05f, 0.25f, 0.05f);
+}
+
+Rectangle<int> CustomTabContent::getComponentArea()
+{
+	return Rectangle<int>(0.01f*getWidth(), 0.15f*getHeight(), getWidth() - 0.01f*getWidth(), getHeight() - 0.15f*getHeight());
+}

@@ -102,3 +102,44 @@ void SuppliersTableListBoxModel::setQueryEntry(QueryEntry *qe_)
 {
 	qe = qe_;
 }
+
+//================================================================================
+
+SuppliersComponent::SuppliersComponent()
+{
+	TableHeaderComponent *accountsHeaderComponent = new TableHeaderComponent();
+	accountsHeaderComponent->addColumn(L"Ονοματεπώνυμο προμηθευτή", 1, 250, 100, 250);
+	accountsHeaderComponent->addColumn(L"Επωνυμία", 2, 250, 100, 250);
+	accountsHeaderComponent->addColumn(L"Τηλέφωνο", 3, 150, 100, 250);
+	accountsHeaderComponent->addColumn(L"Υπόλοιπο", 4, 250, 100, 250);
+	accountsHeaderComponent->addColumn(String::empty, 5, 200, 100, 250);
+
+	suppliersTableListBoxModel = new SuppliersTableListBoxModel();
+	accounts = new TableListBox(String::empty, suppliersTableListBoxModel);
+	accounts->setRowHeight(40);
+	accounts->setHeader(accountsHeaderComponent);
+	accounts->setHeaderHeight(40);
+
+	addAndMakeVisible(accounts);
+
+	CacheSystem *cs = CacheSystem::getInstance();
+	cs->getResultsFor(String(L"SELECT SupplierCode, Name, PhoneNumber, SupplierTransactions FROM suppliers"), this);
+}
+
+SuppliersComponent::~SuppliersComponent()
+{
+	accounts = nullptr;
+}
+
+void SuppliersComponent::resized() 
+{
+	CustomTabContent::resized();
+	accounts->setBounds(getComponentArea());
+}
+
+void SuppliersComponent::receivedResults(QueryEntry *qe_) 
+{
+	qe = qe_;
+	suppliersTableListBoxModel->setQueryEntry(qe);
+	accounts->updateContent();
+}

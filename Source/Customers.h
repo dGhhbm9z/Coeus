@@ -2,6 +2,7 @@
 #define CustomersGuard
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "CustomComponents.h"
 
 //=======================================================================================================
 class CustomersTableListBoxModel : public TableListBoxModel
@@ -13,7 +14,7 @@ class CustomersTableListBoxModel : public TableListBoxModel
 };
 
 //=======================================================================================================
-class CustomersComponent : public Component
+class CustomersComponent : public CustomTabContent
 {
 public:
 	CustomersComponent();

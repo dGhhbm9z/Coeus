@@ -56,7 +56,6 @@ public:
 	void changeListenerCallback(ChangeBroadcaster *source) override;
 
 private:
-	ScopedPointer<TextEditor> search;
 	ScopedPointer<AccountChartComponent> accountChartComponent;
 	ScopedPointer<AccountsComponent> accountsComponent;
 	ScopedPointer<SuppliersComponent> suppliersComponent;

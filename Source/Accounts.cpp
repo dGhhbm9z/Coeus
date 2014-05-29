@@ -174,5 +174,6 @@ AccountsComponent::~AccountsComponent()
 
 void AccountsComponent::resized() 
 {
-	accounts->setBounds(0.01f*getWidth(), 0.01f*getHeight(), getWidth() - 0.01f*getWidth(), getHeight() - 0.01f*getHeight());
+	CustomTabContent::resized();
+	accounts->setBounds(getComponentArea());
 }

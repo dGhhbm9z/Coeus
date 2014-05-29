@@ -73,4 +73,23 @@ private:
 	ScopedPointer<Component> comp;
 };
 
+//=======================================================================================================
+
+class CustomTabContent : public Component
+{
+public:
+	CustomTabContent();
+	~CustomTabContent();
+
+	void resized() override;
+	Rectangle<int> getComponentArea();
+
+protected:
+	ScopedPointer<Label> title;
+	ScopedPointer<TextEditor> search;
+
+private:
+
+};
+
 #endif

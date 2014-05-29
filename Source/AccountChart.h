@@ -2,6 +2,7 @@
 #define AccountChartGuard
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "CustomComponents.h"
 
 //=======================================================================================================
 class AccountChartsListBoxModel : public ListBoxModel
@@ -12,7 +13,7 @@ public:
 	Component* refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate) override;
 };
 
-class AccountChartComponent : public Component
+class AccountChartComponent : public CustomTabContent
 {
 public:
 	AccountChartComponent();

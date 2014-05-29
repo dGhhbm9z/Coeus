@@ -39,7 +39,7 @@ public:
 };
 
 //=======================================================================================================
-class AccountsComponent : public Component
+class AccountsComponent : public CustomTabContent
 {
 public:
 	AccountsComponent();
