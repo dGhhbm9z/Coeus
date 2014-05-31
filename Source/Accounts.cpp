@@ -302,6 +302,28 @@ void AccountsComponent::receivedResults(QueryEntry *qe_)
 
 void AccountsComponent::searchButtonPressed()
 {
+	String andOr = (searchFilter->getSelectedId() == 2) ? " AND " : " OR ";
+	String or = " OR ";
+	StringArray terms;
+	terms.addTokens(search->getText(), true);
+
+	String queryStr = "SELECT Code, Name, AccountType, XreosPist FROM accounts WHERE ";
+
+	for (int i = 0; i < terms.size(); i++) {
+		queryStr += "VAT like '%" + terms[i] + "%' " + or;
+		queryStr += "Code like '%" + terms[i] + "%' " + or;
+		queryStr += "Name like '%" + terms[i] + "%' " + or;
+		queryStr += "ShortName like '%" + terms[i] + "%' " + or;
+		queryStr += "AccountType like '%" + terms[i] + "%' " + or;
+		queryStr += "XreosPist like '%" + terms[i] + "%' " + andOr;
+	}
+
+	queryStr += (searchFilter->getSelectedId() == 2 || terms.size() == 0) ? " 1 = 1" : " 1 = 0";
+
+	//		CompanyVAT varchar(10) NOT NULL,
+
 	CacheSystem *cs = CacheSystem::getInstance();
-	cs->getResultsFor(String(L"SELECT Code, Name, AccountType, XreosPist FROM accounts"), this);
+	cs->getResultsFor(queryStr, this);
+
+	std::cout << queryStr << std::endl;
 }
