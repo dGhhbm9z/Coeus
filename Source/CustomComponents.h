@@ -118,7 +118,7 @@ public:
 	~CustomTabContent();
 
 	void resized() override;
-	Rectangle<int> getComponentArea();
+	juce::Rectangle<int> getComponentArea();
 
 	void comboBoxChanged(ComboBox *comboBoxThatHasChanged) override;
 

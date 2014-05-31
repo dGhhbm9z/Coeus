@@ -145,6 +145,7 @@
     <ClCompile Include="..\..\Source\CustomTabBar.cpp" />
     <ClCompile Include="..\..\Source\Main.cpp" />
     <ClCompile Include="..\..\Source\MainComponent.cpp" />
+    <ClCompile Include="..\..\Source\Splash.cpp" />
     <ClCompile Include="..\..\Source\Suppliers.cpp" />
     <ClCompile Include="..\..\Source\Theme.cpp" />
     <ClCompile Include="..\..\Source\WorkspaceView.cpp" />
@@ -1251,6 +1252,7 @@
     <ClInclude Include="..\..\Source\CustomTabBar.h" />
     <ClInclude Include="..\..\Source\MainComponent.h" />
     <ClInclude Include="..\..\Source\PortDefinitions.h" />
+    <ClInclude Include="..\..\Source\Splash.h" />
     <ClInclude Include="..\..\Source\Suppliers.h" />
     <ClInclude Include="..\..\Source\Theme.h" />
     <ClInclude Include="..\..\Source\WorkspaceView.h" />

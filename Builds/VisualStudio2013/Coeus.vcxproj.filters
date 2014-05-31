@@ -1449,6 +1449,9 @@
     <ClCompile Include="..\..\Source\Companies.cpp">
       <Filter>Coeus\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Splash.cpp">
+      <Filter>Coeus\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\CacheSystem.h">
@@ -2805,6 +2808,9 @@
       <Filter>Coeus\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Companies.h">
+      <Filter>Coeus\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Splash.h">
       <Filter>Coeus\Source</Filter>
     </ClInclude>
   </ItemGroup>

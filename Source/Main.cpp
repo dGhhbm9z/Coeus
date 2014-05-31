@@ -63,6 +63,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MainComponent.h"
+#include "Splash.h"
 
 //==============================================================================
 /**
@@ -94,9 +95,13 @@ public:
 		//centreWithSize(100, 100);
 
         // Create an instance of our main content component, and add it to our window..
-		Component *cmp = new MainComponent();
+		cmp = new MainComponent();
 		cmp->setBoundsRelative(0.1f, 0.1f, 0.8f, 0.8f);
-        setContentOwned (cmp, true);
+
+		splash = new CoeusSplashScreen(this, cmp);
+		splash->setBoundsRelative(0.1f, 0.1f, 0.8f, 0.8f);
+
+        setContentOwned (splash, true);
 		setTopLeftPosition(cmp->getWidth()*0.1f / 0.8f, cmp->getHeight()*0.1f / 0.8f);
 
         // And show it!
@@ -122,6 +127,10 @@ public:
         // HelloWorldWindow object will be deleted by the JUCEHelloWorldApplication class.
         JUCEApplication::quit();
     }
+
+private:
+	CoeusSplashScreen *splash;
+	Component *cmp;
 };
 
 //==============================================================================

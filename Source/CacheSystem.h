@@ -84,9 +84,10 @@ class CacheSystem	:	public Thread
 public:
 	~CacheSystem();
 
-	bool setUserName();
-	bool setPassword();
+	bool setUserName(String &user);
+	bool setPassword(String &pass);
 	bool setServer(String &address_, uint32 port_);
+	bool testServer();
 
 	void getResultsFor(String &str, CacheSystemClient *client);
 

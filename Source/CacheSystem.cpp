@@ -17,7 +17,6 @@ CacheSystem::CacheSystem()
 : Thread("Cache System Thread")
 {
 	nextQueryToServeIndex = -1;
-	setPassword();
 	startThread();
 }
 
@@ -101,21 +100,32 @@ void *CacheSystem::initialiseConnection()
 */
 }
 
-bool CacheSystem::setUserName()
+bool CacheSystem::setUserName(String &user)
 {
-	username = L"root";
+	username = user;
 	return true;
 }
 
-bool CacheSystem::setPassword()
+bool CacheSystem::setPassword(String &pass)
 {
-	password = L"k41n0ur10p4ss";
+	password = pass;
 	return true;
 }
 
 bool CacheSystem::setServer(String &address_, uint32 port_)
 {
 	address = L"localhost";
+	return true;
+}
+
+bool CacheSystem::testServer()
+{
+	MYSQL *con = (MYSQL *)initialiseConnection();
+	if (con == nullptr) {
+		return false;
+	}
+	
+	mysql_close(con);
 	return true;
 }
 
