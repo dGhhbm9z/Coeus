@@ -205,7 +205,7 @@ SuppliersComponent::SuppliersComponent()
 
 	addAndMakeVisible(suppliersTableListBoxModel);
 
-	searchButtonPressed();
+	//searchButtonPressed();
 }
 
 SuppliersComponent::~SuppliersComponent()
