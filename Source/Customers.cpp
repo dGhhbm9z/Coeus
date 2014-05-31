@@ -263,7 +263,7 @@ void CustomersComponent::searchButtonPressed()
 		queryStr += "CommercialActivity like '%" + terms[i] + "%' " + andOr;
 	}
 
-	queryStr += (searchFilter->getSelectedId() == 2) ? " 1 = 1" : " 1 = 0";
+	queryStr += (searchFilter->getSelectedId() == 2 || terms.size() == 0) ? " 1 = 1" : " 1 = 0";
 
 //		CompanyVAT varchar(10) NOT NULL,
 	

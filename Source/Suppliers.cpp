@@ -233,6 +233,41 @@ void SuppliersComponent::mouseExit(const MouseEvent &event)
 
 void SuppliersComponent::searchButtonPressed()
 {
+	String andOr = (searchFilter->getSelectedId() == 2) ? " AND " : " OR ";
+	String or = " OR ";
+	StringArray terms;
+	terms.addTokens(search->getText(), true);
+
+	String queryStr = "SELECT SupplierCode, Name, PhoneNumber, SupplierTransactions FROM suppliers WHERE ";
+
+	for (int i = 0; i < terms.size(); i++) {
+		queryStr += "SupplierCode like '%" + terms[i] + "%' " + or;
+		queryStr += "SupplierVAT like '%" + terms[i] + "%' " + or;
+		queryStr += "Trademark like '%" + terms[i] + "%' " + or;
+		queryStr += "Name like '%" + terms[i] + "%' " + or;
+		queryStr += "FathersName like '%" + terms[i] + "%' " + or;
+		queryStr += "DateOfBirth like '%" + terms[i] + "%' " + or;
+		queryStr += "Address like '%" + terms[i] + "%' " + or;
+		queryStr += "City like '%" + terms[i] + "%' " + or;
+
+		queryStr += "Country like '%" + terms[i] + "%' " + or;
+		queryStr += "Phonenumber like '%" + terms[i] + "%' " + or;
+		queryStr += "Faxnumber like '%" + terms[i] + "%' " + or;
+		queryStr += "Email like '%" + terms[i] + "%' " + or;
+		queryStr += "DateOfBirth like '%" + terms[i] + "%' " + or;
+		queryStr += "IDcardNumber like '%" + terms[i] + "%' " + or;
+		queryStr += "SupplierTransactions like '%" + terms[i] + "%' " + or;
+
+		queryStr += "PublicRevenueService like '%" + terms[i] + "%' " + or;
+		queryStr += "CommercialActivity like '%" + terms[i] + "%' " + andOr;
+	}
+
+	queryStr += (searchFilter->getSelectedId() == 2 || terms.size() == 0) ? " 1 = 1" : " 1 = 0";
+
+	//		CompanyVAT varchar(10) NOT NULL,
+
 	CacheSystem *cs = CacheSystem::getInstance();
-	cs->getResultsFor(String(L"SELECT SupplierCode, Name, PhoneNumber, SupplierTransactions FROM suppliers"), this);
+	cs->getResultsFor(queryStr, this);
+
+	std::cout << queryStr << std::endl;
 }
