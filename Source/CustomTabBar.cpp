@@ -177,6 +177,7 @@ CustomTabComponent::CustomTabComponent()
 	accountsComponent = new AccountsComponent();
 	suppliersComponent = new SuppliersComponent();
 	customersComponent = new CustomersComponent();
+	companiesComponent = new CompaniesComponent();
 
 	tabButtons = new CustomTabbedButtonBar();
 	tabButtons->addChangeListener(this);
@@ -186,6 +187,7 @@ CustomTabComponent::CustomTabComponent()
 	addChildComponent(accountsComponent);
 	addChildComponent(suppliersComponent);
 	addChildComponent(customersComponent);
+	addChildComponent(companiesComponent);
 
 	addAndMakeVisible(tabButtons);
 
@@ -198,6 +200,7 @@ CustomTabComponent::~CustomTabComponent()
 	accountsComponent = nullptr;
 	suppliersComponent = nullptr;
 	customersComponent = nullptr;
+	companiesComponent = nullptr;
 }
 
 void CustomTabComponent::resized()
@@ -208,6 +211,7 @@ void CustomTabComponent::resized()
 	accountsComponent->setBounds(0, 0, getWidth(), getHeight());
 	suppliersComponent->setBounds(0, 0, getWidth(), getHeight());
 	customersComponent->setBounds(0, 0, getWidth(), getHeight());
+	companiesComponent->setBounds(0, 0, getWidth(), getHeight());
 	tabButtons->setBounds(0, (getHeight()-575) / 2, 120, 575);
 }
 
@@ -238,36 +242,42 @@ void CustomTabComponent::changeListenerCallback(ChangeBroadcaster *source)
 			accountsComponent->setVisible(false);
 			suppliersComponent->setVisible(false);
 			customersComponent->setVisible(true);
+			companiesComponent->setVisible(false);
 			break;
 		case 2:
 			accountChartComponent->setVisible(false);
 			accountsComponent->setVisible(false);
 			suppliersComponent->setVisible(true);
 			customersComponent->setVisible(false);
+			companiesComponent->setVisible(false);
 			break;
 		case 3:
 			accountChartComponent->setVisible(true);
 			accountsComponent->setVisible(false);
 			suppliersComponent->setVisible(false);
 			customersComponent->setVisible(false);
+			companiesComponent->setVisible(false);
 			break;
 		case 4:
 			accountChartComponent->setVisible(false);
 			accountsComponent->setVisible(true);
 			suppliersComponent->setVisible(false);
 			customersComponent->setVisible(false);
+			companiesComponent->setVisible(false);
 			break;
 		case 5:
 			accountChartComponent->setVisible(false);
 			accountsComponent->setVisible(false);
 			suppliersComponent->setVisible(false);
 			customersComponent->setVisible(false);
+			companiesComponent->setVisible(true);
 			break;
 		case 6:
 			accountChartComponent->setVisible(false);
 			accountsComponent->setVisible(false);
 			suppliersComponent->setVisible(false);
 			customersComponent->setVisible(false);
+			companiesComponent->setVisible(false);
 			break;
 
 		default:

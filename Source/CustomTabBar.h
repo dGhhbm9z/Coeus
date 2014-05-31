@@ -8,6 +8,7 @@
 #include "AccountChart.h"
 #include "Customers.h"
 #include "Suppliers.h"
+#include "Companies.h"
 
 //=======================================================================================================
 class CustomTabbedButtonBar : public Component,
@@ -60,6 +61,7 @@ private:
 	ScopedPointer<AccountsComponent> accountsComponent;
 	ScopedPointer<SuppliersComponent> suppliersComponent;
 	ScopedPointer<CustomersComponent> customersComponent;
+	ScopedPointer<CompaniesComponent> companiesComponent;
 
 	ScopedPointer<CustomTabbedButtonBar> tabButtons;
 };
