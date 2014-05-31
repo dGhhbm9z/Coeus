@@ -99,23 +99,36 @@ CustomTabContent::CustomTabContent() {
 	search->setFont(Font(22));
 	search->setTextToShowWhenEmpty(L"Enter Search Keyword", Colours::black.withAlpha(0.5f));
 
+	searchFilter = new ComboBox();
+	searchFilter->addItem(L"Any", 1);
+	searchFilter->addItem(L"All", 2);
+	searchFilter->addListener(this);
+
 	addAndMakeVisible(title);
 	addAndMakeVisible(search);
+	addAndMakeVisible(searchFilter);
 }
 
 CustomTabContent::~CustomTabContent()
 {
 	title = nullptr;
 	search = nullptr;
+	searchFilter = nullptr;
 }
 
 void CustomTabContent::resized()
 {
 	title->setBoundsRelative(0.5f - 0.125f, 0.01, 0.25f, 0.05f);
 	search->setBoundsRelative(0.5f - 0.125f, 0.01 + 0.05f, 0.25f, 0.05f);
+	searchFilter->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f, 0.01 + 0.05f, 0.1f, 0.05f);
 }
 
 Rectangle<int> CustomTabContent::getComponentArea()
 {
 	return Rectangle<int>(0.01f*getWidth(), 0.15f*getHeight(), getWidth() - 0.01f*getWidth(), getHeight() - 0.15f*getHeight());
+}
+
+void CustomTabContent::comboBoxChanged(ComboBox *comboBoxThatHasChanged)
+{
+
 }

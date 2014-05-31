@@ -109,7 +109,8 @@ private:
 
 //=======================================================================================================
 
-class CustomTabContent : public Component
+class CustomTabContent :	public Component,
+							public ComboBox::Listener
 {
 public:
 	CustomTabContent();
@@ -118,9 +119,12 @@ public:
 	void resized() override;
 	Rectangle<int> getComponentArea();
 
+	void comboBoxChanged(ComboBox *comboBoxThatHasChanged) override;
+
 protected:
 	ScopedPointer<Label> title;
 	ScopedPointer<TextEditor> search;
+	ScopedPointer<ComboBox> searchFilter;
 
 private:
 
