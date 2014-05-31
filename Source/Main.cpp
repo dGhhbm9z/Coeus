@@ -103,8 +103,10 @@ public:
         setVisible (true);
 		setResizable(true, false);
 
-		#ifdef _MSC_VER
-		RedirectIOToConsole();
+		#ifdef _MSC_VER 
+			#if _SHOW_CONSOLE_
+				RedirectIOToConsole();
+			#endif
 		#endif
     }
 
