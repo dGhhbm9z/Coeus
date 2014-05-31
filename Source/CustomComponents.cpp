@@ -91,7 +91,7 @@ void CustomMenuBarButton::paint(Graphics &g) {
 //=======================================================================================
 
 CustomTabContent::CustomTabContent() {
-	title = new Label("", "Events");
+	title = new Label("", "-title-");
 	title->setFont(22);
 	title->setJustificationType(Justification::centred);
 

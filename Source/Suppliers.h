@@ -6,7 +6,9 @@
 #include "CustomComponents.h"
 
 //=======================================================================================================
-class SuppliersTableListBoxModel : public TableListBoxModel
+class SuppliersTableListBoxModel :  public TableListBoxModel,
+									public TableListBox,
+									public ChangeListener
 {
 public:
 	SuppliersTableListBoxModel();
@@ -17,8 +19,13 @@ public:
 	Component * refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate) override;
 	void setQueryEntry(QueryEntry *qe_);
 
+	void changeListenerCallback(ChangeBroadcaster *source) override;
+	void mouseMove(const MouseEvent &event) override;
+	void mouseExit(const MouseEvent &event) override;
+
 private:
 	QueryEntry *qe;
+	int rowUnderMouse;
 };
 
 //=======================================================================================================
@@ -30,10 +37,9 @@ public:
 	~SuppliersComponent();
 
 	void resized() override;
-	void receivedResults(QueryEntry *qe_);
+	void receivedResults(QueryEntry *qe_) override;
 
 private:
-	ScopedPointer<TableListBox> accounts;
 	ScopedPointer<SuppliersTableListBoxModel> suppliersTableListBoxModel;
 	QueryEntry *qe;
 };

@@ -236,6 +236,8 @@ void AccountsTableListBoxModel::mouseExit(const MouseEvent &event)
 //=======================================================================================================
 
 AccountsComponent::AccountsComponent() {
+	title->setText("Accounts", dontSendNotification);
+
 	TableHeaderComponent *accountsHeaderComponent = new TableHeaderComponent();
 	accountsHeaderComponent->addColumn(L"Κωδικός Λογαριασμού", 1, 250, 100, 250);
 	accountsHeaderComponent->addColumn(L"Ονομασία Λογαριασμού", 2, 250, 100, 250);

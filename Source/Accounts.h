@@ -24,10 +24,9 @@ private:
 };
 
 //=======================================================================================================
-class AccountsTableListBoxModel : public TableListBox,
-	public TableListBoxModel,
-	public ChangeListener
-
+class AccountsTableListBoxModel :	public TableListBox,
+									public TableListBoxModel,
+									public ChangeListener
 {
 public:
 	AccountsTableListBoxModel();
@@ -35,6 +34,7 @@ public:
 	void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override;
 	void paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override;
 	Component * refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate) override;
+
 	void changeListenerCallback(ChangeBroadcaster *source) override;
 	void mouseMove(const MouseEvent &event) override;
 	void mouseExit(const MouseEvent &event) override;

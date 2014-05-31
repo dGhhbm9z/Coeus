@@ -33,6 +33,8 @@ Component* AccountChartsListBoxModel::refreshComponentForRow(int rowNumber, bool
 
 AccountChartComponent::AccountChartComponent() 
 {
+	title->setText("Events", dontSendNotification);
+
 	accountChartListBoxModel = new AccountChartsListBoxModel();
 	accountChart = new ListBox(String::empty, accountChartListBoxModel);
 	accountChart->setRowHeight(620);
