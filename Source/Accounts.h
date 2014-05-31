@@ -36,6 +36,11 @@ public:
 	void paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override;
 	Component * refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate) override;
 	void changeListenerCallback(ChangeBroadcaster *source) override;
+	void mouseMove(const MouseEvent &event) override;
+	void mouseExit(const MouseEvent &event) override;
+
+private:
+	int rowUnderMouse;
 };
 
 //=======================================================================================================
@@ -46,6 +51,7 @@ public:
 	~AccountsComponent();
 
 	void resized() override;
+	void mouseExit(const MouseEvent &event) override;
 
 private:
 	ScopedPointer<AccountsTableListBoxModel> accounts;

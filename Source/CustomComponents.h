@@ -27,11 +27,18 @@ class ComboBoxFocusReport : public ComboBox,
 	public ChangeBroadcaster
 {
 public:
-	void focusGained(FocusChangeType cause) {
+	void focusGained(FocusChangeType cause) override {
+		focus = true;
+		sendChangeMessage();
+	}
+
+	void mouseEnter(const MouseEvent &event) override {
+		focus = false;
 		sendChangeMessage();
 	}
 
 	int rowIndex;
+	bool focus;
 };
 
 //=======================================================================================================
@@ -40,11 +47,38 @@ class TextEditFocusReport : public TextEditor,
 	public ChangeBroadcaster
 {
 public:
-	void focusGained(FocusChangeType cause) {
+	void focusGained(FocusChangeType cause) override {
+		focus = true;
+		sendChangeMessage();
+	}
+
+	void mouseEnter(const MouseEvent &event) override {
+		focus = false;
 		sendChangeMessage();
 	}
 
 	int rowIndex;
+	bool focus;
+};
+
+//=======================================================================================================
+
+class LabelFocusReport : public Label,
+	public ChangeBroadcaster
+{
+public:
+	void focusGained(FocusChangeType cause) override {
+		focus = true;
+		sendChangeMessage();
+	}
+
+	void mouseEnter(const MouseEvent &event) override {
+		focus = false;
+		sendChangeMessage();
+	}
+
+	int rowIndex;
+	bool focus;
 };
 
 //=======================================================================================================

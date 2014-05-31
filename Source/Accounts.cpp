@@ -27,7 +27,7 @@ void AccountCellButtons::resized()
 //=======================================================================================================
 
 
-AccountsTableListBoxModel::AccountsTableListBoxModel() : TableListBox(String::empty, this) {}
+AccountsTableListBoxModel::AccountsTableListBoxModel() : TableListBox(String::empty, this), rowUnderMouse(-1) {}
 
 int AccountsTableListBoxModel::getNumRows()
 {
@@ -40,14 +40,15 @@ void AccountsTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, i
 		g.setColour(Colours::grey.brighter().brighter());
 		g.fillAll();
 	}
+	else if (rowNumber == rowUnderMouse) {
+		g.setColour(Colours::lightgrey.brighter().brighter());
+		g.fillAll();
+	}
 }
 
 void AccountsTableListBoxModel::paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
 {
-	if (columnId == 4) {
-		g.setColour(Colours::black);
-		g.drawText(L"133", 0, 0, width, height, Justification::centred, false);
-	}
+
 }
 
 Component * AccountsTableListBoxModel::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate)
@@ -82,10 +83,30 @@ Component * AccountsTableListBoxModel::refreshComponentForCell(int rowNumber, in
 			MarginComponent *newComponent = new MarginComponent(payload);
 			return (Component *)newComponent;
 		}
+		else if (columnId == 4) {
+			LabelFocusReport *payload = new LabelFocusReport();
+			payload->rowIndex = rowNumber;
+			payload->setText(String(rand()%100), dontSendNotification);
+			payload->setEditable(false);
+			payload->addChangeListener(this);
+			payload->setJustificationType(Justification::centred);
+			MarginComponent *newComponent = new MarginComponent(payload);
+			return (Component *)newComponent;
+		}
 		else if (columnId == 5 && isRowSelected) {
 			AccountCellButtons *newComponent = new AccountCellButtons();
-			newComponent->setVisible(isRowSelected);
+			newComponent->setVisible(true);
 			newComponent->rowIndex = rowNumber;
+			return (Component *)newComponent;
+		}
+		else if (columnId == 5 && !isRowSelected) {
+			LabelFocusReport *payload = new LabelFocusReport();
+			payload->rowIndex = rowNumber;
+			payload->setText(String::empty, dontSendNotification);
+			payload->setEditable(false);
+			payload->addChangeListener(this);
+			payload->setJustificationType(Justification::centred);
+			MarginComponent *newComponent = new MarginComponent(payload);
 			return (Component *)newComponent;
 		}
 
@@ -97,20 +118,52 @@ Component * AccountsTableListBoxModel::refreshComponentForCell(int rowNumber, in
 			MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
 			if (newComponent) {
 				TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(newComponent->getEnclosedComp());
+				ComboBoxFocusReport *cbfr = dynamic_cast<ComboBoxFocusReport *>(newComponent->getEnclosedComp());
+				LabelFocusReport *lbfr = dynamic_cast<LabelFocusReport *>(newComponent->getEnclosedComp());
 				if (tefr) {
 					tefr->rowIndex = rowNumber;
+				}
+				else if (cbfr) {
+					cbfr->rowIndex = rowNumber;
+				}
+				else if (lbfr) {
+					lbfr->rowIndex = rowNumber;
 				}
 			}
 		}
 		else if (columnId == 5) {
-			if (!isRowSelected) {
-				delete existingComponentToUpdate;
-				return nullptr;
+			AccountCellButtons *acb = dynamic_cast<AccountCellButtons *>(existingComponentToUpdate);
+			MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
+			LabelFocusReport *lbfr = nullptr;
+			if (newComponent) {
+				lbfr = dynamic_cast<LabelFocusReport *>(newComponent->getEnclosedComp());
 			}
 
-			AccountCellButtons *newComponent = dynamic_cast<AccountCellButtons *>(existingComponentToUpdate);
-			if (newComponent) {
+			if (acb && isRowSelected) {
+				acb->rowIndex = rowNumber;
+			}
+			else if (lbfr && !isRowSelected) {
+				lbfr->rowIndex = rowNumber;
+			}
+			else if (acb && !isRowSelected) {
+				delete existingComponentToUpdate;
+
+				LabelFocusReport *payload = new LabelFocusReport();
+				payload->rowIndex = rowNumber;
+				payload->setText(String::empty, dontSendNotification);
+				payload->setEditable(false);
+				payload->addChangeListener(this);
+				payload->setJustificationType(Justification::centred);
+				MarginComponent *newComponent = new MarginComponent(payload);
+				return (Component *)newComponent;
+			}
+			else if (lbfr && isRowSelected) {
+				delete existingComponentToUpdate;
+
+				AccountCellButtons *newComponent = new AccountCellButtons();
 				newComponent->rowIndex = rowNumber;
+				newComponent->setVisible(true);
+				return (Component *)newComponent;
 			}
 		}
 
@@ -122,13 +175,62 @@ void AccountsTableListBoxModel::changeListenerCallback(ChangeBroadcaster *source
 {
 	TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(source);
 	ComboBoxFocusReport *cbfr = dynamic_cast<ComboBoxFocusReport *>(source);
+	LabelFocusReport *lbfr = dynamic_cast<LabelFocusReport *>(source);
 
 	if (tefr) {
-		selectRow(tefr->rowIndex);
+		if (tefr->focus) {
+			selectRow(tefr->rowIndex);
+		}
+		else {
+			const int prevR = rowUnderMouse;
+			rowUnderMouse = tefr->rowIndex;
+			repaintRow(rowUnderMouse);
+			repaintRow(prevR);
+		}
 	}
 	else if (cbfr) {
-		selectRow(cbfr->rowIndex);
+		if (cbfr->focus) {
+			selectRow(cbfr->rowIndex);
+		}
+		else {
+			const int prevR = rowUnderMouse;
+			rowUnderMouse = cbfr->rowIndex;
+			repaintRow(rowUnderMouse);
+			repaintRow(prevR);
+		}
 	}
+	else if (lbfr) {
+		if (lbfr->focus) {
+			selectRow(lbfr->rowIndex);
+		}
+		else {
+			const int prevR = rowUnderMouse;
+			rowUnderMouse = lbfr->rowIndex;
+			repaintRow(rowUnderMouse);
+			repaintRow(prevR);
+		}
+	}
+}
+
+void AccountsTableListBoxModel::mouseMove(const MouseEvent &event)
+{
+	const int x = event.getPosition().getX();
+	const int y = event.getPosition().getY();
+	const int r = getRowContainingPosition(x, y);
+	if (r != rowUnderMouse) {
+		const int prevR = rowUnderMouse;
+		rowUnderMouse = r;
+		repaintRow(rowUnderMouse);
+		repaintRow(prevR);
+	}
+}
+
+void AccountsTableListBoxModel::mouseExit(const MouseEvent &event)
+{
+	const int prevR = rowUnderMouse;
+	rowUnderMouse = -1;
+	repaintRow(rowUnderMouse);
+	repaintRow(prevR);
 }
 
 //=======================================================================================================
@@ -158,4 +260,9 @@ void AccountsComponent::resized()
 {
 	CustomTabContent::resized();
 	accounts->setBounds(getComponentArea());
+}
+
+void AccountsComponent::mouseExit(const MouseEvent &event)
+{
+	accounts->mouseExit(event);
 }
