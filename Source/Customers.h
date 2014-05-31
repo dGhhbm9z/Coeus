@@ -35,7 +35,9 @@ class CustomersComponent :	public CustomTabContent,
 public:
 	CustomersComponent();
 	~CustomersComponent();
+
 	void resized() override;
+	void mouseExit(const MouseEvent &event) override;
 
 	void receivedResults(QueryEntry *qe_) override;
 

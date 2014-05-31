@@ -226,3 +226,8 @@ void CustomersComponent::receivedResults(QueryEntry *qe_)
 	customersTableListBoxModel->setQueryEntry(qe);
 	customersTableListBoxModel->updateContent();
 }
+
+void CustomersComponent::mouseExit(const MouseEvent &event)
+{
+	customersTableListBoxModel->mouseExit(event);
+}

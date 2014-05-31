@@ -226,3 +226,8 @@ void SuppliersComponent::receivedResults(QueryEntry *qe_)
 	suppliersTableListBoxModel->setQueryEntry(qe);
 	suppliersTableListBoxModel->updateContent();
 }
+
+void SuppliersComponent::mouseExit(const MouseEvent &event)
+{
+	suppliersTableListBoxModel->mouseExit(event);
+}

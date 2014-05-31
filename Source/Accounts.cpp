@@ -27,11 +27,16 @@ void AccountCellButtons::resized()
 //=======================================================================================================
 
 
-AccountsTableListBoxModel::AccountsTableListBoxModel() : TableListBox(String::empty, this), rowUnderMouse(-1) {}
+AccountsTableListBoxModel::AccountsTableListBoxModel() : TableListBox(String::empty, this), qe(nullptr), rowUnderMouse(-1) {}
 
 int AccountsTableListBoxModel::getNumRows()
 {
-	return 8;
+	if (qe != nullptr) {
+		return qe->num_rows;
+	}
+	else {
+		return 0;
+	}
 }
 
 void AccountsTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected)
@@ -58,7 +63,11 @@ Component * AccountsTableListBoxModel::refreshComponentForCell(int rowNumber, in
 		if (columnId == 1) {
 			TextEditFocusReport *payload = new TextEditFocusReport();
 			payload->rowIndex = rowNumber;
-			payload->setText(L"00.00.00.00");
+			
+			if (qe != nullptr && payload != nullptr) {
+				payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1));
+			}
+
 			payload->addChangeListener(this);
 			MarginComponent *newComponent = new MarginComponent(payload);
 			return (Component *)newComponent;
@@ -66,7 +75,11 @@ Component * AccountsTableListBoxModel::refreshComponentForCell(int rowNumber, in
 		else if (columnId == 2) {
 			TextEditFocusReport *payload = new TextEditFocusReport();
 			payload->rowIndex = rowNumber;
-			payload->setText(L"Πολύ βασικός");
+			
+			if (qe != nullptr && payload != nullptr) {
+				payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1));
+			}
+
 			payload->addChangeListener(this);
 			MarginComponent *newComponent = new MarginComponent(payload);
 			return (Component *)newComponent;
@@ -86,7 +99,11 @@ Component * AccountsTableListBoxModel::refreshComponentForCell(int rowNumber, in
 		else if (columnId == 4) {
 			LabelFocusReport *payload = new LabelFocusReport();
 			payload->rowIndex = rowNumber;
-			payload->setText(String(rand()%100), dontSendNotification);
+
+			if (qe != nullptr && payload != nullptr) {
+				payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1), dontSendNotification);
+			}
+
 			payload->setEditable(false);
 			payload->addChangeListener(this);
 			payload->setJustificationType(Justification::centred);
@@ -171,6 +188,11 @@ Component * AccountsTableListBoxModel::refreshComponentForCell(int rowNumber, in
 	}
 }
 
+void AccountsTableListBoxModel::setQueryEntry(QueryEntry *qe_)
+{
+	qe = qe_;
+}
+
 void AccountsTableListBoxModel::changeListenerCallback(ChangeBroadcaster *source)
 {
 	TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(source);
@@ -251,6 +273,9 @@ AccountsComponent::AccountsComponent() {
 	accounts->setHeaderHeight(40);
 
 	addAndMakeVisible(accounts);
+
+	CacheSystem *cs = CacheSystem::getInstance();
+	cs->getResultsFor(String(L"SELECT Code, Name, AccountType, XreosPist FROM accounts"), this);
 }
 
 AccountsComponent::~AccountsComponent() 
@@ -267,4 +292,11 @@ void AccountsComponent::resized()
 void AccountsComponent::mouseExit(const MouseEvent &event)
 {
 	accounts->mouseExit(event);
+}
+
+void AccountsComponent::receivedResults(QueryEntry *qe_)
+{
+	qe = qe_;
+	accounts->setQueryEntry(qe);
+	accounts->updateContent();
 }

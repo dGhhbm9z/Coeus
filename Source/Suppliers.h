@@ -37,6 +37,8 @@ public:
 	~SuppliersComponent();
 
 	void resized() override;
+	void mouseExit(const MouseEvent &event) override;
+
 	void receivedResults(QueryEntry *qe_) override;
 
 private:
