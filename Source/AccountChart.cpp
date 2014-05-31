@@ -52,3 +52,9 @@ void AccountChartComponent::resized()
 	CustomTabContent::resized();
 	accountChart->setBounds(getComponentArea());
 }
+
+void AccountChartComponent::searchButtonPressed()
+{
+	//CacheSystem *cs = CacheSystem::getInstance();
+	//cs->getResultsFor(String(L"SELECT SupplierCode, Name, PhoneNumber, SupplierTransactions FROM suppliers"), this);
+}

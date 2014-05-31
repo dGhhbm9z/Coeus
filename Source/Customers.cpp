@@ -205,8 +205,7 @@ CustomersComponent::CustomersComponent()
 
 	addAndMakeVisible(customersTableListBoxModel);
 
-	CacheSystem *cs = CacheSystem::getInstance();
-	cs->getResultsFor(String(L"SELECT Name, Trademark, PhoneNumber, CustomerTransactions FROM customers"), this);
+	//searchButtonPressed();
 }
 
 CustomersComponent::~CustomersComponent() 
@@ -230,4 +229,10 @@ void CustomersComponent::receivedResults(QueryEntry *qe_)
 void CustomersComponent::mouseExit(const MouseEvent &event)
 {
 	customersTableListBoxModel->mouseExit(event);
+}
+
+void CustomersComponent::searchButtonPressed()
+{
+	CacheSystem *cs = CacheSystem::getInstance();
+	cs->getResultsFor(String(L"SELECT Name, Trademark, PhoneNumber, CustomerTransactions FROM customers"), this);
 }

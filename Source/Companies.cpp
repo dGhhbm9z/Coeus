@@ -205,8 +205,7 @@ CompaniesComponent::CompaniesComponent()
 
 	addAndMakeVisible(companiesTableListBoxModel);
 
-	CacheSystem *cs = CacheSystem::getInstance();
-	cs->getResultsFor(String(L"SELECT CompanyName, LegalInc, Telephone, Activity FROM companies"), this);
+	//searchButtonPressed();
 }
 
 CompaniesComponent::~CompaniesComponent()
@@ -230,4 +229,10 @@ void CompaniesComponent::receivedResults(QueryEntry *qe_)
 void CompaniesComponent::mouseExit(const MouseEvent &event)
 {
 	companiesTableListBoxModel->mouseExit(event);
+}
+
+void CompaniesComponent::searchButtonPressed()
+{
+	CacheSystem *cs = CacheSystem::getInstance();
+	cs->getResultsFor(String(L"SELECT CompanyName, LegalInc, Telephone, Activity FROM companies"), this);
 }

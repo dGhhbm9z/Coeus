@@ -205,8 +205,7 @@ SuppliersComponent::SuppliersComponent()
 
 	addAndMakeVisible(suppliersTableListBoxModel);
 
-	CacheSystem *cs = CacheSystem::getInstance();
-	cs->getResultsFor(String(L"SELECT SupplierCode, Name, PhoneNumber, SupplierTransactions FROM suppliers"), this);
+	searchButtonPressed();
 }
 
 SuppliersComponent::~SuppliersComponent()
@@ -230,4 +229,10 @@ void SuppliersComponent::receivedResults(QueryEntry *qe_)
 void SuppliersComponent::mouseExit(const MouseEvent &event)
 {
 	suppliersTableListBoxModel->mouseExit(event);
+}
+
+void SuppliersComponent::searchButtonPressed()
+{
+	CacheSystem *cs = CacheSystem::getInstance();
+	cs->getResultsFor(String(L"SELECT SupplierCode, Name, PhoneNumber, SupplierTransactions FROM suppliers"), this);
 }

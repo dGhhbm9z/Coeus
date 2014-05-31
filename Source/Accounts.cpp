@@ -274,8 +274,7 @@ AccountsComponent::AccountsComponent() {
 
 	addAndMakeVisible(accounts);
 
-	CacheSystem *cs = CacheSystem::getInstance();
-	cs->getResultsFor(String(L"SELECT Code, Name, AccountType, XreosPist FROM accounts"), this);
+	//searchButtonPressed();
 }
 
 AccountsComponent::~AccountsComponent() 
@@ -299,4 +298,10 @@ void AccountsComponent::receivedResults(QueryEntry *qe_)
 	qe = qe_;
 	accounts->setQueryEntry(qe);
 	accounts->updateContent();
+}
+
+void AccountsComponent::searchButtonPressed()
+{
+	CacheSystem *cs = CacheSystem::getInstance();
+	cs->getResultsFor(String(L"SELECT Code, Name, AccountType, XreosPist FROM accounts"), this);
 }

@@ -21,6 +21,8 @@ public:
 
 	void resized() override;
 
+	void searchButtonPressed() override;
+
 private:
 	ScopedPointer<ListBox> accountChart;
 	ScopedPointer<AccountChartsListBoxModel> accountChartListBoxModel;

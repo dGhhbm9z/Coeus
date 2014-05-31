@@ -41,6 +41,8 @@ public:
 
 	void receivedResults(QueryEntry *qe_) override;
 
+	void searchButtonPressed() override;
+
 private:
 	ScopedPointer<CompaniesTableListBoxModel> companiesTableListBoxModel;
 	QueryEntry *qe;

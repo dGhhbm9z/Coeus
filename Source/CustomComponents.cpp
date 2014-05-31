@@ -99,6 +99,20 @@ CustomTabContent::CustomTabContent() {
 	search->setFont(Font(22));
 	search->setTextToShowWhenEmpty(L"Enter Search Keyword", Colours::black.withAlpha(0.5f));
 
+	searchButton = new ImageButton();
+
+	imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/search/searchNormal.png"));
+	imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/search/searchHover.png"));
+	imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/search/searchClicked.png"));
+
+	searchButton->setImages(false, true, true,
+		imageNormal, 1.0f, Colours::transparentBlack,
+		imageMouseOver, 1.0f, Colours::transparentBlack,
+		imageMouseDown, 1.0f, Colours::transparentBlack,
+		0.0f);
+
+	searchButton->addListener(this);
+
 	searchFilter = new ComboBox();
 	searchFilter->addItem(L"Any", 1);
 	searchFilter->addItem(L"All", 2);
@@ -106,6 +120,7 @@ CustomTabContent::CustomTabContent() {
 
 	addAndMakeVisible(title);
 	addAndMakeVisible(search);
+	addAndMakeVisible(searchButton);
 	addAndMakeVisible(searchFilter);
 }
 
@@ -120,7 +135,13 @@ void CustomTabContent::resized()
 {
 	title->setBoundsRelative(0.5f - 0.125f, 0.01, 0.25f, 0.05f);
 	search->setBoundsRelative(0.5f - 0.125f, 0.01 + 0.05f, 0.25f, 0.05f);
-	searchFilter->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f, 0.01 + 0.05f, 0.1f, 0.05f);
+
+	const float sbz = getHeight()*0.05f;
+	const float sbwp = sbz / (float)getWidth();
+	const float sbhp = sbz / (float)getHeight();
+	searchButton->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f, 0.01 + 0.05f, sbwp, sbhp);
+
+	searchFilter->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f + sbwp + 0.01f, 0.01 + 0.05f, 0.1f, 0.05f);
 }
 
 Rectangle<int> CustomTabContent::getComponentArea()
@@ -131,4 +152,11 @@ Rectangle<int> CustomTabContent::getComponentArea()
 void CustomTabContent::comboBoxChanged(ComboBox *comboBoxThatHasChanged)
 {
 
+}
+
+void CustomTabContent::buttonClicked(Button *btn)
+{
+	if (btn == searchButton) {
+		searchButtonPressed();
+	}
 }

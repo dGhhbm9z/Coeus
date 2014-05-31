@@ -110,7 +110,8 @@ private:
 //=======================================================================================================
 
 class CustomTabContent :	public Component,
-							public ComboBox::Listener
+							public ComboBox::Listener,
+							public Button::Listener
 {
 public:
 	CustomTabContent();
@@ -121,10 +122,19 @@ public:
 
 	void comboBoxChanged(ComboBox *comboBoxThatHasChanged) override;
 
+	virtual void searchButtonPressed() = 0;
+
+	void buttonClicked(Button *) override;
+
 protected:
 	ScopedPointer<Label> title;
 	ScopedPointer<TextEditor> search;
 	ScopedPointer<ComboBox> searchFilter;
+	ScopedPointer<ImageButton> searchButton;
+
+	Image imageNormal;
+	Image imageMouseOver;
+	Image imageMouseDown;
 
 private:
 
