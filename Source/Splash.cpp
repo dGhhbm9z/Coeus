@@ -46,8 +46,10 @@ void CoeusSplashScreen::resized()
 
 void CoeusSplashScreen::textEditorReturnKeyPressed(TextEditor &ed)
 {
-	CacheSystem::getInstance()->setUserName(userText->getText());
-	CacheSystem::getInstance()->setPassword(passwordText->getText());
+    String un = userText->getText();
+    String pa = passwordText->getText();
+	CacheSystem::getInstance()->setUserName(un);
+	CacheSystem::getInstance()->setPassword(pa);
 
 	if (CacheSystem::getInstance()->testServer() && owner) {
 		owner->setContentOwned(other, true);

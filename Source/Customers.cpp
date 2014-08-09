@@ -192,10 +192,10 @@ CustomersComponent::CustomersComponent()
 	title->setText("Customers", dontSendNotification);
 
 	TableHeaderComponent *accountsHeaderComponent = new TableHeaderComponent();
-	accountsHeaderComponent->addColumn(L"Ονοματεπώνυμο πελάτη", 1, 250, 100, 250);
-	accountsHeaderComponent->addColumn(L"Επωνυμία", 2, 250, 100, 250);
-	accountsHeaderComponent->addColumn(L"Τηλέφωνο", 3, 150, 100, 250);
-	accountsHeaderComponent->addColumn(L"Υπόλοιπο", 4, 250, 100, 250);
+	accountsHeaderComponent->addColumn(L"Customers", 1, 250, 100, 250);
+	accountsHeaderComponent->addColumn(L"Customers", 2, 250, 100, 250);
+	accountsHeaderComponent->addColumn(L"Customers", 3, 150, 100, 250);
+	accountsHeaderComponent->addColumn(L"Customers", 4, 250, 100, 250);
 	accountsHeaderComponent->addColumn(String::empty, 5, 200, 100, 250);
 
 	customersTableListBoxModel = new CustomersTableListBoxModel();
@@ -234,32 +234,32 @@ void CustomersComponent::mouseExit(const MouseEvent &event)
 void CustomersComponent::searchButtonPressed()
 {
 	String andOr = (searchFilter->getSelectedId() == 2) ? " AND " : " OR ";
-	String or = " OR ";
+	String orStr = " OR ";
 	StringArray terms;
 	terms.addTokens(search->getText(), true);
 
 	String queryStr = "SELECT Name, Trademark, PhoneNumber, CustomerTransactions FROM customers WHERE ";
 
 	for (int i = 0; i < terms.size(); i++) {
-		queryStr += "CustomerCode like '%" + terms[i] + "%' " + or;
-		queryStr += "CustomerVat like '%" + terms[i] + "%' " + or;
-		queryStr += "Trademark like '%" + terms[i] + "%' " + or;
-		queryStr += "Name like '%" + terms[i] + "%' " + or;
-		queryStr += "FathersName like '%" + terms[i] + "%' " + or;
-		queryStr += "DateOfBirth like '%" + terms[i] + "%' " + or;
-		queryStr += "Address like '%" + terms[i] + "%' " + or;
-		queryStr += "City like '%" + terms[i] + "%' " + or;
+		queryStr += "CustomerCode like '%" + terms[i] + "%' " + orStr;
+		queryStr += "CustomerVat like '%" + terms[i] + "%' " + orStr;
+		queryStr += "Trademark like '%" + terms[i] + "%' " + orStr;
+		queryStr += "Name like '%" + terms[i] + "%' " + orStr;
+		queryStr += "FathersName like '%" + terms[i] + "%' " + orStr;
+		queryStr += "DateOfBirth like '%" + terms[i] + "%' " + orStr;
+		queryStr += "Address like '%" + terms[i] + "%' " + orStr;
+		queryStr += "City like '%" + terms[i] + "%' " + orStr;
 
-		queryStr += "Country like '%" + terms[i] + "%' " + or;
-		queryStr += "ShippingAdress like '%" + terms[i] + "%' " + or;
-		queryStr += "Phonenumber like '%" + terms[i] + "%' " + or;
-		queryStr += "Faxnumber like '%" + terms[i] + "%' " + or;
-		queryStr += "Email like '%" + terms[i] + "%' " + or;
-		queryStr += "DateOfBirth like '%" + terms[i] + "%' " + or;
-		queryStr += "IDcardNumber like '%" + terms[i] + "%' " + or;
-		queryStr += "CustomerTransactions like '%" + terms[i] + "%' " + or;
+		queryStr += "Country like '%" + terms[i] + "%' " + orStr;
+		queryStr += "ShippingAdress like '%" + terms[i] + "%' " + orStr;
+		queryStr += "Phonenumber like '%" + terms[i] + "%' " + orStr;
+		queryStr += "Faxnumber like '%" + terms[i] + "%' " + orStr;
+		queryStr += "Email like '%" + terms[i] + "%' " + orStr;
+		queryStr += "DateOfBirth like '%" + terms[i] + "%' " + orStr;
+		queryStr += "IDcardNumber like '%" + terms[i] + "%' " + orStr;
+		queryStr += "CustomerTransactions like '%" + terms[i] + "%' " + orStr;
 
-		queryStr += "PublicRevenueService like '%" + terms[i] + "%' " + or;
+		queryStr += "PublicRevenueService like '%" + terms[i] + "%' " + orStr;
 		queryStr += "CommercialActivity like '%" + terms[i] + "%' " + andOr;
 	}
 

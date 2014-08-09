@@ -261,10 +261,10 @@ AccountsComponent::AccountsComponent() {
 	title->setText("Accounts", dontSendNotification);
 
 	TableHeaderComponent *accountsHeaderComponent = new TableHeaderComponent();
-	accountsHeaderComponent->addColumn(L"Κωδικός Λογαριασμού", 1, 250, 100, 250);
-	accountsHeaderComponent->addColumn(L"Ονομασία Λογαριασμού", 2, 250, 100, 250);
-	accountsHeaderComponent->addColumn(L"Είδος Λογαριασμού", 3, 150, 100, 250);
-	accountsHeaderComponent->addColumn(L"Υπόλοιπο Λογαριασμού", 4, 250, 100, 250);
+	accountsHeaderComponent->addColumn(L"Accounts1", 1, 250, 100, 250);
+	accountsHeaderComponent->addColumn(L"Accounts2", 2, 250, 100, 250);
+	accountsHeaderComponent->addColumn(L"Accounts3", 3, 150, 100, 250);
+	accountsHeaderComponent->addColumn(L"Accounts4", 4, 250, 100, 250);
 	accountsHeaderComponent->addColumn(String::empty, 5, 200, 100, 250);
 
 	accounts = new AccountsTableListBoxModel();
@@ -303,18 +303,18 @@ void AccountsComponent::receivedResults(QueryEntry *qe_)
 void AccountsComponent::searchButtonPressed()
 {
 	String andOr = (searchFilter->getSelectedId() == 2) ? " AND " : " OR ";
-	String or = " OR ";
+	String orStr = " OR ";
 	StringArray terms;
 	terms.addTokens(search->getText(), true);
 
 	String queryStr = "SELECT Code, Name, AccountType, XreosPist FROM accounts WHERE ";
 
 	for (int i = 0; i < terms.size(); i++) {
-		queryStr += "VAT like '%" + terms[i] + "%' " + or;
-		queryStr += "Code like '%" + terms[i] + "%' " + or;
-		queryStr += "Name like '%" + terms[i] + "%' " + or;
-		queryStr += "ShortName like '%" + terms[i] + "%' " + or;
-		queryStr += "AccountType like '%" + terms[i] + "%' " + or;
+		queryStr += "VAT like '%" + terms[i] + "%' " + orStr;
+		queryStr += "Code like '%" + terms[i] + "%' " + orStr;
+		queryStr += "Name like '%" + terms[i] + "%' " + orStr;
+		queryStr += "ShortName like '%" + terms[i] + "%' " + orStr;
+		queryStr += "AccountType like '%" + terms[i] + "%' " + orStr;
 		queryStr += "XreosPist like '%" + terms[i] + "%' " + andOr;
 	}
 
