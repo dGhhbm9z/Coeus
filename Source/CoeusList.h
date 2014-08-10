@@ -22,6 +22,8 @@ public:
     int findSumForIndex(int index);
     void setNewValueAtIndex(int value, int index);
     void setNewValues(int *values, int size);
+    int getValueAt(int index);
+    int getSum();
     
 private:
     HeapBlock<int> heap;
@@ -29,7 +31,8 @@ private:
     int numEl;
 };
 
-class CoeusList :   public Component
+class CoeusList :   public Component,
+                    public ScrollBar::Listener
 {
 public:
     CoeusList();
@@ -57,6 +60,7 @@ public:
     void resized() override;
     void selectRow(int rowNumber);
     void repaintRow(int rowNumber);
+    void scrollBarMoved (ScrollBar *scrollBarThatHasMoved, double newRangeStart) override;
     
 private:
     virtual int getRowIndexAt(int y);
@@ -64,8 +68,11 @@ private:
     
     Array<Component *> items;
     Array<Component *> pool;
+    ScrollBar sb;
     CoeusHeap heap;
     int selectedRow;
+    int viewFirstRow;
+    int viewLastRow;
 };
 
 
