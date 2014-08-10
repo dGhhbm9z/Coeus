@@ -2,7 +2,7 @@
 #include "CustomComponents.h"
 #include "Accounts.h"
 
-CompaniesTableListBoxModel::CompaniesTableListBoxModel() : TableListBox(String::empty, this), qe(nullptr), rowUnderMouse(-1) {}
+CompaniesTableListBoxModel::CompaniesTableListBoxModel() : qe(nullptr), rowUnderMouse(-1) {}
 
 int CompaniesTableListBoxModel::getNumRows()
 {
@@ -26,11 +26,11 @@ void CompaniesTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, 
 	}
 }
 
-void CompaniesTableListBoxModel::paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
+void CompaniesTableListBoxModel::paintRow(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected)
 {
 }
 
-Component * CompaniesTableListBoxModel::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate)
+Component * CompaniesTableListBoxModel::refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate)
 {
 	// create
 	if (existingComponentToUpdate == nullptr) {

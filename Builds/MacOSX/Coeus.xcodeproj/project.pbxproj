@@ -35,6 +35,7 @@
 		7355894F199657E8004C62B3 /* search in Resources */ = {isa = PBXBuildFile; fileRef = 7355894C199657E7004C62B3 /* search */; };
 		73558950199657E8004C62B3 /* sidebar in Resources */ = {isa = PBXBuildFile; fileRef = 7355894D199657E8004C62B3 /* sidebar */; };
 		73558951199657E8004C62B3 /* splash in Resources */ = {isa = PBXBuildFile; fileRef = 7355894E199657E8004C62B3 /* splash */; };
+		7355895E1997ADD8004C62B3 /* CoeusList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7355895C1997ADD8004C62B3 /* CoeusList.cpp */; };
 		76308AA90D333C146FEF7992 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21D26DA966F2D4E3948E129D /* OpenGL.framework */; };
 		9543C8FCF963D719B0D21A68 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 751D34933CBDAE9ABF834531 /* AudioToolbox.framework */; };
 		9A96F767A95CC2454CAF4B2C /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = CEF598E16C7BBF2C8A11E6A4 /* RecentFilesMenuTemplate.nib */; };
@@ -454,6 +455,13 @@
 		7355894C199657E7004C62B3 /* search */ = {isa = PBXFileReference; lastKnownFileType = folder; name = search; path = ../../Resources/search; sourceTree = "<group>"; };
 		7355894D199657E8004C62B3 /* sidebar */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sidebar; path = ../../Resources/sidebar; sourceTree = "<group>"; };
 		7355894E199657E8004C62B3 /* splash */ = {isa = PBXFileReference; lastKnownFileType = folder; name = splash; path = ../../Resources/splash; sourceTree = "<group>"; };
+		73558952199699DE004C62B3 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		7355895419969CA4004C62B3 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = usr/lib/libcrypto.dylib; sourceTree = SDKROOT; };
+		7355895619969D37004C62B3 /* libiconv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libiconv.a; path = ../../../../macports/lib/libiconv.a; sourceTree = "<group>"; };
+		7355895819969D86004C62B3 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = ../../../../macports/lib/libcrypto.a; sourceTree = "<group>"; };
+		7355895A19969DB4004C62B3 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = ../../../../macports/lib/libssl.a; sourceTree = "<group>"; };
+		7355895C1997ADD8004C62B3 /* CoeusList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CoeusList.cpp; path = ../../Source/CoeusList.cpp; sourceTree = "<group>"; };
+		7355895D1997ADD8004C62B3 /* CoeusList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoeusList.h; path = ../../Source/CoeusList.h; sourceTree = "<group>"; };
 		736158528FBF925EA5A9A0C0 /* Main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Main.cpp; path = ../../Source/Main.cpp; sourceTree = SOURCE_ROOT; };
 		73AFDB772824C58FEBBA988E /* juce_LookAndFeel_V3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_LookAndFeel_V3.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/lookandfeel/juce_LookAndFeel_V3.cpp; sourceTree = SOURCE_ROOT; };
 		73B4178E8D7A0F85AD7F2AC7 /* juce_ShapeButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_ShapeButton.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/buttons/juce_ShapeButton.h; sourceTree = SOURCE_ROOT; };
@@ -1263,6 +1271,11 @@
 		35D43BB21D36DDC0820B3970 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7355895A19969DB4004C62B3 /* libssl.a */,
+				7355895819969D86004C62B3 /* libcrypto.a */,
+				7355895619969D37004C62B3 /* libiconv.a */,
+				7355895419969CA4004C62B3 /* libcrypto.dylib */,
+				73558952199699DE004C62B3 /* libiconv.dylib */,
 				4A022BA9E42FD417F5B1764B /* Accelerate.framework */,
 				751D34933CBDAE9ABF834531 /* AudioToolbox.framework */,
 				5B7A7EA6C84A02339A735834 /* Carbon.framework */,
@@ -2175,6 +2188,8 @@
 		AFB8FADB788DDC3DA50CF961 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				7355895C1997ADD8004C62B3 /* CoeusList.cpp */,
+				7355895D1997ADD8004C62B3 /* CoeusList.h */,
 				7355893319965379004C62B3 /* AccountChart.cpp */,
 				7355893419965379004C62B3 /* AccountChart.h */,
 				7355893519965379004C62B3 /* Accounts.cpp */,
@@ -2746,6 +2761,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7355894519965379004C62B3 /* Accounts.cpp in Sources */,
+				7355895E1997ADD8004C62B3 /* CoeusList.cpp in Sources */,
 				7355894419965379004C62B3 /* AccountChart.cpp in Sources */,
 				E0BCBE993ED1BB11CAE34414 /* CacheSystem.cpp in Sources */,
 				BBEA2B551CA9B0360856C51F /* CacheViewer.cpp in Sources */,
@@ -2807,14 +2823,16 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					/Users/catLauncher/coeus/mariadb/libmariadb,
+					"~/macports/lib/",
 					/opt/local/lib/,
+					/Users/catLauncher/macports/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_LDFLAGS = (
 					"-lmariadbclient",
+					"-liconv",
 					"-lcrypto",
 					"-lssl",
-					"-liconv",
 				);
 				SDKROOT_ppc = macosx10.5;
 			};
@@ -2848,15 +2866,17 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					/Users/catLauncher/coeus/mariadb/libmariadb,
+					"~/macports/lib/",
 					/opt/local/lib/,
+					/Users/catLauncher/macports/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lmariadbclient",
+					"-liconv",
 					"-lcrypto",
 					"-lssl",
-					"-liconv",
 				);
 				SDKROOT_ppc = macosx10.5;
 			};
@@ -2876,6 +2896,8 @@
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Coeus;
 				WARNING_CFLAGS = "-Wreorder";
 				ZERO_LINK = NO;
@@ -2896,6 +2918,8 @@
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Coeus;
 				WARNING_CFLAGS = "-Wreorder";
 				ZERO_LINK = NO;

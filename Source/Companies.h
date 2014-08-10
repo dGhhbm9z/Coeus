@@ -4,10 +4,10 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "CacheSystem.h"
 #include "CustomComponents.h"
+#include "CoeusList.h"
 
 //=======================================================================================================
-class CompaniesTableListBoxModel : public TableListBoxModel,
-									public TableListBox,
+class CompaniesTableListBoxModel : public CoeusList,
 									public ChangeListener
 {
 public:
@@ -15,8 +15,8 @@ public:
 
 	int getNumRows() override;
 	void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override;
-	void paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override;
-	Component * refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate) override;
+	void paintRow(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override;
+	Component * refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate) override;
 	void setQueryEntry(QueryEntry *qe_);
 
 	void changeListenerCallback(ChangeBroadcaster *source) override;

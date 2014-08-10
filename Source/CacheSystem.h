@@ -10,7 +10,7 @@ class QueryEntry;
 class CacheSystemClient
 {
 public:
-	~CacheSystemClient() {
+	virtual ~CacheSystemClient() {
 		masterReference.clear();
 	}
 
@@ -96,7 +96,7 @@ public:
 private:
 	CacheSystem();
 	CacheSystem(CacheSystem const&) : CacheSystem() {};	// copy constructor is private
-	CacheSystem& operator=(CacheSystem const&){};		// assignment operator is private
+	CacheSystem& operator=(CacheSystem const&){ return *instancePointer; };		// assignment operator is private
 
 	void serveNextQuery();
 	void *initialiseConnection();
