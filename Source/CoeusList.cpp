@@ -23,6 +23,7 @@ void CoeusHeap::update()
 {
     for(int i=heapSize/2 - 1; i>=0; --i) {
         heap[i] = heap[2*i+1] + heap[2*i+2];
+        std::cout << heap[i] << " = " << heap[2*i+1] << " + " << heap[2*i+2] << "\n";
     }
 }
 
@@ -37,10 +38,10 @@ int CoeusHeap::findIndexForSum(int sum)
     while(next >=0 && next < heapSize/2) {
         const int lchld = 2*next+1;
         const int rchld = 2*next+2;
-        next = heap[lchld] > sum ? lchld : rchld;
+        next = heap[lchld] >= sum ? lchld : rchld;
     }
     
-    return next;
+    return next - heapSize/2;
 }
 
 int CoeusHeap::findSumForIndex(int index)
@@ -49,12 +50,16 @@ int CoeusHeap::findSumForIndex(int index)
         return 0;
     }
     
-    int sum = heap[heapSize/2 + index];
-    int next = (heapSize/2 + index - 1)  >> 1;
+    int sum = 0;
+    int next = heapSize/2 + index;
+    sum += next % 2 ? 0 : heap[next-1];
+    next = (next - 1) >> 1;
     while(next > 0) {
-        sum += next % 2 ? 0 : heap[next-1] + heap[next];
+        sum += next % 2 ? 0 : heap[next-1];
         next = (next - 1) >> 1;
     }
+    
+//    40 20 20 10 10 10 10
     
     return sum;
 }
@@ -78,14 +83,14 @@ void CoeusHeap::setNewValueAtIndex(int value, int index)
 void CoeusHeap::setNewValues(int *values, int size)
 {
     numEl = size;
-    int exp = 1;
+    int exp = 2;
     while((size = size >> 1) >= 1) {++exp;}
     
     heapSize = pow(2.0, exp) - 1;
     heap.realloc(heapSize);
     
     heap.clear(heapSize);
-    memcpy(heap + heapSize/2, values, size*sizeof(int));
+    memcpy(heap + heapSize/2, values, numEl*sizeof(int));
 }
 
 int CoeusHeap::getValueAt(int index)
@@ -134,6 +139,7 @@ void CoeusList::update()
     
     pool.addArray(items);
     items.clear();
+    itemsToRows.clear();
     
     updateComponents();
     positionComponents();
@@ -203,8 +209,9 @@ void CoeusList::positionComponents()
     // set bounds
     for(int i=0; i<items.size(); i++) {
         if (items[i] != nullptr) {
-            int itemStartHeight = viewHeight - getYStartForRow(itemsToRows[i]);
+            int itemStartHeight = getYStartForRow(itemsToRows[i]) - viewHeight;
             items[i]->setBounds(0, itemStartHeight, getWidth()-sb.getWidth(), heap.getValueAt(startRow+i));
+            std::cout << "i: " << i << "x: " << 0 << " y: " << itemStartHeight << " w: " << getWidth()-sb.getWidth() << " h: " << heap.getValueAt(startRow+i) << std::endl;
         }
     }
 }

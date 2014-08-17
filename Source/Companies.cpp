@@ -37,7 +37,7 @@ int CompaniesTableListBoxModel::getMaxRowSize()
 
 int CompaniesTableListBoxModel::getRowSize(int rowNumber)
 {
-    return rowNumber <= 5 ? 20 : 100;
+    return rowNumber < 5 ? 20 : 100;
 }
 
 void CompaniesTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected)
@@ -60,12 +60,25 @@ Component * CompaniesTableListBoxModel::refreshComponentForRow(int rowNumber, bo
 {
 	// create
 	if (existingComponentToUpdate == nullptr) {
-		return new Label(String(rowNumber));
+        Label *newComp = new Label(String(rowNumber), String(rowNumber));
+        if (rowNumber % 2) {
+            newComp->setColour(Label::backgroundColourId, Colours::rosybrown);
+        }
+        else {
+            newComp->setColour(Label::backgroundColourId, Colours::royalblue);
+        }
+		return newComp;
 	}
 	// update
 	else {
         Label * lbl = dynamic_cast<Label *>(existingComponentToUpdate);
-        lbl ? lbl->setText(String(rowNumber), dontSendNotification), 0 : 0 ;
+        lbl ? lbl->setText(String(rowNumber), dontSendNotification) ,0:0;
+        if (rowNumber % 2) {
+            lbl->setColour(Label::backgroundColourId, Colours::rosybrown);
+        }
+        else {
+            lbl->setColour(Label::backgroundColourId, Colours::royalblue);
+        }
 		return existingComponentToUpdate;
 	}
 }
