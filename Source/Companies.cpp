@@ -2,16 +2,42 @@
 #include "CustomComponents.h"
 #include "Accounts.h"
 
-CompaniesTableListBoxModel::CompaniesTableListBoxModel() : qe(nullptr), rowUnderMouse(-1) {}
+CompaniesTableListBoxModel::CompaniesTableListBoxModel() : qe(nullptr), rowUnderMouse(-1)
+{
+    update();
+}
+
+void CompaniesTableListBoxModel::paint(Graphics &g)
+{
+    g.fillAll(Colours::aquamarine);
+}
 
 int CompaniesTableListBoxModel::getNumRows()
 {
+    // TODO: remove
+    return 20;
+    
 	if (qe != nullptr) {
 		return qe->num_rows;
 	}
 	else {
 		return 0;
 	}
+}
+
+int CompaniesTableListBoxModel::getMinRowSize()
+{
+    return 20;
+}
+
+int CompaniesTableListBoxModel::getMaxRowSize()
+{
+    return 100;
+}
+
+int CompaniesTableListBoxModel::getRowSize(int rowNumber)
+{
+    return rowNumber <= 5 ? 20 : 100;
 }
 
 void CompaniesTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected)
@@ -34,86 +60,12 @@ Component * CompaniesTableListBoxModel::refreshComponentForRow(int rowNumber, bo
 {
 	// create
 	if (existingComponentToUpdate == nullptr) {
-		if (columnId >= 1 && columnId <= 4) {
-			TextEditFocusReport *payload = new TextEditFocusReport();
-			payload->setMultiLine(true);
-			payload->rowIndex = rowNumber;
-			payload->addChangeListener(this);
-
-			if (qe != nullptr) {
-				payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1));
-			}
-
-			MarginComponent *newComponent = new MarginComponent(payload);
-			return (Component *)newComponent;
-		}
-		else if (columnId == 5 && isRowSelected) {
-			AccountCellButtons *newComponent = new AccountCellButtons();
-			newComponent->setVisible(true);
-			newComponent->rowIndex = rowNumber;
-			return (Component *)newComponent;
-		}
-		else if (columnId == 5 && !isRowSelected) {
-			LabelFocusReport *payload = new LabelFocusReport();
-			payload->rowIndex = rowNumber;
-			payload->setText(String::empty, dontSendNotification);
-			payload->setEditable(false);
-			payload->addChangeListener(this);
-			payload->setJustificationType(Justification::centred);
-			MarginComponent *newComponent = new MarginComponent(payload);
-			return (Component *)newComponent;
-		}
-
-		return nullptr;
+		return new Label(String(rowNumber));
 	}
 	// update
 	else {
-		if (columnId >= 1 && columnId <= 4) {
-			MarginComponent *margin = dynamic_cast<MarginComponent *> (existingComponentToUpdate);
-			if (margin != nullptr) {
-				TextEditFocusReport *payload = dynamic_cast<TextEditFocusReport *> (margin->getEnclosedComp());
-
-				if (qe != nullptr && payload != nullptr) {
-					payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1));
-				}
-			}
-		}
-		else if (columnId == 5) {
-			AccountCellButtons *acb = dynamic_cast<AccountCellButtons *>(existingComponentToUpdate);
-			MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
-			LabelFocusReport *lbfr = nullptr;
-			if (newComponent) {
-				lbfr = dynamic_cast<LabelFocusReport *>(newComponent->getEnclosedComp());
-			}
-
-			if (acb && isRowSelected) {
-				acb->rowIndex = rowNumber;
-			}
-			else if (lbfr && !isRowSelected) {
-				lbfr->rowIndex = rowNumber;
-			}
-			else if (acb && !isRowSelected) {
-				delete existingComponentToUpdate;
-
-				LabelFocusReport *payload = new LabelFocusReport();
-				payload->rowIndex = rowNumber;
-				payload->setText(String::empty, dontSendNotification);
-				payload->setEditable(false);
-				payload->addChangeListener(this);
-				payload->setJustificationType(Justification::centred);
-				MarginComponent *newComponent = new MarginComponent(payload);
-				return (Component *)newComponent;
-			}
-			else if (lbfr && isRowSelected) {
-				delete existingComponentToUpdate;
-
-				AccountCellButtons *newComponent = new AccountCellButtons();
-				newComponent->rowIndex = rowNumber;
-				newComponent->setVisible(true);
-				return (Component *)newComponent;
-			}
-		}
-
+        Label * lbl = dynamic_cast<Label *>(existingComponentToUpdate);
+        lbl ? lbl->setText(String(rowNumber), dontSendNotification), 0 : 0 ;
 		return existingComponentToUpdate;
 	}
 }
@@ -166,9 +118,10 @@ void CompaniesTableListBoxModel::changeListenerCallback(ChangeBroadcaster *sourc
 
 void CompaniesTableListBoxModel::mouseMove(const MouseEvent &event)
 {
-	const int x = event.getPosition().getX();
+// TODO : remove line below if not used
+//	const int x = event.getPosition().getX();
 	const int y = event.getPosition().getY();
-	const int r = getRowContainingPosition(x, y);
+	const int r = getRowIndexAt(y);
 	if (r != rowUnderMouse) {
 		const int prevR = rowUnderMouse;
 		rowUnderMouse = r;
@@ -191,17 +144,18 @@ CompaniesComponent::CompaniesComponent()
 {
 	title->setText("Suppliers", dontSendNotification);
 
-	TableHeaderComponent *accountsHeaderComponent = new TableHeaderComponent();
-	accountsHeaderComponent->addColumn(L"Companies1", 1, 250, 100, 250);
-	accountsHeaderComponent->addColumn(L"Companies1", 2, 250, 100, 250);
-	accountsHeaderComponent->addColumn(L"Companies1", 3, 150, 100, 250);
-	accountsHeaderComponent->addColumn(L"Companies1", 4, 250, 100, 250);
-	accountsHeaderComponent->addColumn(String::empty, 5, 200, 100, 250);
+//	TableHeaderComponent *accountsHeaderComponent = new TableHeaderComponent();
+//	accountsHeaderComponent->addColumn(L"Companies1", 1, 250, 100, 250);
+//	accountsHeaderComponent->addColumn(L"Companies1", 2, 250, 100, 250);
+//	accountsHeaderComponent->addColumn(L"Companies1", 3, 150, 100, 250);
+//	accountsHeaderComponent->addColumn(L"Companies1", 4, 250, 100, 250);
+//	accountsHeaderComponent->addColumn(String::empty, 5, 200, 100, 250);
 
 	companiesTableListBoxModel = new CompaniesTableListBoxModel();
-	companiesTableListBoxModel->setRowHeight(40);
-	companiesTableListBoxModel->setHeader(accountsHeaderComponent);
-	companiesTableListBoxModel->setHeaderHeight(40);
+
+// TODO: what to do with the header?
+//	companiesTableListBoxModel->setHeader(accountsHeaderComponent);
+//	companiesTableListBoxModel->setHeaderHeight(40);
 
 	addAndMakeVisible(companiesTableListBoxModel);
 
@@ -223,7 +177,7 @@ void CompaniesComponent::receivedResults(QueryEntry *qe_)
 {
 	qe = qe_;
 	companiesTableListBoxModel->setQueryEntry(qe);
-	companiesTableListBoxModel->updateContent();
+	companiesTableListBoxModel->update();
 }
 
 void CompaniesComponent::mouseExit(const MouseEvent &event)

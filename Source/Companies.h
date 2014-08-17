@@ -12,8 +12,14 @@ class CompaniesTableListBoxModel : public CoeusList,
 {
 public:
 	CompaniesTableListBoxModel();
+    
+    void paint(Graphics &g);
 
 	int getNumRows() override;
+    int getMinRowSize() override;
+    int getMaxRowSize() override;
+    int getRowSize(int rowNumber) override;
+    
 	void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override;
 	void paintRow(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override;
 	Component * refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate) override;

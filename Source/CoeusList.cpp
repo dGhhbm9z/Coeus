@@ -10,6 +10,15 @@
 
 //================================================
 
+const int MAXROWS = 40;
+
+CoeusHeap::CoeusHeap()
+:   heap(0)
+{
+    heapSize = 0;
+    numEl = 0;
+}
+
 void CoeusHeap::update()
 {
     for(int i=heapSize/2 - 1; i>=0; --i) {
@@ -21,7 +30,7 @@ int CoeusHeap::findIndexForSum(int sum)
 {
     int next = 0;
     
-    if (heap[0] < sum) {
+    if (heapSize == 0 || heap[0] < sum) {
         return -1;
     }
     
@@ -68,15 +77,15 @@ void CoeusHeap::setNewValueAtIndex(int value, int index)
 
 void CoeusHeap::setNewValues(int *values, int size)
 {
-    int exp = 0;
-    while((size >>= 1) > 1) {++exp;}
+    numEl = size;
+    int exp = 1;
+    while((size = size >> 1) >= 1) {++exp;}
     
     heapSize = pow(2.0, exp) - 1;
     heap.realloc(heapSize);
     
     heap.clear(heapSize);
     memcpy(heap + heapSize/2, values, size*sizeof(int));
-    numEl = size;
 }
 
 int CoeusHeap::getValueAt(int index)
@@ -98,6 +107,16 @@ CoeusList::CoeusList()
     sb.addListener(this);
 }
 
+CoeusList::~CoeusList()
+{
+    for(int i=0; i < items.size(); i++) {
+        if (items[i] != nullptr) {
+            delete items[i];
+            items.set(i, nullptr);
+        }
+    }
+}
+
 void CoeusList::rowChangedSize(int rowNumber, int newSize)
 {
     heap.setNewValueAtIndex(newSize, rowNumber);
@@ -116,47 +135,23 @@ void CoeusList::update()
     pool.addArray(items);
     items.clear();
     
-    
-    
-    repaint();
+    updateComponents();
+    positionComponents();
 }
 
 void CoeusList::resized()
 {
-    // set children bounds
+    updateComponents();
     
-    //
-    const int viewHeight = sb.getCurrentRangeStart()*heap.getSum();
-    const int startRow = getRowIndexAt(viewHeight);
-    const int endRow = getRowIndexAt(viewHeight+getHeight());
+    positionComponents();
     
-    // refresh children content
-    for(int r = startRow; r <= endRow; r++) {
-        if (items.size() <= r-endRow) {
-            Component *res = refreshComponentForRow(r, r == selectedRow, nullptr);
-            items.add(res);
-        }
-        else {
-            Component *res = refreshComponentForRow(r, r == selectedRow, items[r-startRow]);
-            items.set(r-startRow, res);
-        }
-    }
-    
-    // set bounds
-    int itemStartHeight = viewHeight - getYStartForRow(startRow);
-    for(int i=0; i<items.size(); i++) {
-        if (items[i] != nullptr) {
-            items[i]->setBounds(0, itemStartHeight, getWidth()-sb.getWidth(), heap.getValueAt(startRow+i));
-        }
-    }
 }
 
 void CoeusList::selectRow(int rowNumber)
 {
-    // repaint = sceduling that's why it works
     repaintRow(selectedRow);
+    repaintRow(rowNumber);
     selectedRow = rowNumber;
-    repaintRow(selectedRow);
 }
 
 void CoeusList::repaintRow(int rowNumber)
@@ -172,6 +167,46 @@ int CoeusList::getRowIndexAt(int y)
 int CoeusList::getYStartForRow(int index)
 {
     return heap.findSumForIndex(index);
+}
+
+void CoeusList::updateComponents()
+{
+    const int viewHeight = sb.getCurrentRangeStart()*heap.getSum();
+    const int startRow = getRowIndexAt(viewHeight);
+    const int endRow = getRowIndexAt(viewHeight+getHeight());
+    
+    // refresh children content
+    for(int r = startRow; r <= endRow; r++) {
+        if (items.size() <= r-endRow) {
+            Component *res = refreshComponentForRow(r, r == selectedRow, nullptr);
+            addAndMakeVisible(res);
+            items.add(res);
+            itemsToRows.add(r);
+        }
+        else {
+            Component *res = refreshComponentForRow(r, r == selectedRow, items[r-startRow]);
+            if (res != items[r-startRow]) {
+                removeChildComponent(items[r-startRow]);
+                addAndMakeVisible(res);
+            }
+            items.set(r-startRow, res);
+            itemsToRows.set(r-startRow, r);
+        }
+    }
+}
+
+void CoeusList::positionComponents()
+{
+    const int viewHeight = sb.getCurrentRangeStart()*heap.getSum();
+    const int startRow = getRowIndexAt(viewHeight);
+    
+    // set bounds
+    for(int i=0; i<items.size(); i++) {
+        if (items[i] != nullptr) {
+            int itemStartHeight = viewHeight - getYStartForRow(itemsToRows[i]);
+            items[i]->setBounds(0, itemStartHeight, getWidth()-sb.getWidth(), heap.getValueAt(startRow+i));
+        }
+    }
 }
 
 void CoeusList::scrollBarMoved (ScrollBar *scrollBarThatHasMoved, double newRangeStart)

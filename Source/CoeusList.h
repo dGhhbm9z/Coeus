@@ -17,6 +17,7 @@
 class CoeusHeap
 {
 public:
+    CoeusHeap();
     void update();
     int findIndexForSum(int sum);
     int findSumForIndex(int index);
@@ -36,6 +37,8 @@ class CoeusList :   public Component,
 {
 public:
     CoeusList();
+    ~CoeusList();
+    
     virtual int getNumRows() = 0;
     virtual void paintRowBackground(Graphics &g, int rowNumber,
                                     int width, int height,
@@ -62,12 +65,16 @@ public:
     void repaintRow(int rowNumber);
     void scrollBarMoved (ScrollBar *scrollBarThatHasMoved, double newRangeStart) override;
     
-private:
     virtual int getRowIndexAt(int y);
+    
+private:
     virtual int getYStartForRow(int index);
+    virtual void updateComponents();
+    virtual void positionComponents();
     
     Array<Component *> items;
     Array<Component *> pool;
+    Array<int> itemsToRows;
     ScrollBar sb;
     CoeusHeap heap;
     int selectedRow;
