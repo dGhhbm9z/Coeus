@@ -22,6 +22,10 @@ CoeusSplashScreen::CoeusSplashScreen(DocumentWindow *owner_, Component *other_) 
 	addAndMakeVisible(passwordText);
 }
 
+CoeusSplashScreen::~CoeusSplashScreen()
+{
+}
+
 void CoeusSplashScreen::paint(Graphics &g)
 {
 	const float bgw = bg.getWidth();

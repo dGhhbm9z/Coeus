@@ -11,7 +11,8 @@ class CoeusSplashScreen :	public Component,
 {
 public:
 	CoeusSplashScreen(DocumentWindow *owner_, Component *other_);
-
+	~CoeusSplashScreen();
+    
 	void paint(Graphics &g) override;
 	void resized() override;
 

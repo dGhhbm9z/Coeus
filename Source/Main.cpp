@@ -118,6 +118,9 @@ public:
     ~HelloWorldWindow()
     {
         // (the content component will be deleted automatically, so no need to do it here)
+        if(getContentComponent() != cmp) {
+            delete cmp;
+        }
     }
 
     //==============================================================================

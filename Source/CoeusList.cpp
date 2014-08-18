@@ -141,6 +141,8 @@ void CoeusList::update()
     items.clear();
     itemsToRows.clear();
     
+    sb.setCurrentRange(0.0, 1.0, dontSendNotification);
+    
     updateComponents();
     positionComponents();
 }
@@ -220,6 +222,8 @@ void CoeusList::scrollBarMoved (ScrollBar *scrollBarThatHasMoved, double newRang
 {
     // update children content
     // if needed
+    updateComponents();
     
     // update children position
+    positionComponents();
 }
