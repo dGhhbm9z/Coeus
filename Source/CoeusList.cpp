@@ -103,13 +103,17 @@ int CoeusHeap::getSum()
     return heapSize ? heap[0] : 0;
 }
 
-//================================================
+//===============================================================================
 
 CoeusList::CoeusList()
 :   sb(true), selectedRow(-1)
 {
-    addAndMakeVisible(&sb);
+    sb.setRangeLimits(0.0, 1.0);
+    sb.setCurrentRange(0.0, 0.5, dontSendNotification);
+    sb.setAutoHide(false);
     sb.addListener(this);
+    sb.setAlwaysOnTop(true);
+    addAndMakeVisible(&sb);
 }
 
 CoeusList::~CoeusList()
@@ -118,6 +122,13 @@ CoeusList::~CoeusList()
         if (items[i] != nullptr) {
             delete items[i];
             items.set(i, nullptr);
+        }
+    }
+    
+    for(int i=0; i < pool.size(); i++) {
+        if (pool[i] != nullptr) {
+            delete pool[i];
+            pool.set(i, nullptr);
         }
     }
 }
@@ -141,7 +152,7 @@ void CoeusList::update()
     items.clear();
     itemsToRows.clear();
     
-    sb.setCurrentRange(0.0, 1.0, dontSendNotification);
+    sb.setCurrentRange(0.0, 0.5, dontSendNotification);
     
     updateComponents();
     positionComponents();
@@ -149,6 +160,8 @@ void CoeusList::update()
 
 void CoeusList::resized()
 {
+    sb.setBounds(getWidth() - 30, 0, 30, getHeight());
+    
     updateComponents();
     
     positionComponents();

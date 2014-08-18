@@ -9,7 +9,7 @@ CompaniesTableListBoxModel::CompaniesTableListBoxModel() : qe(nullptr), rowUnder
 
 void CompaniesTableListBoxModel::paint(Graphics &g)
 {
-    g.fillAll(Colours::aquamarine);
+//    g.fillAll(Colours::aquamarine);
 }
 
 int CompaniesTableListBoxModel::getNumRows()
