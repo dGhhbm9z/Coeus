@@ -110,7 +110,7 @@ CoeusList::CoeusList()
 {
     sb.setRangeLimits(0.0, 1.0);
     sb.setCurrentRange(0.0, 0.5, dontSendNotification);
-    sb.setAutoHide(false);
+    sb.setAutoHide(true);
     sb.addListener(this);
     sb.setAlwaysOnTop(true);
     addAndMakeVisible(&sb);
@@ -160,7 +160,7 @@ void CoeusList::update()
 
 void CoeusList::resized()
 {
-    sb.setBounds(getWidth() - 30, 0, 30, getHeight());
+    sb.setBounds(getWidth() - 10, 0, 10, getHeight());
     
     updateComponents();
     

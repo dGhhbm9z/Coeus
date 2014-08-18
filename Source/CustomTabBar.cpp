@@ -207,11 +207,11 @@ void CustomTabComponent::resized()
 {
 	const float width = getWidth();
 	const float height = getHeight();
-	accountChartComponent->setBounds(120, 0, getWidth(), getHeight());
-	accountsComponent->setBounds(120, 0, getWidth(), getHeight());
-	suppliersComponent->setBounds(120, 0, getWidth(), getHeight());
-	customersComponent->setBounds(120, 0, getWidth(), getHeight());
-	companiesComponent->setBounds(120, 0, getWidth(), getHeight());
+	accountChartComponent->setBounds(120, 0, width-120, height);
+	accountsComponent->setBounds(120, 0, width-120, height);
+	suppliersComponent->setBounds(120, 0, width-120, height);
+	customersComponent->setBounds(120, 0, width-120, height);
+	companiesComponent->setBounds(120, 0, width-120, height);
 	tabButtons->setBounds(0, (getHeight()-575) / 2, 120, 575);
 }
 

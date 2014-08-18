@@ -146,7 +146,7 @@ void CustomTabContent::resized()
 
 Rectangle<int> CustomTabContent::getComponentArea()
 {
-	return Rectangle<int>(0.01f*getWidth(), 0.15f*getHeight(), getWidth() - 0.01f*getWidth(), getHeight() - 0.15f*getHeight());
+	return Rectangle<int>(0.01f*(float)getWidth(), 0.15f*getHeight(), 0.99f*(float)getWidth(), getHeight() - 0.15f*getHeight());
 }
 
 void CustomTabContent::comboBoxChanged(ComboBox *comboBoxThatHasChanged)
