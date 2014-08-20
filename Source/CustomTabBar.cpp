@@ -9,15 +9,49 @@ CustomTabbedButtonBar::CustomTabbedButtonBar()
 	accounts = new CustomMenuBarButton(CustomMenuBarButton::AccountChartType);
 	companies = new CustomMenuBarButton(CustomMenuBarButton::CompaniesType);
 
+	customers->setClickingTogglesState(true);
+	suppliers->setClickingTogglesState(true);
+	accountChart->setClickingTogglesState(true);
+	accounts->setClickingTogglesState(true);
+	companies->setClickingTogglesState(true);
+
+	customers->setRadioGroupId(2, dontSendNotification);
+	suppliers->setRadioGroupId(2, dontSendNotification);
+	accountChart->setRadioGroupId(2, dontSendNotification);
+	accounts->setRadioGroupId(2, dontSendNotification);
+	companies->setRadioGroupId(2, dontSendNotification);
+
+	customers->triggerClick();
+
 	reporting = new CustomMenuBarButton(CustomMenuBarButton::ReportingTabType);
 	accounting = new CustomMenuBarButton(CustomMenuBarButton::AccountingTabType);
 	logout = new CustomMenuBarButton(CustomMenuBarButton::LogoutType);
+
+	reporting->setClickingTogglesState(true);
+	accounting->setClickingTogglesState(true);
+	reporting->setRadioGroupId(1, dontSendNotification);
+	accounting->setRadioGroupId(1, dontSendNotification);
+
+	accounting->triggerClick();
+	logout->setClickingTogglesState(true);
 
 	businessModel = new CustomMenuBarButton(CustomMenuBarButton::BusinessModelType);
 	businessPlan = new CustomMenuBarButton(CustomMenuBarButton::BusinessPlanType);
 	financialRatios = new CustomMenuBarButton(CustomMenuBarButton::FinancialRatiosType);
 	openSourceInnovation = new CustomMenuBarButton(CustomMenuBarButton::OpenSourceInnovationType);
 	reportGenerator = new CustomMenuBarButton(CustomMenuBarButton::ReportGeneratorTytpe);
+
+	businessModel->setClickingTogglesState(true);
+	businessPlan->setClickingTogglesState(true);
+	financialRatios->setClickingTogglesState(true);
+	openSourceInnovation->setClickingTogglesState(true);
+	reportGenerator->setClickingTogglesState(true);
+
+	businessModel->setRadioGroupId(2, dontSendNotification);
+	businessPlan->setRadioGroupId(2, dontSendNotification);
+	financialRatios->setRadioGroupId(2, dontSendNotification);
+	openSourceInnovation->setRadioGroupId(2, dontSendNotification);
+	reportGenerator->setRadioGroupId(2, dontSendNotification);
 
 	customers->addListener(this);
 	suppliers->addListener(this);
@@ -70,23 +104,23 @@ void CustomTabbedButtonBar::paint(Graphics &g)
 {
 	Path rect = Theme::createRectPath(0, 0, getWidth(), getHeight(), 0, 0, 10);
 
-	g.setColour(Colours::grey);
+	g.setColour(Colour(0xff3a3a3a));
 	g.fillPath(rect);
 }
 
 void CustomTabbedButtonBar::resized() 
 {
-	customers->setBounds(0, 67, getWidth(), 75);
-	suppliers->setBounds(0, 167, getWidth(), 75);
-	accountChart->setBounds(0, 267, getWidth(), 75);
-	accounts->setBounds(0, 367, getWidth(), 75);
-	companies->setBounds(0, 467, getWidth(), 75);
+	customers->setBounds(0, 48, getWidth(), 75);
+	suppliers->setBounds(0, 148, getWidth(), 75);
+	accountChart->setBounds(0, 248, getWidth(), 75);
+	accounts->setBounds(0, 348, getWidth(), 75);
+	companies->setBounds(0, 448, getWidth(), 75);
 
-	businessModel->setBounds(0, 67, getWidth(), 75);
-	businessPlan->setBounds(0, 167, getWidth(), 75);
-	financialRatios->setBounds(0, 267, getWidth(), 75);
-	openSourceInnovation->setBounds(0, 367, getWidth(), 75);
-	reportGenerator->setBounds(0, 467, getWidth(), 75);
+	businessModel->setBounds(0, 48, getWidth(), 75);
+	businessPlan->setBounds(0, 148, getWidth(), 75);
+	financialRatios->setBounds(0, 248, getWidth(), 75);
+	openSourceInnovation->setBounds(0, 348, getWidth(), 75);
+	reportGenerator->setBounds(0, 448, getWidth(), 75);
 
 
 	reporting->setBounds(65, 0, 56, 28);

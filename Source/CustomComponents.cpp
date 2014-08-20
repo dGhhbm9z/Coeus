@@ -77,7 +77,7 @@ CustomMenuBarButton::CustomMenuBarButton(ButtonType btntype) {
 
 void CustomMenuBarButton::paint(Graphics &g) {
 
-	if (isMouseButtonDown()) {
+	if (isMouseButtonDown() || getToggleState()) {
 		g.drawImage(imageMouseDown, 0, 0, getWidth(), getHeight(), 0, 0, imageMouseDown.getWidth(), imageMouseDown.getHeight());
 	}
 	else if (isMouseOver()) {
