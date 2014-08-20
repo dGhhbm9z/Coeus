@@ -731,6 +731,14 @@ void Theme::drawTableHeaderColumn(Graphics &g, const String &columnName, int col
 	}
 }
 
+void Theme::drawDocumentWindowTitleBar(DocumentWindow &, Graphics &g, int w, int h, int titleSpaceX, int titleSpaceW, const Image *icon, bool drawTitleTextOnLeft)
+{
+	g.fillAll(Colour(0xff3c3c37));
+	g.setColour(Colour(0xff486c7b));
+	g.setFont(Font(16, Font::bold));
+	g.drawText("Coeus Finance", 0, 0, w, h, Justification::centred, false);
+}
+
 //---------------------------------------------------------------------
 // Button stuff
 void ThemeAlt::drawButtonBackground(Graphics &g, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown)

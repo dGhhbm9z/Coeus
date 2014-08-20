@@ -128,6 +128,8 @@ public:
 	// table header
 	void drawTableHeaderBackground(Graphics &, TableHeaderComponent &) override;
 	void drawTableHeaderColumn(Graphics &, const String &columnName, int columnId, int width, int height, bool isMouseOver, bool isMouseDown, int columnFlags) override;
+
+	void drawDocumentWindowTitleBar(DocumentWindow &, Graphics &, int w, int h, int titleSpaceX, int titleSpaceW, const Image *icon, bool drawTitleTextOnLeft) override;
 };
 
 
