@@ -99,7 +99,7 @@ public:
 		cmp->setBoundsRelative(0.1f, 0.1f, 0.8f, 0.8f);
 
 		splash = new CoeusSplashScreen(this, cmp);
-		splash->setBoundsRelative(0.1f, 0.1f, 0.8f, 0.8f);
+		splash->centreWithSize(1024, 589);
 
         setContentOwned (splash, true);
 		setTopLeftPosition(cmp->getWidth()*0.1f / 0.8f, cmp->getHeight()*0.1f / 0.8f);

@@ -139,6 +139,7 @@
     <ClCompile Include="..\..\Source\Accounts.cpp" />
     <ClCompile Include="..\..\Source\CacheSystem.cpp" />
     <ClCompile Include="..\..\Source\CacheViewer.cpp" />
+    <ClCompile Include="..\..\Source\CoeusList.cpp" />
     <ClCompile Include="..\..\Source\Companies.cpp" />
     <ClCompile Include="..\..\Source\CustomComponents.cpp" />
     <ClCompile Include="..\..\Source\Customers.cpp" />
@@ -1246,6 +1247,7 @@
     <ClInclude Include="..\..\Source\CacheSystem.h" />
     <ClInclude Include="..\..\Source\CacheViewer.h" />
     <ClInclude Include="..\..\Source\CoeusCommandIDs.h" />
+    <ClInclude Include="..\..\Source\CoeusList.h" />
     <ClInclude Include="..\..\Source\Companies.h" />
     <ClInclude Include="..\..\Source\CustomComponents.h" />
     <ClInclude Include="..\..\Source\Customers.h" />

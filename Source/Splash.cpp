@@ -10,12 +10,18 @@ CoeusSplashScreen::CoeusSplashScreen(DocumentWindow *owner_, Component *other_) 
 
 	userText = new TextEditor();
 	userText->setFont(Font(22));
-	userText->setTextToShowWhenEmpty(L"-username-", Colours::black.withAlpha(0.5f));
+	userText->setColour(TextEditor::backgroundColourId, Colours::white.withAlpha(0.75f));
+	userText->setColour(TextEditor::outlineColourId, Colour(0x00000000));
+	userText->setColour(TextEditor::focusedOutlineColourId, Colour(0x00000000));
+	userText->setTextToShowWhenEmpty(L"Username", Colours::black.withAlpha(0.5f));
 	userText->addListener(this);
 
 	passwordText = new TextEditor("", '*');
 	passwordText->setFont(Font(22));
-	passwordText->setTextToShowWhenEmpty(L"-password-", Colours::black.withAlpha(0.5f));
+	passwordText->setColour(TextEditor::backgroundColourId, Colours::white.withAlpha(0.75f));
+	passwordText->setColour(TextEditor::outlineColourId, Colour(0x00000000));
+	passwordText->setColour(TextEditor::focusedOutlineColourId, Colour(0x00000000));
+	passwordText->setTextToShowWhenEmpty(L"Password", Colours::black.withAlpha(0.5f));
 	passwordText->addListener(this);
 
 	addAndMakeVisible(userText);
@@ -44,8 +50,8 @@ void CoeusSplashScreen::resized()
 {
 	const float bgw = bg.getWidth();
 	const float bgh = bg.getHeight();
-	userText->setBoundsRelative( (22 + 10 )/ bgw, (486 + 10 ) / bgh, 440 / bgw, 60 / bgh);
-	passwordText->setBoundsRelative((22 + 10) / bgw, (486 + 10 + 60 + 10) / bgh, 440 / bgw, 60 / bgh);
+	userText->setBoundsRelative( (22 + 10 )/ bgw, (486 + 10 ) / bgh, 400 / bgw, 50 / bgh);
+	passwordText->setBoundsRelative((22 + 10) / bgw, (486 + 10 + 60 + 10) / bgh, 400 / bgw, 50 / bgh);
 }
 
 void CoeusSplashScreen::textEditorReturnKeyPressed(TextEditor &ed)
