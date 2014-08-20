@@ -272,3 +272,8 @@ void CustomersComponent::searchButtonPressed()
 
 	std::cout << queryStr << std::endl;
 }
+
+void CustomersComponent::paint(Graphics &g)
+{
+	//g.fillAll(Colour(0xffeeeeee));
+}

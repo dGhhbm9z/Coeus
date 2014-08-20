@@ -21,8 +21,8 @@ Colour buttonOutline = Colour(0xffd3d3d3);
 Colour buttonTextDown = Colour(0xb2002828);
 Colour buttonTextOver = Colour(0xff000000);
 Colour buttonText = Colour(0xff808080);
-Colour tabButtonBarGr1 = Colour(0xffe3e3e3);
-Colour tabButtonBarGr2 = Colour(0xffcccccc);
+Colour tabButtonBarGr1 = Colour(0xff2e4650);
+Colour tabButtonBarGr2 = Colour(0xff486c7b);
 Colour tabButtonBarOutline = Colour(0xff545454);
 Colour tabButtonFrontTab = Colour(0xfffefefe);
 Colour tabButtonFrontTabOutline = Colour(0xffaaaaaa);
@@ -733,8 +733,8 @@ void Theme::drawTableHeaderColumn(Graphics &g, const String &columnName, int col
 
 void Theme::drawDocumentWindowTitleBar(DocumentWindow &, Graphics &g, int w, int h, int titleSpaceX, int titleSpaceW, const Image *icon, bool drawTitleTextOnLeft)
 {
-	g.fillAll(Colour(0xff3c3c37));
-	g.setColour(Colour(0xff486c7b));
+	g.fillAll(Colour(0xff3a3a3a));
+	g.setColour(Colour(0xff1a7b83));
 	g.setFont(Font(16, Font::bold));
 	g.drawText("Coeus Finance", 0, 0, w, h, Justification::centred, false);
 }

@@ -43,6 +43,8 @@ public:
 
 	void searchButtonPressed() override;
 
+	void paint(Graphics &g) override;
+
 private:
 	ScopedPointer<CustomersTableListBoxModel> customersTableListBoxModel;
 	QueryEntry *qe;
