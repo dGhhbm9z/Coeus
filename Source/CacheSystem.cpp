@@ -1,5 +1,5 @@
 #include "CacheSystem.h"
-#include <mysql.h>
+#include <mariadb/mysql/mysql.h>
 
 CacheSystem* CacheSystem::instancePointer = nullptr;
 

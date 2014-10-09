@@ -2818,18 +2818,19 @@
 					../../JuceLibraryCode/modules,
 					"$(inherited)",
 					../../../mariadb/include,
+					/opt/local/include/,
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					/Users/catLauncher/coeus/mariadb/libmariadb,
 					"~/macports/lib/",
-					/opt/local/lib/,
+					/opt/local/lib/mariadb/mysql,
 					/Users/catLauncher/macports/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_LDFLAGS = (
-					"-lmariadbclient",
+					"-lmysqlclient",
 					"-liconv",
 					"-lcrypto",
 					"-lssl",
@@ -2862,19 +2863,20 @@
 					../../JuceLibraryCode/modules,
 					"$(inherited)",
 					../../../mariadb/include,
+					/opt/local/include/,
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					/Users/catLauncher/coeus/mariadb/libmariadb,
 					"~/macports/lib/",
-					/opt/local/lib/,
+					/opt/local/lib/mariadb/mysql,
 					/Users/catLauncher/macports/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
-					"-lmariadbclient",
+					"-lmysqlclient",
 					"-liconv",
 					"-lcrypto",
 					"-lssl",
