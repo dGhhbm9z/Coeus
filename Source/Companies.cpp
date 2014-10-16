@@ -90,6 +90,8 @@ void CompaniesTableListBoxModel::setQueryEntry(QueryEntry *qe_)
 
 void CompaniesTableListBoxModel::changeListenerCallback(ChangeBroadcaster *source)
 {
+    update();
+    
 	TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(source);
 	ComboBoxFocusReport *cbfr = dynamic_cast<ComboBoxFocusReport *>(source);
 	LabelFocusReport *lbfr = dynamic_cast<LabelFocusReport *>(source);
@@ -213,15 +215,12 @@ void CompaniesComponent::searchButtonPressed()
 		queryStr += "CompanyName like '%" + terms[i] + "%' " + orStr;
 		queryStr += "LegalInc like '%" + terms[i] + "%' " + orStr;
 		queryStr += "Address like '%" + terms[i] + "%' " + orStr;
-		queryStr += "DateOfBirth like '%" + terms[i] + "%' " + orStr;
 		queryStr += "AddressNumber like '%" + terms[i] + "%' " + orStr;
 		queryStr += "PersonInCharge like '%" + terms[i] + "%' " + orStr;
 
 		queryStr += "Telephone like '%" + terms[i] + "%' " + orStr;
 		queryStr += "Activity like '%" + terms[i] + "%' " + orStr;
 		queryStr += "StartDate like '%" + terms[i] + "%' " + orStr;
-		queryStr += "Faxnumber like '%" + terms[i] + "%' " + orStr;
-		queryStr += "Email like '%" + terms[i] + "%' " + orStr;
 
 		queryStr += "Comments like '%" + terms[i] + "%' " + andOr;
 	}
@@ -232,6 +231,6 @@ void CompaniesComponent::searchButtonPressed()
 
 	CacheSystem *cs = CacheSystem::getInstance();
 	cs->getResultsFor(queryStr, this);
-
+    
 	std::cout << queryStr << std::endl;
 }

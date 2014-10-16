@@ -2723,7 +2723,7 @@
 		C8659163C0534EF3375609FD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0600;
 			};
 			buildConfigurationList = C9203A8C2FAB4A44565A71F1 /* Build configuration list for PBXProject "Coeus" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2823,6 +2823,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
+					/opt/local/lib/mysql55/mysql/,
 					/Users/catLauncher/coeus/mariadb/libmariadb,
 					"~/macports/lib/",
 					/opt/local/lib/mariadb/mysql,
@@ -2868,6 +2869,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
+					/opt/local/lib/mysql55/mysql/,
 					/Users/catLauncher/coeus/mariadb/libmariadb,
 					"~/macports/lib/",
 					/opt/local/lib/mariadb/mysql,
@@ -2901,6 +2903,7 @@
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LIBRARY_SEARCH_PATHS = "";
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Coeus;
 				WARNING_CFLAGS = "-Wreorder";
