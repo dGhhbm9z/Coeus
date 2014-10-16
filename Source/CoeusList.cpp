@@ -154,7 +154,8 @@ void CoeusList::update()
     items.clear();
     itemsToRows.clear();
     
-    sb.setCurrentRange(0.0, 0.5, dontSendNotification);
+    double sbsize = getHeight()/static_cast<double>(heap.getSum());
+    sb.setCurrentRange(0.0, sbsize, dontSendNotification);
     
     updateComponents();
     positionComponents();
@@ -163,6 +164,8 @@ void CoeusList::update()
 void CoeusList::resized()
 {
     sb.setBounds(getWidth() - 10, 0, 10, getHeight());
+    double sbsize = getHeight()/static_cast<double>(heap.getSum());
+    sb.setCurrentRange(0.0, sbsize, dontSendNotification);
     
     updateComponents();
     
