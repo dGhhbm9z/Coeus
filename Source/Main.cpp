@@ -71,7 +71,8 @@
     show a component from the MainComponent.cpp file (you can open this file using
     the Jucer to edit it).
 */
-class HelloWorldWindow  : public DocumentWindow
+class HelloWorldWindow  :   public DocumentWindow,
+                            public ComponentBoundsConstrainer
 {
 public:
     //==============================================================================
@@ -104,6 +105,11 @@ public:
         setContentOwned (splash, true);
 		setTopLeftPosition(cmp->getWidth()*0.1f / 0.8f, cmp->getHeight()*0.1f / 0.8f);
 
+        // size constrains
+        setMinimumHeight(700);
+        setMinimumWidth(900);
+        setConstrainer(this);
+
         // And show it!
         setVisible (true);
 		setResizable(true, false);
@@ -131,9 +137,19 @@ public:
         JUCEApplication::quit();
     }
 
+    void resizeStart()
+    {
+        cmp->resizeStart();
+    }
+
+    void resizeEnd()
+    {
+        cmp->resizeEnd();
+    }
+
 private:
 	CoeusSplashScreen *splash;
-	Component *cmp;
+	MainComponent *cmp;
 };
 
 //==============================================================================

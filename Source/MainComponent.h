@@ -40,7 +40,8 @@
 */
 class MainComponent  :	public Component,
 						public ButtonListener,
-						public ApplicationCommandTarget
+						public ApplicationCommandTarget,
+                        public ComponentBoundsConstrainer
 {
 public:
     //==============================================================================
@@ -60,6 +61,20 @@ public:
 	void getAllCommands(Array< CommandID > &commands) override;
 	void getCommandInfo(CommandID commandID, ApplicationCommandInfo &result) override;
 	bool perform(const InvocationInfo &info) override;
+
+    void resizeStart() {
+        MainComponent *comp = dynamic_cast<MainComponent *>(tabs->getCurrentContentComponent());
+        if (comp) {
+            comp->resizeStart();
+        }
+    }
+
+    void resizeEnd() {
+        MainComponent *comp = dynamic_cast<MainComponent *>(tabs->getCurrentContentComponent());
+        if (comp) {
+            comp->resizeEnd();
+        }
+    }
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.

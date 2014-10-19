@@ -55,6 +55,8 @@ public:
 	void resized() override;
 	void timerCallback() override;
 	void changeListenerCallback(ChangeBroadcaster *source) override;
+    void resizeStart();
+    void resizeEnd();
 
 private:
 	ScopedPointer<AccountChartComponent> accountChartComponent;
@@ -64,6 +66,7 @@ private:
 	ScopedPointer<CompaniesComponent> companiesComponent;
 
 	ScopedPointer<CustomTabbedButtonBar> tabButtons;
+    bool isBeingResized;
 };
 
 #endif
