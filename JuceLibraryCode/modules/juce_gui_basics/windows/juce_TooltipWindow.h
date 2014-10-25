@@ -42,7 +42,7 @@
     @see TooltipClient, SettableTooltipClient
 */
 class JUCE_API  TooltipWindow  : public Component,
-                                 virtual private Timer
+                                 private Timer
 {
 public:
     //==============================================================================
@@ -111,7 +111,7 @@ public:
 private:
     //==============================================================================
     int millisecondsBeforeTipAppears;
-    Point<int> lastMousePos;
+    Point<float> lastMousePos;
     int mouseClicks, mouseWheelMoves;
     unsigned int lastCompChangeTime, lastHideTime;
     Component* lastComponentUnderMouse;

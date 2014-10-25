@@ -76,6 +76,9 @@ public:
     */
     String toString (bool includeGetParameters) const;
 
+    /** Returns true if the URL is an empty string. */
+    bool isEmpty() const noexcept;
+
     /** True if it seems to be valid. */
     bool isWellFormed() const;
 
@@ -360,6 +363,7 @@ private:
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Upload)
     };
 
+    friend struct ContainerDeletePolicy<Upload>;
     ReferenceCountedArray<Upload> filesToUpload;
 
     URL (const String&, int);

@@ -66,7 +66,8 @@ HelloWorldWindow::HelloWorldWindow()
 
     // Create an instance of our main content component, and add it to our window..
     cmp = new MainComponent();
-    cmp->setBoundsRelative(0.1f, 0.1f, 0.8f, 0.8f);
+    Rectangle<int> r = Desktop::getInstance().getDisplays().getMainDisplay().userArea;
+    cmp->setBounds(0.1f*r.getX(), 0.1f*r.getY(), 0.8f*r.getWidth(), 0.8f*r.getHeight());
 
     splash = new CoeusSplashScreen(this, cmp);
     splash->centreWithSize(1024, 589);
@@ -75,9 +76,9 @@ HelloWorldWindow::HelloWorldWindow()
     setTopLeftPosition(cmp->getWidth()*0.1f / 0.8f, cmp->getHeight()*0.1f / 0.8f);
 
     // size constrains
-    setMinimumHeight(700);
-    setMinimumWidth(900);
-    setConstrainer(this);
+//    setMinimumWidth(1024);
+//    setMinimumHeight(589);
+//    setConstrainer(this);
 
     // And show it!
     setVisible (true);
@@ -115,12 +116,25 @@ void HelloWorldWindow::resizeEnd()
 void HelloWorldWindow::login() {
     // TODO: load user workspace
     setContentNonOwned(cmp, true);
+    
+    // size constrains
+//    setMinimumWidth(500);
+//    setMinimumHeight(920);
+//    setConstrainer(this);
+    
+    Rectangle<int> r = Desktop::getInstance().getDisplays().getMainDisplay().userArea;
+    this->setBounds(0.1f*r.getX(), 0.1f*r.getY(), 0.8f*r.getWidth(), 0.8f*r.getHeight());
 }
 
 void HelloWorldWindow::logout()
 {
     // TODO: clear current workspace
     setContentNonOwned(splash, true);
+    
+    // size constrains
+//    setMinimumWidth(1024);
+//    setMinimumHeight(589);
+//    setConstrainer(this);
 }
 
 

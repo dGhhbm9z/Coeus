@@ -1,5 +1,5 @@
 #ifndef MainGuard
-#define MainGaurd
+#define MainGuard
 
 #ifdef _MSC_VER
 	#include <windows.h>

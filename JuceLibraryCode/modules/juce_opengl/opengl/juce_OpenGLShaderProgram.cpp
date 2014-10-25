@@ -54,15 +54,8 @@ void OpenGLShaderProgram::release() noexcept
 
 double OpenGLShaderProgram::getLanguageVersion()
 {
-   #if JUCE_OPENGL_ES
-    // GLES doesn't support this version number, but that shouldn't matter since
-    // on GLES you probably won't need to check it.
-    jassertfalse;
-    return 0;
-   #else
-    return String ((const char*) glGetString (GL_SHADING_LANGUAGE_VERSION))
-            .upToFirstOccurrenceOf (" ", false, false).getDoubleValue();
-   #endif
+    return String::fromUTF8 ((const char*) glGetString (GL_SHADING_LANGUAGE_VERSION))
+            .retainCharacters("1234567890.").getDoubleValue();
 }
 
 bool OpenGLShaderProgram::addShader (const String& code, GLenum type)
@@ -142,13 +135,17 @@ void OpenGLShaderProgram::use() const noexcept
 OpenGLShaderProgram::Uniform::Uniform (const OpenGLShaderProgram& program, const char* const name)
     : uniformID (program.context.extensions.glGetUniformLocation (program.getProgramID(), name)), context (program.context)
 {
+   #if JUCE_DEBUG && ! JUCE_DONT_ASSERT_ON_GLSL_COMPILE_ERROR
     jassert (uniformID >= 0);
+   #endif
 }
 
 OpenGLShaderProgram::Attribute::Attribute (const OpenGLShaderProgram& program, const char* name)
     : attributeID (program.context.extensions.glGetAttribLocation (program.getProgramID(), name))
 {
+   #if JUCE_DEBUG && ! JUCE_DONT_ASSERT_ON_GLSL_COMPILE_ERROR
     jassert (attributeID >= 0);
+   #endif
 }
 
 void OpenGLShaderProgram::Uniform::set (GLfloat n1) const noexcept                                    { context.extensions.glUniform1f (uniformID, n1); }
