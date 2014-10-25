@@ -1,5 +1,5 @@
-#ifndef SuppliersGuard
-#define SuppliersGuard
+#ifndef SplashGuard
+#define SplashGuard
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "CacheSystem.h"

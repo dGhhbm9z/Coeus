@@ -5,6 +5,7 @@
               jucerVersion="3.1.0">
   <MAINGROUP id="WU2z1W" name="Coeus">
     <GROUP id="{64667E0B-0D83-13E7-5350-8644B7BB1ADE}" name="Source">
+      <FILE id="zVEz7x" name="Main.h" compile="0" resource="0" file="Source/Main.h"/>
       <FILE id="JMMs4Y" name="AccountChart.cpp" compile="1" resource="0"
             file="Source/AccountChart.cpp"/>
       <FILE id="C2ojeb" name="AccountChart.h" compile="0" resource="0" file="Source/AccountChart.h"/>

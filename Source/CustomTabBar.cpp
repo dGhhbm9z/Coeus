@@ -1,4 +1,5 @@
 #include "CustomTabBar.h"
+#include "Main.h"
 
 CustomTabbedButtonBar::CustomTabbedButtonBar()
 : index(1) 
@@ -33,7 +34,7 @@ CustomTabbedButtonBar::CustomTabbedButtonBar()
 	accounting->setRadioGroupId(1, dontSendNotification);
 
 	accounting->triggerClick();
-	logout->setClickingTogglesState(true);
+    //logout->setClickingTogglesState(true);
 
 	businessModel = new CustomMenuBarButton(CustomMenuBarButton::BusinessModelType);
 	businessPlan = new CustomMenuBarButton(CustomMenuBarButton::BusinessPlanType);
@@ -317,6 +318,14 @@ void CustomTabComponent::changeListenerCallback(ChangeBroadcaster *source)
 			companiesComponent->setVisible(false);
 			break;
 
+        case 11:
+        {
+            HelloWorldWindow *window = dynamic_cast<HelloWorldWindow*>(getTopLevelComponent());
+            if(window) {
+                window->logout();
+            }
+            break;
+        }
 		default:
 			break;
 		}

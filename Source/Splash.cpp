@@ -62,6 +62,6 @@ void CoeusSplashScreen::textEditorReturnKeyPressed(TextEditor &ed)
 	CacheSystem::getInstance()->setPassword(pa);
 
 	if (CacheSystem::getInstance()->testServer() && owner) {
-		owner->setContentOwned(other, true);
+        owner->setContentNonOwned(other, true);
 	}
 }

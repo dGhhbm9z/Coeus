@@ -1533,6 +1533,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\Main.h">
+      <Filter>Coeus\Source</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\AccountChart.h">
       <Filter>Coeus\Source</Filter>
     </ClInclude>
