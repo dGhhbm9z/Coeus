@@ -57,7 +57,7 @@ public:
     virtual int getMaxRowSize() = 0;
     virtual int getRowSize(int rowNumber) = 0;
     virtual int *getRowSizes(int *pointer) { return nullptr; };
-    
+
     void rowChangedSize(int rowNumber, int newSize);
     void update();
     void resized() override;

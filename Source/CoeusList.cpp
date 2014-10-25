@@ -138,6 +138,8 @@ CoeusList::~CoeusList()
 void CoeusList::rowChangedSize(int rowNumber, int newSize)
 {
     heap.setNewValueAtIndex(newSize, rowNumber);
+    updateComponents();
+    positionComponents();
 }
 
 void CoeusList::update()

@@ -37,6 +37,10 @@ int CompaniesTableListBoxModel::getMaxRowSize()
 
 int CompaniesTableListBoxModel::getRowSize(int rowNumber)
 {
+    if(clickedRows.contains(rowNumber)) {
+        return 120;
+    }
+
     return rowNumber < 5 ? 20 : 100;
 }
 
@@ -61,6 +65,7 @@ Component * CompaniesTableListBoxModel::refreshComponentForRow(int rowNumber, bo
 	// create
 	if (existingComponentToUpdate == nullptr) {
         Label *newComp = new Label(String(rowNumber), String(rowNumber));
+        newComp->addMouseListener(this, true);
         if (rowNumber % 2) {
             newComp->setColour(Label::backgroundColourId, Colours::rosybrown);
         }
@@ -129,6 +134,25 @@ void CompaniesTableListBoxModel::changeListenerCallback(ChangeBroadcaster *sourc
 			repaintRow(prevR);
 		}
 	}
+}
+
+void CompaniesTableListBoxModel::mouseDown (const MouseEvent &event)
+{
+    Label *lbl = dynamic_cast<Label*>(event.eventComponent);
+    if(lbl) {
+        int row = lbl->getText().getIntValue();
+        if (row >= 0 && row < getNumRows()) {
+            if(clickedRows.contains(row)) {
+                clickedRows.removeAllInstancesOf(row);
+                std::cout << "Removed " << row << std::endl;
+            }
+            else {
+                clickedRows.add(row);
+                std::cout << "Added " << row << std::endl;
+            }
+            rowChangedSize(row, getRowSize(row));
+        }
+    }
 }
 
 void CompaniesTableListBoxModel::mouseMove(const MouseEvent &event)
