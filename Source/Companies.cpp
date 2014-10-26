@@ -9,14 +9,10 @@ CompaniesTableListBoxModel::CompaniesTableListBoxModel() : qe(nullptr), rowUnder
 
 void CompaniesTableListBoxModel::paint(Graphics &g)
 {
-//    g.fillAll(Colours::aquamarine);
 }
 
 int CompaniesTableListBoxModel::getNumRows()
 {
-    // TODO: remove
-    return 20;
-    
 	if (qe != nullptr) {
 		return qe->num_rows;
 	}
@@ -27,16 +23,19 @@ int CompaniesTableListBoxModel::getNumRows()
 
 int CompaniesTableListBoxModel::getMinRowSize()
 {
+    //TODO: impl
     return 20;
 }
 
 int CompaniesTableListBoxModel::getMaxRowSize()
 {
+    //TODO: impl
     return 100;
 }
 
 int CompaniesTableListBoxModel::getRowSize(int rowNumber)
 {
+    //TODO: impl
     if(clickedRows.contains(rowNumber)) {
         return 120;
     }
@@ -62,6 +61,7 @@ void CompaniesTableListBoxModel::paintRow(Graphics &g, int rowNumber, int width,
 
 Component * CompaniesTableListBoxModel::refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate)
 {
+    //TODO: impl
 	// create
 	if (existingComponentToUpdate == nullptr) {
         Label *newComp = new Label(String(rowNumber), String(rowNumber));
@@ -95,11 +95,7 @@ void CompaniesTableListBoxModel::setQueryEntry(QueryEntry *qe_)
 
 void CompaniesTableListBoxModel::changeListenerCallback(ChangeBroadcaster *source)
 {
-    update();
-    
 	TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(source);
-	ComboBoxFocusReport *cbfr = dynamic_cast<ComboBoxFocusReport *>(source);
-	LabelFocusReport *lbfr = dynamic_cast<LabelFocusReport *>(source);
 
 	if (tefr) {
 		if (tefr->focus) {
@@ -108,28 +104,6 @@ void CompaniesTableListBoxModel::changeListenerCallback(ChangeBroadcaster *sourc
 		else {
 			const int prevR = rowUnderMouse;
 			rowUnderMouse = tefr->rowIndex;
-			repaintRow(rowUnderMouse);
-			repaintRow(prevR);
-		}
-	}
-	else if (cbfr) {
-		if (cbfr->focus) {
-			selectRow(cbfr->rowIndex);
-		}
-		else {
-			const int prevR = rowUnderMouse;
-			rowUnderMouse = cbfr->rowIndex;
-			repaintRow(rowUnderMouse);
-			repaintRow(prevR);
-		}
-	}
-	else if (lbfr) {
-		if (lbfr->focus) {
-			selectRow(lbfr->rowIndex);
-		}
-		else {
-			const int prevR = rowUnderMouse;
-			rowUnderMouse = lbfr->rowIndex;
 			repaintRow(rowUnderMouse);
 			repaintRow(prevR);
 		}
@@ -144,11 +118,9 @@ void CompaniesTableListBoxModel::mouseDown (const MouseEvent &event)
         if (row >= 0 && row < getNumRows()) {
             if(clickedRows.contains(row)) {
                 clickedRows.removeAllInstancesOf(row);
-                std::cout << "Removed " << row << std::endl;
             }
             else {
                 clickedRows.add(row);
-                std::cout << "Added " << row << std::endl;
             }
             rowChangedSize(row, getRowSize(row));
         }
