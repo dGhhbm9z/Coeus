@@ -323,7 +323,7 @@ void AccountsComponent::searchButtonPressed()
 	//		CompanyVAT varchar(10) NOT NULL,
 
 	CacheSystem *cs = CacheSystem::getInstance();
-	cs->getResultsFor(queryStr, this);
+    cs->getResultsFor(queryStr, QueryEntry::Accounts, this);
 
 	std::cout << queryStr << std::endl;
 }

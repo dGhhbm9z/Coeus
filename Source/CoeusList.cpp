@@ -10,8 +10,6 @@
 
 //================================================
 
-const int MAXROWS = 40;
-
 CoeusHeap::CoeusHeap()
 :   heap(0)
 {
@@ -23,7 +21,6 @@ void CoeusHeap::update()
 {
     for(int i=heapSize/2 - 1; i>=0; --i) {
         heap[i] = heap[2*i+1] + heap[2*i+2];
-//        std::cout << heap[i] << " = " << heap[2*i+1] << " + " << heap[2*i+2] << "\n";
     }
 }
 
@@ -60,7 +57,6 @@ int CoeusHeap::findSumForIndex(int index)
     while(next > 0) {
         sum += next % 2 ? 0 : heap[next-1];
         next = (next - 1) >> 1;
-//        std::cout << String(sum) + String(", ");
     }
     
     return sum;
@@ -203,8 +199,6 @@ void CoeusList::updateComponents()
     const int startRow = getRowIndexAt(viewHeight);
     const int endRow = getRowIndexAt(viewHeight+getHeight());
     
-    std::cout << "Start row: " << startRow << " End Row: " << endRow << std::endl;
-    
     // refresh children content
     for(int r = startRow; r <= endRow; r++) {
         if (items.size() <= r-endRow) {
@@ -237,11 +231,8 @@ void CoeusList::positionComponents()
         if (items[i] != nullptr) {
             int itemStartHeight = getYStartForRow(itemsToRows[i]) - viewHeight;
             items[i]->setBounds(0, itemStartHeight, getWidth()-sb.getWidth(), heap.getValueAt(startRow+i));
-//            std::cout << "sr: " << startRow+i << "x: " << 0 << " y: " << itemStartHeight << " w: " << getWidth()-sb.getWidth() << " h: " << heap.getValueAt(startRow+i) << std::endl;
         }
     }
-//    std::cout << "========================================" << std::endl;
-//    std::cout << "sr: " << startRow << "x: " << 0 << " y: " << getYStartForRow(startRow) - viewHeight << " w: " << getWidth()-sb.getWidth() << " h: " << heap.getValueAt(startRow) << std::endl;
 }
 
 void CoeusList::scrollBarMoved (ScrollBar *scrollBarThatHasMoved, double newRangeStart)

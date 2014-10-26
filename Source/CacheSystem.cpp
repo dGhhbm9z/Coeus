@@ -130,7 +130,7 @@ bool CacheSystem::testServer()
 	return true;
 }
 
-void CacheSystem::getResultsFor(String &str, CacheSystemClient *client)
+void CacheSystem::getResultsFor(String &str, QueryEntry::QueryTable tableType, CacheSystemClient *client)
 {
 	// lock
 	//ScopedLock requestLock(querySection);
@@ -156,6 +156,7 @@ void CacheSystem::getResultsFor(String &str, CacheSystemClient *client)
 		QueryEntry *re = new QueryEntry();
 		re->request = str;
 		re->clientList.addIfNotAlreadyThere(client);
+        re->tableType = tableType;
 		queries.add(re);
 
 		// notify "consumer" thread in case it is waiting

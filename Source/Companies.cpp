@@ -182,20 +182,7 @@ void CompaniesTableListBoxModel::mouseExit(const MouseEvent &event)
 CompaniesComponent::CompaniesComponent()
 {
 	title->setText("Suppliers", dontSendNotification);
-
-//	TableHeaderComponent *accountsHeaderComponent = new TableHeaderComponent();
-//	accountsHeaderComponent->addColumn(L"Companies1", 1, 250, 100, 250);
-//	accountsHeaderComponent->addColumn(L"Companies1", 2, 250, 100, 250);
-//	accountsHeaderComponent->addColumn(L"Companies1", 3, 150, 100, 250);
-//	accountsHeaderComponent->addColumn(L"Companies1", 4, 250, 100, 250);
-//	accountsHeaderComponent->addColumn(String::empty, 5, 200, 100, 250);
-
 	companiesTableListBoxModel = new CompaniesTableListBoxModel();
-
-// TODO: what to do with the header?
-//	companiesTableListBoxModel->setHeader(accountsHeaderComponent);
-//	companiesTableListBoxModel->setHeaderHeight(40);
-
 	addAndMakeVisible(companiesTableListBoxModel);
 
 	//searchButtonPressed();
@@ -251,10 +238,10 @@ void CompaniesComponent::searchButtonPressed()
 
 	queryStr += (searchFilter->getSelectedId() == 2 || terms.size() == 0) ? " 1 = 1" : " 1 = 0";
 
-	//		CompanyVAT varchar(10) NOT NULL,
+
 
 	CacheSystem *cs = CacheSystem::getInstance();
-	cs->getResultsFor(queryStr, this);
+    cs->getResultsFor(queryStr, QueryEntry::Companies, this);
     
 	std::cout << queryStr << std::endl;
 }

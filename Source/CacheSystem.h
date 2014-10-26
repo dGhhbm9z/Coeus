@@ -40,6 +40,8 @@ private:
 
 class QueryEntry{
 public:
+    enum QueryTable { Events=0, Accounts, Companies, Customers, Suppliers, QueryTableSize};
+    
 	QueryEntry() : result(nullptr), num_fields(0), size(0) {
 	}
 
@@ -74,6 +76,7 @@ public:
 	Array<int> fieldSizes;
 	unsigned long size;
 	unsigned long usedSpace;
+    QueryTable tableType;
 
 private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(QueryEntry)
@@ -89,7 +92,7 @@ public:
 	bool setServer(String &address_, uint32 port_);
 	bool testServer();
 
-	void getResultsFor(String &str, CacheSystemClient *client);
+	void getResultsFor(String &str, QueryEntry::QueryTable tableType, CacheSystemClient *client);
 
 	static CacheSystem *getInstance();
 
