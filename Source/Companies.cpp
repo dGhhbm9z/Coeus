@@ -22,6 +22,10 @@ public:
         addAndMakeVisible(save = new TextButton(L"save"));
         addAndMakeVisible(remove = new TextButton(L"remove"));
 
+        edit->addListener(this);
+        save->addListener(this);
+        remove->addListener(this);
+        
         setDetailedView(false);
     }
 
@@ -187,6 +191,7 @@ CoeusListRowComponent * CompaniesTableListBoxModel::refreshComponentForRow(int r
         newComp->addChangeListener(this);
         newComp->row = rowNumber;
 
+        // TODO
         const bool dView = false;//(rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize);
         newComp->updateFromQueryForRow(qe, rowNumber,  dView);
 
@@ -245,9 +250,8 @@ void CompaniesTableListBoxModel::mouseDown (const MouseEvent &event)
         CoeusListRowComponent *prevComp = dynamic_cast<CoeusListRowComponent*>(getComponentForRow(selectedRow));
         
         // select new row
+        const int prevR = selectedRow;
         selectRow(rcomp->row);
-        const int prevR = rowUnderMouse;
-        rowUnderMouse = rcomp->row;
         
         // show/hide controls
         rcomp->shouldShowControls(true);
@@ -256,7 +260,7 @@ void CompaniesTableListBoxModel::mouseDown (const MouseEvent &event)
         }
         
         // repaint
-        repaintRow(rowUnderMouse);
+        repaintRow(selectedRow);
         repaintRow(prevR);
     }
 }
@@ -271,20 +275,32 @@ void CompaniesTableListBoxModel::mouseMove(const MouseEvent &event)
         parent = parent->getParentComponent();
     }
     
-    if (rcomp) {
-        const int r = rcomp->row;
-        if (r != rowUnderMouse) {
-            const int prevR = rowUnderMouse;
-            rowUnderMouse = r;
-            repaintRow(rowUnderMouse);
-            repaintRow(prevR);
+    if (rcomp && (rowUnderMouse != rcomp->row)) {
+        CoeusListRowComponent *prevComp = dynamic_cast<CoeusListRowComponent*>(getComponentForRow(rowUnderMouse));
+        
+        // select new row
+        const int prevR = rowUnderMouse;
+        rowUnderMouse = rcomp->row;
+        
+        // show/hide controls
+        rcomp->shouldShowControls(true);
+        if (prevComp && (prevComp->row != selectedRow)) {
+            prevComp->shouldShowControls(false);
         }
+        
+        // repaint
+        repaintRow(rowUnderMouse);
+        repaintRow(prevR);
     }
 }
 
 void CompaniesTableListBoxModel::mouseExit(const MouseEvent &event)
 {
 	const int prevR = rowUnderMouse;
+    CoeusListRowComponent *prevComp = dynamic_cast<CoeusListRowComponent*>(getComponentForRow(rowUnderMouse));
+    if(prevComp && (prevComp->row != selectedRow)) {
+        prevComp->shouldShowControls(false);
+    }
 	rowUnderMouse = -1;
 	repaintRow(rowUnderMouse);
 	repaintRow(prevR);

@@ -199,6 +199,7 @@ void CoeusList::selectRow(int rowNumber)
 
 void CoeusList::repaintRow(int rowNumber)
 {
+    // TODO : actually repaint only the requested row...
     repaint();
 }
 
