@@ -149,7 +149,7 @@ int CompaniesTableListBoxModel::getMaxRowSize()
 
 int CompaniesTableListBoxModel::getRowSize(int rowNumber)
 {
-    return (rowNumber > 0 && rowNumber < getNumRows()) ? rowSizes[rowNumber] : 0;
+    return (rowNumber >= 0 && rowNumber < getNumRows()) ? rowSizes[rowNumber] : 0;
 }
 
 void CompaniesTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected)

@@ -162,6 +162,13 @@ void CoeusList::update()
     heap.setNewValues(hb, getNumRows());
     heap.update();
     
+    for(int i=0; i<items.size(); i++) {
+        if (items[i] != nullptr) {
+            removeChildComponent(items[i]);
+            items[i]->setVisible(false);
+        }
+    }
+    
     pool.addArray(items);
     items.clear();
     itemsToRows.clear();
@@ -233,15 +240,18 @@ void CoeusList::updateComponents()
             res->repaint();
         }
     }
+    
+    
 }
 
 void CoeusList::positionComponents()
 {
     const int viewHeight = sb.getCurrentRangeStart()*heap.getSum();
     const int startRow = getRowIndexAt(viewHeight);
+    const int endRow = jmax(getRowIndexAt(viewHeight+getHeight()), startRow);
     
     // set bounds
-    for(int i=0; i<items.size(); i++) {
+    for(int i=0; i<=endRow; i++) {
         if (items[i] != nullptr) {
             int itemStartHeight = getYStartForRow(itemsToRows[i]) - viewHeight;
             const int height = heap.getValueAt(startRow+i);

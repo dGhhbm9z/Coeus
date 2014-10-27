@@ -2822,9 +2822,9 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
-					../../JuceLibraryCode,
-					../../JuceLibraryCode/modules,
-					"$(inherited)",
+					"<Multiple",
+					"values>",
+					/opt/local/include/mysql55/,
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -2854,16 +2854,15 @@
 				);
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
-					../../JuceLibraryCode,
-					../../JuceLibraryCode/modules,
-					/opt/local/include/mariadb/,
-					"$(inherited)",
+					"<Multiple",
+					"values>",
+					/opt/local/include/mysql55/,
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"/opt/local/lib/mariadb/mysql/\"",
+					/opt/local/lib/mysql55/mysql/,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
