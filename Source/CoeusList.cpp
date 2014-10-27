@@ -138,6 +138,11 @@ CoeusList::~CoeusList()
     }
 }
 
+CoeusListRowComponent *CoeusList::getComponentForRow(int row) const
+{
+    return items[itemsToRows.indexOf(row)];
+}
+
 void CoeusList::rowChangedSize(int rowNumber, int newSize)
 {
     heap.setNewValueAtIndex(newSize, rowNumber);

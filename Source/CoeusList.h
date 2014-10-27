@@ -39,10 +39,11 @@ public:
     virtual int getCoeusListHeight() = 0;
     virtual void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) = 0;
     virtual void setDetailedView(bool s, bool force=false) = 0;
+    virtual void shouldShowControls(bool show) = 0;
     int row;
 
 protected:
-    bool detailedView, editView;
+    bool detailedView, editView, showControls;
 
 };
 
@@ -67,6 +68,7 @@ public:
     virtual int getMaxRowSize() = 0;
     virtual int getRowSize(int rowNumber) = 0;
     virtual int *getRowSizes(int *pointer) { return nullptr; }
+    CoeusListRowComponent *getComponentForRow(int row) const;
 
     void rowChangedSize(int rowNumber, int newSize);
     void update();
