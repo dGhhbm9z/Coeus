@@ -19,8 +19,10 @@ CoeusHeap::CoeusHeap()
 
 void CoeusHeap::update()
 {
+    std::cout << "=================" << std::endl;
     for(int i=heapSize/2 - 1; i>=0; --i) {
         heap[i] = heap[2*i+1] + heap[2*i+2];
+        std::cout << i << "wtf: " << heap[i] << std::endl;
     }
 }
 
@@ -28,9 +30,13 @@ int CoeusHeap::findIndexForSum(int sum)
 {
     int next = 0;
     
-    if (heapSize == 0 || heap[0] < sum) {
+    if (heapSize == 0 ){
         return -1;
     }
+    else if (heap[0] < sum) {
+        return numEl-1;
+    }
+
     
     while(next >=0 && next < heapSize/2) {
         const int lchld = 2*next+1;
@@ -46,9 +52,11 @@ int CoeusHeap::findIndexForSum(int sum)
 int CoeusHeap::findSumForIndex(int index)
 {
     if (index < 0 || index >= numEl) {
+        std::cout << "---------------" << std::endl;
+        std::cout << index << " in -> sum : " << 0 << std::endl;
         return 0;
     }
-    
+
     int sum = 0;
     int next = heapSize/2 + index;
     sum += next % 2 ? 0 : heap[next-1];
@@ -59,6 +67,9 @@ int CoeusHeap::findSumForIndex(int index)
         next = (next - 1) >> 1;
     }
     
+    std::cout << "---------------" << std::endl;
+    std::cout << index << " in -> sum : " << sum << std::endl;
+
     return sum;
 }
 
@@ -197,19 +208,19 @@ void CoeusList::updateComponents()
 {
     const int viewHeight = sb.getCurrentRangeStart()*heap.getSum();
     const int startRow = getRowIndexAt(viewHeight);
-    const int endRow = getRowIndexAt(viewHeight+getHeight());
+    const int endRow = jmax(getRowIndexAt(viewHeight+getHeight()), startRow);
     
     // refresh children content
     for(int r = startRow; r <= endRow; r++) {
         if (items.size() <= r-endRow) {
-            Component *res = refreshComponentForRow(r, r == selectedRow, nullptr);
+            CoeusListRowComponent *res = refreshComponentForRow(r, r == selectedRow, nullptr);
             addAndMakeVisible(res);
             items.add(res);
             itemsToRows.add(r);
             res->repaint();            
         }
         else {
-            Component *res = refreshComponentForRow(r, r == selectedRow, items[r-startRow]);
+            CoeusListRowComponent *res = refreshComponentForRow(r, r == selectedRow, items[r-startRow]);
             if (res != items[r-startRow]) {
                 removeChildComponent(items[r-startRow]);
                 addAndMakeVisible(res);
@@ -230,7 +241,8 @@ void CoeusList::positionComponents()
     for(int i=0; i<items.size(); i++) {
         if (items[i] != nullptr) {
             int itemStartHeight = getYStartForRow(itemsToRows[i]) - viewHeight;
-            items[i]->setBounds(0, itemStartHeight, getWidth()-sb.getWidth(), heap.getValueAt(startRow+i));
+            const int height = heap.getValueAt(startRow+i);
+            items[i]->setBounds(0, itemStartHeight, getWidth()-sb.getWidth(), height);
         }
     }
 }

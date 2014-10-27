@@ -22,7 +22,7 @@ public:
     
 	void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override;
 	void paintRow(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override;
-	Component * refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate) override;
+    CoeusListRowComponent * refreshComponentForRow(int rowNumber, bool isRowSelected, CoeusListRowComponent *existingComponentToUpdate) override;
 	void setQueryEntry(QueryEntry *qe_);
 
 	void changeListenerCallback(ChangeBroadcaster *source) override;
@@ -33,7 +33,7 @@ public:
 private:
 	QueryEntry *qe;
 	int rowUnderMouse;
-    Array<int> clickedRows;
+    HeapBlock<int> rowSizes;
 };
 
 //=======================================================================================================

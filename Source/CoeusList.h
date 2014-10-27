@@ -32,6 +32,20 @@ private:
     int numEl;
 };
 
+class CoeusListRowComponent :   public Component,
+                                public ChangeBroadcaster
+{
+public:
+    virtual int getCoeusListHeight() = 0;
+    virtual void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) = 0;
+    virtual void setDetailedView(bool s, bool force=false) = 0;
+    int row;
+
+protected:
+    bool detailedView, editView;
+
+};
+
 class CoeusList :   public Component,
                     public ScrollBar::Listener
 {
@@ -40,23 +54,23 @@ public:
     ~CoeusList();
     
     virtual int getNumRows() = 0;
-    virtual void paintRowBackground(Graphics &g, int rowNumber,
-                                    int width, int height,
-                                    bool rowIsSelected) {};
+    virtual void paintRowBackground(Graphics &/*g*/, int /*rowNumber*/,
+                                    int /*width*/, int /*height*/,
+                                    bool /*rowIsSelected*/) {}
     
     virtual void paintRow(Graphics &g, int rowNumber,
                           int width, int height,
-                          bool rowIsSelected) {};
+                          bool rowIsSelected) {}
     
-    virtual Component * refreshComponentForRow(int rowNumber, bool isRowSelected,
-                                               Component *existingComponentToUpdate) {
+    virtual CoeusListRowComponent * refreshComponentForRow(int rowNumber, bool isRowSelected,
+                                               CoeusListRowComponent *existingComponentToUpdate) {
         return nullptr;
     };
     
     virtual int getMinRowSize() = 0;
     virtual int getMaxRowSize() = 0;
     virtual int getRowSize(int rowNumber) = 0;
-    virtual int *getRowSizes(int *pointer) { return nullptr; };
+    virtual int *getRowSizes(int *pointer) { return nullptr; }
 
     void rowChangedSize(int rowNumber, int newSize);
     void update();
@@ -72,8 +86,8 @@ private:
     virtual void updateComponents();
     virtual void positionComponents();
     
-    Array<Component *> items;
-    Array<Component *> pool;
+    Array<CoeusListRowComponent *> items;
+    Array<CoeusListRowComponent *> pool;
     Array<int> itemsToRows;
     ScrollBar sb;
     CoeusHeap heap;
