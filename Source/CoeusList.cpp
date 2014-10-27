@@ -92,8 +92,11 @@ void CoeusHeap::setNewValueAtIndex(int value, int index)
 void CoeusHeap::setNewValues(int *values, int size)
 {
     numEl = size;
-    int exp = 2;
-    while((size = size >> 1) >= 1) {++exp;}
+    int exp = 1;
+    while(size > 0) {
+        size >>= 1;
+        ++exp;
+    }
     
     heapSize = pow(2.0, exp) - 1;
     heap.realloc(heapSize);
