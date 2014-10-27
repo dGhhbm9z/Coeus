@@ -29,8 +29,8 @@ Component* Component::currentlyFocusedComponent = nullptr;
 class Component::MouseListenerList
 {
 public:
-    MouseListenerList(Component &owner_) noexcept
-        : numDeepMouseListeners (0), owner(owner_)
+    MouseListenerList() noexcept
+        : numDeepMouseListeners (0)
     {
     }
 
@@ -41,12 +41,6 @@ public:
             if (wantsEventsForAllNestedChildComponents)
             {
                 listeners.insert (0, newListener);
-                for(int i=0; i<owner.getNumChildComponents(); i++) {
-                    Component *cmp = owner.getChildComponent(i);
-                    if(cmp) {
-                        cmp->addMouseListener(newListener, true);
-                    }
-                }
                 ++numDeepMouseListeners;
             }
             else
@@ -147,7 +141,6 @@ public:
     }
 
 private:
-    Component &owner;
     Array<MouseListener*> listeners;
     int numDeepMouseListeners;
 
@@ -2356,7 +2349,7 @@ void Component::addMouseListener (MouseListener* const newListener,
     jassert ((newListener != this) || wantsEventsForAllNestedChildComponents);
 
     if (mouseListeners == nullptr)
-        mouseListeners = new MouseListenerList(*this);
+        mouseListeners = new MouseListenerList();
 
     mouseListeners->addListener (newListener, wantsEventsForAllNestedChildComponents);
 }
