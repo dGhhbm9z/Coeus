@@ -20,8 +20,7 @@ public:
     int getMaxRowSize() override;
     int getRowSize(int rowNumber) override;
     
-	void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override;
-	void paintRow(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override;
+    void paintRowBackground(Graphics &g, int rowNumber, int x, int y, int width, int height, bool rowIsSelected) override;
     CoeusListRowComponent * refreshComponentForRow(int rowNumber, bool isRowSelected, CoeusListRowComponent *existingComponentToUpdate) override;
 	void setQueryEntry(QueryEntry *qe_);
 

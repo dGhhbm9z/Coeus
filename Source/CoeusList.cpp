@@ -19,14 +19,12 @@ CoeusHeap::CoeusHeap()
 
 void CoeusHeap::update()
 {
-    std::cout << "=================" << std::endl;
     for(int i=heapSize/2 - 1; i>=0; --i) {
         heap[i] = heap[2*i+1] + heap[2*i+2];
-        std::cout << i << "wtf: " << heap[i] << std::endl;
     }
 }
 
-int CoeusHeap::findIndexForSum(int sum)
+int CoeusHeap::findIndexForSum(int sum) const
 {
     int next = 0;
     
@@ -49,11 +47,9 @@ int CoeusHeap::findIndexForSum(int sum)
     return next - heapSize/2;
 }
 
-int CoeusHeap::findSumForIndex(int index)
+int CoeusHeap::findSumForIndex(int index) const
 {
     if (index < 0 || index >= numEl) {
-        std::cout << "---------------" << std::endl;
-        std::cout << index << " in -> sum : " << 0 << std::endl;
         return 0;
     }
 
@@ -66,9 +62,6 @@ int CoeusHeap::findSumForIndex(int index)
         sum += next % 2 ? 0 : heap[next-1];
         next = (next - 1) >> 1;
     }
-    
-    std::cout << "---------------" << std::endl;
-    std::cout << index << " in -> sum : " << sum << std::endl;
 
     return sum;
 }
@@ -110,7 +103,7 @@ int CoeusHeap::getValueAt(int index)
     return heapSize ? heap[heapSize/2 + index] : 0;
 }
 
-int CoeusHeap::getSum()
+int CoeusHeap::getSum() const
 {
     return heapSize ? heap[0] : 0;
 }
@@ -118,7 +111,7 @@ int CoeusHeap::getSum()
 //===============================================================================
 
 CoeusList::CoeusList()
-:   sb(true), selectedRow(-1)
+:   selectedRow(-1), sb(true)
 {
     sb.setRangeLimits(0.0, 1.0);
     sb.setCurrentRange(0.0, 0.5, dontSendNotification);
@@ -201,7 +194,7 @@ void CoeusList::selectRow(int rowNumber)
 
 void CoeusList::repaintRow(int rowNumber)
 {
-    
+    repaint();
 }
 
 int CoeusList::getRowIndexAt(int y)
@@ -209,14 +202,19 @@ int CoeusList::getRowIndexAt(int y)
     return heap.findIndexForSum(y);
 }
 
-int CoeusList::getYStartForRow(int index)
+int CoeusList::getYStartForRow(int index) const
 {
     return heap.findSumForIndex(index);
 }
 
+int CoeusList::getViewStartHeight() const
+{
+    return sb.getCurrentRangeStart()*heap.getSum();
+}
+
 void CoeusList::updateComponents()
 {
-    const int viewHeight = sb.getCurrentRangeStart()*heap.getSum();
+    const int viewHeight = getViewStartHeight();
     const int startRow = getRowIndexAt(viewHeight);
     const int endRow = jmax(getRowIndexAt(viewHeight+getHeight()), startRow);
     

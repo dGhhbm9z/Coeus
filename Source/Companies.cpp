@@ -28,7 +28,7 @@ public:
     }
 
     void paint(Graphics &g) {
-        g.fillAll(Colours::darkgreen);
+//        g.fillAll(Colours::darkgreen);
     }
 
     void buttonClicked (Button *btn) override {
@@ -75,18 +75,19 @@ public:
     void setDetailedView(bool s, bool force=false) {
         if (detailedView != s || force) {
             detailedView = s;
-            const int lm = 5;
-            const int tm = 5;
-            const int pad = 2;
-            const int teHS = minRowSize;
+            const int lm = 4;
+            const int tm = 2;
+            const int bm = 2;
+            const int pad = 4;
+            const int teHS = minRowSize - tm - bm;
             const int teWS = 250;
 
             if(s) {
                 // detailed
                 companyNameTE->setBounds(lm, tm, teWS, teHS);
-                legalIncTE->setBounds(pad+lm+teWS, tm+teHS, teWS, teHS);
-                telephoneTE->setBounds(pad+lm+2*teWS, tm+2*teHS, 150, teHS);
-                activityTE->setBounds(pad+lm+2*teWS+150, tm+3*teHS, teWS, teHS);
+                legalIncTE->setBounds(lm+teWS+pad, tm+teHS, teWS, teHS);
+                telephoneTE->setBounds(lm+2*(teWS+pad), tm+2*teHS, 150, teHS);
+                activityTE->setBounds(lm+2*(teWS+pad)+pad+150, tm+3*teHS, teWS, teHS);
             }
             else {
                 // summary
@@ -97,9 +98,9 @@ public:
             }
 
             const int btnW=66;
-            edit->setBounds(lm+2*(teWS+pad)+pad+150+10, tm, btnW, teHS);
-            save->setBounds(lm+2*(teWS+pad)+pad+150+10+btnW, tm, btnW, teHS);
-            remove->setBounds(lm+2*(teWS+pad)+pad+150+10+2*btnW, tm, btnW, teHS);
+            edit->setBounds(lm+3*(teWS+pad)+pad+150+10, tm, btnW, teHS);
+            save->setBounds(lm+3*(teWS+pad)+pad+150+10+btnW, tm, btnW, teHS);
+            remove->setBounds(lm+3*(teWS+pad)+pad+150+10+2*btnW, tm, btnW, teHS);
         }
     }
 
@@ -125,6 +126,9 @@ CompaniesTableListBoxModel::CompaniesTableListBoxModel() : qe(nullptr), rowUnder
 
 void CompaniesTableListBoxModel::paint(Graphics &g)
 {
+    for(int i=0; i<getNumRows(); i++) {
+        paintRowBackground(g, i, 0, getYStartForRow(i), getWidth(), getRowSize(i), selectedRow == i);
+    }
 }
 
 int CompaniesTableListBoxModel::getNumRows()
@@ -152,20 +156,16 @@ int CompaniesTableListBoxModel::getRowSize(int rowNumber)
     return (rowNumber >= 0 && rowNumber < getNumRows()) ? rowSizes[rowNumber] : 0;
 }
 
-void CompaniesTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected)
+void CompaniesTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, int x, int y, int width, int height, bool rowIsSelected)
 {
 	if (rowIsSelected) {
 		g.setColour(Colours::grey.brighter().brighter());
-		g.fillAll();
+        g.fillRect(x, y, width, height);
 	}
 	else if (rowNumber == rowUnderMouse) {
 		g.setColour(Colours::lightgrey.brighter().brighter());
-		g.fillAll();
+        g.fillRect(x, y, width, height);
 	}
-}
-
-void CompaniesTableListBoxModel::paintRow(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected)
-{
 }
 
 CoeusListRowComponent * CompaniesTableListBoxModel::refreshComponentForRow(int rowNumber, bool isRowSelected, CoeusListRowComponent *existingComponentToUpdate)
@@ -236,14 +236,23 @@ void CompaniesTableListBoxModel::mouseDown (const MouseEvent &event)
 
 void CompaniesTableListBoxModel::mouseMove(const MouseEvent &event)
 {
-    const int y = event.getPosition().getY();
-	const int r = getRowIndexAt(y);
-	if (r != rowUnderMouse) {
-		const int prevR = rowUnderMouse;
-		rowUnderMouse = r;
-		repaintRow(rowUnderMouse);
-		repaintRow(prevR);
-	}
+    CoeusListRowComponent *rcomp = dynamic_cast<CoeusListRowComponent *>(event.eventComponent);
+    Component *parent = event.eventComponent->getParentComponent();;
+    
+    while (!rcomp && parent) {
+        rcomp = dynamic_cast<CoeusListRowComponent *>(parent);
+        parent = parent->getParentComponent();
+    }
+    
+    if (rcomp) {
+        const int r = rcomp->row;
+        if (r != rowUnderMouse) {
+            const int prevR = rowUnderMouse;
+            rowUnderMouse = r;
+            repaintRow(rowUnderMouse);
+            repaintRow(prevR);
+        }
+    }
 }
 
 void CompaniesTableListBoxModel::mouseExit(const MouseEvent &event)

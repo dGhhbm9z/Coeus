@@ -19,12 +19,12 @@ class CoeusHeap
 public:
     CoeusHeap();
     void update();
-    int findIndexForSum(int sum);
-    int findSumForIndex(int index);
+    int findIndexForSum(int sum) const;
+    int findSumForIndex(int index) const;
     void setNewValueAtIndex(int value, int index);
     void setNewValues(int *values, int size);
     int getValueAt(int index);
-    int getSum();
+    int getSum() const;
     
 private:
     HeapBlock<int> heap;
@@ -54,13 +54,9 @@ public:
     ~CoeusList();
     
     virtual int getNumRows() = 0;
-    virtual void paintRowBackground(Graphics &/*g*/, int /*rowNumber*/,
+    virtual void paintRowBackground(Graphics &/*g*/, int /*rowNumber*/, int /*x*/, int /*y*/,
                                     int /*width*/, int /*height*/,
                                     bool /*rowIsSelected*/) {}
-    
-    virtual void paintRow(Graphics &g, int rowNumber,
-                          int width, int height,
-                          bool rowIsSelected) {}
     
     virtual CoeusListRowComponent * refreshComponentForRow(int rowNumber, bool isRowSelected,
                                                CoeusListRowComponent *existingComponentToUpdate) {
@@ -81,8 +77,12 @@ public:
     
     virtual int getRowIndexAt(int y);
     
+protected:
+    int selectedRow;
+    virtual int getYStartForRow(int index) const;
+    int getViewStartHeight() const;
+    
 private:
-    virtual int getYStartForRow(int index);
     virtual void updateComponents();
     virtual void positionComponents();
     
@@ -91,7 +91,6 @@ private:
     Array<int> itemsToRows;
     ScrollBar sb;
     CoeusHeap heap;
-    int selectedRow;
     int viewFirstRow;
     int viewLastRow;
 };
