@@ -83,6 +83,7 @@ protected:
     int selectedRow;
     virtual int getYStartForRow(int index) const;
     int getViewStartHeight() const;
+    ScrollBar sb;
     
 private:
     virtual void updateComponents();
@@ -91,7 +92,6 @@ private:
     Array<CoeusListRowComponent *> items;
     Array<CoeusListRowComponent *> pool;
     Array<int> itemsToRows;
-    ScrollBar sb;
     CoeusHeap heap;
     int viewFirstRow;
     int viewLastRow;

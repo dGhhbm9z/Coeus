@@ -28,6 +28,7 @@ public:
 	void mouseMove(const MouseEvent &event) override;
 	void mouseExit(const MouseEvent &event) override;
     void mouseDown (const MouseEvent &event) override;
+    void mouseWheelMove (const MouseEvent &event, const MouseWheelDetails &wheel) override;
 
 private:
 	QueryEntry *qe;

@@ -2825,6 +2825,7 @@
 					"<Multiple",
 					"values>",
 					/opt/local/include/mysql55/,
+					/opt/local/include/mariadb/,
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -2857,12 +2858,14 @@
 					"<Multiple",
 					"values>",
 					/opt/local/include/mysql55/,
+					/opt/local/include/mariadb/,
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/local/lib/mysql55/mysql/,
+					/opt/local/lib/mariadb/mysql/,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;

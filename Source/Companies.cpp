@@ -66,6 +66,7 @@ public:
 
     void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) override {
         setDetailedView(detailedView, true);
+        this->row = row;
         if(qe) {
             // summary
             companyNameTE->setText(qe->getFieldFromRow(row, 0));
@@ -192,7 +193,7 @@ CoeusListRowComponent * CompaniesTableListBoxModel::refreshComponentForRow(int r
         newComp->row = rowNumber;
 
         // TODO
-        const bool dView = false;//(rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize);
+        const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize : false;
         newComp->updateFromQueryForRow(qe, rowNumber,  dView);
 
 		return newComp;
@@ -202,7 +203,8 @@ CoeusListRowComponent * CompaniesTableListBoxModel::refreshComponentForRow(int r
         CompaniesRowComponent * cmp = dynamic_cast<CompaniesRowComponent *>(existingComponentToUpdate);
 
         if(cmp) {
-            cmp->updateFromQueryForRow(qe, rowNumber, rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize);
+            const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize : false;
+            cmp->updateFromQueryForRow(qe, rowNumber, dView);
         }
 
 		return existingComponentToUpdate;
@@ -306,6 +308,13 @@ void CompaniesTableListBoxModel::mouseExit(const MouseEvent &event)
 	repaintRow(prevR);
 }
 
+void CompaniesTableListBoxModel::mouseWheelMove (const MouseEvent &event, const MouseWheelDetails &wheel)
+{
+    const double cStart = sb.getCurrentRangeStart();
+    const double nCStart = cStart + wheel.deltaY;
+    sb.setCurrentRangeStart(nCStart);
+}
+
 //================================================================================
 
 CompaniesComponent::CompaniesComponent()
@@ -367,6 +376,7 @@ void CompaniesComponent::searchButtonPressed()
 
 	queryStr += (searchFilter->getSelectedId() == 2 || terms.size() == 0) ? " 1 = 1" : " 1 = 0";
 
+    queryStr += " ORDER BY LegalInc";
 
 
 	CacheSystem *cs = CacheSystem::getInstance();
