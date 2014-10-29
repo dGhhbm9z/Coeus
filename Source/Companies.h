@@ -12,8 +12,6 @@ class CompaniesTableListBoxModel : public CoeusList,
 {
 public:
 	CompaniesTableListBoxModel();
-    
-    void paint(Graphics &g);
 
 	int getNumRows() override;
     int getMinRowSize() override;

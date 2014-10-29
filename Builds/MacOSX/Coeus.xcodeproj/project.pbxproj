@@ -19,6 +19,9 @@
 		3BB038AB0663A49C94927129 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA9473E5A30CA8AB16E89132 /* CoreAudio.framework */; };
 		3BFBB1BE62F131EA03D181A9 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67936926BEB4B3B55458681A /* WebKit.framework */; };
 		3E5653FBD8B6E91F9EA499DE /* juce_data_structures.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F9E0E37EA93EEA0C6915A30 /* juce_data_structures.mm */; };
+		3F0B7F901A0135F500DCA9E5 /* libmysqlclient.18.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 3F0B7F8F1A0135F500DCA9E5 /* libmysqlclient.18.dylib */; };
+		3F0B7F921A01366800DCA9E5 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F0B7F911A01366800DCA9E5 /* CFNetwork.framework */; };
+		3F0B7F941A01369300DCA9E5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F0B7F931A01369300DCA9E5 /* Foundation.framework */; };
 		3F6948E619FC3FB500B0456A /* search in Resources */ = {isa = PBXBuildFile; fileRef = 3F6948E319FC3FB500B0456A /* search */; };
 		3F6948E719FC3FB500B0456A /* sidebar in Resources */ = {isa = PBXBuildFile; fileRef = 3F6948E419FC3FB500B0456A /* sidebar */; };
 		3F6948E819FC3FB500B0456A /* splash in Resources */ = {isa = PBXBuildFile; fileRef = 3F6948E519FC3FB500B0456A /* splash */; };
@@ -271,6 +274,9 @@
 		3C46F427301F5CAF9DFD401E /* juce_UnitTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_UnitTest.cpp; path = ../../JuceLibraryCode/modules/juce_core/unit_tests/juce_UnitTest.cpp; sourceTree = SOURCE_ROOT; };
 		3D4F5D95FFC5A3688E82E9A4 /* juce_LowLevelGraphicsPostScriptRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_LowLevelGraphicsPostScriptRenderer.h; path = ../../JuceLibraryCode/modules/juce_graphics/contexts/juce_LowLevelGraphicsPostScriptRenderer.h; sourceTree = SOURCE_ROOT; };
 		3E212DC6ED6AEF7D4E602F13 /* juce_DeletedAtShutdown.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_DeletedAtShutdown.h; path = ../../JuceLibraryCode/modules/juce_events/messages/juce_DeletedAtShutdown.h; sourceTree = SOURCE_ROOT; };
+		3F0B7F8F1A0135F500DCA9E5 /* libmysqlclient.18.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libmysqlclient.18.dylib; sourceTree = "<group>"; };
+		3F0B7F911A01366800DCA9E5 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		3F0B7F931A01369300DCA9E5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		3F0DB3DF294AD8CB20C9090C /* juce_Result.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_Result.cpp; path = ../../JuceLibraryCode/modules/juce_core/misc/juce_Result.cpp; sourceTree = SOURCE_ROOT; };
 		3F41B7F22E2F0662A3BDA949 /* juce_FileInputSource.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_FileInputSource.cpp; path = ../../JuceLibraryCode/modules/juce_core/streams/juce_FileInputSource.cpp; sourceTree = SOURCE_ROOT; };
 		3F67AB233DC2AFA5775D022B /* juce_MarkerList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_MarkerList.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/positioning/juce_MarkerList.h; sourceTree = SOURCE_ROOT; };
@@ -966,6 +972,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F0B7F941A01369300DCA9E5 /* Foundation.framework in Frameworks */,
+				3F0B7F921A01366800DCA9E5 /* CFNetwork.framework in Frameworks */,
 				9B2E9944720732DDBB2390BD /* Accelerate.framework in Frameworks */,
 				9543C8FCF963D719B0D21A68 /* AudioToolbox.framework in Frameworks */,
 				08F36003D711F80C6A9AF83B /* Carbon.framework in Frameworks */,
@@ -1247,6 +1255,7 @@
 		330428715AD2EBB8228D9C6F /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				3F0B7F8F1A0135F500DCA9E5 /* libmysqlclient.18.dylib */,
 				568506D8D2957228AAE53D56 /* Coeus */,
 				21F0A2C2461DFAE7AEC4F0C0 /* Juce Modules */,
 				974C3393D8DC53A6F25D206C /* Juce Library Code */,
@@ -1279,6 +1288,8 @@
 		35D43BB21D36DDC0820B3970 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3F0B7F931A01369300DCA9E5 /* Foundation.framework */,
+				3F0B7F911A01366800DCA9E5 /* CFNetwork.framework */,
 				4A022BA9E42FD417F5B1764B /* Accelerate.framework */,
 				751D34933CBDAE9ABF834531 /* AudioToolbox.framework */,
 				5B7A7EA6C84A02339A735834 /* Carbon.framework */,
@@ -2754,6 +2765,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F0B7F901A0135F500DCA9E5 /* libmysqlclient.18.dylib in Resources */,
 				3F6948E719FC3FB500B0456A /* sidebar in Resources */,
 				3F6948E819FC3FB500B0456A /* splash in Resources */,
 				3F6948E619FC3FB500B0456A /* search in Resources */,
@@ -2829,9 +2841,10 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = /opt/local/lib/mariadb/mysql/;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_LDFLAGS = "-lmysqlclient";
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 				SDKROOT_ppc = macosx10.5;
 			};
 			name = Release;

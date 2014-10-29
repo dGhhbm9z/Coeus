@@ -111,8 +111,9 @@ int CoeusHeap::getSum() const
 //===============================================================================
 
 CoeusList::CoeusList()
-:   selectedRow(-1), sb(true)
+:   sb(true)
 {
+    selectedRow.add(-1);
     sb.setRangeLimits(0.0, 1.0);
     sb.setCurrentRange(0.0, 0.5, dontSendNotification);
     sb.setAutoHide(true);
@@ -192,9 +193,19 @@ void CoeusList::resized()
 
 void CoeusList::selectRow(int rowNumber)
 {
-    repaintRow(selectedRow);
+    selectedRow.clear();
+    selectedRow.add(rowNumber);
     repaintRow(rowNumber);
-    selectedRow = rowNumber;
+}
+
+void CoeusList::paint(Graphics &g)
+{
+    const int viewHeight = sb.getCurrentRangeStart()*heap.getSum();
+    const int startRow = getRowIndexAt(viewHeight);
+    const int endRow = jmax(getRowIndexAt(viewHeight+getHeight()), startRow);
+    for(int i=startRow; i<endRow; i++) {
+        paintRowBackground(g, i, 0, getYStartForRow(i)-viewHeight, getWidth(), getRowSize(i), selectedRow.contains(i));
+    }
 }
 
 void CoeusList::repaintRow(int rowNumber)
@@ -227,14 +238,14 @@ void CoeusList::updateComponents()
     // refresh children content
     for(int r = startRow; r <= endRow; r++) {
         if (items.size() <= r-endRow) {
-            CoeusListRowComponent *res = refreshComponentForRow(r, r == selectedRow, nullptr);
+            CoeusListRowComponent *res = refreshComponentForRow(r, selectedRow.contains(r), nullptr);
             addAndMakeVisible(res);
             items.add(res);
             itemsToRows.add(r);
             res->repaint();            
         }
         else {
-            CoeusListRowComponent *res = refreshComponentForRow(r, r == selectedRow, items[r-startRow]);
+            CoeusListRowComponent *res = refreshComponentForRow(r, selectedRow.contains(r), items[r-startRow]);
             if (res != items[r-startRow]) {
                 removeChildComponent(items[r-startRow]);
                 addAndMakeVisible(res);

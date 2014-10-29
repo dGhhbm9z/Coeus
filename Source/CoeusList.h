@@ -55,6 +55,8 @@ public:
     ~CoeusList();
     
     virtual int getNumRows() = 0;
+    void paint(Graphics &g) override;
+    void repaintRow(int rowNumber);
     virtual void paintRowBackground(Graphics &/*g*/, int /*rowNumber*/, int /*x*/, int /*y*/,
                                     int /*width*/, int /*height*/,
                                     bool /*rowIsSelected*/) {}
@@ -74,13 +76,12 @@ public:
     void update();
     void resized() override;
     void selectRow(int rowNumber);
-    void repaintRow(int rowNumber);
     void scrollBarMoved (ScrollBar *scrollBarThatHasMoved, double newRangeStart) override;
     
     virtual int getRowIndexAt(int y);
     
 protected:
-    int selectedRow;
+    Array<int> selectedRow;
     virtual int getYStartForRow(int index) const;
     int getViewStartHeight() const;
     ScrollBar sb;
