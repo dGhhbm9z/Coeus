@@ -211,8 +211,8 @@ void CoeusList::paint(Graphics &g)
 {
     const int viewHeight = sb.getCurrentRangeStart()*heap.getSum();
     const int startRow = getRowIndexAt(viewHeight);
-    const int endRow = jmax(getRowIndexAt(viewHeight+getHeight()+3*getMinRowSize()), startRow);
-    for(int i=startRow; i<endRow; i++) {
+    const int endRow = jmax(getRowIndexAt(viewHeight+getHeight()), startRow);
+    for(int i=startRow; i<=endRow; i++) {
         paintRowBackground(g, i, 0, getYStartForRow(i)-viewHeight, getWidth(), getRowSize(i), selectedRow.contains(i));
     }
 }
