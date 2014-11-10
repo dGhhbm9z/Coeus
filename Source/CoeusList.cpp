@@ -114,7 +114,7 @@ int CoeusHeap::getSum() const
 //===============================================================================
 
 CoeusList::CoeusList()
-:   sb(true)
+:   sb(true), qe(nullptr), rowUnderMouse(-1)
 {
     selectedRow.add(-1);
     sb.setRangeLimits(0.0, 1.0);
@@ -298,4 +298,111 @@ void CoeusList::scrollBarMoved (ScrollBar *scrollBarThatHasMoved, double newRang
     
     // update children position
     positionComponents();
+}
+
+void CoeusList::setQueryEntry(QueryEntry *qe_)
+{
+    if(qe_) {
+        qe = qe_;
+        rowSizes.realloc(qe->num_rows);
+        // fill in row sizes
+        for(int i=0; i<qe->num_rows; i++) {
+            rowSizes[i] = getMinRowSize();
+        }
+        update();
+    }
+}
+
+void CoeusList::changeListenerCallback(ChangeBroadcaster *source)
+{
+    // row changed size
+    CoeusListRowComponent *rcomp = dynamic_cast<CoeusListRowComponent*>(source);
+    if(rcomp) {
+        const int row = rcomp->row;
+        if (row >= 0 && row < getNumRows()) {
+            rowSizes[row] = rcomp->getCoeusListHeight();
+            rowChangedSize(row, getRowSize(row));
+        }
+    }
+}
+
+void CoeusList::mouseDown (const MouseEvent &event)
+{
+    // selected row
+    CoeusListRowComponent *rcomp = dynamic_cast<CoeusListRowComponent *>(event.eventComponent);
+    Component *parent = event.eventComponent->getParentComponent();
+    
+    while (!rcomp && parent) {
+        rcomp = dynamic_cast<CoeusListRowComponent *>(parent);
+        parent = parent->getParentComponent();
+    }
+    
+    if (rcomp && (selectedRow[0] != rcomp->row)) {
+        CoeusListRowComponent *prevComp = dynamic_cast<CoeusListRowComponent*>(getComponentForRow(selectedRow[0]));
+        
+        // select new row
+        const int prevR = selectedRow[0];
+        selectRow(rcomp->row);
+        
+        // show/hide controls
+        rcomp->shouldShowControls(true);
+        if (prevComp) {
+            prevComp->shouldShowControls(false);
+        }
+        
+        // repaint
+        //        repaintRow(selectedRow[0]);
+        repaintRow(prevR);
+    }
+}
+
+void CoeusList::mouseMove(const MouseEvent &event)
+{
+    CoeusListRowComponent *rcomp = dynamic_cast<CoeusListRowComponent *>(event.eventComponent);
+    Component *parent = event.eventComponent->getParentComponent();
+    
+    while (!rcomp && parent) {
+        rcomp = dynamic_cast<CoeusListRowComponent *>(parent);
+        parent = parent->getParentComponent();
+    }
+    
+    if (rcomp && (rowUnderMouse != rcomp->row)) {
+        CoeusListRowComponent *prevComp = dynamic_cast<CoeusListRowComponent*>(getComponentForRow(rowUnderMouse));
+        
+        // select new row
+        const int prevR = rowUnderMouse;
+        rowUnderMouse = rcomp->row;
+        
+        // show/hide controls
+        rcomp->shouldShowControls(true);
+        
+        if (prevComp && (prevComp->row != selectedRow[0])) {
+            prevComp->shouldShowControls(false);
+        }
+        
+        // repaint
+        // TODO: remove after repaitRow todo
+        //        repaintRow(rowUnderMouse);
+        repaintRow(prevR);
+    }
+}
+
+void CoeusList::mouseExit(const MouseEvent &event)
+{
+    //    if (event.eventComponent == this) {
+    //        const int prevR = rowUnderMouse;
+    //        CoeusListRowComponent *prevComp = dynamic_cast<CoeusListRowComponent*>(getComponentForRow(rowUnderMouse));
+    //        if(prevComp && (prevComp->row != selectedRow)) {
+    //            prevComp->shouldShowControls(false);
+    //        }
+    //        rowUnderMouse = -1;
+    //        repaintRow(prevR);
+    //    }
+}
+
+void CoeusList::mouseWheelMove (const MouseEvent &event, const MouseWheelDetails &wheel)
+{
+    const double cStart = sb.getCurrentRangeStart();
+    const double nCStart = cStart + wheel.deltaY;
+    sb.setCurrentRangeStart(nCStart);
 }

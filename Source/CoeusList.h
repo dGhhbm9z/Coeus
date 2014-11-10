@@ -48,13 +48,18 @@ protected:
 };
 
 class CoeusList :   public Component,
-                    public ScrollBar::Listener
+                    public ScrollBar::Listener,
+                    public ChangeListener
 {
 public:
     CoeusList();
     ~CoeusList();
     
     virtual int getNumRows() = 0;
+    virtual int getMinRowSize() = 0;
+    virtual int getMaxRowSize() = 0;
+    virtual int getRowSize(int rowNumber) = 0;
+    
     void paint(Graphics &g) override;
     void repaintRow(int rowNumber);
     virtual void paintRowBackground(Graphics &/*g*/, int /*rowNumber*/, int /*x*/, int /*y*/,
@@ -66,9 +71,6 @@ public:
         return nullptr;
     };
     
-    virtual int getMinRowSize() = 0;
-    virtual int getMaxRowSize() = 0;
-    virtual int getRowSize(int rowNumber) = 0;
     virtual int *getRowSizes(int *pointer) { return nullptr; }
     CoeusListRowComponent *getComponentForRow(int row) const;
 
@@ -76,15 +78,32 @@ public:
     void update();
     void resized() override;
     void selectRow(int rowNumber);
+    
+    //
     void scrollBarMoved (ScrollBar *scrollBarThatHasMoved, double newRangeStart) override;
     
+    //
     virtual int getRowIndexAt(int y);
+    
+    //
+    void setQueryEntry(QueryEntry *qe_);
+    
+    //
+    void changeListenerCallback(ChangeBroadcaster *source) override;
+    void mouseMove(const MouseEvent &event) override;
+    void mouseExit(const MouseEvent &event) override;
+    void mouseDown (const MouseEvent &event) override;
+    void mouseWheelMove (const MouseEvent &event, const MouseWheelDetails &wheel) override;
     
 protected:
     Array<int> selectedRow;
     virtual int getYStartForRow(int index) const;
     int getViewStartHeight() const;
     ScrollBar sb;
+    
+    QueryEntry *qe;
+    int rowUnderMouse;
+    HeapBlock<int> rowSizes;
     
 private:
     virtual void updateComponents();
