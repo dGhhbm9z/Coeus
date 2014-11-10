@@ -74,12 +74,13 @@ void CoeusHeap::setNewValueAtIndex(int value, int index)
 
     int next = (heapSize/2 + index);
     heap[next] = value;
-    update();
-    return;
     
     next = (next - 1) >> 1;
-    while(next > 0) {
+    while(next >= 0) {
         heap[next] = heap[2*next+1] + heap[2*next+2];
+        if (!next) {
+            break;
+        }
         next = (next - 1) >> 1;
     }
 }
