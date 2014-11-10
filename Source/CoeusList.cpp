@@ -74,12 +74,14 @@ void CoeusHeap::setNewValueAtIndex(int value, int index)
 
     int next = (heapSize/2 + index);
     heap[next] = value;
+    update();
+    return;
+    
     next = (next - 1) >> 1;
     while(next > 0) {
         heap[next] = heap[2*next+1] + heap[2*next+2];
         next = (next - 1) >> 1;
     }
-    
 }
 
 void CoeusHeap::setNewValues(int *values, int size)
@@ -146,7 +148,13 @@ CoeusListRowComponent *CoeusList::getComponentForRow(int row) const
 
 void CoeusList::rowChangedSize(int rowNumber, int newSize)
 {
+    double viewHeight = getViewStartHeight();
+    
     heap.setNewValueAtIndex(newSize, rowNumber);
+    
+    double sbsize = getHeight()/static_cast<double>(heap.getSum());
+    sb.setCurrentRange(viewHeight/static_cast<double>(heap.getSum()), sbsize, dontSendNotification);
+    
     updateComponents();
     positionComponents();
 }
