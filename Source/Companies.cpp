@@ -65,7 +65,7 @@ public:
     }
 
     void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) override {
-        setDetailedView(detailedView, true);
+        setDetailedView(dView, true);
         this->row = row;
         if(qe) {
             // summary
@@ -210,7 +210,7 @@ void CompaniesTableListBoxModel::setQueryEntry(QueryEntry *qe_)
 {
     if(qe_) {
         qe = qe_;
-        rowSizes.realloc(qe->num_rows+1); //hack +1
+        rowSizes.realloc(qe->num_rows);
         // fill in row sizes
         for(int i=0; i<qe->num_rows; i++) {
             rowSizes[i] = getMinRowSize();
