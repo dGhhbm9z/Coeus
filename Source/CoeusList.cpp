@@ -263,9 +263,6 @@ void CoeusList::updateComponents()
     for (int r=endRow+1 - startRow; r<items.size(); r++) {
         items[r]->setVisible(false);
     }
-    
-    std::cout << "UC: sr: " << startRow << " er: " << endRow << std::endl;
-    
 }
 
 void CoeusList::positionComponents()
@@ -280,12 +277,8 @@ void CoeusList::positionComponents()
             int itemStartHeight = getYStartForRow(itemsToRows[i]) - viewHeight;
             const int height = heap.getValueAt(startRow+i);
             items[i]->setBounds(0, itemStartHeight, getWidth()-sb.getWidth(), height);
-            
-            std::cout << "PoCo (" << i << " - " << startRow + i << "): " << itemStartHeight << " h: " << height << std::endl;
         }
     }
-    
-    std::cout << "PC: sr: " << startRow << " er: " << endRow << std::endl;
 }
 
 void CoeusList::scrollBarMoved (ScrollBar *scrollBarThatHasMoved, double newRangeStart)
