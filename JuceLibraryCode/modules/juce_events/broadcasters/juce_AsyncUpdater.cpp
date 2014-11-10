@@ -61,9 +61,7 @@ AsyncUpdater::~AsyncUpdater()
 void AsyncUpdater::triggerAsyncUpdate()
 {
     if (activeMessage->shouldDeliver.compareAndSetBool (1, 0))
-        if (! activeMessage->post())
-            cancelPendingUpdate(); // if the message queue fails, this avoids getting
-                                   // trapped waiting for the message to arrive
+        activeMessage->post();
 }
 
 void AsyncUpdater::cancelPendingUpdate() noexcept

@@ -78,7 +78,7 @@ public:
         initialise its fields with the appropriate details, and then call its launchAsync()
         method to launch the dialog.
     */
-    struct JUCE_API  LaunchOptions
+    struct LaunchOptions
     {
         LaunchOptions() noexcept;
 

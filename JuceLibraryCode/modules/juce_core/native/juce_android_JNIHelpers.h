@@ -271,33 +271,26 @@ public:
 
     JNIEnv* attach() noexcept
     {
-        if (android.activity != nullptr)
+        if (JNIEnv* env = attachToCurrentThread())
         {
-            if (JNIEnv* env = attachToCurrentThread())
-            {
-                SpinLock::ScopedLockType sl (addRemoveLock);
-                return addEnv (env);
-            }
-
-            jassertfalse;
+            SpinLock::ScopedLockType sl (addRemoveLock);
+            return addEnv (env);
         }
 
+        jassertfalse;
         return nullptr;
     }
 
     void detach() noexcept
     {
-        if (android.activity != nullptr)
-        {
-            jvm->DetachCurrentThread();
+        jvm->DetachCurrentThread();
 
-            const pthread_t thisThread = pthread_self();
+        const pthread_t thisThread = pthread_self();
 
-            SpinLock::ScopedLockType sl (addRemoveLock);
-            for (int i = 0; i < maxThreads; ++i)
-                if (threads[i] == thisThread)
-                    threads[i] = 0;
-        }
+        SpinLock::ScopedLockType sl (addRemoveLock);
+        for (int i = 0; i < maxThreads; ++i)
+            if (threads[i] == thisThread)
+                threads[i] = 0;
     }
 
     JNIEnv* getOrAttach() noexcept
@@ -361,12 +354,6 @@ private:
 };
 
 extern ThreadLocalJNIEnvHolder threadLocalJNIEnvHolder;
-
-struct AndroidThreadScope
-{
-    AndroidThreadScope()   { threadLocalJNIEnvHolder.attach(); }
-    ~AndroidThreadScope()  { threadLocalJNIEnvHolder.detach(); }
-};
 
 //==============================================================================
 #define JNI_CLASS_MEMBERS(METHOD, STATICMETHOD, FIELD, STATICFIELD) \

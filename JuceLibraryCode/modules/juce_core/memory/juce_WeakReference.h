@@ -158,7 +158,7 @@ public:
     public:
         Master() noexcept {}
 
-        ~Master() noexcept
+        ~Master()
         {
             // You must remember to call clear() in your source object's destructor! See the notes
             // for the WeakReference class for an example of how to do this.
@@ -187,7 +187,7 @@ public:
             to zero all the references to this object that may be out there. See the WeakReference
             class notes for an example of how to do this.
         */
-        void clear() noexcept
+        void clear()
         {
             if (sharedPointer != nullptr)
                 sharedPointer->clearPointer();

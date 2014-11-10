@@ -98,32 +98,16 @@ public:
     //==============================================================================
     /** Performs an action and adds it to the undo history list.
 
-        @param action   the action to perform - this object will be deleted by
-                        the UndoManager when no longer needed
-        @returns true if the command succeeds - see UndoableAction::perform
-        @see beginNewTransaction
-    */
-    bool perform (UndoableAction* action);
-
-    /** Performs an action and also gives it a name.
-
-        @param action       the action to perform - this object will be deleted by
-                            the UndoManager when no longer needed
+        @param action   the action to perform - this will be deleted by the UndoManager
+                        when no longer needed
         @param actionName   if this string is non-empty, the current transaction will be
                             given this name; if it's empty, the current transaction name will
                             be left unchanged. See setCurrentTransactionName()
         @returns true if the command succeeds - see UndoableAction::perform
         @see beginNewTransaction
     */
-    bool perform (UndoableAction* action, const String& actionName);
-
-    /** Starts a new group of actions that together will be treated as a single transaction.
-
-        All actions that are passed to the perform() method between calls to this
-        method are grouped together and undone/redone together by a single call to
-        undo() or redo().
-    */
-    void beginNewTransaction() noexcept;
+    bool perform (UndoableAction* action,
+                  const String& actionName = String());
 
     /** Starts a new group of actions that together will be treated as a single transaction.
 
@@ -134,7 +118,7 @@ public:
         @param actionName   a description of the transaction that is about to be
                             performed
     */
-    void beginNewTransaction (const String& actionName) noexcept;
+    void beginNewTransaction (const String& actionName = String());
 
     /** Changes the name stored for the current transaction.
 
@@ -142,15 +126,19 @@ public:
         called, but this can be used to change that name without starting a new
         transaction.
     */
-    void setCurrentTransactionName (const String& newName) noexcept;
+    void setCurrentTransactionName (const String& newName);
 
     //==============================================================================
     /** Returns true if there's at least one action in the list to undo.
         @see getUndoDescription, undo, canRedo
     */
-    bool canUndo() const noexcept;
+    bool canUndo() const;
 
-    /** Returns the name of the transaction that will be rolled-back when undo() is called.
+    /** Returns the description of the transaction that would be next to get undone.
+
+        The description returned is the one that was passed into beginNewTransaction
+        before the set of actions was performed.
+
         @see undo
     */
     String getUndoDescription() const;
@@ -184,7 +172,7 @@ public:
 
         The first item in the list is the earliest action performed.
     */
-    void getActionsInCurrentTransaction (Array<const UndoableAction*>& actionsFound) const;
+    void getActionsInCurrentTransaction (Array <const UndoableAction*>& actionsFound) const;
 
     /** Returns the number of UndoableAction objects that have been performed during the
         transaction that is currently open.
@@ -206,9 +194,12 @@ public:
     /** Returns true if there's at least one action in the list to redo.
         @see getRedoDescription, redo, canUndo
     */
-    bool canRedo() const noexcept;
+    bool canRedo() const;
 
-    /** Returns the name of the transaction that will be redone when redo() is called.
+    /** Returns the description of the transaction that would be next to get redone.
+        The description returned is the one that was passed into beginNewTransaction
+        before the set of actions was performed.
+
         @see redo
     */
     String getRedoDescription() const;
@@ -225,7 +216,7 @@ private:
     struct ActionSet;
     friend struct ContainerDeletePolicy<ActionSet>;
     OwnedArray<ActionSet> transactions;
-    String newTransactionName;
+    String currentTransactionName;
     int totalUnitsStored, maxNumUnitsToKeep, minimumTransactionsToKeep, nextIndex;
     bool newTransaction, reentrancyCheck;
     ActionSet* getCurrentSet() const noexcept;

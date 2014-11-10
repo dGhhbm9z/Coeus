@@ -287,7 +287,7 @@ void TabbedButtonBar::setTabName (const int tabIndex, const String& newName)
     }
 }
 
-void TabbedButtonBar::removeTab (const int tabIndex, const bool animate)
+void TabbedButtonBar::removeTab (const int tabIndex)
 {
     const int oldIndex = currentTabIndex;
     if (tabIndex == currentTabIndex)
@@ -296,7 +296,7 @@ void TabbedButtonBar::removeTab (const int tabIndex, const bool animate)
     tabs.remove (tabIndex);
 
     setCurrentTabIndex (oldIndex);
-    updateTabPositions (animate);
+    resized();
 }
 
 void TabbedButtonBar::moveTab (const int currentIndex, const int newIndex, const bool animate)

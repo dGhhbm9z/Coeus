@@ -1,6 +1,7 @@
 /*
   ==============================================================================
- file is part of the JUCE library.
+
+   This file is part of the JUCE library.
    Copyright (c) 2013 - Raw Material Software Ltd.
 
    Permission is granted to use this software under the terms of either:
@@ -21,15 +22,8 @@
   ==============================================================================
 */
 
-TextButton::TextButton()  : Button (String())
-{
-}
-
-TextButton::TextButton (const String& name) : Button (name)
-{
-}
-
-TextButton::TextButton (const String& name, const String& toolTip)  : Button (name)
+TextButton::TextButton (const String& name, const String& toolTip)
+    : Button (name)
 {
     setTooltip (toolTip);
 }
@@ -38,15 +32,21 @@ TextButton::~TextButton()
 {
 }
 
-void TextButton::paintButton (Graphics& g, bool isMouseOverButton, bool isButtonDown)
+void TextButton::paintButton (Graphics& g,
+                              bool isMouseOverButton,
+                              bool isButtonDown)
 {
     LookAndFeel& lf = getLookAndFeel();
 
     lf.drawButtonBackground (g, *this,
-                             findColour (getToggleState() ? buttonOnColourId : buttonColourId),
-                             isMouseOverButton, isButtonDown);
+                             findColour (getToggleState() ? buttonOnColourId
+                                                          : buttonColourId),
+                             isMouseOverButton,
+                             isButtonDown);
 
-    lf.drawButtonText (g, *this, isMouseOverButton, isButtonDown);
+    lf.drawButtonText (g, *this,
+                       isMouseOverButton,
+                       isButtonDown);
 }
 
 void TextButton::colourChanged()
@@ -54,17 +54,16 @@ void TextButton::colourChanged()
     repaint();
 }
 
-void TextButton::changeWidthToFitText()
+Font TextButton::getFont()
 {
-    changeWidthToFitText (getHeight());
+    return Font (jmin (15.0f, getHeight() * 0.6f));
 }
 
 void TextButton::changeWidthToFitText (const int newHeight)
 {
-    setSize (getBestWidthForHeight (newHeight), newHeight);
-}
+    if (newHeight >= 0)
+        setSize (jmax (1, getWidth()), newHeight);
 
-int TextButton::getBestWidthForHeight (int buttonHeight)
-{
-    return getLookAndFeel().getTextButtonWidthToFitText (*this, buttonHeight);
+    setSize (getFont().getStringWidth (getButtonText()) + getHeight(),
+             getHeight());
 }

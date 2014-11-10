@@ -44,7 +44,11 @@ class JUCE_API  AudioProcessor
 {
 protected:
     //==============================================================================
-    /** Constructor. */
+    /** Constructor.
+
+        You can also do your initialisation tasks in the initialiseFilterInfo()
+        call, which will be made after this object has been created.
+    */
     AudioProcessor();
 
 public:
@@ -289,9 +293,9 @@ public:
         filter will return an empty buffer, but won't block the audio thread like it would
         do if you use the getCallbackLock() critical section to synchronise access.
 
-        Any code that calls processBlock() should call isSuspended() before doing so, and
-        if the processor is suspended, it should avoid the call and emit silence or
-        whatever is appropriate.
+        If you're going to use this, your processBlock() method must call isSuspended() and
+        check whether it's suspended or not. If it is, then it should skip doing any real
+        processing, either emitting silence or passing the input through unchanged.
 
         @see getCallbackLock
     */
@@ -325,7 +329,7 @@ public:
     /** Called by the host to tell this processor whether it's being used in a non-realtime
         capacity for offline rendering or bouncing.
     */
-    virtual void setNonRealtime (bool isNonRealtime) noexcept;
+    void setNonRealtime (bool isNonRealtime) noexcept;
 
     //==============================================================================
     /** Creates the filter's UI.
@@ -377,10 +381,10 @@ public:
     /** This must return the correct value immediately after the object has been
         created, and mustn't change the number of parameters later.
     */
-    virtual int getNumParameters();
+    virtual int getNumParameters() = 0;
 
     /** Returns the name of a particular parameter. */
-    virtual const String getParameterName (int parameterIndex);
+    virtual const String getParameterName (int parameterIndex) = 0;
 
     /** Called by the host to find out the value of one of the filter's parameters.
 
@@ -390,10 +394,10 @@ public:
         It's also likely to be called by non-UI threads, so the code in here should
         be thread-aware.
     */
-    virtual float getParameter (int parameterIndex);
+    virtual float getParameter (int parameterIndex) = 0;
 
     /** Returns the value of a parameter as a text string. */
-    virtual const String getParameterText (int parameterIndex);
+    virtual const String getParameterText (int parameterIndex) = 0;
 
     /** Returns the name of a parameter as a text string with a preferred maximum length.
         If you want to provide customised short versions of your parameter names that
@@ -414,17 +418,11 @@ public:
     virtual String getParameterText (int parameterIndex, int maximumStringLength);
 
     /** Returns the number of discrete steps that this parameter can represent.
-        The default return value if you don't implement this method is
-        AudioProcessor::getDefaultNumParameterSteps().
+        The default return value if you don't implement this method is 0x7fffffff.
         If your parameter is boolean, then you may want to make this return 2.
         The value that is returned may or may not be used, depending on the host.
     */
     virtual int getParameterNumSteps (int parameterIndex);
-
-    /** Returns the default number of steps for a parameter.
-        @see getParameterNumSteps
-    */
-    static int getDefaultNumParameterSteps() noexcept;
 
     /** Returns the default value for the parameter.
         By default, this just returns 0.
@@ -436,11 +434,6 @@ public:
         parameter's units.
     */
     virtual String getParameterLabel (int index) const;
-
-    /** This can be overridden to tell the host that particular parameters operate in the
-        reverse direction. (Not all plugin formats or hosts will actually use this information).
-    */
-    virtual bool isParameterOrientationInverted (int index) const;
 
     /** The host will call this method to change the value of one of the filter's parameters.
 
@@ -455,7 +448,7 @@ public:
 
         The value passed will be between 0 and 1.0.
     */
-    virtual void setParameter (int parameterIndex, float newValue);
+    virtual void setParameter (int parameterIndex, float newValue) = 0;
 
     /** Your filter can call this when it needs to change one of its parameters.
 
@@ -470,13 +463,16 @@ public:
     void setParameterNotifyingHost (int parameterIndex, float newValue);
 
     /** Returns true if the host can automate this parameter.
+
         By default, this returns true for all parameters.
     */
     virtual bool isParameterAutomatable (int parameterIndex) const;
 
     /** Should return true if this parameter is a "meta" parameter.
+
         A meta-parameter is a parameter that changes other params. It is used
         by some hosts (e.g. AudioUnit hosts).
+
         By default this returns false.
     */
     virtual bool isMetaParameter (int parameterIndex) const;
@@ -506,16 +502,6 @@ public:
         etc, has changed, and that it should update itself.
     */
     void updateHostDisplay();
-
-    //==============================================================================
-    /** Adds a parameter to the list.
-        The parameter object will be managed and deleted automatically by the list
-        when no longer needed.
-    */
-    void addParameter (AudioProcessorParameter*);
-
-    /** Returns the current list of parameters. */
-    const OwnedArray<AudioProcessorParameter>& getParameters() const noexcept;
 
     //==============================================================================
     /** Returns the number of preset programs the filter supports.
@@ -672,9 +658,6 @@ private:
     bool suspended, nonRealtime;
     CriticalSection callbackLock, listenerLock;
     String inputSpeakerArrangement, outputSpeakerArrangement;
-
-    OwnedArray<AudioProcessorParameter> managedParameters;
-    AudioProcessorParameter* getParamChecked (int) const noexcept;
 
    #if JUCE_DEBUG
     BigInteger changingParams;

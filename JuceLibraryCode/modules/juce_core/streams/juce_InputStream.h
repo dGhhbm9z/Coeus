@@ -211,7 +211,7 @@ public:
     /** Tries to read the whole stream and turn it into a string.
 
         This will read from the stream's current position until the end-of-stream.
-        It can read from UTF-8 data, or UTF-16 if it detects suitable header-bytes.
+        It can read from either UTF-16 or UTF-8 formats.
     */
     virtual String readEntireStreamAsString();
 
@@ -223,8 +223,8 @@ public:
                                     will be read until the stream is exhausted.
         @returns the number of bytes that were added to the memory block
     */
-    virtual size_t readIntoMemoryBlock (MemoryBlock& destBlock,
-                                        ssize_t maxNumBytesToRead = -1);
+    virtual int readIntoMemoryBlock (MemoryBlock& destBlock,
+                                     ssize_t maxNumBytesToRead = -1);
 
     //==============================================================================
     /** Returns the offset of the next byte that will be read from the stream.

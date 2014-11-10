@@ -36,7 +36,7 @@
 */
 #define JUCE_MAJOR_VERSION      3
 #define JUCE_MINOR_VERSION      0
-#define JUCE_BUILDNUMBER        8
+#define JUCE_BUILDNUMBER        4
 
 /** Current Juce version number.
 
@@ -51,7 +51,6 @@
 
 //==============================================================================
 #include "juce_PlatformDefs.h"
-#include "juce_CompilerSupport.h"
 
 //==============================================================================
 // Now we'll include some common OS headers..
@@ -73,9 +72,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <functional>
 
-#if JUCE_USE_MSVC_INTRINSICS
+#if JUCE_USE_INTRINSICS
  #include <intrin.h>
 #endif
 

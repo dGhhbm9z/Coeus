@@ -25,13 +25,16 @@
 class ComponentAnimator::AnimationTask
 {
 public:
-    AnimationTask (Component* c) noexcept  : component (c) {}
+    AnimationTask (Component* const comp)
+        : component (comp)
+    {
+    }
 
     void reset (const Rectangle<int>& finalBounds,
                 float finalAlpha,
                 int millisecondsToSpendMoving,
                 bool useProxyComponent,
-                double startSpd, double endSpd)
+                double startSpeed_, double endSpeed_)
     {
         msElapsed = 0;
         msTotal = jmax (1, millisecondsToSpendMoving);
@@ -48,10 +51,10 @@ public:
         bottom  = component->getBottom();
         alpha   = component->getAlpha();
 
-        const double invTotalDistance = 4.0 / (startSpd + endSpd + 2.0);
-        startSpeed = jmax (0.0, startSpd * invTotalDistance);
+        const double invTotalDistance = 4.0 / (startSpeed_ + endSpeed_ + 2.0);
+        startSpeed = jmax (0.0, startSpeed_ * invTotalDistance);
         midSpeed = invTotalDistance;
-        endSpeed = jmax (0.0, endSpd * invTotalDistance);
+        endSpeed = jmax (0.0, endSpeed_ * invTotalDistance);
 
         if (useProxyComponent)
             proxy = new ProxyComponent (*component);
@@ -63,8 +66,8 @@ public:
 
     bool useTimeslice (const int elapsed)
     {
-        if (Component* const c = proxy != nullptr ? static_cast<Component*> (proxy)
-                                                  : static_cast<Component*> (component))
+        if (Component* const c = proxy != nullptr ? static_cast <Component*> (proxy)
+                                                  : static_cast <Component*> (component))
         {
             msElapsed += elapsed;
             double newProgress = msElapsed / (double) msTotal;
@@ -147,10 +150,7 @@ public:
             else
                 jassertfalse; // seem to be trying to animate a component that's not visible..
 
-            const float scale = (float) Desktop::getInstance().getDisplays()
-                                            .getDisplayContaining (getScreenBounds().getCentre()).scale;
-
-            image = c.createComponentSnapshot (c.getLocalBounds(), false, scale);
+            image = c.createComponentSnapshot (c.getLocalBounds(), false, getDesktopScaleFactor());
 
             setVisible (true);
             toBehind (&c);
@@ -190,8 +190,14 @@ private:
 };
 
 //==============================================================================
-ComponentAnimator::ComponentAnimator()  : lastTime (0) {}
-ComponentAnimator::~ComponentAnimator() {}
+ComponentAnimator::ComponentAnimator()
+    : lastTime (0)
+{
+}
+
+ComponentAnimator::~ComponentAnimator()
+{
+}
 
 //==============================================================================
 ComponentAnimator::AnimationTask* ComponentAnimator::findTaskFor (Component* const component) const noexcept
@@ -212,7 +218,7 @@ void ComponentAnimator::animateComponent (Component* const component,
                                           const double endSpeed)
 {
     // the speeds must be 0 or greater!
-    jassert (startSpeed >= 0 && endSpeed >= 0);
+    jassert (startSpeed >= 0 && endSpeed >= 0)
 
     if (component != nullptr)
     {

@@ -30,8 +30,6 @@ Viewport::Viewport (const String& name)
     showHScrollbar (true),
     showVScrollbar (true),
     deleteContent (true),
-    allowScrollingWithoutScrollbarV (false),
-    allowScrollingWithoutScrollbarH (false),
     verticalScrollBar (true),
     horizontalScrollBar (false)
 {
@@ -236,23 +234,31 @@ void Viewport::updateVisibleArea()
 
     Point<int> visibleOrigin (-contentBounds.getPosition());
 
-    horizontalScrollBar.setBounds (0, contentArea.getHeight(), contentArea.getWidth(), scrollbarWidth);
-    horizontalScrollBar.setRangeLimits (0.0, contentBounds.getWidth());
-    horizontalScrollBar.setCurrentRange (visibleOrigin.x, contentArea.getWidth());
-    horizontalScrollBar.setSingleStepSize (singleStepX);
-    horizontalScrollBar.cancelPendingUpdate();
-
-    if (canShowHBar && ! hBarVisible)
+    if (hBarVisible)
+    {
+        horizontalScrollBar.setBounds (0, contentArea.getHeight(), contentArea.getWidth(), scrollbarWidth);
+        horizontalScrollBar.setRangeLimits (0.0, contentBounds.getWidth());
+        horizontalScrollBar.setCurrentRange (visibleOrigin.x, contentArea.getWidth());
+        horizontalScrollBar.setSingleStepSize (singleStepX);
+        horizontalScrollBar.cancelPendingUpdate();
+    }
+    else if (canShowHBar)
+    {
         visibleOrigin.setX (0);
+    }
 
-    verticalScrollBar.setBounds (contentArea.getWidth(), 0, scrollbarWidth, contentArea.getHeight());
-    verticalScrollBar.setRangeLimits (0.0, contentBounds.getHeight());
-    verticalScrollBar.setCurrentRange (visibleOrigin.y, contentArea.getHeight());
-    verticalScrollBar.setSingleStepSize (singleStepY);
-    verticalScrollBar.cancelPendingUpdate();
-
-    if (canShowVBar && ! vBarVisible)
+    if (vBarVisible)
+    {
+        verticalScrollBar.setBounds (contentArea.getWidth(), 0, scrollbarWidth, contentArea.getHeight());
+        verticalScrollBar.setRangeLimits (0.0, contentBounds.getHeight());
+        verticalScrollBar.setCurrentRange (visibleOrigin.y, contentArea.getHeight());
+        verticalScrollBar.setSingleStepSize (singleStepY);
+        verticalScrollBar.cancelPendingUpdate();
+    }
+    else if (canShowVBar)
+    {
         visibleOrigin.setY (0);
+    }
 
     // Force the visibility *after* setting the ranges to avoid flicker caused by edge conditions in the numbers.
     horizontalScrollBar.setVisible (hBarVisible);
@@ -295,13 +301,8 @@ void Viewport::setSingleStepSizes (const int stepX, const int stepY)
 }
 
 void Viewport::setScrollBarsShown (const bool showVerticalScrollbarIfNeeded,
-                                   const bool showHorizontalScrollbarIfNeeded,
-                                   const bool allowVerticalScrollingWithoutScrollbar,
-                                   const bool allowHorizontalScrollingWithoutScrollbar)
+                                   const bool showHorizontalScrollbarIfNeeded)
 {
-    allowScrollingWithoutScrollbarV = allowVerticalScrollingWithoutScrollbar;
-    allowScrollingWithoutScrollbarH = allowHorizontalScrollingWithoutScrollbar;
-
     if (showVScrollbar != showVerticalScrollbarIfNeeded
          || showHScrollbar != showHorizontalScrollbarIfNeeded)
     {
@@ -346,43 +347,49 @@ void Viewport::mouseWheelMove (const MouseEvent& e, const MouseWheelDetails& whe
         Component::mouseWheelMove (e, wheel);
 }
 
-static int rescaleMouseWheelDistance (float distance, int singleStepSize) noexcept
-{
-    if (distance == 0)
-        return 0;
-
-    distance *= 14.0f * singleStepSize;
-
-    return roundToInt (distance < 0 ? jmin (distance, -1.0f)
-                                    : jmax (distance,  1.0f));
-}
-
 bool Viewport::useMouseWheelMoveIfNeeded (const MouseEvent& e, const MouseWheelDetails& wheel)
 {
     if (! (e.mods.isAltDown() || e.mods.isCtrlDown() || e.mods.isCommandDown()))
     {
-        const bool canScrollVert = (allowScrollingWithoutScrollbarV || verticalScrollBar.isVisible());
-        const bool canScrollHorz = (allowScrollingWithoutScrollbarH || horizontalScrollBar.isVisible());
+        const bool hasVertBar = verticalScrollBar.isVisible();
+        const bool hasHorzBar = horizontalScrollBar.isVisible();
 
-        if (canScrollHorz || canScrollVert)
+        if (hasHorzBar || hasVertBar)
         {
-            const int deltaX = rescaleMouseWheelDistance (wheel.deltaX, singleStepX);
-            const int deltaY = rescaleMouseWheelDistance (wheel.deltaY, singleStepY);
+            float wheelIncrementX = wheel.deltaX;
+            float wheelIncrementY = wheel.deltaY;
+
+            if (wheelIncrementX != 0)
+            {
+                wheelIncrementX *= 14.0f * singleStepX;
+                wheelIncrementX = (wheelIncrementX < 0) ? jmin (wheelIncrementX, -1.0f)
+                                                        : jmax (wheelIncrementX, 1.0f);
+            }
+
+            if (wheelIncrementY != 0)
+            {
+                wheelIncrementY *= 14.0f * singleStepY;
+                wheelIncrementY = (wheelIncrementY < 0) ? jmin (wheelIncrementY, -1.0f)
+                                                        : jmax (wheelIncrementY, 1.0f);
+            }
 
             Point<int> pos (getViewPosition());
 
-            if (deltaX != 0 && deltaY != 0 && canScrollHorz && canScrollVert)
+            if (wheelIncrementX != 0 && wheelIncrementY != 0 && hasHorzBar && hasVertBar)
             {
-                pos.x -= deltaX;
-                pos.y -= deltaY;
+                pos.setX (pos.x - roundToInt (wheelIncrementX));
+                pos.setY (pos.y - roundToInt (wheelIncrementY));
             }
-            else if (canScrollHorz && (deltaX != 0 || e.mods.isShiftDown() || ! canScrollVert))
+            else if (hasHorzBar && (wheelIncrementX != 0 || e.mods.isShiftDown() || ! hasVertBar))
             {
-                pos.x -= deltaX != 0 ? deltaX : deltaY;
+                if (wheelIncrementX == 0 && ! hasVertBar)
+                    wheelIncrementX = wheelIncrementY;
+
+                pos.setX (pos.x - roundToInt (wheelIncrementX));
             }
-            else if (canScrollVert && deltaY != 0)
+            else if (hasVertBar && wheelIncrementY != 0)
             {
-                pos.y -= deltaY;
+                pos.setY (pos.y - roundToInt (wheelIncrementY));
             }
 
             if (pos != getViewPosition())

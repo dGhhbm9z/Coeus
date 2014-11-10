@@ -209,10 +209,10 @@ String InputStream::readNextLine()
     return String::fromUTF8 (data, (int) i);
 }
 
-size_t InputStream::readIntoMemoryBlock (MemoryBlock& block, ssize_t numBytes)
+int InputStream::readIntoMemoryBlock (MemoryBlock& block, ssize_t numBytes)
 {
     MemoryOutputStream mo (block, true);
-    return (size_t) mo.writeFromInputStream (*this, numBytes);
+    return mo.writeFromInputStream (*this, numBytes);
 }
 
 String InputStream::readEntireStreamAsString()

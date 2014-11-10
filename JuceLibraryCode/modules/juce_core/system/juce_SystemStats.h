@@ -64,8 +64,7 @@ public:
         WinXP       = 0x4106,
         WinVista    = 0x4107,
         Windows7    = 0x4108,
-        Windows8_0  = 0x4109,
-        Windows8_1  = 0x410a,
+        Windows8    = 0x4109,
 
         Windows     = 0x4000,   /**< To test whether any version of Windows is running,
                                      you can use the expression ((getOperatingSystemType() & Windows) != 0). */
@@ -119,9 +118,7 @@ public:
     static String getUserRegion();
 
     /** Returns the user's display language.
-        The return value is a 2 or 3 letter language code (ISO 639-1 or ISO 639-2).
-        Note that depending on the OS and region, this may also be followed by a dash
-        and a sub-region code, e.g "en-GB"
+        The return value is a 2 or 3 letter language code (ISO 639-1 or ISO 639-2)
     */
     static String getDisplayLanguage();
 

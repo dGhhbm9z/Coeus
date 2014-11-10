@@ -182,10 +182,6 @@ void AudioTransportSource::setNextReadPosition (int64 newPosition)
             newPosition = (int64) (newPosition * sourceSampleRate / sampleRate);
 
         positionableSource->setNextReadPosition (newPosition);
-
-        if (resamplerSource != nullptr)
-            resamplerSource->flushBuffers();
-
         inputStreamEOF = false;
     }
 }

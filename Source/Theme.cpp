@@ -572,7 +572,7 @@ void Theme::drawButtonBackground (Graphics &g, Button &button, const Colour &bac
 	g.strokePath(rect, PathStrokeType(1.5f));
 }
 
-Font Theme::getTextButtonFont (TextButton&, int buttonHeight)
+Font Theme::getTextButtonFont (TextButton&)
 {
 	return Font();
 }
@@ -749,7 +749,7 @@ void ThemeAlt::drawButtonBackground(Graphics &g, Button &button, const Colour &b
 	g.fillRect(0, 0, 7, button.getHeight());
 }
 
-Font ThemeAlt::getTextButtonFont (TextButton&, int buttonHeight)
+Font ThemeAlt::getTextButtonFont (TextButton&)
 {
 	return Font();
 }

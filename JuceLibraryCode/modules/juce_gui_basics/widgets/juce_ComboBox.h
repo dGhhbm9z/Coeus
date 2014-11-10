@@ -94,7 +94,7 @@ public:
         @param newItemId        an associated ID number that can be set or retrieved - see
                                 getSelectedId() and setSelectedId(). Note that this value can not
                                 be 0!
-        @see setItemEnabled, addSeparator, addSectionHeading, getNumItems, getItemText, getItemId
+        @see setItemEnabled, addSeparator, addSectionHeading, removeItem, getNumItems, getItemText, getItemId
     */
     void addItem (const String& newItemText, int newItemId);
 
@@ -142,7 +142,7 @@ public:
         If this call causes the content to be cleared, and a change-message
         will be broadcast according to the notification parameter.
 
-        @see addItem, getNumItems
+        @see addItem, removeItem, getNumItems
     */
     void clear (NotificationType notification = sendNotificationAsync);
 
@@ -257,11 +257,8 @@ public:
     */
     void showEditor();
 
-    /** Pops up the combo box's list.
-        This is virtual so that you can override it with your own custom popup
-        mechanism if you need some really unusual behaviour.
-    */
-    virtual void showPopup();
+    /** Pops up the combo box's list. */
+    void showPopup();
 
     //==============================================================================
     /**
@@ -315,12 +312,6 @@ public:
     //==============================================================================
     /** Gives the ComboBox a tooltip. */
     void setTooltip (const String& newTooltip) override;
-
-    /** This can be used to allow the scroll-wheel to nudge the chosen item.
-        By default it's disabled, and I'd recommend leaving it disabled if there's any
-        chance that the control might be inside a scrollable list or viewport.
-    */
-    void setScrollWheelEnabled (bool enabled) noexcept;
 
 
     //==============================================================================
@@ -396,8 +387,6 @@ public:
     bool keyPressed (const KeyPress&) override;
     /** @internal */
     void valueChanged (Value&) override;
-    /** @internal */
-    void parentHierarchyChanged() override;
 
     // These methods' bool parameters have changed: see their new method signatures.
     JUCE_DEPRECATED (void clear (bool));
@@ -418,11 +407,10 @@ private:
         bool isEnabled : 1, isHeading : 1;
     };
 
-    OwnedArray<ItemInfo> items;
+    OwnedArray <ItemInfo> items;
     Value currentId;
     int lastCurrentId;
-    bool isButtonDown, separatorPending, menuActive, scrollWheelEnabled;
-    float mouseWheelAccumulator;
+    bool isButtonDown, separatorPending, menuActive;
     ListenerList <Listener> listeners;
     ScopedPointer<Label> label;
     String textWhenNothingSelected, noChoicesMessage;

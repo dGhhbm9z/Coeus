@@ -36,7 +36,7 @@ void* getUser32Function (const char* functionName)
 }
 
 //==============================================================================
-#if ! JUCE_USE_MSVC_INTRINSICS
+#if ! JUCE_USE_INTRINSICS
 // In newer compilers, the inline versions of these are used (in juce_Atomic.h), but in
 // older ones we have to actually call the ops as win32 functions..
 long juce_InterlockedExchange (volatile long* a, long b) noexcept                { return InterlockedExchange (a, b); }
@@ -555,21 +555,7 @@ bool ChildProcess::start (const String& command, int streamFlags)
 
 bool ChildProcess::start (const StringArray& args, int streamFlags)
 {
-    String escaped;
-
-    for (int i = 0; i < args.size(); ++i)
-    {
-        String arg (args[i]);
-
-        // If there are spaces, surround it with quotes. If there are quotes,
-        // replace them with \" so that CommandLineToArgv will correctly parse them.
-        if (arg.containsAnyOf ("\" "))
-            arg = arg.replace ("\"", "\\\"").quoted();
-
-        escaped << arg << ' ';
-    }
-
-    return start (escaped.trim(), streamFlags);
+    return start (args.joinIntoString (" "), streamFlags);
 }
 
 //==============================================================================

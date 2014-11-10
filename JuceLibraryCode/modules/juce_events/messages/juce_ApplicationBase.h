@@ -50,24 +50,24 @@
             MyJUCEApp()  {}
             ~MyJUCEApp() {}
 
-            void initialise (const String& commandLine) override
+            void initialise (const String& commandLine)
             {
                 myMainWindow = new MyApplicationWindow();
                 myMainWindow->setBounds (100, 100, 400, 500);
                 myMainWindow->setVisible (true);
             }
 
-            void shutdown() override
+            void shutdown()
             {
                 myMainWindow = nullptr;
             }
 
-            const String getApplicationName() override
+            const String getApplicationName()
             {
                 return "Super JUCE-o-matic";
             }
 
-            const String getApplicationVersion() override
+            const String getApplicationVersion()
             {
                 return "1.0";
             }

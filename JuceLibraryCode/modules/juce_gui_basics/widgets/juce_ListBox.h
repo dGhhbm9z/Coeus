@@ -45,10 +45,7 @@ public:
     */
     virtual int getNumRows() = 0;
 
-    /** This method must be implemented to draw a row of the list.
-        Note that the rowNumber value may be greater than the number of rows in your
-        list, so be careful that you don't assume it's less than getNumRows().
-    */
+    /** This method must be implemented to draw a row of the list. */
     virtual void paintListBoxItem (int rowNumber,
                                    Graphics& g,
                                    int width, int height,
@@ -87,18 +84,18 @@ public:
     /** This can be overridden to react to the user clicking on a row.
         @see listBoxItemDoubleClicked
     */
-    virtual void listBoxItemClicked (int row, const MouseEvent&);
+    virtual void listBoxItemClicked (int row, const MouseEvent& e);
 
     /** This can be overridden to react to the user double-clicking on a row.
         @see listBoxItemClicked
     */
-    virtual void listBoxItemDoubleClicked (int row, const MouseEvent&);
+    virtual void listBoxItemDoubleClicked (int row, const MouseEvent& e);
 
     /** This can be overridden to react to the user clicking on a part of the list where
         there are no rows.
         @see listBoxItemClicked
     */
-    virtual void backgroundClicked (const MouseEvent&);
+    virtual void backgroundClicked();
 
     /** Override this to be informed when rows are selected or deselected.
 
@@ -155,12 +152,6 @@ public:
 
     /** You can override this to return a custom mouse cursor for each row. */
     virtual MouseCursor getMouseCursorForRow (int row);
-
-private:
-   #if JUCE_CATCH_DEPRECATED_CODE_MISUSE
-    // This method's signature has changed to take a MouseEvent parameter - please update your code!
-    JUCE_DEPRECATED_WITH_BODY (virtual int backgroundClicked(), { return 0; })
-   #endif
 };
 
 
@@ -219,16 +210,7 @@ public:
         clicked and to get it to do the appropriate selection based on whether
         the ctrl/shift keys are held down.
     */
-    void setMultipleSelectionEnabled (bool shouldBeEnabled) noexcept;
-
-    /** If enabled, this makes the listbox flip the selection status of
-        each row that the user clicks, without affecting other selected rows.
-
-        (This only has an effect if multiple selection is also enabled).
-        If not enabled, you can still get the same row-flipping behaviour by holding
-        down CMD or CTRL when clicking.
-    */
-    void setClickingTogglesRowSelection (bool flipRowSelection) noexcept;
+    void setMultipleSelectionEnabled (bool shouldBeEnabled);
 
     /** Makes the list react to mouse moves by selecting the row that the mouse if over.
 
@@ -552,8 +534,6 @@ public:
     /** @internal */
     void colourChanged() override;
     /** @internal */
-    void parentHierarchyChanged() override;
-    /** @internal */
     void startDragAndDrop (const MouseEvent&, const var& dragDescription, bool allowDraggingToOtherWindows);
 
 private:
@@ -569,7 +549,7 @@ private:
     int totalItems, rowHeight, minimumRowWidth;
     int outlineThickness;
     int lastRowSelected;
-    bool multipleSelection, alwaysFlipSelection, hasDoneInitialUpdate;
+    bool multipleSelection, hasDoneInitialUpdate;
     SparseSet<int> selected;
 
     void selectRowInternal (int rowNumber, bool dontScrollToShowThisRow,

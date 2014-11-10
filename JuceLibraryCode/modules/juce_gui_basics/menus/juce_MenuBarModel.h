@@ -80,7 +80,8 @@ public:
         virtual ~Listener() {}
 
         //==============================================================================
-        /** This callback is made when items are changed in the menu bar model. */
+        /** This callback is made when items are changed in the menu bar model.
+        */
         virtual void menuBarItemsChanged (MenuBarModel* menuBarModel) = 0;
 
         /** This callback is made when an application command is invoked that
@@ -100,6 +101,7 @@ public:
     void addListener (Listener* listenerToAdd) noexcept;
 
     /** Removes a listener.
+
         @see addListener
     */
     void removeListener (Listener* listenerToRemove) noexcept;
@@ -128,7 +130,7 @@ public:
 
     //==============================================================================
    #if JUCE_MAC || DOXYGEN
-    /** OSX ONLY - Sets the model that is currently being shown as the main
+    /** MAC ONLY - Sets the model that is currently being shown as the main
         menu bar at the top of the screen on the Mac.
 
         You can pass 0 to stop the current model being displayed. Be careful
@@ -149,12 +151,12 @@ public:
                                 const PopupMenu* extraAppleMenuItems = nullptr,
                                 const String& recentItemsMenuName = String::empty);
 
-    /** OSX ONLY - Returns the menu model that is currently being shown as
+    /** MAC ONLY - Returns the menu model that is currently being shown as
         the main menu bar.
     */
     static MenuBarModel* getMacMainMenu();
 
-    /** OSX ONLY - Returns the menu that was last passed as the extraAppleMenuItems
+    /** MAC ONLY - Returns the menu that was last passed as the extraAppleMenuItems
         argument to setMacMainMenu(), or nullptr if none was specified.
     */
     static const PopupMenu* getMacExtraAppleItemsMenu();
@@ -162,7 +164,7 @@ public:
 
     //==============================================================================
     /** @internal */
-    void applicationCommandInvoked (const ApplicationCommandTarget::InvocationInfo&) override;
+    void applicationCommandInvoked (const ApplicationCommandTarget::InvocationInfo& info) override;
     /** @internal */
     void applicationCommandListChanged() override;
     /** @internal */
@@ -170,7 +172,7 @@ public:
 
 private:
     ApplicationCommandManager* manager;
-    ListenerList<Listener> listeners;
+    ListenerList <Listener> listeners;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MenuBarModel)
 };

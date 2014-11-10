@@ -145,6 +145,11 @@ public:
     {
         ScopedPointer<MessageManagerLock> mmLock;
 
+        const Rectangle<int> screenBounds (component.getTopLevelComponent()->getScreenBounds());
+
+        if (lastScreenBounds != screenBounds)
+            updateViewportSize (false);
+
         const bool isUpdating = needsUpdate.compareAndSetBool (0, 1);
 
         if (context.renderComponents && isUpdating)
@@ -156,8 +161,6 @@ public:
             mmLock = new MessageManagerLock (this);  // need to acquire this before locking the context.
             if (! mmLock->lockWasGained())
                 return false;
-
-            updateViewportSize (false);
         }
 
         if (! context.makeActive())
@@ -216,18 +219,12 @@ public:
         }
     }
 
-    void checkViewportBounds()
-    {
-        const Rectangle<int> screenBounds (component.getTopLevelComponent()->getScreenBounds());
-
-        if (lastScreenBounds != screenBounds)
-            updateViewportSize (true);
-    }
-
     void paintComponent()
     {
         // you mustn't set your own cached image object when attaching a GL context!
         jassert (get (component) == this);
+
+        updateViewportSize (false);
 
         if (! ensureFrameBufferSize())
             return;
@@ -337,16 +334,6 @@ public:
 
         while (! threadShouldExit())
         {
-           #if JUCE_IOS
-            // NB: on iOS, all GL calls will crash when the app is running
-            // in the background..
-            if (! Process::isForegroundProcess())
-            {
-                wait (500);
-                continue;
-            }
-           #endif
-
             if (! renderFrame())
                 wait (5); // failed to render, so avoid a tight fail-loop.
             else if (! context.continuousRepaint)
@@ -466,8 +453,7 @@ void OpenGLContext::NativeContext::renderCallback()
 #endif
 
 //==============================================================================
-class OpenGLContext::Attachment  : public ComponentMovementWatcher,
-                                   private Timer
+class OpenGLContext::Attachment  : public ComponentMovementWatcher
 {
 public:
     Attachment (OpenGLContext& c, Component& comp)
@@ -512,9 +498,7 @@ public:
 
         if (canBeAttached (comp))
         {
-            if (isAttached (comp))
-                comp.repaint(); // (needed when windows are un-minimised)
-            else
+            if (! isAttached (comp))
                 attach();
         }
         else
@@ -568,14 +552,10 @@ private:
         comp.setCachedComponentImage (newCachedImage);
         newCachedImage->start(); // (must wait until this is attached before starting its thread)
         newCachedImage->updateViewportSize (true);
-
-        startTimer (400);
     }
 
     void detach()
     {
-        stopTimer();
-
         Component& comp = *getComponent();
 
        #if JUCE_MAC
@@ -587,12 +567,6 @@ private:
 
         comp.setCachedComponentImage (nullptr);
         context.nativeContext = nullptr;
-    }
-
-    void timerCallback() override
-    {
-        if (CachedImage* const cachedImage = CachedImage::get (*getComponent()))
-            cachedImage->checkViewportBounds();
     }
 };
 
@@ -630,7 +604,6 @@ void OpenGLContext::setComponentPaintingEnabled (bool shouldPaintComponent) noex
 void OpenGLContext::setContinuousRepainting (bool shouldContinuouslyRepaint) noexcept
 {
     continuousRepaint = shouldContinuouslyRepaint;
-    triggerRepaint();
 }
 
 void OpenGLContext::setPixelFormat (const OpenGLPixelFormat& preferredPixelFormat) noexcept
@@ -856,27 +829,27 @@ void OpenGLContext::copyTexture (const Rectangle<int>& targetClipArea,
                 ProgramBuilder (OpenGLShaderProgram& prog)
                 {
                     prog.addVertexShader (OpenGLHelpers::translateVertexShaderToV3 (
-                        "attribute " JUCE_HIGHP " vec2 position;"
-                        "uniform " JUCE_HIGHP " vec2 screenSize;"
-                        "uniform " JUCE_HIGHP " float textureBounds[4];"
-                        "uniform " JUCE_HIGHP " vec2 vOffsetAndScale;"
-                        "varying " JUCE_HIGHP " vec2 texturePos;"
-                        "void main()"
-                        "{"
-                          JUCE_HIGHP " vec2 scaled = position / (0.5 * screenSize.xy);"
-                          "gl_Position = vec4 (scaled.x - 1.0, 1.0 - scaled.y, 0, 1.0);"
-                          "texturePos = (position - vec2 (textureBounds[0], textureBounds[1])) / vec2 (textureBounds[2], textureBounds[3]);"
-                          "texturePos = vec2 (texturePos.x, vOffsetAndScale.x + vOffsetAndScale.y * texturePos.y);"
-                        "}"));
+                                            "attribute " JUCE_HIGHP " vec2 position;"
+                                            "uniform " JUCE_HIGHP " vec2 screenSize;"
+                                            "varying " JUCE_HIGHP " vec2 pixelPos;"
+                                            "void main()"
+                                            "{"
+                                              "pixelPos = position;"
+                                              JUCE_HIGHP " vec2 scaled = position / (0.5 * screenSize.xy);"
+                                              "gl_Position = vec4 (scaled.x - 1.0, 1.0 - scaled.y, 0, 1.0);"
+                                            "}"));
 
                     prog.addFragmentShader (OpenGLHelpers::translateFragmentShaderToV3 (
-                        "uniform sampler2D imageTexture;"
-                        "varying " JUCE_HIGHP " vec2 texturePos;"
-                        "void main()"
-                        "{"
-                          "gl_FragColor = texture2D (imageTexture, texturePos);"
-                        "}"));
-
+                                             "uniform sampler2D imageTexture;"
+                                             "uniform " JUCE_HIGHP " float textureBounds[4];"
+                                             "uniform " JUCE_HIGHP " vec2 vOffsetAndScale;"
+                                             "varying " JUCE_HIGHP " vec2 pixelPos;"
+                                             "void main()"
+                                             "{"
+                                               JUCE_HIGHP " vec2 texturePos = (pixelPos - vec2 (textureBounds[0], textureBounds[1]))"
+                                                                                 "/ vec2 (textureBounds[2], textureBounds[3]);"
+                                              "gl_FragColor = texture2D (imageTexture, vec2 (texturePos.x, vOffsetAndScale.x + vOffsetAndScale.y * texturePos.y));"
+                                            "}"));
                     prog.link();
                 }
             };

@@ -50,11 +50,13 @@
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" extraLinkerFlags="-lmysqlclient">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="10.7 SDK" osxArchitecture="default"
-                       isDebug="1" optimisation="1" targetName="Coeus" headerPath="/opt/local/include/mariadb/"
-                       libraryPath="/opt/local/lib/mariadb/mysql/"/>
-        <CONFIGURATION name="Release" osxSDK="10.7 SDK" osxCompatibility="default" osxArchitecture="default"
-                       isDebug="0" optimisation="2" targetName="Coeus"/>
+        <CONFIGURATION name="Debug" osxSDK="10.9 SDK" osxCompatibility="10.6 SDK" osxArchitecture="default"
+                       isDebug="1" optimisation="1" targetName="Coeus" headerPath="/opt/local/include/mariadb/&#10;/opt/local/include/mysql55/"
+                       libraryPath="/opt/local/lib/mariadb/mysql/&#10;/opt/local/lib/mysql55/mysql/"/>
+        <CONFIGURATION name="Release" osxSDK="10.9 SDK" osxCompatibility="10.6 SDK"
+                       osxArchitecture="default" isDebug="0" optimisation="2" targetName="Coeus"
+                       libraryPath="/opt/local/lib/mariadb/mysql/&#10;/opt/local/lib/mysql55/mysql/"
+                       headerPath="/opt/local/include/mariadb/&#10;/opt/local/include/mysql55/"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../JUCE/modules"/>

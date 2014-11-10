@@ -29,6 +29,13 @@
  #include "../../juce_gui_extra/native/juce_mac_CarbonViewWrapperComponent.h"
 #endif
 
+#if JUCE_MAC
+ static bool makeFSRefFromPath (FSRef* destFSRef, const String& path)
+ {
+     return FSPathMakeRef (reinterpret_cast<const UInt8*> (path.toRawUTF8()), destFSRef, 0) == noErr;
+ }
+#endif
+
 //==============================================================================
 #undef PRAGMA_ALIGN_SUPPORTED
 #define VST_FORCE_DEPRECATED 0
@@ -77,68 +84,74 @@
 #endif
 
 //==============================================================================
+const int fxbVersionNum = 1;
+
+struct fxProgram
+{
+    VstInt32 chunkMagic;    // 'CcnK'
+    VstInt32 byteSize;      // of this chunk, excl. magic + byteSize
+    VstInt32 fxMagic;       // 'FxCk'
+    VstInt32 version;
+    VstInt32 fxID;          // fx unique id
+    VstInt32 fxVersion;
+    VstInt32 numParams;
+    char prgName[28];
+    float params[1];        // variable no. of parameters
+};
+
+struct fxSet
+{
+    VstInt32 chunkMagic;    // 'CcnK'
+    VstInt32 byteSize;      // of this chunk, excl. magic + byteSize
+    VstInt32 fxMagic;       // 'FxBk'
+    VstInt32 version;
+    VstInt32 fxID;          // fx unique id
+    VstInt32 fxVersion;
+    VstInt32 numPrograms;
+    char future[128];
+    fxProgram programs[1];  // variable no. of programs
+};
+
+struct fxChunkSet
+{
+    VstInt32 chunkMagic;    // 'CcnK'
+    VstInt32 byteSize;      // of this chunk, excl. magic + byteSize
+    VstInt32 fxMagic;       // 'FxCh', 'FPCh', or 'FBCh'
+    VstInt32 version;
+    VstInt32 fxID;          // fx unique id
+    VstInt32 fxVersion;
+    VstInt32 numPrograms;
+    char future[128];
+    VstInt32 chunkSize;
+    char chunk[8];          // variable
+};
+
+struct fxProgramSet
+{
+    VstInt32 chunkMagic;    // 'CcnK'
+    VstInt32 byteSize;      // of this chunk, excl. magic + byteSize
+    VstInt32 fxMagic;       // 'FxCh', 'FPCh', or 'FBCh'
+    VstInt32 version;
+    VstInt32 fxID;          // fx unique id
+    VstInt32 fxVersion;
+    VstInt32 numPrograms;
+    char name[28];
+    VstInt32 chunkSize;
+    char chunk[8];          // variable
+};
+
 namespace
 {
-    const int fxbVersionNum = 1;
-
-    struct fxProgram
+    VstInt32 vst_swap (const VstInt32 x) noexcept
     {
-        VstInt32 chunkMagic;    // 'CcnK'
-        VstInt32 byteSize;      // of this chunk, excl. magic + byteSize
-        VstInt32 fxMagic;       // 'FxCk'
-        VstInt32 version;
-        VstInt32 fxID;          // fx unique id
-        VstInt32 fxVersion;
-        VstInt32 numParams;
-        char prgName[28];
-        float params[1];        // variable no. of parameters
-    };
+       #ifdef JUCE_LITTLE_ENDIAN
+        return (VstInt32) ByteOrder::swap ((uint32) x);
+       #else
+        return x;
+       #endif
+    }
 
-    struct fxSet
-    {
-        VstInt32 chunkMagic;    // 'CcnK'
-        VstInt32 byteSize;      // of this chunk, excl. magic + byteSize
-        VstInt32 fxMagic;       // 'FxBk'
-        VstInt32 version;
-        VstInt32 fxID;          // fx unique id
-        VstInt32 fxVersion;
-        VstInt32 numPrograms;
-        char future[128];
-        fxProgram programs[1];  // variable no. of programs
-    };
-
-    struct fxChunkSet
-    {
-        VstInt32 chunkMagic;    // 'CcnK'
-        VstInt32 byteSize;      // of this chunk, excl. magic + byteSize
-        VstInt32 fxMagic;       // 'FxCh', 'FPCh', or 'FBCh'
-        VstInt32 version;
-        VstInt32 fxID;          // fx unique id
-        VstInt32 fxVersion;
-        VstInt32 numPrograms;
-        char future[128];
-        VstInt32 chunkSize;
-        char chunk[8];          // variable
-    };
-
-    struct fxProgramSet
-    {
-        VstInt32 chunkMagic;    // 'CcnK'
-        VstInt32 byteSize;      // of this chunk, excl. magic + byteSize
-        VstInt32 fxMagic;       // 'FxCh', 'FPCh', or 'FBCh'
-        VstInt32 version;
-        VstInt32 fxID;          // fx unique id
-        VstInt32 fxVersion;
-        VstInt32 numPrograms;
-        char name[28];
-        VstInt32 chunkSize;
-        char chunk[8];          // variable
-    };
-
-    static VstInt32 fxbName (const char* name) noexcept   { return (VstInt32) ByteOrder::bigEndianInt (name); }
-    static VstInt32 fxbSwap (const VstInt32 x) noexcept   { return (VstInt32) ByteOrder::swapIfLittleEndian ((uint32) x); }
-
-    static float fxbSwapFloat (const float x) noexcept
+    float vst_swapFloat (const float x) noexcept
     {
        #ifdef JUCE_LITTLE_ENDIAN
         union { uint32 asInt; float asFloat; } n;
@@ -149,12 +162,8 @@ namespace
         return x;
        #endif
     }
-}
 
-//==============================================================================
-namespace
-{
-    static double getVSTHostTimeNanoseconds() noexcept
+    double getVSTHostTimeNanoseconds()
     {
        #if JUCE_WINDOWS
         return timeGetTime() * 1000000.0;
@@ -168,51 +177,39 @@ namespace
         return micro.lo * 1000.0;
        #endif
     }
-
-    static int shellUIDToCreate = 0;
-    static int insideVSTCallback = 0;
-
-    struct IdleCallRecursionPreventer
-    {
-        IdleCallRecursionPreventer()  : isMessageThread (MessageManager::getInstance()->isThisTheMessageThread())
-        {
-            if (isMessageThread)
-                ++insideVSTCallback;
-        }
-
-        ~IdleCallRecursionPreventer()
-        {
-            if (isMessageThread)
-                --insideVSTCallback;
-        }
-
-        const bool isMessageThread;
-        JUCE_DECLARE_NON_COPYABLE (IdleCallRecursionPreventer)
-    };
-
-   #if JUCE_MAC
-    static bool makeFSRefFromPath (FSRef* destFSRef, const String& path)
-    {
-        return FSPathMakeRef (reinterpret_cast<const UInt8*> (path.toRawUTF8()), destFSRef, 0) == noErr;
-    }
-   #endif
-
-   #if JUCE_MAC && JUCE_PPC
-    static void* newCFMFromMachO (void* const machofp) noexcept
-    {
-        void* result = (void*) new char[8];
-
-        ((void**) result)[0] = machofp;
-        ((void**) result)[1] = result;
-
-        return result;
-    }
-   #endif
 }
 
 //==============================================================================
 typedef AEffect* (VSTCALLBACK *MainCall) (audioMasterCallback);
+
 static VstIntPtr VSTCALLBACK audioMaster (AEffect* effect, VstInt32 opcode, VstInt32 index, VstIntPtr value, void* ptr, float opt);
+
+static int shellUIDToCreate = 0;
+static int insideVSTCallback = 0;
+
+class IdleCallRecursionPreventer
+{
+public:
+    IdleCallRecursionPreventer()
+        : isMessageThread (MessageManager::getInstance()->isThisTheMessageThread())
+    {
+        if (isMessageThread)
+            ++insideVSTCallback;
+    }
+
+    ~IdleCallRecursionPreventer()
+    {
+        if (isMessageThread)
+            --insideVSTCallback;
+    }
+
+private:
+    const bool isMessageThread;
+
+    JUCE_DECLARE_NON_COPYABLE (IdleCallRecursionPreventer)
+};
+
+class VSTPluginWindow;
 
 //==============================================================================
 // Change this to disable logging of various VST activities
@@ -227,10 +224,25 @@ static VstIntPtr VSTCALLBACK audioMaster (AEffect* effect, VstInt32 opcode, VstI
 #endif
 
 //==============================================================================
+#if JUCE_MAC && JUCE_PPC
+static void* NewCFMFromMachO (void* const machofp) noexcept
+{
+    void* result = (void*) new char[8];
+
+    ((void**) result)[0] = machofp;
+    ((void**) result)[1] = result;
+
+    return result;
+}
+#endif
+
+//==============================================================================
 #if JUCE_LINUX
 
 extern Display* display;
 extern XContext windowHandleXContext;
+
+typedef void (*EventProcPtr) (XEvent* ev);
 
 namespace
 {
@@ -241,8 +253,6 @@ namespace
         xErrorTriggered = true;
         return 0;
     }
-
-    typedef void (*EventProcPtr) (XEvent* ev);
 
     static EventProcPtr getPropertyFromXWindow (Window handle, Atom atom)
     {
@@ -259,7 +269,8 @@ namespace
 
         XSetErrorHandler (oldErrorHandler);
 
-        return (userCount == 1 && ! xErrorTriggered) ? *reinterpret_cast<EventProcPtr*> (data) : nullptr;
+        return (userCount == 1 && ! xErrorTriggered) ? *reinterpret_cast<EventProcPtr*> (data)
+                                                     : 0;
     }
 
     Window getChildWindow (Window windowToCheck)
@@ -268,7 +279,12 @@ namespace
         Window* childWindows;
         unsigned int numChildren = 0;
 
-        XQueryTree (display, windowToCheck, &rootWindow, &parentWindow, &childWindows, &numChildren);
+        XQueryTree (display,
+                    windowToCheck,
+                    &rootWindow,
+                    &parentWindow,
+                    &childWindows,
+                    &numChildren);
 
         if (numChildren > 0)
             return childWindows [0];
@@ -338,9 +354,9 @@ public:
 
     typedef ReferenceCountedObjectPtr<ModuleHandle> Ptr;
 
-    static Array<ModuleHandle*>& getActiveModules()
+    static Array <ModuleHandle*>& getActiveModules()
     {
-        static Array<ModuleHandle*> activeModules;
+        static Array <ModuleHandle*> activeModules;
         return activeModules;
     }
 
@@ -454,7 +470,7 @@ public:
             {
                 if (HGLOBAL hGlob = LoadResource (dllModule, res))
                 {
-                    const char* data = static_cast<const char*> (LockResource (hGlob));
+                    const char* data = static_cast <const char*> (LockResource (hGlob));
                     return String::fromUTF8 (data, SizeofResource (dllModule, res));
                 }
             }
@@ -536,7 +552,7 @@ public:
                 }
             }
         }
-       #if JUCE_PPC
+#if JUCE_PPC
         else
         {
             FSRef fn;
@@ -589,7 +605,7 @@ public:
                 }
             }
         }
-       #endif
+#endif
 
         return ok;
     }
@@ -667,7 +683,7 @@ public:
 
     static void disposeMachOFromCFM (void* ptr)
     {
-        delete[] static_cast<UInt32*> (ptr);
+        delete[] static_cast <UInt32*> (ptr);
     }
 
     void coerceAEffectFunctionCalls (AEffect* eff)
@@ -699,11 +715,11 @@ class VSTPluginInstance     : public AudioPluginInstance,
                               private AsyncUpdater
 {
 public:
-    VSTPluginInstance (const ModuleHandle::Ptr& mh)
+    VSTPluginInstance (const ModuleHandle::Ptr& module_)
         : effect (nullptr),
-          module (mh),
+          module (module_),
           usesCocoaNSView (false),
-          name (mh->pluginName),
+          name (module_->pluginName),
           wantsMidiMessages (false),
           initialised (false),
           isPowerOn (false),
@@ -725,7 +741,7 @@ public:
             {
                 static void* audioMasterCoerced = nullptr;
                 if (audioMasterCoerced == nullptr)
-                    audioMasterCoerced = newCFMFromMachO ((void*) &audioMaster);
+                    audioMasterCoerced = NewCFMFromMachO ((void*) &audioMaster);
 
                 effect = module->moduleMain ((audioMasterCallback) audioMasterCoerced);
             }
@@ -787,7 +803,7 @@ public:
             char buffer [512] = { 0 };
             dispatch (effGetEffectName, 0, 0, buffer, 0);
 
-            desc.descriptiveName = String::fromUTF8 (buffer).trim();
+            desc.descriptiveName = String (buffer).trim();
 
             if (desc.descriptiveName.isEmpty())
                 desc.descriptiveName = name;
@@ -802,7 +818,7 @@ public:
         {
             char buffer [kVstMaxVendorStrLen + 8] = { 0 };
             dispatch (effGetVendorString, 0, 0, buffer, 0);
-            desc.manufacturerName = String::fromUTF8 (buffer);
+            desc.manufacturerName = buffer;
         }
 
         desc.version = getVersion();
@@ -1046,17 +1062,17 @@ public:
 
             if ((effect->flags & effFlagsCanReplacing) != 0)
             {
-                effect->processReplacing (effect, buffer.getArrayOfWritePointers(), buffer.getArrayOfWritePointers(), numSamples);
+                effect->processReplacing (effect, buffer.getArrayOfChannels(), buffer.getArrayOfChannels(), numSamples);
             }
             else
             {
                 tempBuffer.setSize (effect->numOutputs, numSamples);
                 tempBuffer.clear();
 
-                effect->process (effect, buffer.getArrayOfWritePointers(), tempBuffer.getArrayOfWritePointers(), numSamples);
+                effect->process (effect, buffer.getArrayOfChannels(), tempBuffer.getArrayOfChannels(), numSamples);
 
                 for (int i = effect->numOutputs; --i >= 0;)
-                    buffer.copyFrom (i, 0, tempBuffer.getReadPointer (i), numSamples);
+                    buffer.copyFrom (i, 0, tempBuffer.getSampleData (i), numSamples);
             }
         }
         else
@@ -1130,7 +1146,8 @@ public:
 
     bool isValidChannel (int index, bool isInput) const
     {
-        return isPositiveAndBelow (index, isInput ? getNumInputChannels() : getNumOutputChannels());
+        return isInput ? (index < getNumInputChannels())
+                       : (index < getNumOutputChannels());
     }
 
     //==============================================================================
@@ -1197,7 +1214,7 @@ public:
                 char nm[264] = { 0 };
 
                 if (dispatch (effGetProgramNameIndexed, jlimit (0, getNumPrograms(), index), -1, nm, 0) != 0)
-                    return String::fromUTF8 (nm).trim();
+                    return String (CharPointer_UTF8 (nm)).trim();
             }
         }
 
@@ -1268,8 +1285,7 @@ public:
                     handleUpdateNowIfNeeded();
 
                     for (int i = ComponentPeer::getNumPeers(); --i >= 0;)
-                        if (ComponentPeer* p = ComponentPeer::getPeer(i))
-                            p->performAnyPendingRepaintsNow();
+                        ComponentPeer::getPeer(i)->performAnyPendingRepaintsNow();
                 }
                 break;
 
@@ -1432,20 +1448,20 @@ public:
 
         const fxSet* const set = (const fxSet*) data;
 
-        if ((set->chunkMagic != fxbName ("CcnK") && set->chunkMagic != fxbName ("KncC"))
-             || fxbSwap (set->version) > fxbVersionNum)
+        if ((vst_swap (set->chunkMagic) != 'CcnK' && vst_swap (set->chunkMagic) != 'KncC')
+             || vst_swap (set->version) > fxbVersionNum)
             return false;
 
-        if (set->fxMagic == fxbName ("FxBk"))
+        if (vst_swap (set->fxMagic) == 'FxBk')
         {
             // bank of programs
-            if (fxbSwap (set->numPrograms) >= 0)
+            if (vst_swap (set->numPrograms) >= 0)
             {
                 const int oldProg = getCurrentProgram();
-                const int numParams = fxbSwap (((const fxProgram*) (set->programs))->numParams);
+                const int numParams = vst_swap (((const fxProgram*) (set->programs))->numParams);
                 const int progLen = sizeof (fxProgram) + (numParams - 1) * sizeof (float);
 
-                for (int i = 0; i < fxbSwap (set->numPrograms); ++i)
+                for (int i = 0; i < vst_swap (set->numPrograms); ++i)
                 {
                     if (i != oldProg)
                     {
@@ -1453,7 +1469,7 @@ public:
                         if (((const char*) prog) - ((const char*) set) >= (ssize_t) dataSize)
                             return false;
 
-                        if (fxbSwap (set->numPrograms) > 0)
+                        if (vst_swap (set->numPrograms) > 0)
                             setCurrentProgram (i);
 
                         if (! restoreProgramSettings (prog))
@@ -1461,7 +1477,7 @@ public:
                     }
                 }
 
-                if (fxbSwap (set->numPrograms) > 0)
+                if (vst_swap (set->numPrograms) > 0)
                     setCurrentProgram (oldProg);
 
                 const fxProgram* const prog = (const fxProgram*) (((const char*) (set->programs)) + oldProg * progLen);
@@ -1472,38 +1488,38 @@ public:
                     return false;
             }
         }
-        else if (set->fxMagic == fxbName ("FxCk"))
+        else if (vst_swap (set->fxMagic) == 'FxCk')
         {
             // single program
             const fxProgram* const prog = (const fxProgram*) data;
 
-            if (prog->chunkMagic != fxbName ("CcnK"))
+            if (vst_swap (prog->chunkMagic) != 'CcnK')
                 return false;
 
             changeProgramName (getCurrentProgram(), prog->prgName);
 
-            for (int i = 0; i < fxbSwap (prog->numParams); ++i)
-                setParameter (i, fxbSwapFloat (prog->params[i]));
+            for (int i = 0; i < vst_swap (prog->numParams); ++i)
+                setParameter (i, vst_swapFloat (prog->params[i]));
         }
-        else if (set->fxMagic == fxbName ("FBCh") || set->fxMagic == fxbName ("hCBF"))
+        else if (vst_swap (set->fxMagic) == 'FBCh' || vst_swap (set->fxMagic) == 'hCBF')
         {
             // non-preset chunk
             const fxChunkSet* const cset = (const fxChunkSet*) data;
 
-            if (fxbSwap (cset->chunkSize) + sizeof (fxChunkSet) - 8 > (unsigned int) dataSize)
+            if (vst_swap (cset->chunkSize) + sizeof (fxChunkSet) - 8 > (unsigned int) dataSize)
                 return false;
 
-            setChunkData (cset->chunk, fxbSwap (cset->chunkSize), false);
+            setChunkData (cset->chunk, vst_swap (cset->chunkSize), false);
         }
-        else if (set->fxMagic == fxbName ("FPCh") || set->fxMagic == fxbName ("hCPF"))
+        else if (vst_swap (set->fxMagic) == 'FPCh' || vst_swap (set->fxMagic) == 'hCPF')
         {
             // preset chunk
             const fxProgramSet* const cset = (const fxProgramSet*) data;
 
-            if (fxbSwap (cset->chunkSize) + sizeof (fxProgramSet) - 8 > (unsigned int) dataSize)
+            if (vst_swap (cset->chunkSize) + sizeof (fxProgramSet) - 8 > (unsigned int) dataSize)
                 return false;
 
-            setChunkData (cset->chunk, fxbSwap (cset->chunkSize), true);
+            setChunkData (cset->chunk, vst_swap (cset->chunkSize), true);
 
             changeProgramName (getCurrentProgram(), cset->name);
         }
@@ -1531,14 +1547,14 @@ public:
                 dest.setSize (totalLen, true);
 
                 fxChunkSet* const set = (fxChunkSet*) dest.getData();
-                set->chunkMagic = fxbName ("CcnK");
+                set->chunkMagic = vst_swap ('CcnK');
                 set->byteSize = 0;
-                set->fxMagic = fxbName ("FBCh");
-                set->version = fxbSwap (fxbVersionNum);
-                set->fxID = fxbSwap (getUID());
-                set->fxVersion = fxbSwap (getVersionNumber());
-                set->numPrograms = fxbSwap (numPrograms);
-                set->chunkSize = fxbSwap ((VstInt32) chunk.getSize());
+                set->fxMagic = vst_swap ('FBCh');
+                set->version = vst_swap (fxbVersionNum);
+                set->fxID = vst_swap (getUID());
+                set->fxVersion = vst_swap (getVersionNumber());
+                set->numPrograms = vst_swap (numPrograms);
+                set->chunkSize = vst_swap ((VstInt32) chunk.getSize());
 
                 chunk.copyTo (set->chunk, 0, chunk.getSize());
             }
@@ -1548,14 +1564,14 @@ public:
                 dest.setSize (totalLen, true);
 
                 fxProgramSet* const set = (fxProgramSet*) dest.getData();
-                set->chunkMagic = fxbName ("CcnK");
+                set->chunkMagic = vst_swap ('CcnK');
                 set->byteSize = 0;
-                set->fxMagic = fxbName ("FPCh");
-                set->version = fxbSwap (fxbVersionNum);
-                set->fxID = fxbSwap (getUID());
-                set->fxVersion = fxbSwap (getVersionNumber());
-                set->numPrograms = fxbSwap (numPrograms);
-                set->chunkSize = fxbSwap ((VstInt32) chunk.getSize());
+                set->fxMagic = vst_swap ('FPCh');
+                set->version = vst_swap (fxbVersionNum);
+                set->fxID = vst_swap (getUID());
+                set->fxVersion = vst_swap (getVersionNumber());
+                set->numPrograms = vst_swap (numPrograms);
+                set->chunkSize = vst_swap ((VstInt32) chunk.getSize());
 
                 getCurrentProgramName().copyToUTF8 (set->name, sizeof (set->name) - 1);
                 chunk.copyTo (set->chunk, 0, chunk.getSize());
@@ -1570,13 +1586,13 @@ public:
                 dest.setSize (len, true);
 
                 fxSet* const set = (fxSet*) dest.getData();
-                set->chunkMagic = fxbName ("CcnK");
+                set->chunkMagic = vst_swap ('CcnK');
                 set->byteSize = 0;
-                set->fxMagic = fxbName ("FxBk");
-                set->version = fxbSwap (fxbVersionNum);
-                set->fxID = fxbSwap (getUID());
-                set->fxVersion = fxbSwap (getVersionNumber());
-                set->numPrograms = fxbSwap (numPrograms);
+                set->fxMagic = vst_swap ('FxBk');
+                set->version = vst_swap (fxbVersionNum);
+                set->fxID = vst_swap (getUID());
+                set->fxVersion = vst_swap (getVersionNumber());
+                set->numPrograms = vst_swap (numPrograms);
 
                 const int oldProgram = getCurrentProgram();
                 MemoryBlock oldSettings;
@@ -1671,12 +1687,12 @@ private:
 
     bool restoreProgramSettings (const fxProgram* const prog)
     {
-        if (prog->chunkMagic == fxbName ("CcnK") && prog->fxMagic == fxbName ("FxCk"))
+        if (vst_swap (prog->chunkMagic) == 'CcnK' && vst_swap (prog->fxMagic) == 'FxCk')
         {
             changeProgramName (getCurrentProgram(), prog->prgName);
 
-            for (int i = 0; i < fxbSwap (prog->numParams); ++i)
-                setParameter (i, fxbSwapFloat (prog->params[i]));
+            for (int i = 0; i < vst_swap (prog->numParams); ++i)
+                setParameter (i, vst_swapFloat (prog->params[i]));
 
             return true;
         }
@@ -1725,18 +1741,18 @@ private:
     {
         const int numParams = getNumParameters();
 
-        prog->chunkMagic = fxbName ("CcnK");
+        prog->chunkMagic = vst_swap ('CcnK');
         prog->byteSize = 0;
-        prog->fxMagic = fxbName ("FxCk");
-        prog->version = fxbSwap (fxbVersionNum);
-        prog->fxID = fxbSwap (getUID());
-        prog->fxVersion = fxbSwap (getVersionNumber());
-        prog->numParams = fxbSwap (numParams);
+        prog->fxMagic = vst_swap ('FxCk');
+        prog->version = vst_swap (fxbVersionNum);
+        prog->fxID = vst_swap (getUID());
+        prog->fxVersion = vst_swap (getVersionNumber());
+        prog->numParams = vst_swap (numParams);
 
         getCurrentProgramName().copyToUTF8 (prog->prgName, sizeof (prog->prgName) - 1);
 
         for (int i = 0; i < numParams; ++i)
-            prog->params[i] = fxbSwapFloat (getParameter (i));
+            prog->params[i] = vst_swapFloat (getParameter (i));
     }
 
     void updateStoredProgramNames()
@@ -1878,8 +1894,7 @@ private:
 };
 
 //==============================================================================
-class VSTPluginWindow;
-static Array<VSTPluginWindow*> activeVSTWindows;
+static Array <VSTPluginWindow*> activeVSTWindows;
 
 //==============================================================================
 class VSTPluginWindow   : public AudioProcessorEditor,
@@ -2217,11 +2232,10 @@ private:
         #pragma warning (push)
         #pragma warning (disable: 4244)
 
+        originalWndProc = (void*) GetWindowLongPtr (pluginHWND, GWLP_WNDPROC);
+
         if (! pluginWantsKeys)
-        {
-            originalWndProc = (void*) GetWindowLongPtr (pluginHWND, GWLP_WNDPROC);
             SetWindowLongPtr (pluginHWND, GWLP_WNDPROC, (LONG_PTR) vstHookWndProc);
-        }
 
         #pragma warning (pop)
 
@@ -2303,23 +2317,25 @@ private:
     {
         if (isOpen)
         {
+           #if ! (JUCE_MAC && JUCE_SUPPORT_CARBON)
             JUCE_VST_LOG ("Closing VST UI: " + plugin.getName());
             isOpen = false;
+
             dispatch (effEditClose, 0, 0, 0, 0);
             stopTimer();
 
            #if JUCE_WINDOWS
             #pragma warning (push)
             #pragma warning (disable: 4244)
-            if (originalWndProc != 0 && pluginHWND != 0 && IsWindow (pluginHWND))
+            if (pluginHWND != 0 && IsWindow (pluginHWND))
                 SetWindowLongPtr (pluginHWND, GWLP_WNDPROC, (LONG_PTR) originalWndProc);
             #pragma warning (pop)
 
-            originalWndProc = 0;
             pluginHWND = 0;
            #elif JUCE_LINUX
             pluginWindow = 0;
             pluginProc = 0;
+           #endif
            #endif
         }
     }
@@ -2829,7 +2845,7 @@ FileSearchPath VSTPluginFormat::getDefaultLocationsToSearch()
 
 const XmlElement* VSTPluginFormat::getVSTXML (AudioPluginInstance* plugin)
 {
-    if (VSTPluginInstance* const vst = dynamic_cast<VSTPluginInstance*> (plugin))
+    if (VSTPluginInstance* const vst = dynamic_cast <VSTPluginInstance*> (plugin))
         if (vst->module != nullptr)
             return vst->module->vstXml.get();
 
@@ -2838,7 +2854,7 @@ const XmlElement* VSTPluginFormat::getVSTXML (AudioPluginInstance* plugin)
 
 bool VSTPluginFormat::loadFromFXBFile (AudioPluginInstance* plugin, const void* data, size_t dataSize)
 {
-    if (VSTPluginInstance* vst = dynamic_cast<VSTPluginInstance*> (plugin))
+    if (VSTPluginInstance* vst = dynamic_cast <VSTPluginInstance*> (plugin))
         return vst->loadFromFXBFile (data, dataSize);
 
     return false;
@@ -2846,7 +2862,7 @@ bool VSTPluginFormat::loadFromFXBFile (AudioPluginInstance* plugin, const void* 
 
 bool VSTPluginFormat::saveToFXBFile (AudioPluginInstance* plugin, MemoryBlock& dest, bool asFXB)
 {
-    if (VSTPluginInstance* vst = dynamic_cast<VSTPluginInstance*> (plugin))
+    if (VSTPluginInstance* vst = dynamic_cast <VSTPluginInstance*> (plugin))
         return vst->saveToFXBFile (dest, asFXB);
 
     return false;
@@ -2854,7 +2870,7 @@ bool VSTPluginFormat::saveToFXBFile (AudioPluginInstance* plugin, MemoryBlock& d
 
 bool VSTPluginFormat::getChunkData (AudioPluginInstance* plugin, MemoryBlock& result, bool isPreset)
 {
-    if (VSTPluginInstance* vst = dynamic_cast<VSTPluginInstance*> (plugin))
+    if (VSTPluginInstance* vst = dynamic_cast <VSTPluginInstance*> (plugin))
         return vst->getChunkData (result, isPreset, 128);
 
     return false;
@@ -2862,7 +2878,7 @@ bool VSTPluginFormat::getChunkData (AudioPluginInstance* plugin, MemoryBlock& re
 
 bool VSTPluginFormat::setChunkData (AudioPluginInstance* plugin, const void* data, int size, bool isPreset)
 {
-    if (VSTPluginInstance* vst = dynamic_cast<VSTPluginInstance*> (plugin))
+    if (VSTPluginInstance* vst = dynamic_cast <VSTPluginInstance*> (plugin))
         return vst->setChunkData (data, size, isPreset);
 
     return false;
@@ -2872,13 +2888,13 @@ void VSTPluginFormat::setExtraFunctions (AudioPluginInstance* plugin, ExtraFunct
 {
     ScopedPointer<ExtraFunctions> f (functions);
 
-    if (VSTPluginInstance* vst = dynamic_cast<VSTPluginInstance*> (plugin))
+    if (VSTPluginInstance* vst = dynamic_cast <VSTPluginInstance*> (plugin))
         vst->extraFunctions = f;
 }
 
 VSTPluginFormat::VstIntPtr JUCE_CALLTYPE VSTPluginFormat::dispatcher (AudioPluginInstance* plugin, int32 opcode, int32 index, VstIntPtr value, void* ptr, float opt)
 {
-    if (VSTPluginInstance* vst = dynamic_cast<VSTPluginInstance*> (plugin))
+    if (VSTPluginInstance* vst = dynamic_cast <VSTPluginInstance*> (plugin))
         return vst->dispatch (opcode, index, value, ptr, opt);
 
     return 0;

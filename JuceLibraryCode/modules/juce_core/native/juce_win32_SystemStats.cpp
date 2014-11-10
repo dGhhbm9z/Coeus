@@ -38,7 +38,7 @@ void Logger::outputDebugString (const String& text)
 #endif
 
 //==============================================================================
-#if JUCE_USE_MSVC_INTRINSICS
+#if JUCE_USE_INTRINSICS
 
 // CPU info functions using intrinsics...
 
@@ -137,11 +137,10 @@ static bool isWindowsVersionOrLater (SystemStats::OperatingSystemType target)
 
         switch (target)
         {
-            case SystemStats::WinVista:    break;
-            case SystemStats::Windows7:    info.dwMinorVersion = 1; break;
-            case SystemStats::Windows8_0:  info.dwMinorVersion = 2; break;
-            case SystemStats::Windows8_1:  info.dwMinorVersion = 3; break;
-            default:                       jassertfalse; break;
+            case SystemStats::WinVista:  info.dwMinorVersion = 0; break;
+            case SystemStats::Windows7:  info.dwMinorVersion = 1; break;
+            case SystemStats::Windows8:  info.dwMinorVersion = 2; break;
+            default:                     jassertfalse; break;
         }
     }
     else
@@ -166,7 +165,7 @@ static bool isWindowsVersionOrLater (SystemStats::OperatingSystemType target)
 SystemStats::OperatingSystemType SystemStats::getOperatingSystemType()
 {
     const SystemStats::OperatingSystemType types[]
-            = { Windows8_1, Windows8_0, Windows7, WinVista, WinXP, Win2000 };
+            = { Windows8, Windows7, WinVista, WinXP, Win2000 };
 
     for (int i = 0; i < numElementsInArray (types); ++i)
         if (isWindowsVersionOrLater (types[i]))
@@ -182,9 +181,8 @@ String SystemStats::getOperatingSystemName()
 
     switch (getOperatingSystemType())
     {
-        case Windows8_1:        name = "Windows 8.1";       break;
-        case Windows8_0:        name = "Windows 8.0";       break;
         case Windows7:          name = "Windows 7";         break;
+        case Windows8:          name = "Windows 8";         break;
         case WinVista:          name = "Windows Vista";     break;
         case WinXP:             name = "Windows XP";        break;
         case Win2000:           name = "Windows 2000";      break;
@@ -196,7 +194,7 @@ String SystemStats::getOperatingSystemName()
 
 String SystemStats::getDeviceDescription()
 {
-    return String();
+    return String::empty;
 }
 
 bool SystemStats::isOperatingSystem64Bit()
@@ -253,23 +251,9 @@ public:
     HiResCounterHandler()
         : hiResTicksOffset (0)
     {
-        // This macro allows you to override the default timer-period
-        // used on Windows. By default this is set to 1, because that has
-        // always been the value used in JUCE apps, and changing it could
-        // affect the behaviour of existing code, but you may wish to make
-        // it larger (or set it to 0 to use the system default) to make your
-        // app less demanding on the CPU.
-        // For more info, see win32 documentation about the timeBeginPeriod
-        // function.
-       #ifndef JUCE_WIN32_TIMER_PERIOD
-        #define JUCE_WIN32_TIMER_PERIOD 1
-       #endif
-
-       #if JUCE_WIN32_TIMER_PERIOD > 0
-        const MMRESULT res = timeBeginPeriod (JUCE_WIN32_TIMER_PERIOD);
+        const MMRESULT res = timeBeginPeriod (1);
         (void) res;
         jassert (res == TIMERR_NOERROR);
-       #endif
 
         LARGE_INTEGER f;
         QueryPerformanceFrequency (&f);
@@ -313,7 +297,7 @@ double Time::getMillisecondCounterHiRes() noexcept       { return hiResCounterHa
 //==============================================================================
 static int64 juce_getClockCycleCounter() noexcept
 {
-   #if JUCE_USE_MSVC_INTRINSICS
+   #if JUCE_USE_INTRINSICS
     // MS intrinsics version...
     return (int64) __rdtsc();
 
@@ -444,16 +428,8 @@ String SystemStats::getDisplayLanguage()
     DynamicLibrary dll ("kernel32.dll");
     JUCE_LOAD_WINAPI_FUNCTION (dll, GetUserDefaultUILanguage, getUserDefaultUILanguage, LANGID, (void))
 
-    if (getUserDefaultUILanguage == nullptr)
-        return "en";
+    if (getUserDefaultUILanguage != nullptr)
+        return getLocaleValue (MAKELCID (getUserDefaultUILanguage(), SORT_DEFAULT), LOCALE_SISO639LANGNAME, "en");
 
-    const DWORD langID = MAKELCID (getUserDefaultUILanguage(), SORT_DEFAULT);
-
-    String mainLang (getLocaleValue (langID, LOCALE_SISO639LANGNAME, "en"));
-    String region   (getLocaleValue (langID, LOCALE_SISO3166CTRYNAME, nullptr));
-
-    if (region.isNotEmpty())
-        mainLang << '-' << region;
-
-    return mainLang;
+    return "en";
 }

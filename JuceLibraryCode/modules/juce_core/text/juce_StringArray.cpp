@@ -199,11 +199,6 @@ int StringArray::indexOf (StringRef stringToLookFor, const bool ignoreCase, int 
     return -1;
 }
 
-void StringArray::move (const int currentIndex, const int newIndex) noexcept
-{
-    strings.move (currentIndex, newIndex);
-}
-
 //==============================================================================
 void StringArray::remove (const int index)
 {
@@ -260,17 +255,12 @@ void StringArray::trim()
 //==============================================================================
 struct InternalStringArrayComparator_CaseSensitive
 {
-    static int compareElements (String& s1, String& s2) noexcept    { return s1.compare (s2); }
+    static int compareElements (String& first, String& second)      { return first.compare (second); }
 };
 
 struct InternalStringArrayComparator_CaseInsensitive
 {
-    static int compareElements (String& s1, String& s2) noexcept    { return s1.compareIgnoreCase (s2); }
-};
-
-struct InternalStringArrayComparator_Natural
-{
-    static int compareElements (String& s1, String& s2) noexcept    { return s1.compareNatural (s2); }
+    static int compareElements (String& first, String& second)      { return first.compareIgnoreCase (second); }
 };
 
 void StringArray::sort (const bool ignoreCase)
@@ -287,11 +277,11 @@ void StringArray::sort (const bool ignoreCase)
     }
 }
 
-void StringArray::sortNatural()
+void StringArray::move (const int currentIndex, int newIndex) noexcept
 {
-    InternalStringArrayComparator_Natural comp;
-    strings.sort (comp);
+    strings.move (currentIndex, newIndex);
 }
+
 
 //==============================================================================
 String StringArray::joinIntoString (StringRef separator, int start, int numberToJoin) const

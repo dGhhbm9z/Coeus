@@ -27,7 +27,7 @@ enum { magicMastSlaveConnectionHeader = 0x712baf04 };
 static const char* startMessage = "__ipc_st";
 static const char* killMessage  = "__ipc_k_";
 static const char* pingMessage  = "__ipc_p_";
-enum { specialMessageSize = 8, defaultTimeoutMs = 8000 };
+enum { specialMessageSize = 8 };
 
 static String getCommandLinePrefix (const String& commandLineUniqueID)
 {
@@ -40,7 +40,7 @@ static String getCommandLinePrefix (const String& commandLineUniqueID)
 struct ChildProcessPingThread  : public Thread,
                                  private AsyncUpdater
 {
-    ChildProcessPingThread (int timeout)  : Thread ("IPC ping"), timeoutMs (timeout)
+    ChildProcessPingThread()  : Thread ("IPC ping"), timeoutMs (8000)
     {
         pingReceived();
     }
@@ -84,10 +84,8 @@ private:
 struct ChildProcessMaster::Connection  : public InterprocessConnection,
                                          private ChildProcessPingThread
 {
-    Connection (ChildProcessMaster& m, const String& pipeName, int timeout)
-        : InterprocessConnection (false, magicMastSlaveConnectionHeader),
-          ChildProcessPingThread (timeout),
-          owner (m)
+    Connection (ChildProcessMaster& m, const String& pipeName)
+        : InterprocessConnection (false, magicMastSlaveConnectionHeader), owner (m)
     {
         if (createPipe (pipeName, timeoutMs))
             startThread (4);
@@ -142,7 +140,7 @@ bool ChildProcessMaster::sendMessageToSlave (const MemoryBlock& mb)
     return false;
 }
 
-bool ChildProcessMaster::launchSlaveProcess (const File& executable, const String& commandLineUniqueID, int timeoutMs)
+bool ChildProcessMaster::launchSlaveProcess (const File& executable, const String& commandLineUniqueID)
 {
     connection = nullptr;
     jassert (childProcess.kill());
@@ -155,7 +153,7 @@ bool ChildProcessMaster::launchSlaveProcess (const File& executable, const Strin
 
     if (childProcess.start (args))
     {
-        connection = new Connection (*this, pipeName, timeoutMs <= 0 ? defaultTimeoutMs : timeoutMs);
+        connection = new Connection (*this, pipeName);
 
         if (connection->isConnected())
         {
@@ -173,10 +171,8 @@ bool ChildProcessMaster::launchSlaveProcess (const File& executable, const Strin
 struct ChildProcessSlave::Connection  : public InterprocessConnection,
                                         private ChildProcessPingThread
 {
-    Connection (ChildProcessSlave& p, const String& pipeName, int timeout)
-        : InterprocessConnection (false, magicMastSlaveConnectionHeader),
-          ChildProcessPingThread (timeout),
-          owner (p)
+    Connection (ChildProcessSlave& p, const String& pipeName)
+        : InterprocessConnection (false, magicMastSlaveConnectionHeader), owner (p)
     {
         connectToPipe (pipeName, timeoutMs);
         startThread (4);
@@ -241,8 +237,7 @@ bool ChildProcessSlave::sendMessageToMaster (const MemoryBlock& mb)
 }
 
 bool ChildProcessSlave::initialiseFromCommandLine (const String& commandLine,
-                                                   const String& commandLineUniqueID,
-                                                   int timeoutMs)
+                                                   const String& commandLineUniqueID)
 {
     String prefix (getCommandLinePrefix (commandLineUniqueID));
 
@@ -253,7 +248,7 @@ bool ChildProcessSlave::initialiseFromCommandLine (const String& commandLine,
 
         if (pipeName.isNotEmpty())
         {
-            connection = new Connection (*this, pipeName, timeoutMs <= 0 ? defaultTimeoutMs : timeoutMs);
+            connection = new Connection (*this, pipeName);
 
             if (! connection->isConnected())
                 connection = nullptr;

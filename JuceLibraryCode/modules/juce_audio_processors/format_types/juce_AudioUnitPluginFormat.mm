@@ -62,7 +62,7 @@ namespace AudioUnitFormatHelpers
     static ThreadLocalValue<int> insideCallback;
    #endif
 
-    String osTypeToString (OSType type) noexcept
+    String osTypeToString (OSType type)
     {
         const juce_wchar s[4] = { (juce_wchar) ((type >> 24) & 0xff),
                                   (juce_wchar) ((type >> 16) & 0xff),
@@ -88,6 +88,9 @@ namespace AudioUnitFormatHelpers
 
     String createPluginIdentifier (const AudioComponentDescription& desc)
     {
+        jassert (osTypeToString ('abcd') == "abcd"); // agh, must have got the endianness wrong..
+        jassert (stringToOSType ("abcd") == (OSType) 'abcd'); // ditto
+
         String s (auIdentifierPrefix);
 
         if (desc.componentType == kAudioUnitType_MusicDevice)
@@ -135,7 +138,7 @@ namespace AudioUnitFormatHelpers
                                                         fileOrIdentifier.lastIndexOfChar ('/')) + 1));
 
             StringArray tokens;
-            tokens.addTokens (s, ",", StringRef());
+            tokens.addTokens (s, ",", String());
             tokens.removeEmptyStrings();
 
             if (tokens.size() == 3)
@@ -212,11 +215,9 @@ namespace AudioUnitFormatHelpers
                 const short resFileId = CFBundleOpenBundleResourceMap (bundleRef);
                 UseResFile (resFileId);
 
-                const OSType thngType = stringToOSType ("thng");
-
-                for (ResourceIndex i = 1; i <= Count1Resources (thngType); ++i)
+                for (ResourceIndex i = 1; i <= Count1Resources ('thng'); ++i)
                 {
-                    if (Handle h = Get1IndResource (thngType, i))
+                    if (Handle h = Get1IndResource ('thng', i))
                     {
                         HLock (h);
                         const uint32* const types = (const uint32*) *h;
@@ -345,21 +346,11 @@ public:
         refreshParameterList();
         updateNumChannels();
         producesMidiMessages = canProduceMidiOutput();
+        setPluginCallbacks();
         setPlayConfigDetails (numInputBusChannels * numInputBusses,
                               numOutputBusChannels * numOutputBusses,
                               rate, blockSize);
         setLatencySamples (0);
-
-        if (parameters.size() == 0)
-        {
-            // some plugins crash if initialiseAudioUnit() is called too soon (sigh..), so we'll
-            // only call it here if it seems like they it's one of the awkward plugins that can
-            // only create their parameters after it has been initialised.
-            initialiseAudioUnit();
-            refreshParameterList();
-        }
-
-        setPluginCallbacks();
     }
 
     //==============================================================================
@@ -532,16 +523,14 @@ public:
 
             for (int i = 0; i < numOutputBusses; ++i)
             {
-                if (AudioBufferList* const abl = getAudioBufferListForBus(i))
-                {
-                    abl->mNumberBuffers = numOutputBusChannels;
+                AudioBufferList* const abl = getAudioBufferListForBus(i);
+                abl->mNumberBuffers = numOutputBusChannels;
 
-                    for (int j = 0; j < numOutputBusChannels; ++j)
-                    {
-                        abl->mBuffers[j].mNumberChannels = 1;
-                        abl->mBuffers[j].mDataByteSize = sizeof (float) * numSamples;
-                        abl->mBuffers[j].mData = buffer.getWritePointer (i * numOutputBusChannels + j);
-                    }
+                for (int j = 0; j < numOutputBusChannels; ++j)
+                {
+                    abl->mBuffers[j].mNumberChannels = 1;
+                    abl->mBuffers[j].mDataByteSize = sizeof (float) * numSamples;
+                    abl->mBuffers[j].mData = buffer.getSampleData (i * numOutputBusChannels + j, 0);
                 }
             }
 
@@ -924,7 +913,7 @@ private:
         bool automatable;
     };
 
-    OwnedArray<ParamInfo> parameters;
+    OwnedArray <ParamInfo> parameters;
 
     MidiDataConcatenator midiConcatenator;
     CriticalSection midiInLock;
@@ -981,11 +970,16 @@ private:
 
             for (int i = 0; i < parameters.size(); ++i)
             {
+                const ParamInfo& p = *parameters.getUnchecked(i);
+
+                AudioUnitParameter paramToAdd;
+                paramToAdd.mAudioUnit = audioUnit;
+                paramToAdd.mParameterID = p.paramID;
+                paramToAdd.mScope = kAudioUnitScope_Global;
+                paramToAdd.mElement = 0;
+
                 AudioUnitEvent event;
-                event.mArgument.mParameter.mAudioUnit = audioUnit;
-                event.mArgument.mParameter.mParameterID = parameters.getUnchecked(i)->paramID;
-                event.mArgument.mParameter.mScope = kAudioUnitScope_Global;
-                event.mArgument.mParameter.mElement = 0;
+                event.mArgument.mParameter = paramToAdd;
 
                 event.mEventType = kAudioUnitEvent_ParameterValueChange;
                 AUEventListenerAddEventType (eventListenerRef, nullptr, &event);
@@ -996,16 +990,6 @@ private:
                 event.mEventType = kAudioUnitEvent_EndParameterChangeGesture;
                 AUEventListenerAddEventType (eventListenerRef, nullptr, &event);
             }
-
-            // Add a listener for program changes
-            AudioUnitEvent event;
-            event.mArgument.mProperty.mAudioUnit = audioUnit;
-            event.mArgument.mProperty.mPropertyID = kAudioUnitProperty_PresentPreset;
-            event.mArgument.mProperty.mScope = kAudioUnitScope_Global;
-            event.mArgument.mProperty.mElement = 0;
-
-            event.mEventType = kAudioUnitEvent_PropertyChange;
-            AUEventListenerAddEventType (eventListenerRef, nullptr, &event);
         }
     }
 
@@ -1036,7 +1020,6 @@ private:
                 break;
 
             default:
-                sendAllParametersChangedEvents();
                 break;
         }
     }
@@ -1067,7 +1050,7 @@ private:
                 if (bufferChannel < currentBuffer->getNumChannels())
                 {
                     memcpy (ioData->mBuffers[i].mData,
-                            currentBuffer->getReadPointer (bufferChannel),
+                            currentBuffer->getSampleData (bufferChannel, 0),
                             sizeof (float) * inNumberFrames);
                 }
                 else
@@ -1615,7 +1598,7 @@ AudioUnitPluginFormat::~AudioUnitPluginFormat()
 {
 }
 
-void AudioUnitPluginFormat::findAllTypesForFile (OwnedArray<PluginDescription>& results,
+void AudioUnitPluginFormat::findAllTypesForFile (OwnedArray <PluginDescription>& results,
                                                  const String& fileOrIdentifier)
 {
     if (! fileMightContainThisPluginType (fileOrIdentifier))

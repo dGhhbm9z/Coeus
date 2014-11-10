@@ -28,7 +28,8 @@ Label::Label (const String& name, const String& labelText)
       lastTextValue (labelText),
       font (15.0f),
       justification (Justification::centredLeft),
-      border (1, 5, 1, 5),
+      horizontalBorderSize (5),
+      verticalBorderSize (1),
       minimumHorizontalScale (0.7f),
       editSingleClick (false),
       editDoubleClick (false),
@@ -122,11 +123,12 @@ void Label::setJustificationType (Justification newJustification)
     }
 }
 
-void Label::setBorderSize (BorderSize<int> newBorder)
+void Label::setBorderSize (int h, int v)
 {
-    if (border != newBorder)
+    if (horizontalBorderSize != h || verticalBorderSize != v)
     {
-        border = newBorder;
+        horizontalBorderSize = h;
+        verticalBorderSize = v;
         repaint();
     }
 }
@@ -189,12 +191,7 @@ void Label::componentVisibilityChanged (Component& component)
 //==============================================================================
 void Label::textWasEdited() {}
 void Label::textWasChanged() {}
-
-void Label::editorShown (TextEditor* textEditor)
-{
-    Component::BailOutChecker checker (this);
-    listeners.callChecked (checker, &LabelListener::editorShown, this, *textEditor);
-}
+void Label::editorShown (TextEditor*) {}
 
 void Label::editorAboutToBeHidden (TextEditor*)
 {
@@ -289,22 +286,11 @@ bool Label::isBeingEdited() const noexcept
     return editor != nullptr;
 }
 
-static void copyColourIfSpecified (Label& l, TextEditor& ed, int colourID, int targetColourID)
-{
-    if (l.isColourSpecified (colourID) || l.getLookAndFeel().isColourSpecified (colourID))
-        ed.setColour (targetColourID, l.findColour (colourID));
-}
-
 TextEditor* Label::createEditorComponent()
 {
     TextEditor* const ed = new TextEditor (getName());
     ed->applyFontToAllText (getLookAndFeel().getLabelFont (*this));
     copyAllExplicitColoursTo (*ed);
-
-    copyColourIfSpecified (*this, *ed, textWhenEditingColourId, TextEditor::textColourId);
-    copyColourIfSpecified (*this, *ed, backgroundWhenEditingColourId, TextEditor::backgroundColourId);
-    copyColourIfSpecified (*this, *ed, outlineWhenEditingColourId, TextEditor::outlineColourId);
-
     return ed;
 }
 
@@ -339,7 +325,7 @@ void Label::mouseDoubleClick (const MouseEvent& e)
 void Label::resized()
 {
     if (editor != nullptr)
-        editor->setBounds (getLocalBounds());
+        editor->setBoundsInset (BorderSize<int> (0));
 }
 
 void Label::focusGained (FocusChangeType cause)

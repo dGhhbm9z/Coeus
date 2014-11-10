@@ -128,7 +128,7 @@ private:
 SpinLock MouseCursor::SharedCursorHandle::lock;
 
 //==============================================================================
-MouseCursor::MouseCursor() noexcept
+MouseCursor::MouseCursor()
     : cursorHandle (nullptr)
 {
 }

@@ -23,14 +23,16 @@
 */
 
 #if ! JUCE_QUICKTIME
- #error "To support cameras in OSX you'll need to enable the JUCE_QUICKTIME flag"
+ #error "On the Mac, cameras use Quicktime, so if you turn on JUCE_USE_CAMERA, you also need to enable JUCE_QUICKTIME"
 #endif
 
-extern Image juce_createImageFromCIImage (CIImage*, int w, int h);
+extern Image juce_createImageFromCIImage (CIImage* im, int w, int h);
 
-struct CameraDevice::Pimpl
+//==============================================================================
+class QTCameraDeviceInternal
 {
-    Pimpl (const String&, const int index, int /*minWidth*/, int /*minHeight*/, int /*maxWidth*/, int /*maxHeight*/)
+public:
+    QTCameraDeviceInternal (CameraDevice*, const int index)
         : input (nil),
           audioDevice (nil),
           audioInput (nil),
@@ -38,8 +40,7 @@ struct CameraDevice::Pimpl
           fileOutput (nil),
           imageOutput (nil),
           firstPresentationTime (0),
-          averageTimeOffset (0),
-          isRecording (false)
+          averageTimeOffset (0)
     {
         JUCE_AUTORELEASEPOOL
         {
@@ -83,7 +84,7 @@ struct CameraDevice::Pimpl
         }
     }
 
-    ~Pimpl()
+    ~QTCameraDeviceInternal()
     {
         [session stopRunning];
         [session removeOutput: imageOutput];
@@ -97,8 +98,6 @@ struct CameraDevice::Pimpl
         [imageOutput release];
         [callbackDelegate release];
     }
-
-    bool openedOk() const noexcept       { return openingError.isEmpty(); }
 
     void resetFile()
     {
@@ -131,59 +130,6 @@ struct CameraDevice::Pimpl
             audioInput = [[QTCaptureDeviceInput alloc] initWithDevice: audioDevice];
             [session addInput: audioInput error: &err];
         }
-    }
-
-    void startRecordingToFile (const File& file, int quality)
-    {
-        stopRecording();
-
-        firstPresentationTime = 0;
-        file.deleteFile();
-
-        // In some versions of QT (e.g. on 10.5), if you record video without audio, the speed comes
-        // out wrong, so we'll put some audio in there too..,
-        addDefaultAudioInput();
-
-        [session addOutput: fileOutput error: nil];
-
-        NSEnumerator* connectionEnumerator = [[fileOutput connections] objectEnumerator];
-
-        for (;;)
-        {
-            QTCaptureConnection* connection = [connectionEnumerator nextObject];
-            if (connection == nil)
-                break;
-
-            QTCompressionOptions* options = nil;
-            NSString* mediaType = [connection mediaType];
-
-            if ([mediaType isEqualToString: QTMediaTypeVideo])
-                options = [QTCompressionOptions compressionOptionsWithIdentifier:
-                                quality >= 1 ? nsStringLiteral ("QTCompressionOptionsSD480SizeH264Video")
-                                             : nsStringLiteral ("QTCompressionOptions240SizeH264Video")];
-            else if ([mediaType isEqualToString: QTMediaTypeSound])
-                options = [QTCompressionOptions compressionOptionsWithIdentifier: nsStringLiteral ("QTCompressionOptionsHighQualityAACAudio")];
-
-            [fileOutput setCompressionOptions: options forConnection: connection];
-        }
-
-        [fileOutput recordToOutputFileURL: [NSURL fileURLWithPath: juceStringToNS (file.getFullPathName())]];
-        isRecording = true;
-    }
-
-    void stopRecording()
-    {
-        if (isRecording)
-        {
-            resetFile();
-            isRecording = false;
-        }
-    }
-
-    Time getTimeOfFirstRecordedFrame() const
-    {
-        return firstPresentationTime != 0 ? Time (firstPresentationTime + averageTimeOffset)
-                                          : Time();
     }
 
     void addListener (CameraDevice::Listener* listenerToAdd)
@@ -247,42 +193,28 @@ struct CameraDevice::Pimpl
         }
     }
 
-    static StringArray getAvailableDevices()
-    {
-        StringArray results;
-        NSArray* devs = [QTCaptureDevice inputDevicesWithMediaType: QTMediaTypeVideo];
-
-        for (int i = 0; i < (int) [devs count]; ++i)
-        {
-            QTCaptureDevice* dev = (QTCaptureDevice*) [devs objectAtIndex: i];
-            results.add (nsStringToJuce ([dev localizedDisplayName]));
-        }
-
-        return results;
-    }
-
     QTCaptureDevice* device;
-    QTCaptureDevice* audioDevice;
     QTCaptureDeviceInput* input;
+    QTCaptureDevice* audioDevice;
     QTCaptureDeviceInput* audioInput;
     QTCaptureSession* session;
     QTCaptureMovieFileOutput* fileOutput;
     QTCaptureDecompressedVideoOutput* imageOutput;
     NSObject* callbackDelegate;
     String openingError;
-    int64 firstPresentationTime, averageTimeOffset;
-    bool isRecording;
+    int64 firstPresentationTime;
+    int64 averageTimeOffset;
 
     Array<CameraDevice::Listener*> listeners;
     CriticalSection listenerLock;
 
 private:
     //==============================================================================
-    struct DelegateClass  : public ObjCClass<NSObject>
+    struct DelegateClass  : public ObjCClass <NSObject>
     {
-        DelegateClass()  : ObjCClass<NSObject> ("JUCEAppDelegate_")
+        DelegateClass()  : ObjCClass <NSObject> ("JUCEAppDelegate_")
         {
-            addIvar<Pimpl*> ("owner");
+            addIvar<QTCameraDeviceInternal*> ("owner");
 
             addMethod (@selector (captureOutput:didOutputVideoFrame:withSampleBuffer:fromConnection:),
                        didOutputVideoFrame, "v@:@", @encode (CVImageBufferRef), "@@");
@@ -292,14 +224,14 @@ private:
             registerClass();
         }
 
-        static void setOwner (id self, Pimpl* owner)   { object_setInstanceVariable (self, "owner", owner); }
-        static Pimpl* getOwner (id self)               { return getIvar<Pimpl*> (self, "owner"); }
+        static void setOwner (id self, QTCameraDeviceInternal* owner)   { object_setInstanceVariable (self, "owner", owner); }
+        static QTCameraDeviceInternal* getOwner (id self)               { return getIvar<QTCameraDeviceInternal*> (self, "owner"); }
 
     private:
         static void didOutputVideoFrame (id self, SEL, QTCaptureOutput*, CVImageBufferRef videoFrame,
                                          QTSampleBuffer*, QTCaptureConnection*)
         {
-            Pimpl* const internal = getOwner (self);
+            QTCameraDeviceInternal* const internal = getOwner (self);
 
             if (internal->listeners.size() > 0)
             {
@@ -317,37 +249,154 @@ private:
             getOwner (self)->captureBuffer (sampleBuffer);
         }
     };
-
-    JUCE_DECLARE_NON_COPYABLE (Pimpl)
 };
 
-struct CameraDevice::ViewerComponent  : public NSViewComponent
+//==============================================================================
+class QTCaptureViewerComp : public NSViewComponent
 {
-    ViewerComponent (CameraDevice& d)
+public:
+    QTCaptureViewerComp (CameraDevice*, QTCameraDeviceInternal* internal)
     {
         JUCE_AUTORELEASEPOOL
         {
             captureView = [[QTCaptureView alloc] init];
-            [captureView setCaptureSession: d.pimpl->session];
+            [captureView setCaptureSession: internal->session];
 
-            setSize (640, 480);
+            setSize (640, 480); //  xxx need to somehow get the movie size - how?
             setView (captureView);
         }
     }
 
-    ~ViewerComponent()
+    ~QTCaptureViewerComp()
     {
-        setView (nil);
+        setView (0);
         [captureView setCaptureSession: nil];
         [captureView release];
     }
 
     QTCaptureView* captureView;
-
-    JUCE_DECLARE_NON_COPYABLE (ViewerComponent)
 };
+
+//==============================================================================
+CameraDevice::CameraDevice (const String& name_, int index)
+    : name (name_)
+{
+    isRecording = false;
+    internal = new QTCameraDeviceInternal (this, index);
+}
+
+CameraDevice::~CameraDevice()
+{
+    stopRecording();
+    delete static_cast <QTCameraDeviceInternal*> (internal);
+    internal = nullptr;
+}
+
+Component* CameraDevice::createViewerComponent()
+{
+    return new QTCaptureViewerComp (this, static_cast <QTCameraDeviceInternal*> (internal));
+}
 
 String CameraDevice::getFileExtension()
 {
     return ".mov";
+}
+
+void CameraDevice::startRecordingToFile (const File& file, int quality)
+{
+    stopRecording();
+
+    QTCameraDeviceInternal* const d = static_cast <QTCameraDeviceInternal*> (internal);
+    d->firstPresentationTime = 0;
+    file.deleteFile();
+
+    // In some versions of QT (e.g. on 10.5), if you record video without audio, the speed comes
+    // out wrong, so we'll put some audio in there too..,
+    d->addDefaultAudioInput();
+
+    [d->session addOutput: d->fileOutput error: nil];
+
+    NSEnumerator* connectionEnumerator = [[d->fileOutput connections] objectEnumerator];
+
+    for (;;)
+    {
+        QTCaptureConnection* connection = [connectionEnumerator nextObject];
+        if (connection == nil)
+            break;
+
+        QTCompressionOptions* options = nil;
+        NSString* mediaType = [connection mediaType];
+
+        if ([mediaType isEqualToString: QTMediaTypeVideo])
+            options = [QTCompressionOptions compressionOptionsWithIdentifier:
+                            quality >= 1 ? nsStringLiteral ("QTCompressionOptionsSD480SizeH264Video")
+                                         : nsStringLiteral ("QTCompressionOptions240SizeH264Video")];
+        else if ([mediaType isEqualToString: QTMediaTypeSound])
+            options = [QTCompressionOptions compressionOptionsWithIdentifier: nsStringLiteral ("QTCompressionOptionsHighQualityAACAudio")];
+
+        [d->fileOutput setCompressionOptions: options forConnection: connection];
+    }
+
+    [d->fileOutput recordToOutputFileURL: [NSURL fileURLWithPath: juceStringToNS (file.getFullPathName())]];
+    isRecording = true;
+}
+
+Time CameraDevice::getTimeOfFirstRecordedFrame() const
+{
+    QTCameraDeviceInternal* const d = static_cast <QTCameraDeviceInternal*> (internal);
+    if (d->firstPresentationTime != 0)
+        return Time (d->firstPresentationTime + d->averageTimeOffset);
+
+    return Time();
+}
+
+void CameraDevice::stopRecording()
+{
+    if (isRecording)
+    {
+        static_cast <QTCameraDeviceInternal*> (internal)->resetFile();
+        isRecording = false;
+    }
+}
+
+void CameraDevice::addListener (Listener* listenerToAdd)
+{
+    if (listenerToAdd != nullptr)
+        static_cast <QTCameraDeviceInternal*> (internal)->addListener (listenerToAdd);
+}
+
+void CameraDevice::removeListener (Listener* listenerToRemove)
+{
+    if (listenerToRemove != nullptr)
+        static_cast <QTCameraDeviceInternal*> (internal)->removeListener (listenerToRemove);
+}
+
+//==============================================================================
+StringArray CameraDevice::getAvailableDevices()
+{
+    JUCE_AUTORELEASEPOOL
+    {
+        StringArray results;
+        NSArray* devs = [QTCaptureDevice inputDevicesWithMediaType: QTMediaTypeVideo];
+
+        for (int i = 0; i < (int) [devs count]; ++i)
+        {
+            QTCaptureDevice* dev = (QTCaptureDevice*) [devs objectAtIndex: i];
+            results.add (nsStringToJuce ([dev localizedDisplayName]));
+        }
+
+        return results;
+    }
+}
+
+CameraDevice* CameraDevice::openDevice (int index,
+                                        int /*minWidth*/, int /*minHeight*/,
+                                        int /*maxWidth*/, int /*maxHeight*/)
+{
+    ScopedPointer <CameraDevice> d (new CameraDevice (getAvailableDevices() [index], index));
+
+    if (static_cast <QTCameraDeviceInternal*> (d->internal)->openingError.isEmpty())
+        return d.release();
+
+    return nullptr;
 }

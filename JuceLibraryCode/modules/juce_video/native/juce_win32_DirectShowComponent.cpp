@@ -359,9 +359,6 @@ public:
             return true;
         }
 
-        // Note that if you're trying to open a file and this method fails, you may
-        // just need to install a suitable codec. It seems that by default DirectShow
-        // doesn't support a very good range of formats.
         release();
         return false;
     }

@@ -118,8 +118,8 @@ class LADSPAPluginInstance     : public AudioPluginInstance
 {
 public:
     LADSPAPluginInstance (const LADSPAModuleHandle::Ptr& m)
-        : module (m), plugin (nullptr), handle (nullptr),
-          initialised (false), tempBuffer (1, 1)
+        : plugin (nullptr), handle (nullptr), initialised (false),
+          tempBuffer (1, 1), module (m)
     {
         ++insideLADSPACallback;
 
@@ -294,13 +294,13 @@ public:
         {
             for (int i = 0; i < inputs.size(); ++i)
                 plugin->connect_port (handle, inputs[i],
-                                      i < buffer.getNumChannels() ? buffer.getWritePointer (i) : nullptr);
+                                      i < buffer.getNumChannels() ? buffer.getSampleData (i) : nullptr);
 
             if (plugin->run != nullptr)
             {
                 for (int i = 0; i < outputs.size(); ++i)
                     plugin->connect_port (handle, outputs.getUnchecked(i),
-                                          i < buffer.getNumChannels() ? buffer.getWritePointer (i) : nullptr);
+                                          i < buffer.getNumChannels() ? buffer.getSampleData (i) : nullptr);
 
                 plugin->run (handle, numSamples);
                 return;
@@ -312,7 +312,7 @@ public:
                 tempBuffer.clear();
 
                 for (int i = 0; i < outputs.size(); ++i)
-                    plugin->connect_port (handle, outputs.getUnchecked(i), tempBuffer.getWritePointer (i));
+                    plugin->connect_port (handle, outputs.getUnchecked(i), tempBuffer.getSampleData (i));
 
                 plugin->run_adding (handle, numSamples);
 

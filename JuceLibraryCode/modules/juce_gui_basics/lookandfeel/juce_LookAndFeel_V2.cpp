@@ -111,9 +111,6 @@ LookAndFeel_V2::LookAndFeel_V2()
         TextPropertyComponent::textColourId,        0xff000000,
         TextPropertyComponent::outlineColourId,     standardOutlineColour,
 
-        BooleanPropertyComponent::backgroundColourId, 0xffffffff,
-        BooleanPropertyComponent::outlineColourId,  standardOutlineColour,
-
         ListBox::backgroundColourId,                0xffffffff,
         ListBox::outlineColourId,                   standardOutlineColour,
         ListBox::textColourId,                      0xff000000,
@@ -241,19 +238,14 @@ void LookAndFeel_V2::drawButtonBackground (Graphics& g,
                       button.isConnectedOnBottom());
 }
 
-Font LookAndFeel_V2::getTextButtonFont (TextButton&, int buttonHeight)
+Font LookAndFeel_V2::getTextButtonFont (TextButton& button)
 {
-    return Font (jmin (15.0f, buttonHeight * 0.6f));
-}
-
-int LookAndFeel_V2::getTextButtonWidthToFitText (TextButton& b, int buttonHeight)
-{
-    return getTextButtonFont (b, buttonHeight).getStringWidth (b.getButtonText()) + buttonHeight;
+    return button.getFont();
 }
 
 void LookAndFeel_V2::drawButtonText (Graphics& g, TextButton& button, bool /*isMouseOverButton*/, bool /*isButtonDown*/)
 {
-    Font font (getTextButtonFont (button, button.getHeight()));
+    Font font (getTextButtonFont (button));
     g.setFont (font);
     g.setColour (button.findColour (button.getToggleState() ? TextButton::textColourOnId
                                                             : TextButton::textColourOffId)
@@ -450,7 +442,8 @@ void LookAndFeel_V2::drawAlertBox (Graphics& g, AlertWindow& alert,
             colour    = alert.getAlertType() == AlertWindow::InfoIcon ? (uint32) 0x605555ff : (uint32) 0x40b69900;
             character = alert.getAlertType() == AlertWindow::InfoIcon ? 'i' : '?';
 
-            icon.addEllipse (iconRect.toFloat());
+            icon.addEllipse ((float) iconRect.getX(), (float) iconRect.getY(),
+                             (float) iconRect.getWidth(), (float) iconRect.getHeight());
         }
 
         GlyphArrangement ga;
@@ -1004,16 +997,6 @@ void LookAndFeel_V2::drawPopupMenuItem (Graphics& g, const Rectangle<int>& area,
     }
 }
 
-void LookAndFeel_V2::drawPopupMenuSectionHeader (Graphics& g, const Rectangle<int>& area, const String& sectionName)
-{
-    g.setFont (getPopupMenuFont().boldened());
-    g.setColour (findColour (PopupMenu::headerTextColourId));
-
-    g.drawFittedText (sectionName,
-                      area.getX() + 12, area.getY(), area.getWidth() - 16, (int) (area.getHeight() * 0.8f),
-                      Justification::bottomLeft, 1);
-}
-
 //==============================================================================
 int LookAndFeel_V2::getMenuWindowFlags()
 {
@@ -1190,11 +1173,13 @@ void LookAndFeel_V2::drawLabel (Graphics& g, Label& label)
 
         g.setColour (label.findColour (Label::textColourId).withMultipliedAlpha (alpha));
         g.setFont (font);
-
-        Rectangle<int> textArea (label.getBorderSize().subtractedFrom (label.getLocalBounds()));
-
-        g.drawFittedText (label.getText(), textArea, label.getJustificationType(),
-                          jmax (1, (int) (textArea.getHeight() / font.getHeight())),
+        g.drawFittedText (label.getText(),
+                          label.getHorizontalBorderSize(),
+                          label.getVerticalBorderSize(),
+                          label.getWidth() - 2 * label.getHorizontalBorderSize(),
+                          label.getHeight() - 2 * label.getVerticalBorderSize(),
+                          label.getJustificationType(),
+                          jmax (1, (int) (label.getHeight() / font.getHeight())),
                           label.getMinimumHorizontalScale());
 
         g.setColour (label.findColour (Label::outlineColourId).withMultipliedAlpha (alpha));
@@ -2370,10 +2355,6 @@ void LookAndFeel_V2::drawCallOutBoxBackground (CallOutBox& box, Graphics& g,
     g.strokePath (path, PathStrokeType (2.0f));
 }
 
-int LookAndFeel_V2::getCallOutBoxBorderSize (const CallOutBox&)
-{
-    return 20;
-}
 
 //==============================================================================
 AttributedString LookAndFeel_V2::createFileChooserHeaderText (const String& title,

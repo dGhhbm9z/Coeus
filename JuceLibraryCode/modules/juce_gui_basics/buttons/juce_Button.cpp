@@ -125,12 +125,11 @@ void Button::setTooltip (const String& newTooltip)
     generateTooltip = false;
 }
 
-void Button::updateAutomaticTooltip (const ApplicationCommandInfo& info)
+String Button::getTooltip()
 {
-    if (generateTooltip && commandManagerToUse != nullptr)
+    if (generateTooltip && commandManagerToUse != nullptr && commandID != 0)
     {
-        String tt (info.description.isNotEmpty() ? info.description
-                                                 : info.shortName);
+        String tt (commandManagerToUse->getDescriptionOfCommand (commandID));
 
         Array<KeyPress> keyPresses (commandManagerToUse->getKeyMappings()->getKeyPressesAssignedToCommand (commandID));
 
@@ -146,8 +145,10 @@ void Button::updateAutomaticTooltip (const ApplicationCommandInfo& info)
                 tt << key << ']';
         }
 
-        SettableTooltipClient::setTooltip (tt);
+        return tt;
     }
+
+    return SettableTooltipClient::getTooltip();
 }
 
 void Button::setConnectedEdges (const int newFlags)
@@ -541,7 +542,6 @@ void Button::applicationCommandListChangeCallback()
 
         if (commandManagerToUse->getTargetForCommand (commandID, info) != nullptr)
         {
-            updateAutomaticTooltip (info);
             setEnabled ((info.flags & ApplicationCommandInfo::isDisabled) == 0);
             setToggleState ((info.flags & ApplicationCommandInfo::isTicked) != 0, dontSendNotification);
         }

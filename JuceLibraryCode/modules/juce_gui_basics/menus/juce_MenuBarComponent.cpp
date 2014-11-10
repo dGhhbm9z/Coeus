@@ -22,7 +22,7 @@
   ==============================================================================
 */
 
-MenuBarComponent::MenuBarComponent (MenuBarModel* m)
+MenuBarComponent::MenuBarComponent (MenuBarModel* model_)
     : model (nullptr),
       itemUnderMouse (-1),
       currentPopupIndex (-1),
@@ -32,7 +32,7 @@ MenuBarComponent::MenuBarComponent (MenuBarModel* m)
     setWantsKeyboardFocus (false);
     setMouseClickGrabsKeyboardFocus (false);
 
-    setModel (m);
+    setModel (model_);
 }
 
 MenuBarComponent::~MenuBarComponent()
@@ -284,26 +284,22 @@ void MenuBarComponent::mouseMove (const MouseEvent& e)
 
 bool MenuBarComponent::keyPressed (const KeyPress& key)
 {
+    bool used = false;
     const int numMenus = menuNames.size();
+    const int currentIndex = jlimit (0, menuNames.size() - 1, currentPopupIndex);
 
-    if (numMenus > 0)
+    if (key.isKeyCode (KeyPress::leftKey))
     {
-        const int currentIndex = jlimit (0, numMenus - 1, currentPopupIndex);
-
-        if (key.isKeyCode (KeyPress::leftKey))
-        {
-            showMenu ((currentIndex + numMenus - 1) % numMenus);
-            return true;
-        }
-
-        if (key.isKeyCode (KeyPress::rightKey))
-        {
-            showMenu ((currentIndex + 1) % numMenus);
-            return true;
-        }
+        showMenu ((currentIndex + numMenus - 1) % numMenus);
+        used = true;
+    }
+    else if (key.isKeyCode (KeyPress::rightKey))
+    {
+        showMenu ((currentIndex + 1) % numMenus);
+        used = true;
     }
 
-    return false;
+    return used;
 }
 
 void MenuBarComponent::menuBarItemsChanged (MenuBarModel* /*menuBarModel*/)

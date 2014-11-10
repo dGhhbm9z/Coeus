@@ -263,12 +263,6 @@ namespace SocketHelpers
 
         return true;
     }
-
-    static void makeReusable (int handle) noexcept
-    {
-        const int reuse = 1;
-        setsockopt (handle, SOL_SOCKET, SO_REUSEADDR, (const char*) &reuse, sizeof (reuse));
-    }
 }
 
 //==============================================================================
@@ -384,7 +378,7 @@ void StreamingSocket::close()
         {
             // need to do this to interrupt the accept() function..
             StreamingSocket temp;
-            temp.connect (IPAddress::local().toString(), portNumber, 1000);
+            temp.connect ("localhost", portNumber, 1000);
         }
     }
 
@@ -424,9 +418,8 @@ bool StreamingSocket::createListener (const int newPortNumber, const String& loc
     if (handle < 0)
         return false;
 
-   #if ! JUCE_WINDOWS // on windows, adding this option produces behaviour different to posix
-    SocketHelpers::makeReusable (handle);
-   #endif
+    const int reuse = 1;
+    setsockopt (handle, SOL_SOCKET, SO_REUSEADDR, (const char*) &reuse, sizeof (reuse));
 
     if (bind (handle, (struct sockaddr*) &servTmpAddr, sizeof (struct sockaddr_in)) < 0
          || listen (handle, SOMAXCONN) < 0)
@@ -477,7 +470,6 @@ DatagramSocket::DatagramSocket (const int localPortNumber, const bool canBroadca
     SocketHelpers::initSockets();
 
     handle = (int) socket (AF_INET, SOCK_DGRAM, 0);
-    SocketHelpers::makeReusable (handle);
     bindToPort (localPortNumber);
 }
 

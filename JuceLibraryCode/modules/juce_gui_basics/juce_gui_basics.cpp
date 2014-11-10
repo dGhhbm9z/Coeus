@@ -49,7 +49,7 @@
  #import <WebKit/WebKit.h>
  #import <IOKit/pwr_mgt/IOPMLib.h>
 
- #if JUCE_SUPPORT_CARBON && ! (defined (MAC_OS_X_VERSION_10_6) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_6)
+ #if JUCE_SUPPORT_CARBON
   #define Point CarbonDummyPointName
   #define Component CarbonDummyCompName
   #import <Carbon/Carbon.h> // still needed for SetSystemUIMode()
@@ -134,12 +134,6 @@
 //==============================================================================
 namespace juce
 {
-
-#define ASSERT_MESSAGE_MANAGER_IS_LOCKED \
-    jassert (MessageManager::getInstance()->currentThreadHasLockedMessageManager());
-
-#define ASSERT_MESSAGE_MANAGER_IS_LOCKED_OR_OFFSCREEN \
-    jassert (MessageManager::getInstance()->currentThreadHasLockedMessageManager() || getPeer() == nullptr);
 
 extern bool juce_areThereAnyAlwaysOnTopWindows();
 

@@ -72,10 +72,10 @@ public:
 
     //==============================================================================
     /** Creates the standard arrow cursor. */
-    MouseCursor() noexcept;
+    MouseCursor();
 
     /** Creates one of the standard mouse cursor */
-    MouseCursor (StandardCursorType);
+    MouseCursor (StandardCursorType type);
 
     /** Creates a custom cursor from an image.
 

@@ -23,7 +23,7 @@
 */
 
 CallOutBox::CallOutBox (Component& c, const Rectangle<int>& area, Component* const parent)
-    : arrowSize (16.0f), content (c), dismissalMouseClicksAreAlwaysConsumed (false)
+    : arrowSize (16.0f), content (c)
 {
     addAndMakeVisible (content);
 
@@ -91,7 +91,7 @@ void CallOutBox::setArrowSize (const float newSize)
 
 int CallOutBox::getBorderSize() const noexcept
 {
-    return jmax (getLookAndFeel().getCallOutBoxBorderSize (*this), (int) arrowSize);
+    return jmax (20, (int) arrowSize);
 }
 
 void CallOutBox::paint (Graphics& g)
@@ -123,8 +123,9 @@ bool CallOutBox::hitTest (int x, int y)
 
 void CallOutBox::inputAttemptWhenModal()
 {
-    if (dismissalMouseClicksAreAlwaysConsumed
-         || targetArea.contains (getMouseXYRelative() + getBounds().getPosition()))
+    const Point<int> mousePos (getMouseXYRelative() + getBounds().getPosition());
+
+    if (targetArea.contains (mousePos))
     {
         // if you click on the area that originally popped-up the callout, you expect it
         // to get rid of the box, but deleting the box here allows the click to pass through and
@@ -136,11 +137,6 @@ void CallOutBox::inputAttemptWhenModal()
         exitModalState (0);
         setVisible (false);
     }
-}
-
-void CallOutBox::setDismissalMouseClicksAreAlwaysConsumed (bool b) noexcept
-{
-    dismissalMouseClicksAreAlwaysConsumed = b;
 }
 
 enum { callOutBoxDismissCommandId = 0x4f83a04b };

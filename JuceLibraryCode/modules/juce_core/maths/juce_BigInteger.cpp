@@ -307,28 +307,41 @@ void BigInteger::negate() noexcept
     negative = (! negative) && ! isZero();
 }
 
-#if JUCE_USE_MSVC_INTRINSICS && ! defined (__INTEL_COMPILER)
+#if JUCE_USE_INTRINSICS && ! defined (__INTEL_COMPILER)
  #pragma intrinsic (_BitScanReverse)
 #endif
 
-inline static int highestBitInInt (uint32 n) noexcept
+namespace BitFunctions
 {
-    jassert (n != 0); // (the built-in functions may not work for n = 0)
+    inline int countBitsInInt32 (uint32 n) noexcept
+    {
+        n -= ((n >> 1) & 0x55555555);
+        n =  (((n >> 2) & 0x33333333) + (n & 0x33333333));
+        n =  (((n >> 4) + n) & 0x0f0f0f0f);
+        n += (n >> 8);
+        n += (n >> 16);
+        return (int) (n & 0x3f);
+    }
 
-  #if JUCE_GCC
-    return 31 - __builtin_clz (n);
-  #elif JUCE_USE_MSVC_INTRINSICS
-    unsigned long highest;
-    _BitScanReverse (&highest, n);
-    return (int) highest;
-  #else
-    n |= (n >> 1);
-    n |= (n >> 2);
-    n |= (n >> 4);
-    n |= (n >> 8);
-    n |= (n >> 16);
-    return countBitsInInt32 (n >> 1);
-  #endif
+    inline int highestBitInInt (uint32 n) noexcept
+    {
+        jassert (n != 0); // (the built-in functions may not work for n = 0)
+
+      #if JUCE_GCC
+        return 31 - __builtin_clz (n);
+      #elif JUCE_USE_INTRINSICS
+        unsigned long highest;
+        _BitScanReverse (&highest, n);
+        return (int) highest;
+      #else
+        n |= (n >> 1);
+        n |= (n >> 2);
+        n |= (n >> 4);
+        n |= (n >> 8);
+        n |= (n >> 16);
+        return countBitsInInt32 (n >> 1);
+      #endif
+    }
 }
 
 int BigInteger::countNumberOfSetBits() const noexcept
@@ -336,7 +349,7 @@ int BigInteger::countNumberOfSetBits() const noexcept
     int total = 0;
 
     for (int i = (int) bitToIndex (highestBit) + 1; --i >= 0;)
-        total += countNumberOfBits (values[i]);
+        total += BitFunctions::countBitsInInt32 (values[i]);
 
     return total;
 }
@@ -348,7 +361,7 @@ int BigInteger::getHighestBit() const noexcept
         const uint32 n = values[i];
 
         if (n != 0)
-            return highestBitInInt (n) + (i << 5);
+            return BitFunctions::highestBitInInt (n) + (i << 5);
     }
 
     return -1;

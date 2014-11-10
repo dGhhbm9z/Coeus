@@ -43,7 +43,7 @@ JUCE_JNI_CALLBACK (JUCE_ANDROID_ACTIVITY_CLASSNAME, launchApp, void, (JNIEnv* en
 
     JUCEApplicationBase* app = JUCEApplicationBase::createInstance();
     if (! app->initialiseApp())
-        exit (app->getApplicationReturnValue());
+        exit (0);
 
     jassert (MessageManager::getInstance()->isThisTheMessageThread());
 }
@@ -91,7 +91,7 @@ DECLARE_JNI_CLASS (CanvasMinimal, "android/graphics/Canvas");
  METHOD (hasFocus,      "hasFocus",         "()Z") \
  METHOD (invalidate,    "invalidate",       "(IIII)V") \
  METHOD (containsPoint, "containsPoint",    "(II)Z") \
- METHOD (showKeyboard,  "showKeyboard",     "(Ljava/lang/String;)V") \
+ METHOD (showKeyboard,  "showKeyboard",     "(Z)V") \
  METHOD (createGLView,  "createGLView",     "()L" JUCE_ANDROID_ACTIVITY_CLASSPATH "$OpenGLView;") \
 
 DECLARE_JNI_CLASS (ComponentPeerView, JUCE_ANDROID_ACTIVITY_CLASSPATH "$ComponentPeerView");
@@ -234,14 +234,14 @@ public:
                            view.callIntMethod (ComponentPeerView.getTop));
     }
 
-    Point<float> localToGlobal (Point<float> relativePosition) override
+    Point<int> localToGlobal (Point<int> relativePosition) override
     {
-        return relativePosition + getScreenPosition().toFloat();
+        return relativePosition + getScreenPosition();
     }
 
-    Point<float> globalToLocal (Point<float> screenPosition) override
+    Point<int> globalToLocal (Point<int> screenPosition) override
     {
-        return screenPosition - getScreenPosition().toFloat();
+        return screenPosition - getScreenPosition();
     }
 
     void setMinimised (bool shouldBeMinimised) override
@@ -320,7 +320,7 @@ public:
         lastMousePos = pos;
 
         // this forces a mouse-enter/up event, in case for some reason we didn't get a mouse-up before.
-        handleMouseEvent (index, pos, currentModifiers.withoutMouseButtons(), time);
+        handleMouseEvent (index, pos.toInt(), currentModifiers.withoutMouseButtons(), time);
 
         if (isValidPeer (this))
             handleMouseDragCallback (index, pos, time);
@@ -333,8 +333,8 @@ public:
         jassert (index < 64);
         touchesDown = (touchesDown | (1 << (index & 63)));
         currentModifiers = currentModifiers.withoutMouseButtons().withFlags (ModifierKeys::leftButtonModifier);
-        handleMouseEvent (index, pos, currentModifiers.withoutMouseButtons()
-                                        .withFlags (ModifierKeys::leftButtonModifier), time);
+        handleMouseEvent (index, pos.toInt(), currentModifiers.withoutMouseButtons()
+                                                  .withFlags (ModifierKeys::leftButtonModifier), time);
     }
 
     void handleMouseUpCallback (int index, Point<float> pos, int64 time)
@@ -347,7 +347,7 @@ public:
         if (touchesDown == 0)
             currentModifiers = currentModifiers.withoutMouseButtons();
 
-        handleMouseEvent (index, pos, currentModifiers.withoutMouseButtons(), time);
+        handleMouseEvent (index, pos.toInt(), currentModifiers.withoutMouseButtons(), time);
     }
 
     void handleKeyDownCallback (int k, int kc)
@@ -378,30 +378,14 @@ public:
             handleFocusLoss();
     }
 
-    static const char* getVirtualKeyboardType (TextInputTarget::VirtualKeyboardType type) noexcept
+    void textInputRequired (const Point<int>&) override
     {
-        switch (type)
-        {
-            case TextInputTarget::textKeyboard:          return "text";
-            case TextInputTarget::numericKeyboard:       return "number";
-            case TextInputTarget::urlKeyboard:           return "textUri";
-            case TextInputTarget::emailAddressKeyboard:  return "textEmailAddress";
-            case TextInputTarget::phoneNumberKeyboard:   return "phone";
-            default:                                     jassertfalse; break;
-        }
-
-        return "text";
-    }
-
-    void textInputRequired (Point<int>, TextInputTarget& target) override
-    {
-        view.callVoidMethod (ComponentPeerView.showKeyboard,
-                             javaString (getVirtualKeyboardType (target.getKeyboardType())).get());
+        view.callVoidMethod (ComponentPeerView.showKeyboard, true);
     }
 
     void dismissPendingTextInput() override
     {
-        view.callVoidMethod (ComponentPeerView.showKeyboard, javaString ("").get());
+        view.callVoidMethod (ComponentPeerView.showKeyboard, false);
      }
 
     //==============================================================================
@@ -611,12 +595,12 @@ bool MouseInputSource::SourceList::addSource()
     return true;
 }
 
-Point<float> MouseInputSource::getCurrentRawMousePosition()
+Point<int> MouseInputSource::getCurrentRawMousePosition()
 {
-    return AndroidComponentPeer::lastMousePos;
+    return AndroidComponentPeer::lastMousePos.toInt();
 }
 
-void MouseInputSource::setRawMousePosition (Point<float>)
+void MouseInputSource::setRawMousePosition (Point<int>)
 {
     // not needed
 }

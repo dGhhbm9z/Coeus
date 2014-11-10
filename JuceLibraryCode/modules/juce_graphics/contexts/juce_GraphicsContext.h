@@ -158,7 +158,7 @@ public:
     void drawText (const String& text,
                    int x, int y, int width, int height,
                    Justification justificationType,
-                   bool useEllipsesIfTooBig = true) const;
+                   bool useEllipsesIfTooBig) const;
 
     /** Draws a line of text within a specified rectangle.
 
@@ -172,7 +172,7 @@ public:
     void drawText (const String& text,
                    const Rectangle<int>& area,
                    Justification justificationType,
-                   bool useEllipsesIfTooBig = true) const;
+                   bool useEllipsesIfTooBig) const;
 
     /** Draws a line of text within a specified rectangle.
 
@@ -186,7 +186,7 @@ public:
     void drawText (const String& text,
                    const Rectangle<float>& area,
                    Justification justificationType,
-                   bool useEllipsesIfTooBig = true) const;
+                   bool useEllipsesIfTooBig) const;
 
     /** Tries to draw a text string inside a given space.
 

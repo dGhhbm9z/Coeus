@@ -22,62 +22,90 @@
   ==============================================================================
 */
 
-struct CameraDevice::Pimpl
+// TODO
+class AndroidCameraInternal
 {
-    Pimpl (const String&, int /*index*/, int /*minWidth*/, int /*minHeight*/, int /*maxWidth*/, int /*maxHeight*/)
+public:
+    AndroidCameraInternal()
     {
     }
 
-    ~Pimpl()
+    ~AndroidCameraInternal()
     {
-    }
-
-    void startRecordingToFile (const File&, int /*quality*/)
-    {
-    }
-
-    void stopRecording()
-    {
-    }
-
-    Time getTimeOfFirstRecordedFrame() const
-    {
-        return Time();
-    }
-
-    void addListener (CameraDevice::Listener* listenerToAdd)
-    {
-        const ScopedLock sl (listenerLock);
-        listeners.addIfNotAlreadyThere (listenerToAdd);
-    }
-
-    void removeListener (CameraDevice::Listener* listenerToRemove)
-    {
-        const ScopedLock sl (listenerLock);
-        listeners.removeFirstMatchingValue (listenerToRemove);
-    }
-
-    static StringArray getAvailableDevices()
-    {
-        StringArray results;
-
-        return results;
     }
 
 private:
-    JUCE_DECLARE_NON_COPYABLE (Pimpl)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AndroidCameraInternal)
 };
 
-struct CameraDevice::ViewerComponent  : public Component
+//==============================================================================
+CameraDevice::CameraDevice (const String& name_, int /*index*/)
+    : name (name_)
 {
-    ViewerComponent (CameraDevice&)
-    {
-    }
+    internal = new AndroidCameraInternal();
 
-    JUCE_DECLARE_NON_COPYABLE (ViewerComponent)
-};
+    // TODO
+}
+
+CameraDevice::~CameraDevice()
+{
+    stopRecording();
+    delete static_cast <AndroidCameraInternal*> (internal);
+    internal = 0;
+}
+
+Component* CameraDevice::createViewerComponent()
+{
+    // TODO
+
+    return nullptr;
+}
 
 String CameraDevice::getFileExtension()
 {
-    return ".mov";
+    return ".m4a";  // TODO correct?
+}
+
+void CameraDevice::startRecordingToFile (const File& file, int quality)
+{
+    // TODO
+}
+
+Time CameraDevice::getTimeOfFirstRecordedFrame() const
+{
+    // TODO
+    return Time();
+}
+
+void CameraDevice::stopRecording()
+{
+    // TODO
+}
+
+void CameraDevice::addListener (Listener* listenerToAdd)
+{
+    // TODO
+}
+
+void CameraDevice::removeListener (Listener* listenerToRemove)
+{
+    // TODO
+}
+
+StringArray CameraDevice::getAvailableDevices()
+{
+    StringArray devs;
+
+    // TODO
+
+    return devs;
+}
+
+CameraDevice* CameraDevice::openDevice (int index,
+                                        int minWidth, int minHeight,
+                                        int maxWidth, int maxHeight)
+{
+    // TODO
+
+    return nullptr;
 }

@@ -45,14 +45,13 @@ public:
         address (address_), headers (headers_), postData (postData_), position (0),
         finished (false), isPost (isPost_), timeOutMs (timeOutMs_)
     {
-        for (int maxRedirects = 10; --maxRedirects >= 0;)
-        {
-            createConnection (progressCallback, progressCallbackContext);
+        createConnection (progressCallback, progressCallbackContext);
 
-            if (! isError())
+        if (! isError())
+        {
+            if (responseHeaders != nullptr)
             {
                 DWORD bufferSizeBytes = 4096;
-                StringPairArray headers (false);
 
                 for (;;)
                 {
@@ -66,10 +65,11 @@ public:
                         for (int i = 0; i < headersArray.size(); ++i)
                         {
                             const String& header = headersArray[i];
-                            const String key   (header.upToFirstOccurrenceOf (": ", false, false));
+                            const String key (header.upToFirstOccurrenceOf (": ", false, false));
                             const String value (header.fromFirstOccurrenceOf (": ", false, false));
-                            const String previousValue (headers[key]);
-                            headers.set (key, previousValue.isEmpty() ? value : (previousValue + "," + value));
+                            const String previousValue ((*responseHeaders) [key]);
+
+                            responseHeaders->set (key, previousValue.isEmpty() ? value : (previousValue + "," + value));
                         }
 
                         break;
@@ -77,34 +77,14 @@ public:
 
                     if (GetLastError() != ERROR_INSUFFICIENT_BUFFER)
                         break;
-
-                    bufferSizeBytes += 4096;
                 }
-
-                DWORD status = 0;
-                DWORD statusSize = sizeof (status);
-
-                if (HttpQueryInfo (request, HTTP_QUERY_STATUS_CODE | HTTP_QUERY_FLAG_NUMBER, &status, &statusSize, 0))
-                {
-                    statusCode = (int) status;
-
-                    if (status == 301 || status == 302 || status == 303 || status == 307)
-                    {
-                        const String newLocation (headers["Location"]);
-
-                        if (newLocation.isNotEmpty() && newLocation != address)
-                        {
-                            address = newLocation;
-                            continue;
-                        }
-                    }
-                }
-
-                if (responseHeaders != nullptr)
-                    responseHeaders->addArray (headers);
             }
 
-            break;
+            DWORD status = 0;
+            DWORD statusSize = sizeof (status);
+
+            if (HttpQueryInfo (request, HTTP_QUERY_STATUS_CODE | HTTP_QUERY_FLAG_NUMBER, &status, &statusSize, 0))
+                statusCode = (int) status;
         }
     }
 
@@ -279,8 +259,7 @@ private:
     {
         const TCHAR* mimeTypes[] = { _T("*/*"), nullptr };
 
-        DWORD flags = INTERNET_FLAG_RELOAD | INTERNET_FLAG_NO_CACHE_WRITE | INTERNET_FLAG_NO_COOKIES
-                        | INTERNET_FLAG_NO_AUTO_REDIRECT | SECURITY_SET_MASK;
+        DWORD flags = INTERNET_FLAG_RELOAD | INTERNET_FLAG_NO_CACHE_WRITE | INTERNET_FLAG_NO_COOKIES;
 
         if (address.startsWithIgnoreCase ("https:"))
             flags |= INTERNET_FLAG_SECURE;  // (this flag only seems necessary if the OS is running IE6 -
@@ -291,8 +270,6 @@ private:
 
         if (request != 0)
         {
-            setSecurityFlags();
-
             INTERNET_BUFFERS buffers = { 0 };
             buffers.dwStructSize = sizeof (INTERNET_BUFFERS);
             buffers.lpcszHeader = headers.toWideCharPointer();
@@ -310,7 +287,7 @@ private:
 
                     if (bytesToDo > 0
                          && ! InternetWriteFile (request,
-                                                 static_cast<const char*> (postData.getData()) + bytesSent,
+                                                 static_cast <const char*> (postData.getData()) + bytesSent,
                                                  (DWORD) bytesToDo, &bytesDone))
                     {
                         break;
@@ -334,14 +311,6 @@ private:
         }
 
         close();
-    }
-
-    void setSecurityFlags()
-    {
-        DWORD dwFlags = 0, dwBuffLen = sizeof (DWORD);
-        InternetQueryOption (request, INTERNET_OPTION_SECURITY_FLAGS, &dwFlags, &dwBuffLen);
-        dwFlags |= SECURITY_FLAG_IGNORE_UNKNOWN_CA | SECURITY_SET_MASK;
-        InternetSetOption (request, INTERNET_OPTION_SECURITY_FLAGS, &dwFlags, sizeof (dwFlags));
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WebInputStream)
@@ -373,13 +342,7 @@ struct GetAdaptersInfoHelper
 
 namespace MACAddressHelpers
 {
-    static void addAddress (Array<MACAddress>& result, const MACAddress& ma)
-    {
-        if (! ma.isNull())
-            result.addIfNotAlreadyThere (ma);
-    }
-
-    static void getViaGetAdaptersInfo (Array<MACAddress>& result)
+    void getViaGetAdaptersInfo (Array<MACAddress>& result)
     {
         GetAdaptersInfoHelper gah;
 
@@ -387,11 +350,11 @@ namespace MACAddressHelpers
         {
             for (PIP_ADAPTER_INFO adapter = gah.adapterInfo; adapter != nullptr; adapter = adapter->Next)
                 if (adapter->AddressLength >= 6)
-                    addAddress (result, MACAddress (adapter->Address));
+                    result.addIfNotAlreadyThere (MACAddress (adapter->Address));
         }
     }
 
-    static void getViaNetBios (Array<MACAddress>& result)
+    void getViaNetBios (Array<MACAddress>& result)
     {
         DynamicLibrary dll ("netapi32.dll");
         JUCE_LOAD_WINAPI_FUNCTION (dll, Netbios, NetbiosCall, UCHAR, (PNCB))
@@ -433,7 +396,7 @@ namespace MACAddressHelpers
                     ncb.ncb_length = sizeof (ASTAT);
 
                     if (NetbiosCall (&ncb) == 0 && astat.adapt.adapter_type == 0xfe)
-                        addAddress (result, MACAddress (astat.adapt.adapter_address));
+                        result.addIfNotAlreadyThere (MACAddress (astat.adapt.adapter_address));
                 }
             }
         }

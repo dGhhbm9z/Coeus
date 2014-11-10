@@ -225,13 +225,10 @@ private:
 
             hits.set (0);
             misses.set (0);
+            return glyphs.getLast();
         }
 
-        if (CachedGlyphType* g = findLeastRecentlyUsedGlyph())
-            return g;
-
-        addNewGlyphSlots (32);
-        return glyphs.getLast();
+        return findLeastRecentlyUsedGlyph();
     }
 
     void addNewGlyphSlots (int num)
@@ -244,15 +241,14 @@ private:
 
     CachedGlyphType* findLeastRecentlyUsedGlyph() const noexcept
     {
-        CachedGlyphType* oldest = nullptr;
-        int oldestCounter = std::numeric_limits<int>::max();
+        CachedGlyphType* oldest = glyphs.getLast();
+        int oldestCounter = oldest->lastAccessCount;
 
         for (int i = glyphs.size() - 1; --i >= 0;)
         {
             CachedGlyphType* const glyph = glyphs.getUnchecked(i);
 
-            if (glyph->lastAccessCount <= oldestCounter
-                 && glyph->getReferenceCount() == 1)
+            if (glyph->lastAccessCount <= oldestCounter)
             {
                 oldestCounter = glyph->lastAccessCount;
                 oldest = glyph;
@@ -589,10 +585,6 @@ namespace EdgeTableFillers
                 filler[2].set (sourceColour);
                 filler[3].set (sourceColour);
             }
-            else
-            {
-                areRGBComponentsEqual = false;
-            }
         }
 
         forcedinline void setEdgeTableYPos (const int y) noexcept
@@ -894,22 +886,20 @@ namespace EdgeTableFillers
 
         forcedinline void copyRow (DestPixelType* dest, SrcPixelType const* src, int width) const noexcept
         {
-            const int destStride = destData.pixelStride;
-            const int srcStride  = srcData.pixelStride;
-
-            if (destStride == srcStride
-                 && srcData.pixelFormat  == Image::RGB
-                 && destData.pixelFormat == Image::RGB)
+            if (srcData.pixelStride == 3 && destData.pixelStride == 3)
             {
-                memcpy (dest, src, (size_t) (width * srcStride));
+                memcpy (dest, src, sizeof (PixelRGB) * (size_t) width);
             }
             else
             {
+                const int destStride = destData.pixelStride;
+                const int srcStride = srcData.pixelStride;
+
                 do
                 {
                     dest->blend (*src);
                     dest = addBytesToPointer (dest, destStride);
-                    src  = addBytesToPointer (src, srcStride);
+                    src = addBytesToPointer (src, srcStride);
                 } while (--width > 0);
             }
         }

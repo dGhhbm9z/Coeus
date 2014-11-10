@@ -26,7 +26,7 @@ class TableListBox::RowComp   : public Component,
                                 public TooltipClient
 {
 public:
-    RowComp (TableListBox& tlb) noexcept  : owner (tlb), row (-1), isSelected (false)
+    RowComp (TableListBox& tlb)  : owner (tlb), row (-1), isSelected (false)
     {
     }
 
@@ -192,7 +192,7 @@ public:
             if (TableListBoxModel* m = owner.getModel())
                 return m->getCellTooltip (row, columnId);
 
-        return String();
+        return String::empty;
     }
 
     Component* findChildComponentForColumn (const int columnId) const
@@ -275,7 +275,7 @@ void TableListBox::setHeader (TableHeaderComponent* newHeader)
 {
     jassert (newHeader != nullptr); // you need to supply a real header for a table!
 
-    Rectangle<int> newBounds (100, 28);
+    Rectangle<int> newBounds (0, 0, 100, 28);
     if (header != nullptr)
         newBounds = header->getBounds();
 
@@ -287,7 +287,7 @@ void TableListBox::setHeader (TableHeaderComponent* newHeader)
     header->addListener (this);
 }
 
-int TableListBox::getHeaderHeight() const noexcept
+int TableListBox::getHeaderHeight() const
 {
     return header->getHeight();
 }
@@ -312,9 +312,14 @@ void TableListBox::autoSizeAllColumns()
         autoSizeColumn (header->getColumnIdOfIndex (i, true));
 }
 
-void TableListBox::setAutoSizeMenuOptionShown (const bool shouldBeShown) noexcept
+void TableListBox::setAutoSizeMenuOptionShown (const bool shouldBeShown)
 {
     autoSizeOptionsShown = shouldBeShown;
+}
+
+bool TableListBox::isAutoSizeMenuOptionShown() const
+{
+    return autoSizeOptionsShown;
 }
 
 Rectangle<int> TableListBox::getCellPosition (const int columnId, const int rowNumber,
@@ -332,7 +337,7 @@ Rectangle<int> TableListBox::getCellPosition (const int columnId, const int rowN
 
 Component* TableListBox::getCellComponent (int columnId, int rowNumber) const
 {
-    if (RowComp* const rowComp = dynamic_cast<RowComp*> (getComponentForRowNumber (rowNumber)))
+    if (RowComp* const rowComp = dynamic_cast <RowComp*> (getComponentForRowNumber (rowNumber)))
         return rowComp->findChildComponentForColumn (columnId);
 
     return nullptr;
@@ -365,12 +370,12 @@ void TableListBox::paintListBoxItem (int, Graphics&, int, int, bool)
 {
 }
 
-Component* TableListBox::refreshComponentForRow (int rowNumber, bool rowSelected, Component* existingComponentToUpdate)
+Component* TableListBox::refreshComponentForRow (int rowNumber, bool isRowSelected_, Component* existingComponentToUpdate)
 {
     if (existingComponentToUpdate == nullptr)
         existingComponentToUpdate = new RowComp (*this);
 
-    static_cast<RowComp*> (existingComponentToUpdate)->update (rowNumber, rowSelected);
+    static_cast <RowComp*> (existingComponentToUpdate)->update (rowNumber, isRowSelected_);
 
     return existingComponentToUpdate;
 }
@@ -393,10 +398,10 @@ void TableListBox::returnKeyPressed (int row)
         model->returnKeyPressed (row);
 }
 
-void TableListBox::backgroundClicked (const MouseEvent& e)
+void TableListBox::backgroundClicked()
 {
     if (model != nullptr)
-        model->backgroundClicked (e);
+        model->backgroundClicked();
 }
 
 void TableListBox::listWasScrolled()
@@ -445,14 +450,14 @@ void TableListBox::updateColumnComponents() const
     const int firstRow = getRowContainingPosition (0, 0);
 
     for (int i = firstRow + getNumRowsOnScreen() + 2; --i >= firstRow;)
-        if (RowComp* const rowComp = dynamic_cast<RowComp*> (getComponentForRowNumber (i)))
+        if (RowComp* const rowComp = dynamic_cast <RowComp*> (getComponentForRowNumber (i)))
             rowComp->resized();
 }
 
 //==============================================================================
 void TableListBoxModel::cellClicked (int, int, const MouseEvent&)       {}
 void TableListBoxModel::cellDoubleClicked (int, int, const MouseEvent&) {}
-void TableListBoxModel::backgroundClicked (const MouseEvent&)           {}
+void TableListBoxModel::backgroundClicked()                             {}
 void TableListBoxModel::sortOrderChanged (int, const bool)              {}
 int TableListBoxModel::getColumnAutoSizeWidth (int)                     { return 0; }
 void TableListBoxModel::selectedRowsChanged (int)                       {}
@@ -460,7 +465,7 @@ void TableListBoxModel::deleteKeyPressed (int)                          {}
 void TableListBoxModel::returnKeyPressed (int)                          {}
 void TableListBoxModel::listWasScrolled()                               {}
 
-String TableListBoxModel::getCellTooltip (int /*rowNumber*/, int /*columnId*/)    { return String(); }
+String TableListBoxModel::getCellTooltip (int /*rowNumber*/, int /*columnId*/)    { return String::empty; }
 var TableListBoxModel::getDragSourceDescription (const SparseSet<int>&)           { return var(); }
 
 Component* TableListBoxModel::refreshComponentForCell (int, int, bool, Component* existingComponentToUpdate)

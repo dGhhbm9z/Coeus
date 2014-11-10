@@ -68,13 +68,6 @@ void FilenameComponent::resized()
     getLookAndFeel().layoutFilenameComponent (*this, &filenameBox, browseButton);
 }
 
-KeyboardFocusTraverser* FilenameComponent::createFocusTraverser()
-{
-    // This prevents the sub-components from grabbing focus if the
-    // FilenameComponent has been set to refuse focus.
-    return getWantsKeyboardFocus() ? Component::createFocusTraverser() : nullptr;
-}
-
 void FilenameComponent::setBrowseButtonText (const String& newBrowseButtonText)
 {
     browseButtonText = newBrowseButtonText;
@@ -162,14 +155,9 @@ void FilenameComponent::fileDragExit (const StringArray&)
 }
 
 //==============================================================================
-String FilenameComponent::getCurrentFileText() const
-{
-    return filenameBox.getText();
-}
-
 File FilenameComponent::getCurrentFile() const
 {
-    File f (File::getCurrentWorkingDirectory().getChildFile (getCurrentFileText()));
+    File f (File::getCurrentWorkingDirectory().getChildFile (filenameBox.getText()));
 
     if (enforcedSuffix.isNotEmpty())
         f = f.withFileExtension (enforcedSuffix);

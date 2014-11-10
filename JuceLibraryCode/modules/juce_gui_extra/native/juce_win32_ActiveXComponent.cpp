@@ -187,7 +187,7 @@ namespace ActiveXHelpers
             case WM_MBUTTONUP:
             case WM_RBUTTONUP:
                 peer->handleMouseEvent (0, Point<int> (GET_X_LPARAM (lParam) + activeXRect.left - peerRect.left,
-                                                       GET_Y_LPARAM (lParam) + activeXRect.top  - peerRect.top).toFloat(),
+                                                       GET_Y_LPARAM (lParam) + activeXRect.top  - peerRect.top),
                                         ModifierKeys::getCurrentModifiersRealtime(),
                                         getMouseEventTime());
                 break;

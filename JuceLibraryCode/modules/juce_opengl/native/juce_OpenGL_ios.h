@@ -47,9 +47,9 @@ public:
                    const OpenGLPixelFormat& pixFormat,
                    void* contextToShare,
                    bool multisampling,
-                   OpenGLVersion version)
-        : context (nil), frameBufferHandle (0), colorBufferHandle (0),
-          depthBufferHandle (0), msaaColorHandle (0), msaaBufferHandle (0),
+                   OpenGLVersion)
+        : frameBufferHandle (0), colorBufferHandle (0), depthBufferHandle (0),
+          msaaColorHandle (0), msaaBufferHandle (0),
           lastWidth (0), lastHeight (0), needToRebuildBuffers (false),
           swapFrames (0), useDepthBuffer (pixFormat.depthBufferBits > 0),
           useMSAA (multisampling)
@@ -75,22 +75,14 @@ public:
 
             [((UIView*) peer->getNativeHandle()) addSubview: view];
 
-           #if defined (__IPHONE_7_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
-            if (version == OpenGLContext::openGL3_2 && [[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
-            {
-                if (! createContext (kEAGLRenderingAPIOpenGLES3, contextToShare))
-                {
-                    releaseContext();
-                    createContext (kEAGLRenderingAPIOpenGLES2, contextToShare);
-                }
-            }
-            else
-           #endif
-            {
-                createContext (kEAGLRenderingAPIOpenGLES2, contextToShare);
-            }
+            context = [EAGLContext alloc];
 
-            jassert (context != nil);
+            const NSUInteger type = kEAGLRenderingAPIOpenGLES2;
+
+            if (contextToShare != nullptr)
+                [context initWithAPI: type  sharegroup: [(EAGLContext*) contextToShare sharegroup]];
+            else
+                [context initWithAPI: type];
 
             // I'd prefer to put this stuff in the initialiseOnRenderThread() call, but doing
             // so causes myserious timing-related failures.
@@ -102,7 +94,9 @@ public:
 
     ~NativeContext()
     {
-        releaseContext();
+        [context release];
+        context = nil;
+
         [view removeFromSuperview];
         [view release];
     }
@@ -118,7 +112,7 @@ public:
 
     bool createdOk() const noexcept             { return getRawContext() != nullptr; }
     void* getRawContext() const noexcept        { return context; }
-    GLuint getFrameBufferID() const noexcept    { return useMSAA ? msaaBufferHandle : frameBufferHandle; }
+    GLuint getFrameBufferID() const noexcept    { return frameBufferHandle; }
 
     bool makeActive() const noexcept
     {
@@ -142,18 +136,6 @@ public:
 
     void swapBuffers()
     {
-        if (useMSAA)
-        {
-            glBindFramebuffer (GL_DRAW_FRAMEBUFFER, frameBufferHandle);
-            glBindFramebuffer (GL_READ_FRAMEBUFFER, msaaBufferHandle);
-
-           #if defined (__IPHONE_7_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
-            glBlitFramebuffer (0, 0, lastWidth, lastHeight, 0, 0, lastWidth, lastHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-           #else
-            glResolveMultisampleFramebufferAPPLE();
-           #endif
-        }
-
         glBindRenderbuffer (GL_RENDERBUFFER, colorBufferHandle);
         [context presentRenderbuffer: GL_RENDERBUFFER];
 
@@ -201,24 +183,6 @@ private:
     int swapFrames;
     bool useDepthBuffer, useMSAA;
 
-    bool createContext (EAGLRenderingAPI type, void* contextToShare)
-    {
-        jassert (context == nil);
-        context = [EAGLContext alloc];
-
-        context = contextToShare != nullptr
-                    ? [context initWithAPI: type  sharegroup: [(EAGLContext*) contextToShare sharegroup]]
-                    : [context initWithAPI: type];
-
-        return context != nil;
-    }
-
-    void releaseContext()
-    {
-        [context release];
-        context = nil;
-    }
-
     //==============================================================================
     void createGLBuffers()
     {
@@ -245,7 +209,7 @@ private:
             glBindFramebuffer (GL_FRAMEBUFFER, msaaBufferHandle);
             glBindRenderbuffer (GL_RENDERBUFFER, msaaColorHandle);
 
-            glRenderbufferStorageMultisample (GL_RENDERBUFFER, 4, GL_RGBA8, width, height);
+            glRenderbufferStorageMultisampleAPPLE (GL_RENDERBUFFER, 4, GL_RGBA8_OES, width, height);
 
             glFramebufferRenderbuffer (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, msaaColorHandle);
         }
@@ -256,7 +220,7 @@ private:
             glBindRenderbuffer (GL_RENDERBUFFER, depthBufferHandle);
 
             if (useMSAA)
-                glRenderbufferStorageMultisample (GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, width, height);
+                glRenderbufferStorageMultisampleAPPLE (GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, width, height);
             else
                 glRenderbufferStorage (GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
 

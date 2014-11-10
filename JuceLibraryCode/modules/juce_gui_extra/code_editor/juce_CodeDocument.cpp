@@ -102,7 +102,9 @@ public:
         lineLength = 0;
         lineLengthWithoutNewLines = 0;
 
-        for (String::CharPointerType t (line.getCharPointer());;)
+        String::CharPointerType t (line.getCharPointer());
+
+        for (;;)
         {
             const juce_wchar c = t.getAndAdvance();
 
@@ -163,20 +165,18 @@ juce_wchar CodeDocument::Iterator::nextChar() noexcept
                 return 0;
         }
 
-        if (const juce_wchar result = charPointer.getAndAdvance())
-        {
-            if (charPointer.isEmpty())
-            {
-                ++line;
-                charPointer = nullptr;
-            }
+        const juce_wchar result = charPointer.getAndAdvance();
 
+        if (result == 0)
+        {
+            ++line;
+            charPointer = nullptr;
+        }
+        else
+        {
             ++position;
             return result;
         }
-
-        ++line;
-        charPointer = nullptr;
     }
 }
 
@@ -212,7 +212,9 @@ juce_wchar CodeDocument::Iterator::peekNextChar() const noexcept
             return 0;
     }
 
-    if (const juce_wchar c = *charPointer)
+    const juce_wchar c = *charPointer;
+
+    if (c != 0)
         return c;
 
     if (const CodeDocumentLine* const l = document->lines [line + 1])
@@ -240,16 +242,16 @@ CodeDocument::Position::Position() noexcept
 }
 
 CodeDocument::Position::Position (const CodeDocument& ownerDocument,
-                                  const int lineNum, const int index) noexcept
-    : owner (const_cast<CodeDocument*> (&ownerDocument)),
-      characterPos (0), line (lineNum),
-      indexInLine (index), positionMaintained (false)
+                                  const int line_, const int indexInLine_) noexcept
+    : owner (const_cast <CodeDocument*> (&ownerDocument)),
+      characterPos (0), line (line_),
+      indexInLine (indexInLine_), positionMaintained (false)
 {
-    setLineAndIndex (lineNum, index);
+    setLineAndIndex (line_, indexInLine_);
 }
 
 CodeDocument::Position::Position (const CodeDocument& ownerDocument, const int characterPos_) noexcept
-    : owner (const_cast<CodeDocument*> (&ownerDocument)),
+    : owner (const_cast <CodeDocument*> (&ownerDocument)),
       positionMaintained (false)
 {
     setPosition (characterPos_);
@@ -856,7 +858,7 @@ void CodeDocument::insert (const String& text, const int insertPos, const bool u
             }
 
             maximumLineLength = -1;
-            Array<CodeDocumentLine*> newLines;
+            Array <CodeDocumentLine*> newLines;
             CodeDocumentLine::createLines (newLines, textInsideOriginalLine);
             jassert (newLines.size() > 0);
 

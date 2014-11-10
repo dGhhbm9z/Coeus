@@ -54,7 +54,7 @@ public:
 
         DrawableComposite* const drawable = new DrawableComposite();
 
-        setDrawableID (*drawable, xml);
+        drawable->setName (xml->getStringAttribute ("id"));
 
         SVGState newState (*this);
 
@@ -85,13 +85,31 @@ public:
                 newState.viewBoxW = vwh.x;
                 newState.viewBoxH = vwh.y;
 
-                const int placementFlags = parsePlacementFlags (xml->getStringAttribute ("preserveAspectRatio").trim());
+                int placementFlags = 0;
 
-                if (placementFlags != 0)
-                    newState.transform = RectanglePlacement (placementFlags)
-                                            .getTransformToFit (Rectangle<float> (viewboxXY.x, viewboxXY.y, vwh.x, vwh.y),
-                                                                Rectangle<float> (newState.width, newState.height))
-                                            .followedBy (newState.transform);
+                const String aspect (xml->getStringAttribute ("preserveAspectRatio"));
+
+                if (aspect.containsIgnoreCase ("none"))
+                {
+                    placementFlags = RectanglePlacement::stretchToFit;
+                }
+                else
+                {
+                    if (aspect.containsIgnoreCase ("slice"))        placementFlags |= RectanglePlacement::fillDestination;
+
+                    if (aspect.containsIgnoreCase ("xMin"))         placementFlags |= RectanglePlacement::xLeft;
+                    else if (aspect.containsIgnoreCase ("xMax"))    placementFlags |= RectanglePlacement::xRight;
+                    else                                            placementFlags |= RectanglePlacement::xMid;
+
+                    if (aspect.containsIgnoreCase ("yMin"))         placementFlags |= RectanglePlacement::yTop;
+                    else if (aspect.containsIgnoreCase ("yMax"))    placementFlags |= RectanglePlacement::yBottom;
+                    else                                            placementFlags |= RectanglePlacement::yMid;
+                }
+
+                newState.transform = RectanglePlacement (placementFlags)
+                                        .getTransformToFit (Rectangle<float> (viewboxXY.x, viewboxXY.y, vwh.x, vwh.y),
+                                                            Rectangle<float> (newState.width, newState.height))
+                                        .followedBy (newState.transform);
             }
         }
         else
@@ -331,11 +349,6 @@ public:
             if (! carryOn)
                 break;
         }
-
-        // paths that finish back at their start position often seem to be
-        // left without a 'z', so need to be closed explicitly..
-        if (path.getCurrentPosition() == subpathStart)
-            path.closeSubPath();
     }
 
 private:
@@ -344,13 +357,6 @@ private:
     float elementX, elementY, width, height, viewBoxW, viewBoxH;
     AffineTransform transform;
     String cssStyleText;
-
-    static void setDrawableID (Drawable& d, const XmlPath& xml)
-    {
-        String compID (xml->getStringAttribute ("id"));
-        d.setName (compID);
-        d.setComponentID (compID);
-    }
 
     //==============================================================================
     void parseSubElements (const XmlPath& xml, DrawableComposite& parentDrawable)
@@ -391,7 +397,7 @@ private:
     {
         DrawableComposite* const drawable = new DrawableComposite();
 
-        setDrawableID (*drawable, xml);
+        drawable->setName (xml->getStringAttribute ("id"));
 
         if (xml->hasAttribute ("transform"))
         {
@@ -536,18 +542,30 @@ private:
         }
 
         DrawablePath* dp = new DrawablePath();
-        setDrawableID (*dp, xml);
+        dp->setName (xml->getStringAttribute ("id"));
         dp->setFill (Colours::transparentBlack);
 
         path.applyTransform (transform);
         dp->setPath (path);
 
+        Path::Iterator iter (path);
+
+        bool containsClosedSubPath = false;
+        while (iter.next())
+        {
+            if (iter.elementType == Path::Iterator::closePath)
+            {
+                containsClosedSubPath = true;
+                break;
+            }
+        }
+
         dp->setFill (getPathFillType (path,
                                       getStyleAttribute (xml, "fill"),
                                       getStyleAttribute (xml, "fill-opacity"),
                                       getStyleAttribute (xml, "opacity"),
-                                      pathContainsClosedSubPath (path) ? Colours::black
-                                                                       : Colours::transparentBlack));
+                                      containsClosedSubPath ? Colours::black
+                                                            : Colours::transparentBlack));
 
         const String strokeType (getStyleAttribute (xml, "stroke"));
 
@@ -562,15 +580,6 @@ private:
         }
 
         return dp;
-    }
-
-    static bool pathContainsClosedSubPath (const Path& path) noexcept
-    {
-        for (Path::Iterator iter (path); iter.next();)
-            if (iter.elementType == Path::Iterator::closePath)
-                return true;
-
-        return false;
     }
 
     struct SetGradientStopsOp
@@ -775,41 +784,44 @@ private:
         return parseColour (fill, i, defaultColour).withMultipliedAlpha (opacity);
     }
 
-    static PathStrokeType::JointStyle getJointStyle (const String& join) noexcept
-    {
-        if (join.equalsIgnoreCase ("round"))  return PathStrokeType::curved;
-        if (join.equalsIgnoreCase ("bevel"))  return PathStrokeType::beveled;
-
-        return PathStrokeType::mitered;
-    }
-
-    static PathStrokeType::EndCapStyle getEndCapStyle (const String& cap) noexcept
-    {
-        if (cap.equalsIgnoreCase ("round"))   return PathStrokeType::rounded;
-        if (cap.equalsIgnoreCase ("square"))  return PathStrokeType::square;
-
-        return PathStrokeType::butt;
-    }
-
-    float getStrokeWidth (const String& strokeWidth) const noexcept
-    {
-        return transform.getScaleFactor() * getCoordLength (strokeWidth, viewBoxW);
-    }
-
     PathStrokeType getStrokeFor (const XmlPath& xml) const
     {
-        return PathStrokeType (getStrokeWidth (getStyleAttribute (xml, "stroke-width", "1")),
-                               getJointStyle  (getStyleAttribute (xml, "stroke-linejoin")),
-                               getEndCapStyle (getStyleAttribute (xml, "stroke-linecap")));
+        const String strokeWidth (getStyleAttribute (xml, "stroke-width"));
+        const String cap (getStyleAttribute (xml, "stroke-linecap"));
+        const String join (getStyleAttribute (xml, "stroke-linejoin"));
+
+        //const String mitreLimit (getStyleAttribute (xml, "stroke-miterlimit"));
+        //const String dashArray (getStyleAttribute (xml, "stroke-dasharray"));
+        //const String dashOffset (getStyleAttribute (xml, "stroke-dashoffset"));
+
+        PathStrokeType::JointStyle joinStyle = PathStrokeType::mitered;
+        PathStrokeType::EndCapStyle capStyle = PathStrokeType::butt;
+
+        if (join.equalsIgnoreCase ("round"))
+            joinStyle = PathStrokeType::curved;
+        else if (join.equalsIgnoreCase ("bevel"))
+            joinStyle = PathStrokeType::beveled;
+
+        if (cap.equalsIgnoreCase ("round"))
+            capStyle = PathStrokeType::rounded;
+        else if (cap.equalsIgnoreCase ("square"))
+            capStyle = PathStrokeType::square;
+
+        float ox = 0.0f, oy = 0.0f;
+        float x = getCoordLength (strokeWidth, viewBoxW), y = 0.0f;
+        transform.transformPoints (ox, oy, x, y);
+
+        return PathStrokeType (strokeWidth.isNotEmpty() ? juce_hypot (x - ox, y - oy) : 1.0f,
+                               joinStyle, capStyle);
     }
 
     //==============================================================================
     Drawable* parseText (const XmlPath& xml)
     {
-        Array<float> xCoords, yCoords, dxCoords, dyCoords;
+        Array <float> xCoords, yCoords, dxCoords, dyCoords;
 
-        getCoordList (xCoords,  getInheritedAttribute (xml, "x"),  true, true);
-        getCoordList (yCoords,  getInheritedAttribute (xml, "y"),  true, false);
+        getCoordList (xCoords, getInheritedAttribute (xml, "x"), true, true);
+        getCoordList (yCoords, getInheritedAttribute (xml, "y"), true, false);
         getCoordList (dxCoords, getInheritedAttribute (xml, "dx"), true, true);
         getCoordList (dyCoords, getInheritedAttribute (xml, "dy"), true, false);
 
@@ -874,7 +886,7 @@ private:
         return false;
     }
 
-    float getCoordLength (const String& s, const float sizeForProportions) const noexcept
+    float getCoordLength (const String& s, const float sizeForProportions) const
     {
         float n = s.getFloatValue();
         const int len = s.length();
@@ -896,12 +908,13 @@ private:
         return n;
     }
 
-    float getCoordLength (const XmlPath& xml, const char* attName, const float sizeForProportions) const noexcept
+    float getCoordLength (const XmlPath& xml, const char* attName, const float sizeForProportions) const
     {
         return getCoordLength (xml->getStringAttribute (attName), sizeForProportions);
     }
 
-    void getCoordList (Array<float>& coords, const String& list, bool allowUnits, const bool isX) const
+    void getCoordList (Array <float>& coords, const String& list,
+                       const bool allowUnits, const bool isX) const
     {
         String::CharPointerType text (list.getCharPointer());
         float value;
@@ -935,7 +948,7 @@ private:
         return source;
     }
 
-    String getStyleAttribute (const XmlPath& xml, StringRef attributeName,
+    String getStyleAttribute (const XmlPath& xml, const String& attributeName,
                               const String& defaultValue = String()) const
     {
         if (xml->hasAttribute (attributeName))
@@ -975,7 +988,7 @@ private:
         return defaultValue;
     }
 
-    String getInheritedAttribute (const XmlPath& xml, StringRef attributeName) const
+    String getInheritedAttribute (const XmlPath& xml, const String& attributeName) const
     {
         if (xml->hasAttribute (attributeName))
             return xml->getStringAttribute (attributeName);
@@ -986,30 +999,13 @@ private:
         return String();
     }
 
-    static int parsePlacementFlags (const String& align) noexcept
-    {
-        if (align.isEmpty())
-            return 0;
-
-        if (align.containsIgnoreCase ("none"))
-            return RectanglePlacement::stretchToFit;
-
-        return (align.containsIgnoreCase ("slice") ? RectanglePlacement::fillDestination : 0)
-             | (align.containsIgnoreCase ("xMin")  ? RectanglePlacement::xLeft
-                                                   : (align.containsIgnoreCase ("xMax") ? RectanglePlacement::xRight
-                                                                                        : RectanglePlacement::xMid))
-             | (align.containsIgnoreCase ("yMin")  ? RectanglePlacement::yTop
-                                                   : (align.containsIgnoreCase ("yMax") ? RectanglePlacement::yBottom
-                                                                                        : RectanglePlacement::yMid));
-    }
-
     //==============================================================================
     static bool isIdentifierChar (const juce_wchar c)
     {
         return CharacterFunctions::isLetter (c) || c == '-';
     }
 
-    static String getAttributeFromStyleList (const String& list, StringRef attributeName, const String& defaultValue)
+    static String getAttributeFromStyleList (const String& list, const String& attributeName, const String& defaultValue)
     {
         int i = 0;
 
@@ -1213,7 +1209,7 @@ private:
                                             const bool largeArc, const bool sweep,
                                             double& rx, double& ry,
                                             double& centreX, double& centreY,
-                                            double& startAngle, double& deltaAngle) noexcept
+                                            double& startAngle, double& deltaAngle)
     {
         const double midX = (x1 - x2) * 0.5;
         const double midY = (y1 - y2) * 0.5;
