@@ -22,34 +22,47 @@ public:
 
         // add fields
         // summary
-        addAndMakeVisible(companyNameTE = new TextEditor());
-        addAndMakeVisible(legalIncTE = new TextEditor());
-        addAndMakeVisible(telephoneTE = new TextEditor());
-        addAndMakeVisible(activityTE = new TextEditor());
+        addAndMakeVisible(CustomerCodeTE = new TextEditor());
+        addAndMakeVisible(NameTE = new TextEditor());
+        addAndMakeVisible(FathersNameTE = new TextEditor());
+        addAndMakeVisible(PhonenumberTE = new TextEditor());
 
         // summary labels
-        addAndMakeVisible(companyName = new Label("Company Name", "Company Name"));
-        addAndMakeVisible(legalInc = new Label("Inc", "Inc"));
-        addAndMakeVisible(telephone = new Label("Telephone", "Telephone"));
-        addAndMakeVisible(activity = new Label("Activity", "Activity"));
+        addAndMakeVisible(CustomerCode = new Label("Customer Code", "Customer Code"));
+        addAndMakeVisible(Name = new Label("Name", "Name"));
+        addAndMakeVisible(FathersName = new Label("FathersName", "FathersName"));
+        addAndMakeVisible(Phonenumber = new Label("Phonenumber", "Phonenumber"));
 
         // detailed view
-        addAndMakeVisible(VATTE = new TextEditor());
-        addAndMakeVisible(IRSTE = new TextEditor());
+        addAndMakeVisible(TrademarkTE = new TextEditor());
+        addAndMakeVisible(CustomerVATTE = new TextEditor());
+        addAndMakeVisible(DateOfBirthTE = new TextEditor());
         addAndMakeVisible(AddressTE = new TextEditor());
-        addAndMakeVisible(AddressNumberTE = new TextEditor());
-        addAndMakeVisible(PersonInChargeTE = new TextEditor());
-        addAndMakeVisible(StartDateTE = new TextEditor());
-        addAndMakeVisible(CommentsTE = new TextEditor());
+        addAndMakeVisible(CityTE = new TextEditor());
+        addAndMakeVisible(CountryTE = new TextEditor());
+        addAndMakeVisible(ShippingAdressTE = new TextEditor());
+        addAndMakeVisible(FaxnumberTE = new TextEditor());
+        addAndMakeVisible(EmailTE = new TextEditor());
+        addAndMakeVisible(IDcardNumberTE = new TextEditor());
+        addAndMakeVisible(CustomerTransactionsTE = new TextEditor());
+        addAndMakeVisible(PublicRevenueServiceTE = new TextEditor());
+        addAndMakeVisible(CommercialActivityTE = new TextEditor());
+
 
         // detailed view labels
-        addAndMakeVisible(VAT = new Label("VAT", "VAT"));
-        addAndMakeVisible(IRS = new Label("IRS", "IRS"));
+        addAndMakeVisible(Trademark = new Label("Trademark", "Trademark"));
+        addAndMakeVisible(CustomerVAT = new Label("VAT", "VAT"));
+        addAndMakeVisible(DateOfBirth = new Label("Date Of Birth", "Date Of Birth"));
         addAndMakeVisible(Address = new Label("Address", "Address"));
-        addAndMakeVisible(AddressNumber = new Label("Address Number", "Address Number"));
-        addAndMakeVisible(PersonInCharge = new Label("Owner/CEO", "Owner/CEO"));
-        addAndMakeVisible(StartDate = new Label("Start date", "Start date"));
-        addAndMakeVisible(Comments = new Label("Comments", "Comments"));
+        addAndMakeVisible(City = new Label("City", "City"));
+        addAndMakeVisible(Country = new Label("Country", "Country"));
+        addAndMakeVisible(ShippingAdress = new Label("Shipping Adress", "Shipping Adress"));
+        addAndMakeVisible(Faxnumber = new Label("Fax number", "Fax number"));
+        addAndMakeVisible(Email = new Label("Email", "Email"));
+        addAndMakeVisible(IDcardNumber = new Label("IDcardNumber", "IDcardNumber"));
+        addAndMakeVisible(CustomerTransactions = new Label("CustomerTransactions", "CustomerTransactions"));
+        addAndMakeVisible(PublicRevenueService = new Label("PublicRevenueService", "PublicRevenueService"));
+        addAndMakeVisible(CommercialActivity = new Label("CommercialActivity", "CommercialActivity"));
 
         resized();
     }
@@ -75,39 +88,54 @@ public:
 
     void resizeForSummary() override {
         // summary
-        companyNameTE->setBounds(lm, tm, teWS, teHS);
-        legalIncTE->setBounds(lm+teWS+pad, tm, teWS, teHS);
-        telephoneTE->setBounds(lm+2*(teWS+pad), tm, 150, teHS);
-        activityTE->setBounds(lm+2*(teWS+pad)+pad+150, tm, teWS, teHS);
+        CustomerCodeTE->setBounds(lm, tm, teWS, teHS);
+        NameTE->setBounds(lm+teWS+pad, tm, teWS, teHS);
+        FathersNameTE->setBounds(lm+2*(teWS+pad), tm, 150, teHS);
+        PhonenumberTE->setBounds(lm+2*(teWS+pad)+pad+150, tm, teWS, teHS);
     }
 
     void resizeForDetailed() override {
         // detailed
-        companyNameTE->setBounds(lm+teWS+pad, tm+teHS, teWS, teHS);
-        legalIncTE->setBounds(lm+teWS+pad, tm+2*teHS, teWS, teHS);
-        telephoneTE->setBounds(lm+teWS+pad, tm+3*teHS, 150, teHS);
-        activityTE->setBounds(lm+teWS+pad, tm+4*teHS, teWS, teHS);
+        CustomerCodeTE->setBounds(lm+teWS+pad, tm+teHS, teWS, teHS);
+        NameTE->setBounds(lm+teWS+pad, tm+2*teHS, teWS, teHS);
+        FathersNameTE->setBounds(lm+teWS+pad, tm+3*teHS, 150, teHS);
+        PhonenumberTE->setBounds(lm+teWS+pad, tm+4*teHS, teWS, teHS);
         // summary labels
-        companyName->setBounds(lm, tm+teHS, teWS, teHS);
-        legalInc->setBounds(lm, tm+2*teHS, teWS, teHS);
-        telephone->setBounds(lm, tm+3*teHS, teWS, teHS);
-        activity->setBounds(lm, tm+4*teHS, teWS, teHS);
+        CustomerCode->setBounds(lm, tm+teHS, teWS, teHS);
+        Name->setBounds(lm, tm+2*teHS, teWS, teHS);
+        FathersName->setBounds(lm, tm+3*teHS, teWS, teHS);
+        Phonenumber->setBounds(lm, tm+4*teHS, teWS, teHS);
         // detailed view
-        VATTE->setBounds(lm+teWS+pad, tm+5*teHS, teWS, teHS);
-        IRSTE->setBounds(lm+teWS+pad, tm+6*teHS, teWS, teHS);
-        AddressTE->setBounds(lm+teWS+pad, tm+7*teHS, teWS, teHS);
-        AddressNumberTE->setBounds(lm+teWS+pad, tm+8*teHS, teWS, teHS);
-        PersonInChargeTE->setBounds(lm+teWS+pad, tm+9*teHS, teWS, teHS);
-        StartDateTE->setBounds(lm+teWS+pad, tm+10*teHS, teWS, teHS);
-        CommentsTE->setBounds(lm+teWS+pad, tm+11*teHS, teWS, teHS);
+        TrademarkTE->setBounds(lm+teWS+pad, tm+5*teHS, teWS, teHS);
+        CustomerVATTE->setBounds(lm+teWS+pad, tm+6*teHS, teWS, teHS);
+        DateOfBirthTE->setBounds(lm+teWS+pad, tm+7*teHS, teWS, teHS);
+        AddressTE->setBounds(lm+teWS+pad, tm+8*teHS, teWS, teHS);
+        CityTE->setBounds(lm+teWS+pad, tm+9*teHS, teWS, teHS);
+        CountryTE->setBounds(lm+teWS+pad, tm+10*teHS, teWS, teHS);
+        ShippingAdressTE->setBounds(lm+teWS+pad, tm+11*teHS, teWS, teHS);
+
+        FaxnumberTE->setBounds(lm+3*(teWS+pad), tm+6*teHS, teWS, teHS);
+        EmailTE->setBounds(lm+3*(teWS+pad), tm+7*teHS, teWS, teHS);
+        IDcardNumberTE->setBounds(lm+3*(teWS+pad), tm+8*teHS, teWS, teHS);
+        CustomerTransactionsTE->setBounds(lm+3*(teWS+pad), tm+9*teHS, teWS, teHS);
+        PublicRevenueServiceTE->setBounds(lm+3*(teWS+pad), tm+10*teHS, teWS, teHS);
+        CommercialActivityTE->setBounds(lm+3*(teWS+pad), tm+11*teHS, teWS, teHS);
+
         // detailed view labels
-        VAT->setBounds(lm, tm+5*teHS, teWS, teHS);
-        IRS->setBounds(lm, tm+6*teHS, teWS, teHS);
-        Address->setBounds(lm, tm+7*teHS, teWS, teHS);
-        AddressNumber->setBounds(lm, tm+8*teHS, teWS, teHS);
-        PersonInCharge->setBounds(lm, tm+9*teHS, teWS, teHS);
-        StartDate->setBounds(lm, tm+10*teHS, teWS, teHS);
-        Comments->setBounds(lm, tm+11*teHS, teWS, teHS);
+        Trademark->setBounds(lm, tm+5*teHS, teWS, teHS);
+        CustomerVAT->setBounds(lm, tm+6*teHS, teWS, teHS);
+        DateOfBirth->setBounds(lm, tm+7*teHS, teWS, teHS);
+        Address->setBounds(lm, tm+8*teHS, teWS, teHS);
+        City->setBounds(lm, tm+9*teHS, teWS, teHS);
+        Country->setBounds(lm, tm+10*teHS, teWS, teHS);
+        ShippingAdress->setBounds(lm, tm+11*teHS, teWS, teHS);
+
+        Faxnumber->setBounds(lm+2*(teWS+pad), tm+6*teHS, teWS, teHS);
+        Email->setBounds(lm+2*(teWS+pad), tm+7*teHS, teWS, teHS);
+        IDcardNumber->setBounds(lm+2*(teWS+pad), tm+8*teHS, teWS, teHS);
+        CustomerTransactions->setBounds(lm+2*(teWS+pad), tm+9*teHS, teWS, teHS);
+        PublicRevenueService->setBounds(lm+2*(teWS+pad), tm+10*teHS, teWS, teHS);
+        CommercialActivity->setBounds(lm+2*(teWS+pad), tm+11*teHS, teWS, teHS);
     }
 
     void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) override {
@@ -116,18 +144,24 @@ public:
         this->row = row;
         if(qe) {
             // summary
-            companyNameTE->setText(qe->getFieldFromRow(row, 0));
-            legalIncTE->setText(qe->getFieldFromRow(row, 1));
-            telephoneTE->setText(qe->getFieldFromRow(row, 2));
-            activityTE->setText(qe->getFieldFromRow(row, 3));
+            CustomerCodeTE->setText(qe->getFieldFromRow(row, 0));
+            NameTE->setText(qe->getFieldFromRow(row, 4));
+            FathersNameTE->setText(qe->getFieldFromRow(row, 5));
+            PhonenumberTE->setText(qe->getFieldFromRow(row, 11));
             // detailed view
-            VATTE->setText(qe->getFieldFromRow(row, 4));
-            IRSTE->setText(qe->getFieldFromRow(row, 5));
-            AddressTE->setText(qe->getFieldFromRow(row, 6));
-            AddressNumberTE->setText(qe->getFieldFromRow(row, 7));
-            PersonInChargeTE->setText(qe->getFieldFromRow(row, 8));
-            StartDateTE->setText(qe->getFieldFromRow(row, 9));
-            CommentsTE->setText(qe->getFieldFromRow(row, 10));
+            TrademarkTE->setText(qe->getFieldFromRow(row, 3));
+            CustomerVATTE->setText(qe->getFieldFromRow(row, 2));
+            DateOfBirthTE->setText(qe->getFieldFromRow(row, 6));
+            AddressTE->setText(qe->getFieldFromRow(row, 7));
+            CityTE->setText(qe->getFieldFromRow(row, 8));
+            CountryTE->setText(qe->getFieldFromRow(row, 9));
+            ShippingAdressTE->setText(qe->getFieldFromRow(row, 10));
+            FaxnumberTE->setText(qe->getFieldFromRow(row, 12));
+            EmailTE->setText(qe->getFieldFromRow(row, 13));
+            IDcardNumberTE->setText(qe->getFieldFromRow(row, 14));
+            CustomerTransactionsTE->setText(qe->getFieldFromRow(row, 15));
+            PublicRevenueServiceTE->setText(qe->getFieldFromRow(row, 16));
+            CommercialActivityTE->setText(qe->getFieldFromRow(row, 17));
         }
     }
 
@@ -141,12 +175,14 @@ public:
 
 private:
     // summary
-    ScopedPointer<TextEditor> companyNameTE, legalIncTE, telephoneTE, activityTE;
-    ScopedPointer<Label> companyName, legalInc, telephone, activity;
+    ScopedPointer<TextEditor> CustomerCodeTE, NameTE, FathersNameTE, PhonenumberTE;
+    ScopedPointer<Label> CustomerCode, Name, FathersName, Phonenumber;
 
     // detailed
-    ScopedPointer<TextEditor> VATTE, IRSTE, AddressTE, AddressNumberTE, PersonInChargeTE, StartDateTE, CommentsTE;
-    ScopedPointer<Label> VAT, IRS, Address, AddressNumber, PersonInCharge, StartDate, Comments;
+    ScopedPointer<TextEditor> TrademarkTE, CustomerVATTE, DateOfBirthTE, AddressTE, CityTE, CountryTE, ShippingAdressTE, FaxnumberTE;
+    ScopedPointer<Label> Trademark, CustomerVAT, DateOfBirth, Address, City, Country, ShippingAdress, Faxnumber;
+    ScopedPointer<TextEditor> EmailTE, IDcardNumberTE, CustomerTransactionsTE, PublicRevenueServiceTE, CommercialActivityTE;
+    ScopedPointer<Label> Email, IDcardNumber, CustomerTransactions, PublicRevenueService, CommercialActivity;
 };
 
 //================================================================================
@@ -269,7 +305,7 @@ void CustomersComponent::searchButtonPressed()
 	StringArray terms;
 	terms.addTokens(search->getText(), true);
 
-	String queryStr = "SELECT Name, Trademark, PhoneNumber, CustomerTransactions FROM customers WHERE ";
+    String queryStr = "SELECT * FROM customers WHERE ";
 
 	for (int i = 0; i < terms.size(); i++) {
 		queryStr += "CustomerCode like '%" + terms[i] + "%' " + orStr;
