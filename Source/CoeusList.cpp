@@ -113,6 +113,74 @@ int CoeusHeap::getSum() const
 
 //===============================================================================
 
+CoeusListRowComponent::CoeusListRowComponent()
+{
+    // control
+    addAndMakeVisible(edit = new TextButton(L"edit"));
+    addAndMakeVisible(save = new TextButton(L"save"));
+    addAndMakeVisible(remove = new TextButton(L"remove"));
+    
+    edit->addListener(this);
+    save->addListener(this);
+    remove->addListener(this);
+}
+
+int CoeusListRowComponent::getRow() const
+{
+    return row;
+}
+
+void CoeusListRowComponent::setRow(int r)
+{
+    row = r;
+}
+
+void CoeusListRowComponent::setDetailedView(bool s, bool force) {
+    if (detailedView != s || force) {
+        detailedView = s;
+        detailedView ? resizeForDetailed() : resizeForSummary();
+        
+        if (showControls) {
+            const int lm = 4;
+            const int tm = 2;
+            const int bm = 2;
+            const int pad = 4;
+            const int teHS = getMinRowSize() - tm - bm;
+            const int teWS = 250;
+            const int btnW=66;
+            
+            edit->setBounds(lm+3*(teWS+pad)+pad+150+10, tm, btnW, teHS);
+            save->setBounds(lm+3*(teWS+pad)+pad+150+10+btnW, tm, btnW, teHS);
+            remove->setBounds(lm+3*(teWS+pad)+pad+150+10+2*btnW, tm, btnW, teHS);
+        }
+    }
+}
+
+void CoeusListRowComponent::shouldShowControls(bool show) {
+    showControls = show;
+    edit->setVisible(show);
+    save->setVisible(show);
+    remove->setVisible(show);
+    setDetailedView(detailedView, true);
+}
+
+void CoeusListRowComponent::resized() {
+    detailedView ? resizeForDetailed() : resizeForSummary();
+}
+
+void CoeusListRowComponent::buttonClicked (Button *btn) {
+    if (btn == edit) {
+    }
+    else if (btn == save) {
+    }
+    else {
+        setDetailedView(!detailedView);
+        sendChangeMessage();
+    }
+}
+
+//===============================================================================
+
 CoeusList::CoeusList()
 :   sb(true), qe(nullptr), rowUnderMouse(-1)
 {
@@ -318,7 +386,7 @@ void CoeusList::changeListenerCallback(ChangeBroadcaster *source)
     // row changed size
     CoeusListRowComponent *rcomp = dynamic_cast<CoeusListRowComponent*>(source);
     if(rcomp) {
-        const int row = rcomp->row;
+        const int row = rcomp->getRow();
         if (row >= 0 && row < getNumRows()) {
             rowSizes[row] = rcomp->getCoeusListHeight();
             rowChangedSize(row, getRowSize(row));
@@ -337,12 +405,12 @@ void CoeusList::mouseDown (const MouseEvent &event)
         parent = parent->getParentComponent();
     }
     
-    if (rcomp && (selectedRow[0] != rcomp->row)) {
+    if (rcomp && (selectedRow[0] != rcomp->getRow())) {
         CoeusListRowComponent *prevComp = dynamic_cast<CoeusListRowComponent*>(getComponentForRow(selectedRow[0]));
         
         // select new row
         const int prevR = selectedRow[0];
-        selectRow(rcomp->row);
+        selectRow(rcomp->getRow());
         
         // show/hide controls
         rcomp->shouldShowControls(true);
@@ -366,17 +434,17 @@ void CoeusList::mouseMove(const MouseEvent &event)
         parent = parent->getParentComponent();
     }
     
-    if (rcomp && (rowUnderMouse != rcomp->row)) {
+    if (rcomp && (rowUnderMouse != rcomp->getRow())) {
         CoeusListRowComponent *prevComp = dynamic_cast<CoeusListRowComponent*>(getComponentForRow(rowUnderMouse));
         
         // select new row
         const int prevR = rowUnderMouse;
-        rowUnderMouse = rcomp->row;
+        rowUnderMouse = rcomp->getRow();
         
         // show/hide controls
         rcomp->shouldShowControls(true);
         
-        if (prevComp && (prevComp->row != selectedRow[0])) {
+        if (prevComp && (prevComp->getRow() != selectedRow[0])) {
             prevComp->shouldShowControls(false);
         }
         

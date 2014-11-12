@@ -33,18 +33,35 @@ private:
 };
 
 class CoeusListRowComponent :   public Component,
-                                public ChangeBroadcaster
+                                public ChangeBroadcaster,
+                                public ButtonListener
 {
 public:
+    CoeusListRowComponent();
     virtual int getCoeusListHeight() = 0;
     virtual void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) = 0;
-    virtual void setDetailedView(bool s, bool force=false) = 0;
-    virtual void shouldShowControls(bool show) = 0;
-    int row;
+    virtual int getMinRowSize() = 0;
+    virtual int getMaxRowSize() = 0;
+    virtual void resizeForSummary() = 0;
+    virtual void resizeForDetailed() = 0;
+    void resized() override;
+    virtual void shouldShowControls(bool show);
+    
+    void buttonClicked (Button *btn) override;
+    
+    int getRow() const;
+    void setRow(int r);
 
 protected:
+    // control buttons
+    ScopedPointer<TextButton> edit, save, remove;
+    
     bool detailedView, editView, showControls;
+    int row;
 
+private:
+    virtual void setDetailedView(bool s, bool force=false);
+    
 };
 
 class CoeusList :   public Component,
@@ -56,8 +73,6 @@ public:
     ~CoeusList();
     
     virtual int getNumRows() = 0;
-    virtual int getMinRowSize() = 0;
-    virtual int getMaxRowSize() = 0;
     virtual int getRowSize(int rowNumber) = 0;
     
     void paint(Graphics &g) override;
@@ -94,6 +109,10 @@ public:
     void mouseExit(const MouseEvent &event) override;
     void mouseDown (const MouseEvent &event) override;
     void mouseWheelMove (const MouseEvent &event, const MouseWheelDetails &wheel) override;
+    
+    //
+    virtual int getMinRowSize() = 0;
+    virtual int getMaxRowSize() = 0;
     
 protected:
     Array<int> selectedRow;

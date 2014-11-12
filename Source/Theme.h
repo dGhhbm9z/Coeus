@@ -103,7 +103,7 @@ class Theme	:	public LookAndFeel_V2
 public:
 	// Button stuff
 	void drawButtonBackground (Graphics &, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown) override; 
-    Font getTextButtonFont (TextButton&) override;
+    Font getTextButtonFont (TextButton&, int) override;
 	void drawButtonText (Graphics &, TextButton &, bool isMouseOverButton, bool isButtonDown) override;
 	void drawToggleButton (Graphics &, ToggleButton &, bool isMouseOverButton, bool isButtonDown) override;
 	void changeToggleButtonWidthToFitText (ToggleButton &) override;
@@ -138,7 +138,7 @@ class ThemeAlt : public Theme
 public:
 	// Button stuff
 	void drawButtonBackground(Graphics &, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown) override;
-    Font getTextButtonFont (TextButton&) override;
+    Font getTextButtonFont (TextButton&, int) override;
 	void drawButtonText(Graphics &, TextButton &, bool isMouseOverButton, bool isButtonDown) override;
 
 	// tabs stuff

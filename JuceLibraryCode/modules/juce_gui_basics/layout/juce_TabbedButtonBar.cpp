@@ -287,7 +287,7 @@ void TabbedButtonBar::setTabName (const int tabIndex, const String& newName)
     }
 }
 
-void TabbedButtonBar::removeTab (const int tabIndex)
+void TabbedButtonBar::removeTab (const int tabIndex, const bool animate)
 {
     const int oldIndex = currentTabIndex;
     if (tabIndex == currentTabIndex)
@@ -296,7 +296,7 @@ void TabbedButtonBar::removeTab (const int tabIndex)
     tabs.remove (tabIndex);
 
     setCurrentTabIndex (oldIndex);
-    resized();
+    updateTabPositions (animate);
 }
 
 void TabbedButtonBar::moveTab (const int currentIndex, const int newIndex, const bool animate)
@@ -451,7 +451,7 @@ void TabbedButtonBar::updateTabPositions (bool animate)
             extraTabsButton->setCentrePosition (tabsButtonPos, getHeight() / 2);
         }
 
-        totalLength = 10;
+        totalLength = 0;
 
         for (int i = 0; i < tabs.size(); ++i)
         {

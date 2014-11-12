@@ -2,10 +2,18 @@
 #include "CustomComponents.h"
 #include "Accounts.h"
 
-class CompaniesRowComponent :   public CoeusListRowComponent,
-                                public ButtonListener
+class CompaniesRowComponent :   public CoeusListRowComponent
 {
 public:
+    static const int minRowSize = 40;
+    static const int maxRowSize = 200;
+    const int lm = 4;
+    const int tm = 2;
+    const int bm = 2;
+    const int pad = 4;
+    const int teHS = getMinRowSize() - tm - bm;
+    const int teWS = 250;
+    
     CompaniesRowComponent() {
         detailedView = true;
         editView = false;
@@ -16,41 +24,12 @@ public:
         addAndMakeVisible(legalIncTE = new TextEditor());
         addAndMakeVisible(telephoneTE = new TextEditor());
         addAndMakeVisible(activityTE = new TextEditor());
-
-        // control
-        addAndMakeVisible(edit = new TextButton(L"edit"));
-        addAndMakeVisible(save = new TextButton(L"save"));
-        addAndMakeVisible(remove = new TextButton(L"remove"));
-
-        edit->addListener(this);
-        save->addListener(this);
-        remove->addListener(this);
         
-        setDetailedView(false);
+        resized();
     }
 
     ~CompaniesRowComponent() {
     }
-
-    void paint(Graphics &g) {
-//        g.fillAll(Colours::darkgreen);
-    }
-
-    void buttonClicked (Button *btn) override {
-        if (btn == edit) {
-
-        }
-        else if (btn == save) {
-
-        }
-        else {
-            setDetailedView(!detailedView);
-            sendChangeMessage();
-        }
-    }
-
-    static const int minRowSize = 40;
-    static const int maxRowSize = 200;
 
     int getCoeusListHeight() override {
         if (detailedView) {
@@ -59,13 +38,33 @@ public:
 
         return minRowSize;
     }
-
-    void resized() {
-        setDetailedView(detailedView, true);
+    
+    int getMinRowSize() override {
+        return minRowSize;
+    }
+    
+    int getMaxRowSize() override {
+        return maxRowSize;
+    }
+    
+    void resizeForSummary() override {
+        // summary
+        companyNameTE->setBounds(lm, tm, teWS, teHS);
+        legalIncTE->setBounds(lm+teWS+pad, tm, teWS, teHS);
+        telephoneTE->setBounds(lm+2*(teWS+pad), tm, 150, teHS);
+        activityTE->setBounds(lm+2*(teWS+pad)+pad+150, tm, teWS, teHS);
+    }
+    
+    void resizeForDetailed() override {
+        // detailed
+        companyNameTE->setBounds(lm, tm, teWS, teHS);
+        legalIncTE->setBounds(lm+teWS+pad, tm+teHS, teWS, teHS);
+        telephoneTE->setBounds(lm+2*(teWS+pad), tm+2*teHS, 150, teHS);
+        activityTE->setBounds(lm+2*(teWS+pad)+pad+150, tm+3*teHS, teWS, teHS);
     }
 
     void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) override {
-        setDetailedView(dView, true);
+        resized();
         this->row = row;
         if(qe) {
             // summary
@@ -77,48 +76,6 @@ public:
 
         }
     }
-
-    void setDetailedView(bool s, bool force=false) {
-        if (detailedView != s || force) {
-            detailedView = s;
-            const int lm = 4;
-            const int tm = 2;
-            const int bm = 2;
-            const int pad = 4;
-            const int teHS = minRowSize - tm - bm;
-            const int teWS = 250;
-
-            if(s) {
-                // detailed
-                companyNameTE->setBounds(lm, tm, teWS, teHS);
-                legalIncTE->setBounds(lm+teWS+pad, tm+teHS, teWS, teHS);
-                telephoneTE->setBounds(lm+2*(teWS+pad), tm+2*teHS, 150, teHS);
-                activityTE->setBounds(lm+2*(teWS+pad)+pad+150, tm+3*teHS, teWS, teHS);
-            }
-            else {
-                // summary
-                companyNameTE->setBounds(lm, tm, teWS, teHS);
-                legalIncTE->setBounds(lm+teWS+pad, tm, teWS, teHS);
-                telephoneTE->setBounds(lm+2*(teWS+pad), tm, 150, teHS);
-                activityTE->setBounds(lm+2*(teWS+pad)+pad+150, tm, teWS, teHS);
-            }
-
-            if (showControls) {
-                const int btnW=66;
-                edit->setBounds(lm+3*(teWS+pad)+pad+150+10, tm, btnW, teHS);
-                save->setBounds(lm+3*(teWS+pad)+pad+150+10+btnW, tm, btnW, teHS);
-                remove->setBounds(lm+3*(teWS+pad)+pad+150+10+2*btnW, tm, btnW, teHS);
-            }
-        }
-    }
-
-    void shouldShowControls(bool show) {
-        showControls = show;
-        edit->setVisible(show);
-        save->setVisible(show);
-        remove->setVisible(show);
-        setDetailedView(detailedView, true);
-    }
     
 private:
     // summary
@@ -126,9 +83,6 @@ private:
 
     // detailed
     ScopedPointer<TextEditor> VAT, IRS, Address, AddressNumber, PersonInCharge, StartDate, Comments;
-
-    // control buttons
-    ScopedPointer<TextButton> edit, save, remove;
 };
 
 //================================================================================
@@ -147,16 +101,6 @@ int CompaniesTableListBoxModel::getNumRows()
 	else {
 		return 0;
 	}
-}
-
-int CompaniesTableListBoxModel::getMinRowSize()
-{
-    return CompaniesRowComponent::minRowSize;
-}
-
-int CompaniesTableListBoxModel::getMaxRowSize()
-{
-    return CompaniesRowComponent::maxRowSize;
 }
 
 int CompaniesTableListBoxModel::getRowSize(int rowNumber)
@@ -183,7 +127,7 @@ CoeusListRowComponent * CompaniesTableListBoxModel::refreshComponentForRow(int r
         CompaniesRowComponent *newComp = new CompaniesRowComponent();
         newComp->addMouseListener(this, true);
         newComp->addChangeListener(this);
-        newComp->row = rowNumber;
+        newComp->setRow(rowNumber);
 
         // TODO
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize : false;
@@ -204,6 +148,16 @@ CoeusListRowComponent * CompaniesTableListBoxModel::refreshComponentForRow(int r
 
 		return existingComponentToUpdate;
 	}
+}
+
+int CompaniesTableListBoxModel::getMinRowSize()
+{
+    return CompaniesRowComponent::minRowSize;
+}
+
+int CompaniesTableListBoxModel::getMaxRowSize()
+{
+    return CompaniesRowComponent::maxRowSize;
 }
 
 //================================================================================
