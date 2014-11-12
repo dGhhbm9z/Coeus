@@ -56,14 +56,13 @@ public:
     void setRow(int r);
 
 protected:
+    void setDetailedView(bool s, bool force=false);
+
     // control buttons
     ScopedPointer<TextButton> edit, save, remove;
     
     bool detailedView, editView, showControls;
     int row;
-
-private:
-    virtual void setDetailedView(bool s, bool force=false);
     
 };
 

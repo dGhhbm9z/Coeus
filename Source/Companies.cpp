@@ -15,7 +15,7 @@ public:
     const int teWS = 250;
     
     CompaniesRowComponent() {
-        detailedView = true;
+        detailedView = false;
         editView = false;
         showControls = false;
 
@@ -64,6 +64,7 @@ public:
     }
 
     void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) override {
+        setDetailedView(dView);
         resized();
         this->row = row;
         if(qe) {
@@ -72,8 +73,6 @@ public:
             legalIncTE->setText(qe->getFieldFromRow(row, 1));
             telephoneTE->setText(qe->getFieldFromRow(row, 2));
             activityTE->setText(qe->getFieldFromRow(row, 3));
-            // detailed
-
         }
     }
     

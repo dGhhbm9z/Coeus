@@ -113,7 +113,7 @@ int CoeusHeap::getSum() const
 
 //===============================================================================
 
-CoeusListRowComponent::CoeusListRowComponent()
+CoeusListRowComponent::CoeusListRowComponent() : detailedView(false)
 {
     // control
     addAndMakeVisible(edit = new TextButton(L"edit"));
