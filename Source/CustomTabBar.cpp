@@ -253,6 +253,8 @@ void CustomTabComponent::resized()
 
 void CustomTabComponent::timerCallback()
 {
+    static int hideWaitTimeInFrames = 5;
+
     if (!isBeingResized) {
         ComponentAnimator &an = Desktop::getInstance().getAnimator();
         Rectangle<int> finalBoundsVisible = Rectangle<int>(0, tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
@@ -261,11 +263,19 @@ void CustomTabComponent::timerCallback()
         if (getMouseXYRelative().getY() > 0 && getMouseXYRelative().getX() > 0 && getMouseXYRelative().getX() < 120 && tabButtons->getX() < 0 && an.getComponentDestination(tabButtons) == finalBoundsHidden) {
             an.cancelAnimation(tabButtons, false);
             an.animateComponent(tabButtons, finalBoundsVisible, 1.0f, 400, false, 0.0f, 1.0f);
+            hideWaitTimeInFrames = 5;
         }
-        else if ((getMouseXYRelative().getY() < 0 || (getMouseXYRelative().getX() > 0 && getMouseXYRelative().getX() > tabButtons->getWidth())) && tabButtons->getX() == 0) {
+        else if ((getMouseXYRelative().getY() < 0 || (getMouseXYRelative().getX() > 0 && getMouseXYRelative().getX() > tabButtons->getWidth())) && tabButtons->getX() == 0 && hideWaitTimeInFrames > 0) {
+            hideWaitTimeInFrames--;
+        }
+        else if ((getMouseXYRelative().getY() < 0 || (getMouseXYRelative().getX() > 0 && getMouseXYRelative().getX() > tabButtons->getWidth())) && tabButtons->getX() == 0 && hideWaitTimeInFrames <= 0) {
             an.cancelAnimation(tabButtons, false);
             an.animateComponent(tabButtons, finalBoundsHidden, 1.0f, 400, false, 0.0f, 1.0f);
         }
+    }
+    else {
+        ComponentAnimator &an = Desktop::getInstance().getAnimator();
+        an.cancelAnimation(tabButtons, false);
     }
 }
 
