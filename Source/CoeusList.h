@@ -47,6 +47,9 @@ public:
     void resized() override;
     virtual void shouldShowControls(bool show);
     
+    virtual void updateRow() = 0;
+    virtual void insertRow() = 0;
+    
     void buttonClicked (Button *btn) override;
     
     int getRow() const;

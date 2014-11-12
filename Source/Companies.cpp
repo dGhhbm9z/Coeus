@@ -77,6 +77,14 @@ public:
         }
     }
     
+    void updateRow() {
+        
+    }
+    
+    void insertRow() {
+        
+    }
+    
 private:
     // summary
     ScopedPointer<TextEditor> companyNameTE, legalIncTE, telephoneTE, activityTE;
