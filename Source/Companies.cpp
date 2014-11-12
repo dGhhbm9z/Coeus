@@ -6,7 +6,7 @@ class CompaniesRowComponent :   public CoeusListRowComponent
 {
 public:
     static const int minRowSize = 40;
-    static const int maxRowSize = 200;
+    static const int maxRowSize = 480;
     const int lm = 4;
     const int tm = 2;
     const int bm = 2;
@@ -20,11 +20,36 @@ public:
         showControls = false;
 
         // add fields
+        // summary
         addAndMakeVisible(companyNameTE = new TextEditor());
         addAndMakeVisible(legalIncTE = new TextEditor());
         addAndMakeVisible(telephoneTE = new TextEditor());
         addAndMakeVisible(activityTE = new TextEditor());
         
+        // summary labels
+        addAndMakeVisible(companyName = new Label("Company Name", "Company Name"));
+        addAndMakeVisible(legalInc = new Label("Inc", "Inc"));
+        addAndMakeVisible(telephone = new Label("Telephone", "Telephone"));
+        addAndMakeVisible(activity = new Label("Activity", "Activity"));
+
+        // detailed view
+        addAndMakeVisible(VATTE = new TextEditor());
+        addAndMakeVisible(IRSTE = new TextEditor());
+        addAndMakeVisible(AddressTE = new TextEditor());
+        addAndMakeVisible(AddressNumberTE = new TextEditor());
+        addAndMakeVisible(PersonInChargeTE = new TextEditor());
+        addAndMakeVisible(StartDateTE = new TextEditor());
+        addAndMakeVisible(CommentsTE = new TextEditor());
+
+        // detailed view labels
+        addAndMakeVisible(VAT = new Label("VAT", "VAT"));
+        addAndMakeVisible(IRS = new Label("IRS", "IRS"));
+        addAndMakeVisible(Address = new Label("Address", "Address"));
+        addAndMakeVisible(AddressNumber = new Label("Address Number", "Address Number"));
+        addAndMakeVisible(PersonInCharge = new Label("Owner/CEO", "Owner/CEO"));
+        addAndMakeVisible(StartDate = new Label("Start date", "Start date"));
+        addAndMakeVisible(Comments = new Label("Comments", "Comments"));
+
         resized();
     }
 
@@ -57,10 +82,31 @@ public:
     
     void resizeForDetailed() override {
         // detailed
-        companyNameTE->setBounds(lm, tm, teWS, teHS);
-        legalIncTE->setBounds(lm+teWS+pad, tm+teHS, teWS, teHS);
-        telephoneTE->setBounds(lm+2*(teWS+pad), tm+2*teHS, 150, teHS);
-        activityTE->setBounds(lm+2*(teWS+pad)+pad+150, tm+3*teHS, teWS, teHS);
+        companyNameTE->setBounds(lm+teWS+pad, tm+teHS, teWS, teHS);
+        legalIncTE->setBounds(lm+teWS+pad, tm+2*teHS, teWS, teHS);
+        telephoneTE->setBounds(lm+teWS+pad, tm+3*teHS, 150, teHS);
+        activityTE->setBounds(lm+teWS+pad, tm+4*teHS, teWS, teHS);
+        // summary labels
+        companyName->setBounds(lm, tm+teHS, teWS, teHS);
+        legalInc->setBounds(lm, tm+2*teHS, teWS, teHS);
+        telephone->setBounds(lm, tm+3*teHS, teWS, teHS);
+        activity->setBounds(lm, tm+4*teHS, teWS, teHS);
+        // detailed view
+        VATTE->setBounds(lm+teWS+pad, tm+5*teHS, teWS, teHS);
+        IRSTE->setBounds(lm+teWS+pad, tm+6*teHS, teWS, teHS);
+        AddressTE->setBounds(lm+teWS+pad, tm+7*teHS, teWS, teHS);
+        AddressNumberTE->setBounds(lm+teWS+pad, tm+8*teHS, teWS, teHS);
+        PersonInChargeTE->setBounds(lm+teWS+pad, tm+9*teHS, teWS, teHS);
+        StartDateTE->setBounds(lm+teWS+pad, tm+10*teHS, teWS, teHS);
+        CommentsTE->setBounds(lm+teWS+pad, tm+11*teHS, teWS, teHS);
+        // detailed view labels
+        VAT->setBounds(lm, tm+5*teHS, teWS, teHS);
+        IRS->setBounds(lm, tm+6*teHS, teWS, teHS);
+        Address->setBounds(lm, tm+7*teHS, teWS, teHS);
+        AddressNumber->setBounds(lm, tm+8*teHS, teWS, teHS);
+        PersonInCharge->setBounds(lm, tm+9*teHS, teWS, teHS);
+        StartDate->setBounds(lm, tm+10*teHS, teWS, teHS);
+        Comments->setBounds(lm, tm+11*teHS, teWS, teHS);
     }
 
     void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) override {
@@ -73,6 +119,14 @@ public:
             legalIncTE->setText(qe->getFieldFromRow(row, 1));
             telephoneTE->setText(qe->getFieldFromRow(row, 2));
             activityTE->setText(qe->getFieldFromRow(row, 3));
+            // detailed view
+            VATTE->setText(qe->getFieldFromRow(row, 4));
+            IRSTE->setText(qe->getFieldFromRow(row, 5));
+            AddressTE->setText(qe->getFieldFromRow(row, 6));
+            AddressNumberTE->setText(qe->getFieldFromRow(row, 7));
+            PersonInChargeTE->setText(qe->getFieldFromRow(row, 8));
+            StartDateTE->setText(qe->getFieldFromRow(row, 9));
+            CommentsTE->setText(qe->getFieldFromRow(row, 10));
         }
     }
     
@@ -87,9 +141,11 @@ public:
 private:
     // summary
     ScopedPointer<TextEditor> companyNameTE, legalIncTE, telephoneTE, activityTE;
+    ScopedPointer<Label> companyName, legalInc, telephone, activity;
 
     // detailed
-    ScopedPointer<TextEditor> VAT, IRS, Address, AddressNumber, PersonInCharge, StartDate, Comments;
+    ScopedPointer<TextEditor> VATTE, IRSTE, AddressTE, AddressNumberTE, PersonInChargeTE, StartDateTE, CommentsTE;
+    ScopedPointer<Label> VAT, IRS, Address, AddressNumber, PersonInCharge, StartDate, Comments;
 };
 
 //================================================================================
@@ -121,10 +177,14 @@ void CompaniesTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, 
 		g.setColour(Colours::grey.brighter().brighter());
         g.fillRect(x, y, width, height);
 	}
-	else if (rowNumber == rowUnderMouse) {
+    else if (rowNumber == rowUnderMouse) {
 		g.setColour(Colours::lightgrey.brighter().brighter());
         g.fillRect(x, y, width, height);
 	}
+    else if (rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize) {
+        g.setColour(Colours::lightgrey.brighter().brighter().brighter());
+        g.fillRect(x, y, width, height);
+    }
 }
 
 CoeusListRowComponent * CompaniesTableListBoxModel::refreshComponentForRow(int rowNumber, bool isRowSelected, CoeusListRowComponent *existingComponentToUpdate)
