@@ -2,187 +2,230 @@
 #include "CustomComponents.h"
 #include "Accounts.h"
 
-CustomersTableListBoxModel::CustomersTableListBoxModel() : TableListBox(String::empty, this), qe(nullptr), rowUnderMouse(-1) {}
+
+class CustomersRowComponent :   public CoeusListRowComponent
+{
+public:
+    static const int minRowSize = 40;
+    static const int maxRowSize = 480;
+    const int lm = 4;
+    const int tm = 2;
+    const int bm = 2;
+    const int pad = 4;
+    const int teHS = getMinRowSize() - tm - bm;
+    const int teWS = 250;
+
+    CustomersRowComponent() {
+        detailedView = false;
+        editView = false;
+        showControls = false;
+
+        // add fields
+        // summary
+        addAndMakeVisible(companyNameTE = new TextEditor());
+        addAndMakeVisible(legalIncTE = new TextEditor());
+        addAndMakeVisible(telephoneTE = new TextEditor());
+        addAndMakeVisible(activityTE = new TextEditor());
+
+        // summary labels
+        addAndMakeVisible(companyName = new Label("Company Name", "Company Name"));
+        addAndMakeVisible(legalInc = new Label("Inc", "Inc"));
+        addAndMakeVisible(telephone = new Label("Telephone", "Telephone"));
+        addAndMakeVisible(activity = new Label("Activity", "Activity"));
+
+        // detailed view
+        addAndMakeVisible(VATTE = new TextEditor());
+        addAndMakeVisible(IRSTE = new TextEditor());
+        addAndMakeVisible(AddressTE = new TextEditor());
+        addAndMakeVisible(AddressNumberTE = new TextEditor());
+        addAndMakeVisible(PersonInChargeTE = new TextEditor());
+        addAndMakeVisible(StartDateTE = new TextEditor());
+        addAndMakeVisible(CommentsTE = new TextEditor());
+
+        // detailed view labels
+        addAndMakeVisible(VAT = new Label("VAT", "VAT"));
+        addAndMakeVisible(IRS = new Label("IRS", "IRS"));
+        addAndMakeVisible(Address = new Label("Address", "Address"));
+        addAndMakeVisible(AddressNumber = new Label("Address Number", "Address Number"));
+        addAndMakeVisible(PersonInCharge = new Label("Owner/CEO", "Owner/CEO"));
+        addAndMakeVisible(StartDate = new Label("Start date", "Start date"));
+        addAndMakeVisible(Comments = new Label("Comments", "Comments"));
+
+        resized();
+    }
+
+    ~CustomersRowComponent() {
+    }
+
+    int getCoeusListHeight() override {
+        if (detailedView) {
+            return maxRowSize;
+        }
+
+        return minRowSize;
+    }
+
+    int getMinRowSize() override {
+        return minRowSize;
+    }
+
+    int getMaxRowSize() override {
+        return maxRowSize;
+    }
+
+    void resizeForSummary() override {
+        // summary
+        companyNameTE->setBounds(lm, tm, teWS, teHS);
+        legalIncTE->setBounds(lm+teWS+pad, tm, teWS, teHS);
+        telephoneTE->setBounds(lm+2*(teWS+pad), tm, 150, teHS);
+        activityTE->setBounds(lm+2*(teWS+pad)+pad+150, tm, teWS, teHS);
+    }
+
+    void resizeForDetailed() override {
+        // detailed
+        companyNameTE->setBounds(lm+teWS+pad, tm+teHS, teWS, teHS);
+        legalIncTE->setBounds(lm+teWS+pad, tm+2*teHS, teWS, teHS);
+        telephoneTE->setBounds(lm+teWS+pad, tm+3*teHS, 150, teHS);
+        activityTE->setBounds(lm+teWS+pad, tm+4*teHS, teWS, teHS);
+        // summary labels
+        companyName->setBounds(lm, tm+teHS, teWS, teHS);
+        legalInc->setBounds(lm, tm+2*teHS, teWS, teHS);
+        telephone->setBounds(lm, tm+3*teHS, teWS, teHS);
+        activity->setBounds(lm, tm+4*teHS, teWS, teHS);
+        // detailed view
+        VATTE->setBounds(lm+teWS+pad, tm+5*teHS, teWS, teHS);
+        IRSTE->setBounds(lm+teWS+pad, tm+6*teHS, teWS, teHS);
+        AddressTE->setBounds(lm+teWS+pad, tm+7*teHS, teWS, teHS);
+        AddressNumberTE->setBounds(lm+teWS+pad, tm+8*teHS, teWS, teHS);
+        PersonInChargeTE->setBounds(lm+teWS+pad, tm+9*teHS, teWS, teHS);
+        StartDateTE->setBounds(lm+teWS+pad, tm+10*teHS, teWS, teHS);
+        CommentsTE->setBounds(lm+teWS+pad, tm+11*teHS, teWS, teHS);
+        // detailed view labels
+        VAT->setBounds(lm, tm+5*teHS, teWS, teHS);
+        IRS->setBounds(lm, tm+6*teHS, teWS, teHS);
+        Address->setBounds(lm, tm+7*teHS, teWS, teHS);
+        AddressNumber->setBounds(lm, tm+8*teHS, teWS, teHS);
+        PersonInCharge->setBounds(lm, tm+9*teHS, teWS, teHS);
+        StartDate->setBounds(lm, tm+10*teHS, teWS, teHS);
+        Comments->setBounds(lm, tm+11*teHS, teWS, teHS);
+    }
+
+    void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) override {
+        setDetailedView(dView);
+        resized();
+        this->row = row;
+        if(qe) {
+            // summary
+            companyNameTE->setText(qe->getFieldFromRow(row, 0));
+            legalIncTE->setText(qe->getFieldFromRow(row, 1));
+            telephoneTE->setText(qe->getFieldFromRow(row, 2));
+            activityTE->setText(qe->getFieldFromRow(row, 3));
+            // detailed view
+            VATTE->setText(qe->getFieldFromRow(row, 4));
+            IRSTE->setText(qe->getFieldFromRow(row, 5));
+            AddressTE->setText(qe->getFieldFromRow(row, 6));
+            AddressNumberTE->setText(qe->getFieldFromRow(row, 7));
+            PersonInChargeTE->setText(qe->getFieldFromRow(row, 8));
+            StartDateTE->setText(qe->getFieldFromRow(row, 9));
+            CommentsTE->setText(qe->getFieldFromRow(row, 10));
+        }
+    }
+
+    void updateRow() {
+
+    }
+
+    void insertRow() {
+
+    }
+
+private:
+    // summary
+    ScopedPointer<TextEditor> companyNameTE, legalIncTE, telephoneTE, activityTE;
+    ScopedPointer<Label> companyName, legalInc, telephone, activity;
+
+    // detailed
+    ScopedPointer<TextEditor> VATTE, IRSTE, AddressTE, AddressNumberTE, PersonInChargeTE, StartDateTE, CommentsTE;
+    ScopedPointer<Label> VAT, IRS, Address, AddressNumber, PersonInCharge, StartDate, Comments;
+};
+
+//================================================================================
+
+CustomersTableListBoxModel::CustomersTableListBoxModel()
+{
+    update();
+    rowSizes.calloc(1); //hack +1
+}
 
 int CustomersTableListBoxModel::getNumRows()
 {
-	if (qe != nullptr) {
-		return qe->num_rows;
-	}
-	else {
-		return 0;
-	}
+    if (qe != nullptr) {
+        return qe->num_rows;
+    }
+    else {
+        return 0;
+    }
 }
 
-void CustomersTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) 
+int CustomersTableListBoxModel::getRowSize(int rowNumber)
 {
-	if (rowIsSelected) {
-		g.setColour(Colours::grey.brighter().brighter());
-		g.fillAll();
-	}
-	else if (rowNumber == rowUnderMouse) {
-		g.setColour(Colours::lightgrey.brighter().brighter());
-		g.fillAll();
-	}
+    return (rowNumber >= 0 && rowNumber < getNumRows()) ? rowSizes[rowNumber] : 0;
 }
 
-void CustomersTableListBoxModel::paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
+void CustomersTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, int x, int y, int width, int height, bool rowIsSelected)
 {
+    if (rowIsSelected) {
+        g.setColour(Colours::grey.brighter().brighter());
+        g.fillRect(x, y, width, height);
+    }
+    else if (rowNumber == rowUnderMouse) {
+        g.setColour(Colours::lightgrey.brighter().brighter());
+        g.fillRect(x, y, width, height);
+    }
+    else if (getNumRows() && (rowSizes[rowNumber] == CustomersRowComponent::maxRowSize)) {
+        g.setColour(Colours::lightgrey.brighter().brighter().brighter());
+        g.fillRect(x, y, width, height);
+    }
 }
 
-Component * CustomersTableListBoxModel::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate)
+CoeusListRowComponent * CustomersTableListBoxModel::refreshComponentForRow(int rowNumber, bool isRowSelected, CoeusListRowComponent *existingComponentToUpdate)
 {
-	// create
-	if (existingComponentToUpdate == nullptr) {
-		if (columnId >= 1 && columnId <= 4) {
-			TextEditFocusReport *payload = new TextEditFocusReport();
+    // create
+    if (existingComponentToUpdate == nullptr) {
+        CustomersRowComponent *newComp = new CustomersRowComponent();
+        newComp->addMouseListener(this, true);
+        newComp->addChangeListener(this);
+        newComp->setRow(rowNumber);
 
-			if (qe != nullptr) {
-				payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1));
-			}
+        // TODO
+        const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CustomersRowComponent::maxRowSize : false;
+        newComp->updateFromQueryForRow(qe, rowNumber,  dView);
+        newComp->shouldShowControls(isRowSelected);
 
-			payload->rowIndex = rowNumber;
-			payload->addChangeListener(this);
+        return newComp;
+    }
+    // update
+    else {
+        CustomersRowComponent * cmp = dynamic_cast<CustomersRowComponent *>(existingComponentToUpdate);
 
-			MarginComponent *newComponent = new MarginComponent(payload);
-			return (Component *)newComponent;
-		}
-		else if (columnId == 5 && isRowSelected) {
-			AccountCellButtons *newComponent = new AccountCellButtons();
-			newComponent->setVisible(true);
-			newComponent->rowIndex = rowNumber;
-			return (Component *)newComponent;
-		}
-		else if (columnId == 5 && !isRowSelected) {
-			LabelFocusReport *payload = new LabelFocusReport();
-			payload->rowIndex = rowNumber;
-			payload->setText(String::empty, dontSendNotification);
-			payload->setEditable(false);
-			payload->addChangeListener(this);
-			payload->setJustificationType(Justification::centred);
-			MarginComponent *newComponent = new MarginComponent(payload);
-			return (Component *)newComponent;
-		}
+        if(cmp) {
+            const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CustomersRowComponent::maxRowSize : false;
+            cmp->updateFromQueryForRow(qe, rowNumber, dView);
+            cmp->shouldShowControls(isRowSelected);
+        }
 
-		return nullptr;
-	}
-	// update
-	else {
-		if (columnId >= 1 && columnId <= 4) {
-			MarginComponent *margin = dynamic_cast<MarginComponent *> (existingComponentToUpdate);
-			if (margin != nullptr) {
-				TextEditFocusReport *payload = dynamic_cast<TextEditFocusReport *> (margin->getEnclosedComp());
-
-				if (qe != nullptr && payload != nullptr) {
-					payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1));
-				}
-			}
-		}
-		else if (columnId == 5) {
-			AccountCellButtons *acb = dynamic_cast<AccountCellButtons *>(existingComponentToUpdate);
-			MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
-			LabelFocusReport *lbfr = nullptr;
-			if (newComponent) {
-				lbfr = dynamic_cast<LabelFocusReport *>(newComponent->getEnclosedComp());
-			}
-
-			if (acb && isRowSelected) {
-				acb->rowIndex = rowNumber;
-			}
-			else if (lbfr && !isRowSelected) {
-				lbfr->rowIndex = rowNumber;
-			}
-			else if (acb && !isRowSelected) {
-				delete existingComponentToUpdate;
-
-				LabelFocusReport *payload = new LabelFocusReport();
-				payload->rowIndex = rowNumber;
-				payload->setText(String::empty, dontSendNotification);
-				payload->setEditable(false);
-				payload->addChangeListener(this);
-				payload->setJustificationType(Justification::centred);
-				MarginComponent *newComponent = new MarginComponent(payload);
-				return (Component *)newComponent;
-			}
-			else if (lbfr && isRowSelected) {
-				delete existingComponentToUpdate;
-
-				AccountCellButtons *newComponent = new AccountCellButtons();
-				newComponent->rowIndex = rowNumber;
-				newComponent->setVisible(true);
-				return (Component *)newComponent;
-			}
-		}
-
-		return existingComponentToUpdate;
-	}
+        return existingComponentToUpdate;
+    }
 }
 
-void CustomersTableListBoxModel::setQueryEntry(QueryEntry *qe_)
+int CustomersTableListBoxModel::getMinRowSize()
 {
-	qe = qe_;
+    return CustomersRowComponent::minRowSize;
 }
 
-void CustomersTableListBoxModel::changeListenerCallback(ChangeBroadcaster *source)
+int CustomersTableListBoxModel::getMaxRowSize()
 {
-	TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(source);
-	ComboBoxFocusReport *cbfr = dynamic_cast<ComboBoxFocusReport *>(source);
-	LabelFocusReport *lbfr = dynamic_cast<LabelFocusReport *>(source);
-
-	if (tefr) {
-		if (tefr->focus) {
-			selectRow(tefr->rowIndex);
-		}
-		else {
-			const int prevR = rowUnderMouse;
-			rowUnderMouse = tefr->rowIndex;
-			repaintRow(rowUnderMouse);
-			repaintRow(prevR);
-		}
-	}
-	else if (cbfr) {
-		if (cbfr->focus) {
-			selectRow(cbfr->rowIndex);
-		}
-		else {
-			const int prevR = rowUnderMouse;
-			rowUnderMouse = cbfr->rowIndex;
-			repaintRow(rowUnderMouse);
-			repaintRow(prevR);
-		}
-	}
-	else if (lbfr) {
-		if (lbfr->focus) {
-			selectRow(lbfr->rowIndex);
-		}
-		else {
-			const int prevR = rowUnderMouse;
-			rowUnderMouse = lbfr->rowIndex;
-			repaintRow(rowUnderMouse);
-			repaintRow(prevR);
-		}
-	}
-}
-
-void CustomersTableListBoxModel::mouseMove(const MouseEvent &event)
-{
-	const int x = event.getPosition().getX();
-	const int y = event.getPosition().getY();
-	const int r = getRowContainingPosition(x, y);
-	if (r != rowUnderMouse) {
-		const int prevR = rowUnderMouse;
-		rowUnderMouse = r;
-		repaintRow(rowUnderMouse);
-		repaintRow(prevR);
-	}
-}
-
-void CustomersTableListBoxModel::mouseExit(const MouseEvent &event)
-{
-	const int prevR = rowUnderMouse;
-	rowUnderMouse = -1;
-	repaintRow(rowUnderMouse);
-	repaintRow(prevR);
+    return CustomersRowComponent::maxRowSize;
 }
 
 //================================================================
@@ -190,19 +233,7 @@ void CustomersTableListBoxModel::mouseExit(const MouseEvent &event)
 CustomersComponent::CustomersComponent()
 {
 	title->setText("Customers", dontSendNotification);
-
-	TableHeaderComponent *accountsHeaderComponent = new TableHeaderComponent();
-	accountsHeaderComponent->addColumn(L"Customers", 1, 250, 100, 250);
-	accountsHeaderComponent->addColumn(L"Customers", 2, 250, 100, 250);
-	accountsHeaderComponent->addColumn(L"Customers", 3, 150, 100, 250);
-	accountsHeaderComponent->addColumn(L"Customers", 4, 250, 100, 250);
-	accountsHeaderComponent->addColumn(String::empty, 5, 200, 100, 250);
-
-	customersTableListBoxModel = new CustomersTableListBoxModel();
-	customersTableListBoxModel->setRowHeight(40);
-	customersTableListBoxModel->setHeader(accountsHeaderComponent);
-	customersTableListBoxModel->setHeaderHeight(40);
-
+    customersTableListBoxModel = new CustomersTableListBoxModel();
 	addAndMakeVisible(customersTableListBoxModel);
 
 	//searchButtonPressed();
@@ -223,7 +254,7 @@ void CustomersComponent::receivedResults(QueryEntry *qe_)
 {
 	qe = qe_;
 	customersTableListBoxModel->setQueryEntry(qe);
-	customersTableListBoxModel->updateContent();
+    customersTableListBoxModel->update();
 }
 
 void CustomersComponent::mouseExit(const MouseEvent &event)
@@ -271,9 +302,4 @@ void CustomersComponent::searchButtonPressed()
     cs->getResultsFor(queryStr, QueryEntry::Customers, this);
 
 	std::cout << queryStr << std::endl;
-}
-
-void CustomersComponent::paint(Graphics &g)
-{
-	//g.fillAll(Colour(0xffeeeeee));
 }

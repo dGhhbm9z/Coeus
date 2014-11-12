@@ -181,7 +181,7 @@ void CompaniesTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, 
 		g.setColour(Colours::lightgrey.brighter().brighter());
         g.fillRect(x, y, width, height);
 	}
-    else if (rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize) {
+    else if (getNumRows() && (rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize)) {
         g.setColour(Colours::lightgrey.brighter().brighter().brighter());
         g.fillRect(x, y, width, height);
     }

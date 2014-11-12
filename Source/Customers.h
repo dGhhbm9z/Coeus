@@ -4,28 +4,21 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "CacheSystem.h"
 #include "CustomComponents.h"
+#include "CoeusList.h"
 
 //=======================================================================================================
-class CustomersTableListBoxModel :	public TableListBoxModel,
-									public TableListBox,
-									public ChangeListener
+class CustomersTableListBoxModel : public CoeusList
 {
 public:
-	CustomersTableListBoxModel();
+    CustomersTableListBoxModel();
 
-	int getNumRows() override;
-	void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override;
-	void paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override;
-	Component * refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate) override;
-	void setQueryEntry(QueryEntry *qe_);
+    int getNumRows() override;
+    int getRowSize(int rowNumber) override;
+    int getMinRowSize() override;
+    int getMaxRowSize() override;
 
-	void changeListenerCallback(ChangeBroadcaster *source) override;
-	void mouseMove(const MouseEvent &event) override;
-	void mouseExit(const MouseEvent &event) override;
-
-private:
-	QueryEntry *qe;
-	int rowUnderMouse;
+    void paintRowBackground(Graphics &g, int rowNumber, int x, int y, int width, int height, bool rowIsSelected) override;
+    CoeusListRowComponent * refreshComponentForRow(int rowNumber, bool isRowSelected, CoeusListRowComponent *existingComponentToUpdate) override;
 };
 
 //=======================================================================================================
@@ -42,8 +35,6 @@ public:
 	void receivedResults(QueryEntry *qe_) override;
 
 	void searchButtonPressed() override;
-
-	void paint(Graphics &g) override;
 
 private:
 	ScopedPointer<CustomersTableListBoxModel> customersTableListBoxModel;
