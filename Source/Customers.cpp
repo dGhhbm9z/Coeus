@@ -271,9 +271,9 @@ CustomersComponent::CustomersComponent()
 	addAndMakeVisible(customersTableListBoxModel);
 
     tableHeader1->setText("Customer Code", dontSendNotification);
-    tableHeader2->setText("Customer VAT", dontSendNotification);
-    tableHeader3->setText("Trademark", dontSendNotification);
-    tableHeader4->setText("Name", dontSendNotification);
+    tableHeader2->setText("Name", dontSendNotification);
+    tableHeader3->setText("Fathers Name", dontSendNotification);
+    tableHeader4->setText("Phone Number", dontSendNotification);
     
 	//searchButtonPressed();
 }

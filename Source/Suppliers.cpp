@@ -264,6 +264,11 @@ SuppliersComponent::SuppliersComponent()
     suppliersTableListBoxModel = new SuppliersTableListBoxModel();
     addAndMakeVisible(suppliersTableListBoxModel);
     
+    tableHeader1->setText("Supplier Code", dontSendNotification);
+    tableHeader2->setText("Name", dontSendNotification);
+    tableHeader3->setText("Fathers Name", dontSendNotification);
+    tableHeader4->setText("Phone Number", dontSendNotification);
+    
     //searchButtonPressed();
 }
 

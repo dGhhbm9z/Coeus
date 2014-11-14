@@ -234,6 +234,11 @@ CompaniesComponent::CompaniesComponent()
 	companiesTableListBoxModel = new CompaniesTableListBoxModel();
 	addAndMakeVisible(companiesTableListBoxModel);
 
+    tableHeader1->setText("Company Name", dontSendNotification);
+    tableHeader2->setText("Legan Inc.", dontSendNotification);
+    tableHeader3->setText("Contact", dontSendNotification);
+    tableHeader4->setText("Activity", dontSendNotification);
+    
     //searchButtonPressed();
 }
 
@@ -267,7 +272,7 @@ void CompaniesComponent::searchButtonPressed()
 	StringArray terms;
 	terms.addTokens(search->getText(), true);
 
-	String queryStr = "SELECT CompanyName, LegalInc, Telephone, Activity FROM companies WHERE ";
+	String queryStr = "SELECT * FROM companies WHERE ";
 
 	for (int i = 0; i < terms.size(); i++) {
 		queryStr += "VAT like '%" + terms[i] + "%' " + orStr;

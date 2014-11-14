@@ -385,6 +385,7 @@ void CoeusList::setQueryEntry(QueryEntry *qe_)
             rowSizes[i] = getMinRowSize();
         }
         update();
+        repaint();
     }
 }
 
