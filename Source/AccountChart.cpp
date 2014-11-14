@@ -20,47 +20,10 @@ public:
         
         // add fields
         // summary
-        addAndMakeVisible(CustomerCodeTE = new TextEditor());
+        addAndMakeVisible(CodeTE = new TextEditor());
         addAndMakeVisible(NameTE = new TextEditor());
-        addAndMakeVisible(FathersNameTE = new TextEditor());
-        addAndMakeVisible(PhonenumberTE = new TextEditor());
-        
-        // summary labels
-        addAndMakeVisible(CustomerCode = new Label("Customer Code", "Customer Code"));
-        addAndMakeVisible(Name = new Label("Name", "Name"));
-        addAndMakeVisible(FathersName = new Label("FathersName", "FathersName"));
-        addAndMakeVisible(Phonenumber = new Label("Phonenumber", "Phonenumber"));
-        
-        // detailed view
-        addAndMakeVisible(TrademarkTE = new TextEditor());
-        addAndMakeVisible(CustomerVATTE = new TextEditor());
-        addAndMakeVisible(DateOfBirthTE = new TextEditor());
-        addAndMakeVisible(AddressTE = new TextEditor());
-        addAndMakeVisible(CityTE = new TextEditor());
-        addAndMakeVisible(CountryTE = new TextEditor());
-        addAndMakeVisible(ShippingAdressTE = new TextEditor());
-        addAndMakeVisible(FaxnumberTE = new TextEditor());
-        addAndMakeVisible(EmailTE = new TextEditor());
-        addAndMakeVisible(IDcardNumberTE = new TextEditor());
-        addAndMakeVisible(CustomerTransactionsTE = new TextEditor());
-        addAndMakeVisible(PublicRevenueServiceTE = new TextEditor());
-        addAndMakeVisible(CommercialActivityTE = new TextEditor());
-        
-        
-        // detailed view labels
-        addAndMakeVisible(Trademark = new Label("Trademark", "Trademark"));
-        addAndMakeVisible(CustomerVAT = new Label("VAT", "VAT"));
-        addAndMakeVisible(DateOfBirth = new Label("Date Of Birth", "Date Of Birth"));
-        addAndMakeVisible(Address = new Label("Address", "Address"));
-        addAndMakeVisible(City = new Label("City", "City"));
-        addAndMakeVisible(Country = new Label("Country", "Country"));
-        addAndMakeVisible(ShippingAdress = new Label("Shipping Adress", "Shipping Adress"));
-        addAndMakeVisible(Faxnumber = new Label("Fax number", "Fax number"));
-        addAndMakeVisible(Email = new Label("Email", "Email"));
-        addAndMakeVisible(IDcardNumber = new Label("IDcardNumber", "IDcardNumber"));
-        addAndMakeVisible(CustomerTransactions = new Label("CustomerTransactions", "CustomerTransactions"));
-        addAndMakeVisible(PublicRevenueService = new Label("PublicRevenueService", "PublicRevenueService"));
-        addAndMakeVisible(CommercialActivity = new Label("CommercialActivity", "CommercialActivity"));
+        addAndMakeVisible(AccountTypeTE = new TextEditor());
+        addAndMakeVisible(XreosPistTE = new TextEditor());
         
         resized();
     }
@@ -69,9 +32,9 @@ public:
     }
     
     int getCoeusListHeight() override {
-        if (detailedView) {
-            return maxRowSize;
-        }
+//        if (detailedView) {
+//            return maxRowSize;
+//        }
         
         return minRowSize;
     }
@@ -86,54 +49,18 @@ public:
     
     void resizeForSummary() override {
         // summary
-        CustomerCodeTE->setBounds(lm, tm, teWS, teHS);
+        CodeTE->setBounds(lm, tm, teWS, teHS);
         NameTE->setBounds(lm+teWS+pad, tm, teWS, teHS);
-        FathersNameTE->setBounds(lm+2*(teWS+pad), tm, 150, teHS);
-        PhonenumberTE->setBounds(lm+2*(teWS+pad)+pad+150, tm, teWS, teHS);
+        AccountTypeTE->setBounds(lm+2*(teWS+pad), tm, 150, teHS);
+        XreosPistTE->setBounds(lm+2*(teWS+pad)+pad+150, tm, teWS, teHS);
     }
     
     void resizeForDetailed() override {
-        // detailed
-        CustomerCodeTE->setBounds(lm+teWS+pad, tm+teHS, teWS, teHS);
+        CodeTE->setBounds(lm+teWS+pad, tm+teHS, teWS, teHS);
         NameTE->setBounds(lm+teWS+pad, tm+2*teHS, teWS, teHS);
-        FathersNameTE->setBounds(lm+teWS+pad, tm+3*teHS, 150, teHS);
-        PhonenumberTE->setBounds(lm+teWS+pad, tm+4*teHS, teWS, teHS);
-        // summary labels
-        CustomerCode->setBounds(lm, tm+teHS, teWS, teHS);
-        Name->setBounds(lm, tm+2*teHS, teWS, teHS);
-        FathersName->setBounds(lm, tm+3*teHS, teWS, teHS);
-        Phonenumber->setBounds(lm, tm+4*teHS, teWS, teHS);
-        // detailed view
-        TrademarkTE->setBounds(lm+teWS+pad, tm+5*teHS, teWS, teHS);
-        CustomerVATTE->setBounds(lm+teWS+pad, tm+6*teHS, teWS, teHS);
-        DateOfBirthTE->setBounds(lm+teWS+pad, tm+7*teHS, teWS, teHS);
-        AddressTE->setBounds(lm+teWS+pad, tm+8*teHS, teWS, teHS);
-        CityTE->setBounds(lm+teWS+pad, tm+9*teHS, teWS, teHS);
-        CountryTE->setBounds(lm+teWS+pad, tm+10*teHS, teWS, teHS);
-        ShippingAdressTE->setBounds(lm+teWS+pad, tm+11*teHS, teWS, teHS);
-        
-        FaxnumberTE->setBounds(lm+3*(teWS+pad), tm+6*teHS, teWS, teHS);
-        EmailTE->setBounds(lm+3*(teWS+pad), tm+7*teHS, teWS, teHS);
-        IDcardNumberTE->setBounds(lm+3*(teWS+pad), tm+8*teHS, teWS, teHS);
-        CustomerTransactionsTE->setBounds(lm+3*(teWS+pad), tm+9*teHS, teWS, teHS);
-        PublicRevenueServiceTE->setBounds(lm+3*(teWS+pad), tm+10*teHS, teWS, teHS);
-        CommercialActivityTE->setBounds(lm+3*(teWS+pad), tm+11*teHS, teWS, teHS);
-        
-        // detailed view labels
-        Trademark->setBounds(lm, tm+5*teHS, teWS, teHS);
-        CustomerVAT->setBounds(lm, tm+6*teHS, teWS, teHS);
-        DateOfBirth->setBounds(lm, tm+7*teHS, teWS, teHS);
-        Address->setBounds(lm, tm+8*teHS, teWS, teHS);
-        City->setBounds(lm, tm+9*teHS, teWS, teHS);
-        Country->setBounds(lm, tm+10*teHS, teWS, teHS);
-        ShippingAdress->setBounds(lm, tm+11*teHS, teWS, teHS);
-        
-        Faxnumber->setBounds(lm+2*(teWS+pad), tm+6*teHS, teWS, teHS);
-        Email->setBounds(lm+2*(teWS+pad), tm+7*teHS, teWS, teHS);
-        IDcardNumber->setBounds(lm+2*(teWS+pad), tm+8*teHS, teWS, teHS);
-        CustomerTransactions->setBounds(lm+2*(teWS+pad), tm+9*teHS, teWS, teHS);
-        PublicRevenueService->setBounds(lm+2*(teWS+pad), tm+10*teHS, teWS, teHS);
-        CommercialActivity->setBounds(lm+2*(teWS+pad), tm+11*teHS, teWS, teHS);
+        AccountTypeTE->setBounds(lm+teWS+pad, tm+3*teHS, 150, teHS);
+        XreosPistTE->setBounds(lm+teWS+pad, tm+4*teHS, teWS, teHS);
+
     }
     
     void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) override {
@@ -142,24 +69,10 @@ public:
         this->row = row;
         if(qe) {
             // summary
-            CustomerCodeTE->setText(qe->getFieldFromRow(row, 0));
-            NameTE->setText(qe->getFieldFromRow(row, 4));
-            FathersNameTE->setText(qe->getFieldFromRow(row, 5));
-            PhonenumberTE->setText(qe->getFieldFromRow(row, 11));
-            // detailed view
-            TrademarkTE->setText(qe->getFieldFromRow(row, 3));
-            CustomerVATTE->setText(qe->getFieldFromRow(row, 2));
-            DateOfBirthTE->setText(qe->getFieldFromRow(row, 6));
-            AddressTE->setText(qe->getFieldFromRow(row, 7));
-            CityTE->setText(qe->getFieldFromRow(row, 8));
-            CountryTE->setText(qe->getFieldFromRow(row, 9));
-            ShippingAdressTE->setText(qe->getFieldFromRow(row, 10));
-            FaxnumberTE->setText(qe->getFieldFromRow(row, 12));
-            EmailTE->setText(qe->getFieldFromRow(row, 13));
-            IDcardNumberTE->setText(qe->getFieldFromRow(row, 14));
-            CustomerTransactionsTE->setText(qe->getFieldFromRow(row, 15));
-            PublicRevenueServiceTE->setText(qe->getFieldFromRow(row, 16));
-            CommercialActivityTE->setText(qe->getFieldFromRow(row, 17));
+            CodeTE->setText(qe->getFieldFromRow(row, 1));
+            NameTE->setText(qe->getFieldFromRow(row, 2));
+            AccountTypeTE->setText(qe->getFieldFromRow(row, 3));
+            XreosPistTE->setText(qe->getFieldFromRow(row, 4));
         }
     }
     
@@ -173,14 +86,7 @@ public:
     
 private:
     // summary
-    ScopedPointer<TextEditor> CustomerCodeTE, NameTE, FathersNameTE, PhonenumberTE;
-    ScopedPointer<Label> CustomerCode, Name, FathersName, Phonenumber;
-    
-    // detailed
-    ScopedPointer<TextEditor> TrademarkTE, CustomerVATTE, DateOfBirthTE, AddressTE, CityTE, CountryTE, ShippingAdressTE, FaxnumberTE;
-    ScopedPointer<Label> Trademark, CustomerVAT, DateOfBirth, Address, City, Country, ShippingAdress, Faxnumber;
-    ScopedPointer<TextEditor> EmailTE, IDcardNumberTE, CustomerTransactionsTE, PublicRevenueServiceTE, CommercialActivityTE;
-    ScopedPointer<Label> Email, IDcardNumber, CustomerTransactions, PublicRevenueService, CommercialActivity;
+    ScopedPointer<TextEditor> CodeTE, NameTE, AccountTypeTE, XreosPistTE;
 };
 
 //================================================================================
@@ -267,33 +173,33 @@ int AccountChartTableListBoxModel::getMaxRowSize()
 AccountChartComponent::AccountChartComponent()
 {
     title->setText("AccountChart", dontSendNotification);
-    AccountChartTableListBoxModel = new AccountChartTableListBoxModel();
-    addAndMakeVisible(AccountChartTableListBoxModel);
+    accountChartTableListBoxModel = new AccountChartTableListBoxModel();
+    addAndMakeVisible(accountChartTableListBoxModel);
     
     //searchButtonPressed();
 }
 
 AccountChartComponent::~AccountChartComponent()
 {
-    AccountChartTableListBoxModel = nullptr;
+    accountChartTableListBoxModel = nullptr;
 }
 
 void AccountChartComponent::resized()
 {
     CustomTabContent::resized();
-    AccountChartTableListBoxModel->setBounds(getComponentArea());
+    accountChartTableListBoxModel->setBounds(getComponentArea());
 }
 
 void AccountChartComponent::receivedResults(QueryEntry *qe_)
 {
     qe = qe_;
-    AccountChartTableListBoxModel->setQueryEntry(qe);
-    AccountChartTableListBoxModel->update();
+    accountChartTableListBoxModel->setQueryEntry(qe);
+    accountChartTableListBoxModel->update();
 }
 
 void AccountChartComponent::mouseExit(const MouseEvent &event)
 {
-    AccountChartTableListBoxModel->mouseExit(event);
+    accountChartTableListBoxModel->mouseExit(event);
 }
 
 void AccountChartComponent::searchButtonPressed()
@@ -303,37 +209,18 @@ void AccountChartComponent::searchButtonPressed()
     StringArray terms;
     terms.addTokens(search->getText(), true);
     
-    String queryStr = "SELECT * FROM AccountChart WHERE ";
+    String queryStr = "SELECT * FROM accounts WHERE ";
     
     for (int i = 0; i < terms.size(); i++) {
-        queryStr += "CustomerCode like '%" + terms[i] + "%' " + orStr;
-        queryStr += "CustomerVat like '%" + terms[i] + "%' " + orStr;
-        queryStr += "Trademark like '%" + terms[i] + "%' " + orStr;
+        queryStr += "Code like '%" + terms[i] + "%' " + orStr;
         queryStr += "Name like '%" + terms[i] + "%' " + orStr;
-        queryStr += "FathersName like '%" + terms[i] + "%' " + orStr;
-        queryStr += "DateOfBirth like '%" + terms[i] + "%' " + orStr;
-        queryStr += "Address like '%" + terms[i] + "%' " + orStr;
-        queryStr += "City like '%" + terms[i] + "%' " + orStr;
-        
-        queryStr += "Country like '%" + terms[i] + "%' " + orStr;
-        queryStr += "ShippingAdress like '%" + terms[i] + "%' " + orStr;
-        queryStr += "Phonenumber like '%" + terms[i] + "%' " + orStr;
-        queryStr += "Faxnumber like '%" + terms[i] + "%' " + orStr;
-        queryStr += "Email like '%" + terms[i] + "%' " + orStr;
-        queryStr += "DateOfBirth like '%" + terms[i] + "%' " + orStr;
-        queryStr += "IDcardNumber like '%" + terms[i] + "%' " + orStr;
-        queryStr += "CustomerTransactions like '%" + terms[i] + "%' " + orStr;
-        
-        queryStr += "PublicRevenueService like '%" + terms[i] + "%' " + orStr;
-        queryStr += "CommercialActivity like '%" + terms[i] + "%' " + andOr;
+        queryStr += "AccountType like '%" + terms[i] + "%' " + orStr;
+        queryStr += "XreosPist like '%" + terms[i] + "%' " + andOr;
     }
-    
     queryStr += (searchFilter->getSelectedId() == 2 || terms.size() == 0) ? " 1 = 1" : " 1 = 0";
     
-    //		CompanyVAT varchar(10) NOT NULL,
-    
     CacheSystem *cs = CacheSystem::getInstance();
-    cs->getResultsFor(queryStr, QueryEntry::AccountChart, this);
+    cs->getResultsFor(queryStr, QueryEntry::Accounts, this);
     
     std::cout << queryStr << std::endl;
 }

@@ -23,7 +23,7 @@ public:
 
 //=======================================================================================================
 class AccountChartComponent :	public CustomTabContent,
-public CacheSystemClient
+                                public CacheSystemClient
 {
 public:
     AccountChartComponent();
@@ -37,7 +37,7 @@ public:
     void searchButtonPressed() override;
     
 private:
-    ScopedPointer<AccountChartTableListBoxModel> AccountChartTableListBoxModel;
+    ScopedPointer<AccountChartTableListBoxModel> accountChartTableListBoxModel;
     QueryEntry *qe;
 };
 
