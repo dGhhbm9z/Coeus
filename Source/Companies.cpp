@@ -1,6 +1,5 @@
 #include "Companies.h"
 #include "CustomComponents.h"
-#include "Accounts.h"
 
 class CompaniesRowComponent :   public CoeusListRowComponent
 {

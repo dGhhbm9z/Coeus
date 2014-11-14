@@ -2,30 +2,43 @@
 #define AccountChartGuard
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "CacheSystem.h"
 #include "CustomComponents.h"
+#include "CoeusList.h"
 
 //=======================================================================================================
-class AccountChartsListBoxModel : public ListBoxModel
+class AccountChartTableListBoxModel : public CoeusList
 {
 public:
-	int getNumRows() override;
-	void paintListBoxItem(int rowNumber, Graphics &g, int width, int height, bool rowIsSelected) override;
-	Component* refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate) override;
+    AccountChartTableListBoxModel();
+    
+    int getNumRows() override;
+    int getRowSize(int rowNumber) override;
+    int getMinRowSize() override;
+    int getMaxRowSize() override;
+    
+    void paintRowBackground(Graphics &g, int rowNumber, int x, int y, int width, int height, bool rowIsSelected) override;
+    CoeusListRowComponent * refreshComponentForRow(int rowNumber, bool isRowSelected, CoeusListRowComponent *existingComponentToUpdate) override;
 };
 
-class AccountChartComponent : public CustomTabContent
+//=======================================================================================================
+class AccountChartComponent :	public CustomTabContent,
+public CacheSystemClient
 {
 public:
-	AccountChartComponent();
-	~AccountChartComponent();
-
-	void resized() override;
-
-	void searchButtonPressed() override;
-
+    AccountChartComponent();
+    ~AccountChartComponent();
+    
+    void resized() override;
+    void mouseExit(const MouseEvent &event) override;
+    
+    void receivedResults(QueryEntry *qe_) override;
+    
+    void searchButtonPressed() override;
+    
 private:
-	ScopedPointer<ListBox> accountChart;
-	ScopedPointer<AccountChartsListBoxModel> accountChartListBoxModel;
+    ScopedPointer<AccountChartTableListBoxModel> AccountChartTableListBoxModel;
+    QueryEntry *qe;
 };
 
 #endif

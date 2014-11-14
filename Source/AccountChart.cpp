@@ -1,60 +1,339 @@
 #include "AccountChart.h"
-#include "PortDefinitions.h"
-#include "CacheViewer.h"
+#include "CustomComponents.h"
 
-int AccountChartsListBoxModel::getNumRows() 
+class AccountChartRowComponent :   public CoeusListRowComponent
 {
-	return 8;
+public:
+    static const int minRowSize = 40;
+    static const int maxRowSize = 480;
+    const int lm = 4;
+    const int tm = 2;
+    const int bm = 2;
+    const int pad = 4;
+    const int teHS = getMinRowSize() - tm - bm;
+    const int teWS = 250;
+    
+    AccountChartRowComponent() {
+        detailedView = false;
+        editView = false;
+        showControls = false;
+        
+        // add fields
+        // summary
+        addAndMakeVisible(CustomerCodeTE = new TextEditor());
+        addAndMakeVisible(NameTE = new TextEditor());
+        addAndMakeVisible(FathersNameTE = new TextEditor());
+        addAndMakeVisible(PhonenumberTE = new TextEditor());
+        
+        // summary labels
+        addAndMakeVisible(CustomerCode = new Label("Customer Code", "Customer Code"));
+        addAndMakeVisible(Name = new Label("Name", "Name"));
+        addAndMakeVisible(FathersName = new Label("FathersName", "FathersName"));
+        addAndMakeVisible(Phonenumber = new Label("Phonenumber", "Phonenumber"));
+        
+        // detailed view
+        addAndMakeVisible(TrademarkTE = new TextEditor());
+        addAndMakeVisible(CustomerVATTE = new TextEditor());
+        addAndMakeVisible(DateOfBirthTE = new TextEditor());
+        addAndMakeVisible(AddressTE = new TextEditor());
+        addAndMakeVisible(CityTE = new TextEditor());
+        addAndMakeVisible(CountryTE = new TextEditor());
+        addAndMakeVisible(ShippingAdressTE = new TextEditor());
+        addAndMakeVisible(FaxnumberTE = new TextEditor());
+        addAndMakeVisible(EmailTE = new TextEditor());
+        addAndMakeVisible(IDcardNumberTE = new TextEditor());
+        addAndMakeVisible(CustomerTransactionsTE = new TextEditor());
+        addAndMakeVisible(PublicRevenueServiceTE = new TextEditor());
+        addAndMakeVisible(CommercialActivityTE = new TextEditor());
+        
+        
+        // detailed view labels
+        addAndMakeVisible(Trademark = new Label("Trademark", "Trademark"));
+        addAndMakeVisible(CustomerVAT = new Label("VAT", "VAT"));
+        addAndMakeVisible(DateOfBirth = new Label("Date Of Birth", "Date Of Birth"));
+        addAndMakeVisible(Address = new Label("Address", "Address"));
+        addAndMakeVisible(City = new Label("City", "City"));
+        addAndMakeVisible(Country = new Label("Country", "Country"));
+        addAndMakeVisible(ShippingAdress = new Label("Shipping Adress", "Shipping Adress"));
+        addAndMakeVisible(Faxnumber = new Label("Fax number", "Fax number"));
+        addAndMakeVisible(Email = new Label("Email", "Email"));
+        addAndMakeVisible(IDcardNumber = new Label("IDcardNumber", "IDcardNumber"));
+        addAndMakeVisible(CustomerTransactions = new Label("CustomerTransactions", "CustomerTransactions"));
+        addAndMakeVisible(PublicRevenueService = new Label("PublicRevenueService", "PublicRevenueService"));
+        addAndMakeVisible(CommercialActivity = new Label("CommercialActivity", "CommercialActivity"));
+        
+        resized();
+    }
+    
+    ~AccountChartRowComponent() {
+    }
+    
+    int getCoeusListHeight() override {
+        if (detailedView) {
+            return maxRowSize;
+        }
+        
+        return minRowSize;
+    }
+    
+    int getMinRowSize() override {
+        return minRowSize;
+    }
+    
+    int getMaxRowSize() override {
+        return maxRowSize;
+    }
+    
+    void resizeForSummary() override {
+        // summary
+        CustomerCodeTE->setBounds(lm, tm, teWS, teHS);
+        NameTE->setBounds(lm+teWS+pad, tm, teWS, teHS);
+        FathersNameTE->setBounds(lm+2*(teWS+pad), tm, 150, teHS);
+        PhonenumberTE->setBounds(lm+2*(teWS+pad)+pad+150, tm, teWS, teHS);
+    }
+    
+    void resizeForDetailed() override {
+        // detailed
+        CustomerCodeTE->setBounds(lm+teWS+pad, tm+teHS, teWS, teHS);
+        NameTE->setBounds(lm+teWS+pad, tm+2*teHS, teWS, teHS);
+        FathersNameTE->setBounds(lm+teWS+pad, tm+3*teHS, 150, teHS);
+        PhonenumberTE->setBounds(lm+teWS+pad, tm+4*teHS, teWS, teHS);
+        // summary labels
+        CustomerCode->setBounds(lm, tm+teHS, teWS, teHS);
+        Name->setBounds(lm, tm+2*teHS, teWS, teHS);
+        FathersName->setBounds(lm, tm+3*teHS, teWS, teHS);
+        Phonenumber->setBounds(lm, tm+4*teHS, teWS, teHS);
+        // detailed view
+        TrademarkTE->setBounds(lm+teWS+pad, tm+5*teHS, teWS, teHS);
+        CustomerVATTE->setBounds(lm+teWS+pad, tm+6*teHS, teWS, teHS);
+        DateOfBirthTE->setBounds(lm+teWS+pad, tm+7*teHS, teWS, teHS);
+        AddressTE->setBounds(lm+teWS+pad, tm+8*teHS, teWS, teHS);
+        CityTE->setBounds(lm+teWS+pad, tm+9*teHS, teWS, teHS);
+        CountryTE->setBounds(lm+teWS+pad, tm+10*teHS, teWS, teHS);
+        ShippingAdressTE->setBounds(lm+teWS+pad, tm+11*teHS, teWS, teHS);
+        
+        FaxnumberTE->setBounds(lm+3*(teWS+pad), tm+6*teHS, teWS, teHS);
+        EmailTE->setBounds(lm+3*(teWS+pad), tm+7*teHS, teWS, teHS);
+        IDcardNumberTE->setBounds(lm+3*(teWS+pad), tm+8*teHS, teWS, teHS);
+        CustomerTransactionsTE->setBounds(lm+3*(teWS+pad), tm+9*teHS, teWS, teHS);
+        PublicRevenueServiceTE->setBounds(lm+3*(teWS+pad), tm+10*teHS, teWS, teHS);
+        CommercialActivityTE->setBounds(lm+3*(teWS+pad), tm+11*teHS, teWS, teHS);
+        
+        // detailed view labels
+        Trademark->setBounds(lm, tm+5*teHS, teWS, teHS);
+        CustomerVAT->setBounds(lm, tm+6*teHS, teWS, teHS);
+        DateOfBirth->setBounds(lm, tm+7*teHS, teWS, teHS);
+        Address->setBounds(lm, tm+8*teHS, teWS, teHS);
+        City->setBounds(lm, tm+9*teHS, teWS, teHS);
+        Country->setBounds(lm, tm+10*teHS, teWS, teHS);
+        ShippingAdress->setBounds(lm, tm+11*teHS, teWS, teHS);
+        
+        Faxnumber->setBounds(lm+2*(teWS+pad), tm+6*teHS, teWS, teHS);
+        Email->setBounds(lm+2*(teWS+pad), tm+7*teHS, teWS, teHS);
+        IDcardNumber->setBounds(lm+2*(teWS+pad), tm+8*teHS, teWS, teHS);
+        CustomerTransactions->setBounds(lm+2*(teWS+pad), tm+9*teHS, teWS, teHS);
+        PublicRevenueService->setBounds(lm+2*(teWS+pad), tm+10*teHS, teWS, teHS);
+        CommercialActivity->setBounds(lm+2*(teWS+pad), tm+11*teHS, teWS, teHS);
+    }
+    
+    void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) override {
+        setDetailedView(dView);
+        resized();
+        this->row = row;
+        if(qe) {
+            // summary
+            CustomerCodeTE->setText(qe->getFieldFromRow(row, 0));
+            NameTE->setText(qe->getFieldFromRow(row, 4));
+            FathersNameTE->setText(qe->getFieldFromRow(row, 5));
+            PhonenumberTE->setText(qe->getFieldFromRow(row, 11));
+            // detailed view
+            TrademarkTE->setText(qe->getFieldFromRow(row, 3));
+            CustomerVATTE->setText(qe->getFieldFromRow(row, 2));
+            DateOfBirthTE->setText(qe->getFieldFromRow(row, 6));
+            AddressTE->setText(qe->getFieldFromRow(row, 7));
+            CityTE->setText(qe->getFieldFromRow(row, 8));
+            CountryTE->setText(qe->getFieldFromRow(row, 9));
+            ShippingAdressTE->setText(qe->getFieldFromRow(row, 10));
+            FaxnumberTE->setText(qe->getFieldFromRow(row, 12));
+            EmailTE->setText(qe->getFieldFromRow(row, 13));
+            IDcardNumberTE->setText(qe->getFieldFromRow(row, 14));
+            CustomerTransactionsTE->setText(qe->getFieldFromRow(row, 15));
+            PublicRevenueServiceTE->setText(qe->getFieldFromRow(row, 16));
+            CommercialActivityTE->setText(qe->getFieldFromRow(row, 17));
+        }
+    }
+    
+    void updateRow() {
+        
+    }
+    
+    void insertRow() {
+        
+    }
+    
+private:
+    // summary
+    ScopedPointer<TextEditor> CustomerCodeTE, NameTE, FathersNameTE, PhonenumberTE;
+    ScopedPointer<Label> CustomerCode, Name, FathersName, Phonenumber;
+    
+    // detailed
+    ScopedPointer<TextEditor> TrademarkTE, CustomerVATTE, DateOfBirthTE, AddressTE, CityTE, CountryTE, ShippingAdressTE, FaxnumberTE;
+    ScopedPointer<Label> Trademark, CustomerVAT, DateOfBirth, Address, City, Country, ShippingAdress, Faxnumber;
+    ScopedPointer<TextEditor> EmailTE, IDcardNumberTE, CustomerTransactionsTE, PublicRevenueServiceTE, CommercialActivityTE;
+    ScopedPointer<Label> Email, IDcardNumber, CustomerTransactions, PublicRevenueService, CommercialActivity;
+};
+
+//================================================================================
+
+AccountChartTableListBoxModel::AccountChartTableListBoxModel()
+{
+    update();
+    rowSizes.calloc(1); //hack +1
 }
 
-void AccountChartsListBoxModel::paintListBoxItem(int rowNumber, Graphics &g, int width, int height, bool rowIsSelected) 
+int AccountChartTableListBoxModel::getNumRows()
 {
-	/*g.fillAll(Colours::grey);
-	g.setColour(Colours::black);
-	g.drawRect(Rectangle<float>(0,0,width+1,height+1));
-	g.setColour(Colours::azure);
-	g.drawText(String(rowNumber), Rectangle<int>(0,0,width,height), Justification::centred, false);*/
+    if (qe != nullptr) {
+        return qe->num_rows;
+    }
+    else {
+        return 0;
+    }
 }
 
-Component* AccountChartsListBoxModel::refreshComponentForRow(int rowNumber, bool isRowSelected, Component *existingComponentToUpdate) 
+int AccountChartTableListBoxModel::getRowSize(int rowNumber)
 {
-	// create
-	if (existingComponentToUpdate == nullptr) {
-		Component *newComponent = (Component *) new CacheViewer();
-		return newComponent;
-	}
-	// update
-	else {
-		return existingComponentToUpdate;
-	}
+    return (rowNumber >= 0 && rowNumber < getNumRows()) ? rowSizes[rowNumber] : 0;
 }
 
-//========================================================================================
-
-AccountChartComponent::AccountChartComponent() 
+void AccountChartTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, int x, int y, int width, int height, bool rowIsSelected)
 {
-	title->setText("Events", dontSendNotification);
-
-	accountChartListBoxModel = new AccountChartsListBoxModel();
-	accountChart = new ListBox(String::empty, accountChartListBoxModel);
-	accountChart->setRowHeight(620);
-
-	addAndMakeVisible(accountChart);
+    if (rowIsSelected) {
+        g.setColour(Colours::grey.brighter().brighter());
+        g.fillRect(x, y, width, height);
+    }
+    else if (rowNumber == rowUnderMouse) {
+        g.setColour(Colours::lightgrey.brighter().brighter());
+        g.fillRect(x, y, width, height);
+    }
+    else if (getNumRows() && (rowSizes[rowNumber] == AccountChartRowComponent::maxRowSize)) {
+        g.setColour(Colours::lightgrey.brighter().brighter().brighter());
+        g.fillRect(x, y, width, height);
+    }
 }
 
-AccountChartComponent::~AccountChartComponent() 
+CoeusListRowComponent * AccountChartTableListBoxModel::refreshComponentForRow(int rowNumber, bool isRowSelected, CoeusListRowComponent *existingComponentToUpdate)
 {
-	accountChart = nullptr;
+    // create
+    if (existingComponentToUpdate == nullptr) {
+        AccountChartRowComponent *newComp = new AccountChartRowComponent();
+        newComp->addMouseListener(this, true);
+        newComp->addChangeListener(this);
+        newComp->setRow(rowNumber);
+        
+        // TODO
+        const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountChartRowComponent::maxRowSize : false;
+        newComp->updateFromQueryForRow(qe, rowNumber,  dView);
+        newComp->shouldShowControls(isRowSelected);
+        
+        return newComp;
+    }
+    // update
+    else {
+        AccountChartRowComponent * cmp = dynamic_cast<AccountChartRowComponent *>(existingComponentToUpdate);
+        
+        if(cmp) {
+            const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountChartRowComponent::maxRowSize : false;
+            cmp->updateFromQueryForRow(qe, rowNumber, dView);
+            cmp->shouldShowControls(isRowSelected);
+        }
+        
+        return existingComponentToUpdate;
+    }
 }
 
-void AccountChartComponent::resized() 
+int AccountChartTableListBoxModel::getMinRowSize()
 {
-	CustomTabContent::resized();
-	accountChart->setBounds(getComponentArea());
+    return AccountChartRowComponent::minRowSize;
+}
+
+int AccountChartTableListBoxModel::getMaxRowSize()
+{
+    return AccountChartRowComponent::maxRowSize;
+}
+
+//================================================================
+
+AccountChartComponent::AccountChartComponent()
+{
+    title->setText("AccountChart", dontSendNotification);
+    AccountChartTableListBoxModel = new AccountChartTableListBoxModel();
+    addAndMakeVisible(AccountChartTableListBoxModel);
+    
+    //searchButtonPressed();
+}
+
+AccountChartComponent::~AccountChartComponent()
+{
+    AccountChartTableListBoxModel = nullptr;
+}
+
+void AccountChartComponent::resized()
+{
+    CustomTabContent::resized();
+    AccountChartTableListBoxModel->setBounds(getComponentArea());
+}
+
+void AccountChartComponent::receivedResults(QueryEntry *qe_)
+{
+    qe = qe_;
+    AccountChartTableListBoxModel->setQueryEntry(qe);
+    AccountChartTableListBoxModel->update();
+}
+
+void AccountChartComponent::mouseExit(const MouseEvent &event)
+{
+    AccountChartTableListBoxModel->mouseExit(event);
 }
 
 void AccountChartComponent::searchButtonPressed()
 {
-	//CacheSystem *cs = CacheSystem::getInstance();
-	//cs->getResultsFor(String(L"SELECT SupplierCode, Name, PhoneNumber, SupplierTransactions FROM suppliers"), this);
+    String andOr = (searchFilter->getSelectedId() == 2) ? " AND " : " OR ";
+    String orStr = " OR ";
+    StringArray terms;
+    terms.addTokens(search->getText(), true);
+    
+    String queryStr = "SELECT * FROM AccountChart WHERE ";
+    
+    for (int i = 0; i < terms.size(); i++) {
+        queryStr += "CustomerCode like '%" + terms[i] + "%' " + orStr;
+        queryStr += "CustomerVat like '%" + terms[i] + "%' " + orStr;
+        queryStr += "Trademark like '%" + terms[i] + "%' " + orStr;
+        queryStr += "Name like '%" + terms[i] + "%' " + orStr;
+        queryStr += "FathersName like '%" + terms[i] + "%' " + orStr;
+        queryStr += "DateOfBirth like '%" + terms[i] + "%' " + orStr;
+        queryStr += "Address like '%" + terms[i] + "%' " + orStr;
+        queryStr += "City like '%" + terms[i] + "%' " + orStr;
+        
+        queryStr += "Country like '%" + terms[i] + "%' " + orStr;
+        queryStr += "ShippingAdress like '%" + terms[i] + "%' " + orStr;
+        queryStr += "Phonenumber like '%" + terms[i] + "%' " + orStr;
+        queryStr += "Faxnumber like '%" + terms[i] + "%' " + orStr;
+        queryStr += "Email like '%" + terms[i] + "%' " + orStr;
+        queryStr += "DateOfBirth like '%" + terms[i] + "%' " + orStr;
+        queryStr += "IDcardNumber like '%" + terms[i] + "%' " + orStr;
+        queryStr += "CustomerTransactions like '%" + terms[i] + "%' " + orStr;
+        
+        queryStr += "PublicRevenueService like '%" + terms[i] + "%' " + orStr;
+        queryStr += "CommercialActivity like '%" + terms[i] + "%' " + andOr;
+    }
+    
+    queryStr += (searchFilter->getSelectedId() == 2 || terms.size() == 0) ? " 1 = 1" : " 1 = 0";
+    
+    //		CompanyVAT varchar(10) NOT NULL,
+    
+    CacheSystem *cs = CacheSystem::getInstance();
+    cs->getResultsFor(queryStr, QueryEntry::AccountChart, this);
+    
+    std::cout << queryStr << std::endl;
 }

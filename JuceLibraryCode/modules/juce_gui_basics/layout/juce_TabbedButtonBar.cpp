@@ -451,7 +451,7 @@ void TabbedButtonBar::updateTabPositions (bool animate)
             extraTabsButton->setCentrePosition (tabsButtonPos, getHeight() / 2);
         }
 
-        totalLength = 0;
+        totalLength = 10;
 
         for (int i = 0; i < tabs.size(); ++i)
         {
