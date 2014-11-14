@@ -259,7 +259,7 @@ void CoeusList::update()
 
 void CoeusList::resized()
 {
-    sb.setBounds(getWidth() - 10, 0, 10, getHeight());
+    sb.setBounds(getWidth() - 14, 0, 14, getHeight());
     double sbsize = getHeight()/static_cast<double>(heap.getSum());
     sb.setCurrentRange(0.0, sbsize, dontSendNotification);
     
