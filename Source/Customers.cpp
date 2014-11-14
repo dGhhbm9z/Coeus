@@ -270,6 +270,11 @@ CustomersComponent::CustomersComponent()
     customersTableListBoxModel = new CustomersTableListBoxModel();
 	addAndMakeVisible(customersTableListBoxModel);
 
+    tableHeader1->setText("Customer Code", dontSendNotification);
+    tableHeader2->setText("Customer VAT", dontSendNotification);
+    tableHeader3->setText("Trademark", dontSendNotification);
+    tableHeader4->setText("Name", dontSendNotification);
+    
 	//searchButtonPressed();
 }
 
@@ -281,7 +286,9 @@ CustomersComponent::~CustomersComponent()
 void CustomersComponent::resized() 
 {
 	CustomTabContent::resized();
-	customersTableListBoxModel->setBounds(getComponentArea());
+    Rectangle<int> compBounds = getComponentArea();
+    compBounds.setY(compBounds.getY());
+    customersTableListBoxModel->setBounds(compBounds);
 }
 
 void CustomersComponent::receivedResults(QueryEntry *qe_)

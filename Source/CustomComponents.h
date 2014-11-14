@@ -130,7 +130,9 @@ protected:
 	ScopedPointer<Label> title;
 	ScopedPointer<TextEditor> search;
 	ScopedPointer<ComboBox> searchFilter;
-	ScopedPointer<ImageButton> searchButton;
+	ScopedPointer<ImageButton> searchButton;    
+    ScopedPointer<Label> tableHeader1, tableHeader2, tableHeader3, tableHeader4;
+
 
 	Image imageNormal;
 	Image imageMouseOver;

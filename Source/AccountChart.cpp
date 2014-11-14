@@ -176,6 +176,11 @@ AccountChartComponent::AccountChartComponent()
     accountChartTableListBoxModel = new AccountChartTableListBoxModel();
     addAndMakeVisible(accountChartTableListBoxModel);
     
+    tableHeader1->setText("Code", dontSendNotification);
+    tableHeader2->setText("Name", dontSendNotification);
+    tableHeader3->setText("Type", dontSendNotification);
+    tableHeader4->setText("XreosPist", dontSendNotification);
+    
     //searchButtonPressed();
 }
 
@@ -187,7 +192,22 @@ AccountChartComponent::~AccountChartComponent()
 void AccountChartComponent::resized()
 {
     CustomTabContent::resized();
-    accountChartTableListBoxModel->setBounds(getComponentArea());
+    Rectangle<int> compBounds = getComponentArea();
+    
+    const int starty = compBounds.getY();
+    const int lm = 4;
+    const int tm = 2;
+    const int pad = 4;
+    const int teHS = 40;
+    const int teWS = 250;
+    
+    tableHeader1->setBounds(lm, starty+tm, teWS, teHS);
+    tableHeader2->setBounds(lm+teWS+pad, starty+tm, teWS, teHS);
+    tableHeader3->setBounds(lm+2*(teWS+pad), starty+tm, 150, teHS);
+    tableHeader4->setBounds(lm+2*(teWS+pad)+pad+150, starty+tm, teWS, teHS);
+    
+    compBounds.setY(compBounds.getY()+40);
+    accountChartTableListBoxModel->setBounds(compBounds);
 }
 
 void AccountChartComponent::receivedResults(QueryEntry *qe_)

@@ -122,6 +122,16 @@ CustomTabContent::CustomTabContent() {
 	addAndMakeVisible(search);
 	addAndMakeVisible(searchButton);
 	addAndMakeVisible(searchFilter);
+    
+    addAndMakeVisible(tableHeader1 = new Label(String::empty, "Customer Code"));
+    addAndMakeVisible(tableHeader2 = new Label(String::empty, "Customer VAT"));
+    addAndMakeVisible(tableHeader3 = new Label(String::empty, "Trademark"));
+    addAndMakeVisible(tableHeader4 = new Label(String::empty, "Name"));
+    
+    tableHeader1->setJustificationType(Justification::centred);
+    tableHeader2->setJustificationType(Justification::centred);
+    tableHeader3->setJustificationType(Justification::centred);
+    tableHeader4->setJustificationType(Justification::centred);
 }
 
 CustomTabContent::~CustomTabContent()
@@ -135,6 +145,19 @@ void CustomTabContent::resized()
 {
 	title->setBoundsRelative(0.5f - 0.125f - 120.0f/(float)getParentWidth(), 0.01, 0.25f, 0.05f);
 	search->setBoundsRelative(0.5f - 0.125f - 120.0f / (float)getParentWidth(), 0.01 + 0.05f, 0.25f, 0.05f);
+    
+    Rectangle<int> compBounds = getComponentArea();
+    const int starty = compBounds.getY()-40;
+    const int lm = 4;
+    const int tm = 2;
+    const int pad = 4;
+    const int teHS = 40;
+    const int teWS = 250;
+    
+    tableHeader1->setBounds(lm, starty+tm, teWS, teHS);
+    tableHeader2->setBounds(lm+teWS+pad, starty+tm, teWS, teHS);
+    tableHeader3->setBounds(lm+2*(teWS+pad), starty+tm, 150, teHS);
+    tableHeader4->setBounds(lm+2*(teWS+pad)+pad+150, starty+tm, teWS, teHS);
 
 	const float sbz = getHeight()*0.05f;
 	const float sbwp = sbz / (float)getWidth();
@@ -146,7 +169,7 @@ void CustomTabContent::resized()
 
 Rectangle<int> CustomTabContent::getComponentArea()
 {
-	return Rectangle<int>(0.01f*(float)getWidth(), 0.15f*getHeight(), 0.99f*(float)getWidth(), getHeight() - 0.15f*getHeight());
+	return Rectangle<int>(0.01f*(float)getWidth(), 0.15f*getHeight()+40, 0.99f*(float)getWidth(), getHeight() - 0.15f*getHeight());
 }
 
 void CustomTabContent::comboBoxChanged(ComboBox *comboBoxThatHasChanged)
