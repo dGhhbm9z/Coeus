@@ -226,6 +226,7 @@ void CoeusList::rowChangedSize(int rowNumber, int newSize)
     
     updateComponents();
     positionComponents();
+    repaint();
 }
 
 void CoeusList::update()
