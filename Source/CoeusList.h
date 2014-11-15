@@ -59,7 +59,8 @@ protected:
     void setDetailedView(bool s, bool force=false);
 
     // control buttons
-    ScopedPointer<TextButton> edit, save, remove;
+    Image imageNormal, imageMouseOver, imageMouseDown;
+    ScopedPointer<ImageButton> details, remove;
     
     bool detailedView, editView, showControls;
     int row;
