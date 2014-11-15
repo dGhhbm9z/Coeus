@@ -108,6 +108,15 @@ private:
 };
 
 //=======================================================================================================
+class OverlayComp   :   public Component
+{
+public:
+    void paint(Graphics &g) override {
+        g.fillAll(Colours::grey.withAlpha(0.8f));
+    }
+};
+
+//=======================================================================================================
 
 class CustomTabContent :	public Component,
 							public ComboBox::Listener,
@@ -134,6 +143,7 @@ protected:
 	ScopedPointer<ImageButton> searchButton;    
     ScopedPointer<Label> tableHeader1, tableHeader2, tableHeader3, tableHeader4;
     ScopedPointer<ImageButton> addButton;
+    ScopedPointer<OverlayComp> addOverlayComp;
 
 	Image imageNormal;
 	Image imageMouseOver;

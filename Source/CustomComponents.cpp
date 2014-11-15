@@ -147,6 +147,8 @@ CustomTabContent::CustomTabContent() {
     tableHeader2->setJustificationType(Justification::centred);
     tableHeader3->setJustificationType(Justification::centred);
     tableHeader4->setJustificationType(Justification::centred);
+    
+    addChildComponent(addOverlayComp = new OverlayComp());
 }
 
 CustomTabContent::~CustomTabContent()
@@ -181,6 +183,8 @@ void CustomTabContent::resized()
 	searchButton->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f - 120.0f / (float)getParentWidth(), 0.01 + 0.05f, sbwp, sbhp);
 
 	searchFilter->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f + sbwp + 0.01f - 120.0f / (float)getParentWidth(), 0.01 + 0.05f, 0.1f, 0.05f);
+    
+    addOverlayComp->setBounds(compBounds);
 }
 
 Rectangle<int> CustomTabContent::getComponentArea()
@@ -199,6 +203,8 @@ void CustomTabContent::buttonClicked(Button *btn)
 		searchButtonPressed();
 	}
     else if (btn == addButton) {
-        
+        addOverlayComp->setVisible(true);
+        addOverlayComp->toFront(true);
+        addButtonPressed();
     }
 }
