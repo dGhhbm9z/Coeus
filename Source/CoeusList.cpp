@@ -131,18 +131,6 @@ CoeusListRowComponent::CoeusListRowComponent() : detailedView(false)
     
     details->addListener(this);
     addAndMakeVisible(details);
-    
-    remove = new ImageButton();
-    imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/removeButton/normal.png"));
-    imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/removeButton/hover.png"));
-    imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/removeButton/clicked.png"));
-    remove->setImages(false, true, true,
-                       imageNormal, 1.0f, Colours::transparentBlack,
-                       imageMouseOver, 1.0f, Colours::transparentBlack,
-                       imageMouseDown, 1.0f, Colours::transparentBlack,
-                       0.0f);
-    remove->addListener(this);
-    addAndMakeVisible(remove);
 }
 
 int CoeusListRowComponent::getRow() const
@@ -170,7 +158,6 @@ void CoeusListRowComponent::setDetailedView(bool s, bool force) {
             const int btnW=66;
             
             details->setBounds(lm+3*(teWS+pad)+pad+150+10+btnW, tm, btnW, teHS);
-            remove->setBounds(lm+3*(teWS+pad)+pad+150+10+2*btnW, tm, teHS, teHS);
         }
     }
 }
@@ -178,7 +165,6 @@ void CoeusListRowComponent::setDetailedView(bool s, bool force) {
 void CoeusListRowComponent::shouldShowControls(bool show) {
     showControls = show;
     details->setVisible(show);
-    remove->setVisible(show);
     setDetailedView(detailedView, true);
 }
 

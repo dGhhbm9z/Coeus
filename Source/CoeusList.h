@@ -60,7 +60,7 @@ protected:
 
     // control buttons
     Image imageNormal, imageMouseOver, imageMouseDown;
-    ScopedPointer<ImageButton> details, remove;
+    ScopedPointer<ImageButton> details;
     
     bool detailedView, editView, showControls;
     int row;

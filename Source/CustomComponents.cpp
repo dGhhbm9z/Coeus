@@ -126,6 +126,30 @@ CustomTabContent::CustomTabContent() {
                             0.0f);
     
     addButton->addListener(this);
+    
+    editButton = new ImageButton();
+    imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/normal.png"));
+    imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/hover.png"));
+    imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/clicked.png"));
+    editButton->setImages(false, true, true,
+                      imageNormal, 1.0f, Colours::transparentBlack,
+                      imageMouseOver, 1.0f, Colours::transparentBlack,
+                      imageMouseDown, 1.0f, Colours::transparentBlack,
+                      0.0f);
+    editButton->addListener(this);
+    addAndMakeVisible(editButton);
+    
+    removeButton = new ImageButton();
+    imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/removeButton/normal.png"));
+    imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/removeButton/hover.png"));
+    imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/removeButton/clicked.png"));
+    removeButton->setImages(false, true, true,
+                      imageNormal, 1.0f, Colours::transparentBlack,
+                      imageMouseOver, 1.0f, Colours::transparentBlack,
+                      imageMouseDown, 1.0f, Colours::transparentBlack,
+                      0.0f);
+    removeButton->addListener(this);
+    addAndMakeVisible(removeButton);
 
 	searchFilter = new ComboBox();
 	searchFilter->addItem(L"Any", 1);
@@ -176,6 +200,8 @@ void CustomTabContent::resized()
     tableHeader3->setBounds(lm+2*(teWS+pad), starty+tm, 150, teHS);
     tableHeader4->setBounds(lm+2*(teWS+pad)+pad+150, starty+tm, teWS, teHS);
     addButton->setBounds(lm+3*(teWS+pad)+pad+150+100, starty+tm, 25, 25);
+    editButton->setBounds(lm+3*(teWS+pad)+pad+150+100+50, starty+tm, 25, 25);
+    removeButton->setBounds(lm+3*(teWS+pad)+pad+150+100+100, starty+tm, 25, 25);
     
 	const float sbz = getHeight()*0.05f;
 	const float sbwp = sbz / (float)getWidth();
@@ -203,8 +229,14 @@ void CustomTabContent::buttonClicked(Button *btn)
 		searchButtonPressed();
 	}
     else if (btn == addButton) {
-        addOverlayComp->setVisible(true);
+        addOverlayComp->setVisible(!addOverlayComp->isVisible());
         addOverlayComp->toFront(true);
         addButtonPressed();
+    }
+    else if (btn == editButton) {
+        editButtonPressed();
+    }
+    else if (btn == removeButton) {
+        removeButtonPressed();
     }
 }

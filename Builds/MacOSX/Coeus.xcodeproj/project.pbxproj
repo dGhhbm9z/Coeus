@@ -26,6 +26,7 @@
 		3FCD54601A17799100ECADF2 /* addButton in Resources */ = {isa = PBXBuildFile; fileRef = 3FCD545F1A17799100ECADF2 /* addButton */; };
 		3FCD54631A17A2BC00ECADF2 /* listButton in Resources */ = {isa = PBXBuildFile; fileRef = 3FCD54611A17A2BC00ECADF2 /* listButton */; };
 		3FCD54641A17A2BC00ECADF2 /* removeButton in Resources */ = {isa = PBXBuildFile; fileRef = 3FCD54621A17A2BC00ECADF2 /* removeButton */; };
+		3FCD54661A17A70100ECADF2 /* editButton in Resources */ = {isa = PBXBuildFile; fileRef = 3FCD54651A17A70100ECADF2 /* editButton */; };
 		4F17A49082DA18803863D153 /* juce_gui_basics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D6066344B307728903DF455 /* juce_gui_basics.mm */; };
 		51C53B33262B46BE8736D7D1 /* juce_core.mm in Sources */ = {isa = PBXBuildFile; fileRef = F20B2F0DFB09615CF3D28096 /* juce_core.mm */; };
 		52A2BB607D9FE675F3527694 /* juce_audio_formats.mm in Sources */ = {isa = PBXBuildFile; fileRef = AD7DFAFF7F55003353A79F51 /* juce_audio_formats.mm */; };
@@ -284,6 +285,7 @@
 		3FCD545F1A17799100ECADF2 /* addButton */ = {isa = PBXFileReference; lastKnownFileType = folder; name = addButton; path = ../../Resources/addButton; sourceTree = "<group>"; };
 		3FCD54611A17A2BC00ECADF2 /* listButton */ = {isa = PBXFileReference; lastKnownFileType = folder; name = listButton; path = ../../Resources/listButton; sourceTree = "<group>"; };
 		3FCD54621A17A2BC00ECADF2 /* removeButton */ = {isa = PBXFileReference; lastKnownFileType = folder; name = removeButton; path = ../../Resources/removeButton; sourceTree = "<group>"; };
+		3FCD54651A17A70100ECADF2 /* editButton */ = {isa = PBXFileReference; lastKnownFileType = folder; name = editButton; path = ../../Resources/editButton; sourceTree = "<group>"; };
 		4003409D748813F44CB4B176 /* juce_Colour.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_Colour.cpp; path = ../../JuceLibraryCode/modules/juce_graphics/colour/juce_Colour.cpp; sourceTree = SOURCE_ROOT; };
 		40278A4EE842D8A5A748F01A /* juce_mac_AudioCDReader.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_mac_AudioCDReader.mm; path = ../../JuceLibraryCode/modules/juce_audio_devices/native/juce_mac_AudioCDReader.mm; sourceTree = SOURCE_ROOT; };
 		40483DD734D38CB684722E81 /* PortDefinitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PortDefinitions.h; path = ../../Source/PortDefinitions.h; sourceTree = SOURCE_ROOT; };
@@ -1860,6 +1862,7 @@
 		8F54CCF1DEA6D95492BC9AA4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3FCD54651A17A70100ECADF2 /* editButton */,
 				3FCD54611A17A2BC00ECADF2 /* listButton */,
 				3FCD54621A17A2BC00ECADF2 /* removeButton */,
 				3FCD545F1A17799100ECADF2 /* addButton */,
@@ -2767,6 +2770,7 @@
 				3FCD545D1A16B88800ECADF2 /* sidebar in Resources */,
 				3FCD545E1A16B88800ECADF2 /* splash in Resources */,
 				3FCD545C1A16B88800ECADF2 /* search in Resources */,
+				3FCD54661A17A70100ECADF2 /* editButton in Resources */,
 				3FCD54601A17799100ECADF2 /* addButton in Resources */,
 				3FCD54641A17A2BC00ECADF2 /* removeButton in Resources */,
 				9A96F767A95CC2454CAF4B2C /* RecentFilesMenuTemplate.nib in Resources */,
