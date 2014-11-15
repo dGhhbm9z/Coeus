@@ -279,6 +279,12 @@ void CoeusList::selectRow(int rowNumber)
     repaintRow(rowNumber);
 }
 
+void CoeusList::addSelectRow(int rowNumber)
+{
+    selectedRow.add(rowNumber);
+    repaintRow(rowNumber);
+}
+
 void CoeusList::paint(Graphics &g)
 {
     const int viewHeight = sb.getCurrentRangeStart()*heap.getSum();
@@ -416,12 +422,34 @@ void CoeusList::mouseDown (const MouseEvent &event)
         parent = parent->getParentComponent();
     }
     
-    if (rcomp && (selectedRow[0] != rcomp->getRow())) {
-        CoeusListRowComponent *prevComp = dynamic_cast<CoeusListRowComponent*>(getComponentForRow(selectedRow[0]));
+    if (rcomp && (!selectedRow.contains(rcomp->getRow()))) {
+        CoeusListRowComponent *prevComp = dynamic_cast<CoeusListRowComponent*>(getComponentForRow(selectedRow.getLast()));
+        const int rowNumber = rcomp->getRow();
         
         // select new row
-        const int prevR = selectedRow[0];
-        selectRow(rcomp->getRow());
+        const int prevR = selectedRow.getLast();
+        if (event.mods.isShiftDown()) {
+            const int start = jmin(rowNumber, selectedRow.getLast());
+            const int end = jmax(rowNumber, selectedRow.getLast());
+            for(int i=start; i<=end; i++) {
+                addSelectRow(i);
+            }
+        }
+        else if (event.mods.isCtrlDown()) {
+            if (selectedRow.contains(rowNumber)) {
+                selectedRow.removeFirstMatchingValue(rowNumber);
+                repaintRow(rowNumber);
+            }
+            else {
+                addSelectRow(rowNumber);
+            }
+        }
+        else if (event.mods.isAltDown()) {
+            selectRow(-1);
+        }
+        else {
+            selectRow(rowNumber);
+        }
         
         // show/hide controls
         rcomp->shouldShowControls(true);
@@ -455,7 +483,7 @@ void CoeusList::mouseMove(const MouseEvent &event)
         // show/hide controls
         rcomp->shouldShowControls(true);
         
-        if (prevComp && (prevComp->getRow() != selectedRow[0])) {
+        if (prevComp && (!selectedRow.contains(prevComp->getRow()))) {
             prevComp->shouldShowControls(false);
         }
         

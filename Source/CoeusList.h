@@ -96,6 +96,7 @@ public:
     void update();
     void resized() override;
     void selectRow(int rowNumber);
+    void addSelectRow(int rowNumber);
     
     //
     void scrollBarMoved (ScrollBar *scrollBarThatHasMoved, double newRangeStart) override;
