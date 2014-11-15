@@ -422,20 +422,19 @@ void CoeusList::mouseDown (const MouseEvent &event)
         parent = parent->getParentComponent();
     }
     
-    if (rcomp && (!selectedRow.contains(rcomp->getRow()))) {
+    if (rcomp != nullptr) {
         CoeusListRowComponent *prevComp = dynamic_cast<CoeusListRowComponent*>(getComponentForRow(selectedRow.getLast()));
         const int rowNumber = rcomp->getRow();
         
         // select new row
         const int prevR = selectedRow.getLast();
         if (event.mods.isShiftDown()) {
-            const int start = jmin(rowNumber, selectedRow.getLast());
-            const int end = jmax(rowNumber, selectedRow.getLast());
-            for(int i=start; i<=end; i++) {
+            const int c = (selectedRow.getLast() < rowNumber) ? 1 : -1;
+            for(int i=selectedRow.getLast(); i<=rowNumber; i += c) {
                 addSelectRow(i);
             }
         }
-        else if (event.mods.isCtrlDown()) {
+        else if (event.mods.isCtrlDown() || event.mods.isCommandDown()) {
             if (selectedRow.contains(rowNumber)) {
                 selectedRow.removeFirstMatchingValue(rowNumber);
                 repaintRow(rowNumber);
@@ -483,7 +482,7 @@ void CoeusList::mouseMove(const MouseEvent &event)
         // show/hide controls
         rcomp->shouldShowControls(true);
         
-        if (prevComp && (!selectedRow.contains(prevComp->getRow()))) {
+        if (prevComp && (selectedRow.getLast() != prevComp->getRow())) {
             prevComp->shouldShowControls(false);
         }
         
