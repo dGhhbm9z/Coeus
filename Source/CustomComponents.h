@@ -135,6 +135,7 @@ public:
 	virtual void addButtonPressed() = 0;
     virtual void editButtonPressed() {};
     virtual void removeButtonPressed() {};
+    virtual void duplicateButtonPressed() {};
     
 	void buttonClicked(Button *) override;
 
@@ -144,7 +145,7 @@ protected:
 	ScopedPointer<ComboBox> searchFilter;
 	ScopedPointer<ImageButton> searchButton;    
     ScopedPointer<Label> tableHeader1, tableHeader2, tableHeader3, tableHeader4;
-    ScopedPointer<ImageButton> addButton, editButton, removeButton;
+    ScopedPointer<ImageButton> addButton, duplicateButton, editButton, removeButton;
     ScopedPointer<OverlayComp> addOverlayComp;
 
 	Image imageNormal;
