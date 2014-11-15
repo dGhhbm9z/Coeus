@@ -84,6 +84,11 @@ public:
         
     }
     
+    void shouldShowControls(bool show) override {
+        showControls = false;
+        details->setVisible(false);
+    }
+    
 private:
     // summary
     ScopedPointer<TextEditor> CodeTE, NameTE, AccountTypeTE, XreosPistTE;
@@ -140,7 +145,7 @@ CoeusListRowComponent * AccountChartTableListBoxModel::refreshComponentForRow(in
         // TODO
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountChartRowComponent::maxRowSize : false;
         newComp->updateFromQueryForRow(qe, rowNumber,  dView);
-        newComp->shouldShowControls(isRowSelected);
+        newComp->shouldShowControls(false);
         
         return newComp;
     }
@@ -151,7 +156,7 @@ CoeusListRowComponent * AccountChartTableListBoxModel::refreshComponentForRow(in
         if(cmp) {
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountChartRowComponent::maxRowSize : false;
             cmp->updateFromQueryForRow(qe, rowNumber, dView);
-            cmp->shouldShowControls(isRowSelected);
+            cmp->shouldShowControls(false);
         }
         
         return existingComponentToUpdate;

@@ -234,7 +234,7 @@ CoeusListRowComponent * CustomersTableListBoxModel::refreshComponentForRow(int r
         // TODO
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CustomersRowComponent::maxRowSize : false;
         newComp->updateFromQueryForRow(qe, rowNumber,  dView);
-        newComp->shouldShowControls(isRowSelected);
+        newComp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
 
         return newComp;
     }
@@ -245,7 +245,7 @@ CoeusListRowComponent * CustomersTableListBoxModel::refreshComponentForRow(int r
         if(cmp) {
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CustomersRowComponent::maxRowSize : false;
             cmp->updateFromQueryForRow(qe, rowNumber, dView);
-            cmp->shouldShowControls(isRowSelected);
+            cmp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
         }
 
         return existingComponentToUpdate;

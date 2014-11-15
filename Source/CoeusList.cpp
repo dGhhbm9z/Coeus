@@ -281,7 +281,7 @@ void CoeusList::selectRow(int rowNumber)
 
 void CoeusList::addSelectRow(int rowNumber)
 {
-    selectedRow.add(rowNumber);
+    selectedRow.addIfNotAlreadyThere(rowNumber);
     repaintRow(rowNumber);
 }
 
@@ -338,7 +338,7 @@ void CoeusList::updateComponents()
             res->repaint();            
         }
         else {
-            CoeusListRowComponent *res = refreshComponentForRow(r, selectedRow.contains(r), items[r-startRow]);
+            CoeusListRowComponent *res = refreshComponentForRow(r, selectedRow.getLast() == r, items[r-startRow]);
             if (res != items[r-startRow]) {
                 if (items[r-startRow] != nullptr) {
                     items[r-startRow]->setVisible(false);
@@ -416,9 +416,20 @@ void CoeusList::mouseDown (const MouseEvent &event)
     // selected row
     CoeusListRowComponent *rcomp = dynamic_cast<CoeusListRowComponent *>(event.eventComponent);
     Component *parent = event.eventComponent->getParentComponent();
+    Button *btn = dynamic_cast<Button *>(event.eventComponent);
+    if (btn != nullptr) {
+        // buttons should handle themhselves
+        return;
+    }
     
     while (!rcomp && parent) {
         rcomp = dynamic_cast<CoeusListRowComponent *>(parent);
+        btn = dynamic_cast<Button *>(parent);
+        if (btn != nullptr) {
+            // buttons should handle themhselves
+            return;
+        }
+        
         parent = parent->getParentComponent();
     }
     
@@ -430,7 +441,7 @@ void CoeusList::mouseDown (const MouseEvent &event)
         const int prevR = selectedRow.getLast();
         if (event.mods.isShiftDown()) {
             const int c = (selectedRow.getLast() < rowNumber) ? 1 : -1;
-            for(int i=selectedRow.getLast(); i<=rowNumber; i += c) {
+            for(int i=selectedRow.getLast()+c; i*c<=rowNumber*c; i += c) {
                 addSelectRow(i);
             }
         }
