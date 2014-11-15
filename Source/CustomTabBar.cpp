@@ -1,5 +1,6 @@
 #include "CustomTabBar.h"
 #include "Main.h"
+#include "PortDefinitions.h"
 
 CustomTabbedButtonBar::CustomTabbedButtonBar()
 : index(1) 
@@ -82,6 +83,19 @@ CustomTabbedButtonBar::CustomTabbedButtonBar()
 	addChildComponent(financialRatios);
 	addChildComponent(openSourceInnovation);
 	addChildComponent(reportGenerator);
+    
+    pinButton = new ImageButton();
+    imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/pinButton/off.png"));
+    imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/pinButton/on.png"));
+    imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/pinButton/on.png"));
+    pinButton->setImages(false, true, true,
+                          imageNormal, 1.0f, Colours::transparentBlack,
+                          imageMouseOver, 1.0f, Colours::transparentBlack,
+                          imageMouseDown, 1.0f, Colours::transparentBlack,
+                          0.0f);
+    pinButton->setClickingTogglesState(true);
+    pinButton->addListener(this);
+    addAndMakeVisible(pinButton);
 }
 
 CustomTabbedButtonBar::~CustomTabbedButtonBar()
@@ -99,6 +113,7 @@ CustomTabbedButtonBar::~CustomTabbedButtonBar()
 	financialRatios = nullptr;
 	openSourceInnovation = nullptr;
 	reportGenerator = nullptr;
+    pinButton = nullptr;
 }
 
 void CustomTabbedButtonBar::paint(Graphics &g)
@@ -117,6 +132,8 @@ void CustomTabbedButtonBar::resized()
 	accounts->setBounds(0, 348, getWidth(), 75);
 	companies->setBounds(0, 448, getWidth(), 75);
 
+    pinButton->setBounds(getWidth()-15, 448+77, 15, 15);
+    
 	businessModel->setBounds(0, 48, getWidth(), 75);
 	businessPlan->setBounds(0, 148, getWidth(), 75);
 	financialRatios->setBounds(0, 248, getWidth(), 75);
@@ -196,10 +213,18 @@ void CustomTabbedButtonBar::buttonClicked(Button* buttonThatWasClicked)
 	else if (buttonThatWasClicked == logout) {
 		index = 11;
 	}
+    else if (buttonThatWasClicked == pinButton) {
+        
+    }
 	else {
 		index = 1;
 	}
 	sendChangeMessage();
+}
+
+bool CustomTabbedButtonBar::wantsToHide() const
+{
+    return !pinButton->getToggleState();
 }
 
 //=======================================================================
@@ -255,7 +280,7 @@ void CustomTabComponent::timerCallback()
 {
     static int hideWaitTimeInFrames = 5;
 
-    if (!isBeingResized) {
+    if (!isBeingResized && tabButtons->wantsToHide()) {
         ComponentAnimator &an = Desktop::getInstance().getAnimator();
         Rectangle<int> finalBoundsVisible = Rectangle<int>(0, tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
         Rectangle<int> finalBoundsHidden = Rectangle<int>(-tabButtons->getWidth(), tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
@@ -274,8 +299,10 @@ void CustomTabComponent::timerCallback()
         }
     }
     else {
+        Rectangle<int> finalBoundsVisible = Rectangle<int>(0, tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
         ComponentAnimator &an = Desktop::getInstance().getAnimator();
         an.cancelAnimation(tabButtons, false);
+        tabButtons->setBounds(finalBoundsVisible);
     }
 }
 

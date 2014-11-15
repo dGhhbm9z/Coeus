@@ -22,6 +22,7 @@ public:
 	void resized() override;
 	int getCurrentTabIndex() const;
 	void buttonClicked(Button* buttonThatWasClicked) override;
+    bool wantsToHide() const;
 
 private:
 	int index;
@@ -41,6 +42,10 @@ private:
 	ScopedPointer<CustomMenuBarButton> financialRatios;
 	ScopedPointer<CustomMenuBarButton> openSourceInnovation;
 	ScopedPointer<CustomMenuBarButton> reportGenerator;
+    
+    ScopedPointer<ImageButton> pinButton;
+    
+    Image imageNormal, imageMouseOver, imageMouseDown;
 
 	ThemeAlt themeAlt;
 };
