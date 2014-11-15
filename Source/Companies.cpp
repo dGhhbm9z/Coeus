@@ -300,3 +300,8 @@ void CompaniesComponent::searchButtonPressed()
     
 	std::cout << queryStr << std::endl;
 }
+
+void CompaniesComponent::addButtonPressed()
+{
+    // show add overlay
+}

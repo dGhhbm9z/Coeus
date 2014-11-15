@@ -327,3 +327,8 @@ void AccountsComponent::searchButtonPressed()
 
 	std::cout << queryStr << std::endl;
 }
+
+void AccountsComponent::addButtonPressed()
+{
+    // show add overlay
+}

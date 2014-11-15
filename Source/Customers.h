@@ -35,7 +35,8 @@ public:
 	void receivedResults(QueryEntry *qe_) override;
 
 	void searchButtonPressed() override;
-
+	void addButtonPressed() override;
+    
 private:
 	ScopedPointer<CustomersTableListBoxModel> customersTableListBoxModel;
 	QueryEntry *qe;

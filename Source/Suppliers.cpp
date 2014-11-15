@@ -334,3 +334,8 @@ void SuppliersComponent::searchButtonPressed()
     
     std::cout << queryStr << std::endl;
 }
+
+void SuppliersComponent::addButtonPressed()
+{
+    // show add overlay
+}

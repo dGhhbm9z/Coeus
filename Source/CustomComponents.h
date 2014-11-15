@@ -123,7 +123,8 @@ public:
 	void comboBoxChanged(ComboBox *comboBoxThatHasChanged) override;
 
 	virtual void searchButtonPressed() = 0;
-
+	virtual void addButtonPressed() = 0;
+    
 	void buttonClicked(Button *) override;
 
 protected:
@@ -132,7 +133,7 @@ protected:
 	ScopedPointer<ComboBox> searchFilter;
 	ScopedPointer<ImageButton> searchButton;    
     ScopedPointer<Label> tableHeader1, tableHeader2, tableHeader3, tableHeader4;
-
+    ScopedPointer<ImageButton> addButton;
 
 	Image imageNormal;
 	Image imageMouseOver;

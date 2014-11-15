@@ -112,6 +112,20 @@ CustomTabContent::CustomTabContent() {
 		0.0f);
 
 	searchButton->addListener(this);
+    
+    addButton = new ImageButton();
+    
+    imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/addButton/normal.png"));
+    imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/addButton/hover.png"));
+    imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/addButton/clicked.png"));
+    
+    addButton->setImages(false, true, true,
+                            imageNormal, 1.0f, Colours::transparentBlack,
+                            imageMouseOver, 1.0f, Colours::transparentBlack,
+                            imageMouseDown, 1.0f, Colours::transparentBlack,
+                            0.0f);
+    
+    addButton->addListener(this);
 
 	searchFilter = new ComboBox();
 	searchFilter->addItem(L"Any", 1);
@@ -121,6 +135,7 @@ CustomTabContent::CustomTabContent() {
 	addAndMakeVisible(title);
 	addAndMakeVisible(search);
 	addAndMakeVisible(searchButton);
+	addAndMakeVisible(addButton);
 	addAndMakeVisible(searchFilter);
     
     addAndMakeVisible(tableHeader1 = new Label(String::empty, "Customer Code"));
@@ -158,7 +173,8 @@ void CustomTabContent::resized()
     tableHeader2->setBounds(lm+teWS+pad, starty+tm, teWS, teHS);
     tableHeader3->setBounds(lm+2*(teWS+pad), starty+tm, 150, teHS);
     tableHeader4->setBounds(lm+2*(teWS+pad)+pad+150, starty+tm, teWS, teHS);
-
+    addButton->setBounds(lm+3*(teWS+pad)+pad+150+100, starty+tm, 25, 25);
+    
 	const float sbz = getHeight()*0.05f;
 	const float sbwp = sbz / (float)getWidth();
 	const float sbhp = sbz / (float)getHeight();
@@ -182,4 +198,7 @@ void CustomTabContent::buttonClicked(Button *btn)
 	if (btn == searchButton) {
 		searchButtonPressed();
 	}
+    else if (btn == addButton) {
+        
+    }
 }

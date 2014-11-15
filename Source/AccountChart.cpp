@@ -230,3 +230,8 @@ void AccountChartComponent::searchButtonPressed()
     
     std::cout << queryStr << std::endl;
 }
+
+void AccountChartComponent::addButtonPressed()
+{
+    // show add overlay
+}
