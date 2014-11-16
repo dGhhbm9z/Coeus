@@ -374,4 +374,9 @@ void SuppliersComponent::addButtonPressed()
 void SuppliersComponent::editButtonPressed()
 {
     suppliersTableListBoxModel->setEdit(editButton->getToggleState());
+    if (!editButton->getToggleState()) {
+        // TODO
+        // for key in rowUpdates
+        // update db
+    }
 }
