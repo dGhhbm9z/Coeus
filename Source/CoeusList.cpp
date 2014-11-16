@@ -182,6 +182,44 @@ void CoeusListRowComponent::buttonClicked (Button *btn) {
     }
 }
 
+void CoeusListRowComponent::updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit)
+{
+    setDetailedView(dView);
+    resized();
+    this->row = row;
+    if(qe) {
+        // summary
+        for (int i=0; i<getNumChildComponents(); i++) {
+            TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
+            if (te) {
+                te->setText(qe->getFieldFromRow(row, fieldNameToIndex(te->getName())));
+                te->setEnabled(edit);
+            }
+        }
+    }
+}
+
+void CoeusListRowComponent::updateFromMapForRow(QueryEntry *qe, std::map<String, String> rowUpdates, int row, bool dView, bool edit)
+{
+    setDetailedView(dView);
+    resized();
+    this->row = row;
+    
+    for (int i=0; i<getNumChildComponents(); i++) {
+        TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
+        if (te) {
+            const String key = (qe != nullptr) ? qe->getFieldFromRow(row, owner.getKeyField()) : String::empty;
+            if (key.isNotEmpty() && (rowUpdates.find(key) != rowUpdates.end())) {
+                te->setText(rowUpdates[te->getName()]);
+            }
+            else {
+                te->setText(qe->getFieldFromRow(row, fieldNameToIndex(te->getName())));
+            }
+            te->setEnabled(edit);
+        }
+    }
+}
+
 //===============================================================================
 
 CoeusList::CoeusList()

@@ -44,8 +44,8 @@ class CoeusListRowComponent :   public Component,
 public:
     CoeusListRowComponent(CoeusList &owner_);
     virtual int getCoeusListHeight() = 0;
-    virtual void updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit) = 0;
-    virtual void updateFromMapForRow(std::map<String, String>, int row, bool dView, bool edit) = 0;
+    virtual void updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit);
+    virtual void updateFromMapForRow(QueryEntry *qe, std::map<String, String>, int row, bool dView, bool edit);
     virtual int getMinRowSize() = 0;
     virtual int getMaxRowSize() = 0;
     virtual void resizeForSummary() = 0;
@@ -62,7 +62,7 @@ public:
     
     int getRow() const;
     void setRow(int r);
-
+    
 protected:
     void setDetailedView(bool s, bool force=false);
 

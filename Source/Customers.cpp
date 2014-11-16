@@ -151,36 +151,6 @@ public:
         CommercialActivity->setBounds(lm+2*(teWS+pad), tm+11*teHS, teWS, teHS);
     }
 
-    void updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit) override {
-        setDetailedView(dView);
-        resized();
-        this->row = row;
-        if(qe) {
-            // summary
-            for (int i=0; i<getNumChildComponents(); i++) {
-                TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
-                if (te) {
-                    te->setText(qe->getFieldFromRow(row, fieldNameToIndex(te->getName())));
-                    te->setEnabled(edit);
-                }
-            }
-        }
-    }
-    
-    void updateFromMapForRow(std::map<String, String> rowUpdates, int row, bool dView, bool edit) override {
-        setDetailedView(dView);
-        resized();
-        this->row = row;
-
-        for (int i=0; i<getNumChildComponents(); i++) {
-            TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
-            if (te) {
-                te->setText(rowUpdates[te->getName()]);
-                te->setEnabled(edit);
-            }
-        }
-    }
-
     int fieldNameToIndex(String fname) const override {
         if (fname.equalsIgnoreCase("CustomerCode")) {
             return 0;
@@ -309,7 +279,7 @@ CoeusListRowComponent * CustomersTableListBoxModel::refreshComponentForRow(int r
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CustomersRowComponent::maxRowSize : false;
         const String key = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : String::empty;
         if (key.isNotEmpty() && (rowsToUpdate.find(key) != rowsToUpdate.end())) {
-            newComp->updateFromMapForRow(rowsToUpdate[key], rowNumber, dView, edit);
+            newComp->updateFromMapForRow(qe, rowsToUpdate[key], rowNumber, dView, edit);
         }
         else {
             newComp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
@@ -326,7 +296,7 @@ CoeusListRowComponent * CustomersTableListBoxModel::refreshComponentForRow(int r
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CustomersRowComponent::maxRowSize : false;
             const String key = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : String::empty;
             if (key.isNotEmpty() && (rowsToUpdate.find(key) != rowsToUpdate.end())) {
-                cmp->updateFromMapForRow(rowsToUpdate[key], rowNumber, dView, edit);
+                cmp->updateFromMapForRow(qe, rowsToUpdate[key], rowNumber, dView, edit);
             }
             else {
                 cmp->updateFromQueryForRow(qe, rowNumber,  dView, edit);

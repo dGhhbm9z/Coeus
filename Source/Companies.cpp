@@ -123,26 +123,6 @@ public:
         Comments->setBounds(lm, tm+11*teHS, teWS, teHS);
     }
     
-    void updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit) override {
-        setDetailedView(dView);
-        resized();
-        this->row = row;
-        if(qe) {
-            // summary
-            for (int i=0; getNumChildComponents(); i++) {
-                TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
-                if (te) {
-                    te->setText(qe->getFieldFromRow(row, fieldNameToIndex(te->getName())));
-                    te->setEnabled(edit);
-                }
-            }
-        }
-    }
-    
-    void updateFromMapForRow(std::map<String, String>, int row, bool dView, bool edit) override {
-        
-    }
-    
     int fieldNameToIndex(String fname) const override {
         if (fname.equalsIgnoreCase("CompanyName")) {
             return 0;

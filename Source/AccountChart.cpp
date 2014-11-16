@@ -63,64 +63,21 @@ public:
 
     }
     
-    void updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit) override {
-        setDetailedView(dView);
-        resized();
-        this->row = row;
-        if(qe) {
-            // summary
-            CodeTE->setText(qe->getFieldFromRow(row, 1));
-            NameTE->setText(qe->getFieldFromRow(row, 2));
-            AccountTypeTE->setText(qe->getFieldFromRow(row, 3));
-            XreosPistTE->setText(qe->getFieldFromRow(row, 4));
-            
-            CodeTE->setEnabled(edit);
-            NameTE->setEnabled(edit);
-            AccountTypeTE->setEnabled(edit);
-            XreosPistTE->setEnabled(edit);
-        }
-    }
-    
-    void updateFromMapForRow(std::map<String, String>, int row, bool dView, bool edit) override {
-        
-    }
-    
     int fieldNameToIndex(String fname) const override {
-        if (fname.equalsIgnoreCase("CompanyName")) {
-            return 0;
-        }
-        else if (fname.equalsIgnoreCase("LegalInc")) {
+        if (fname.equalsIgnoreCase("Code")) {
             return 1;
         }
-        else if (fname.equalsIgnoreCase("Telephone")) {
+        else if (fname.equalsIgnoreCase("Name")) {
             return 2;
         }
-        else if (fname.equalsIgnoreCase("Activity")) {
+        else if (fname.equalsIgnoreCase("AccountType")) {
             return 3;
         }
-        else if (fname.equalsIgnoreCase("VAT")) {
+        else if (fname.equalsIgnoreCase("XreosPist")) {
             return 4;
         }
-        else if (fname.equalsIgnoreCase("IRS")) {
-            return 5;
-        }
-        else if (fname.equalsIgnoreCase("Address")) {
-            return 6;
-        }
-        else if (fname.equalsIgnoreCase("AddressNumber")) {
-            return 7;
-        }
-        else if (fname.equalsIgnoreCase("PersonInCharge")) {
-            return 8;
-        }
-        else if (fname.equalsIgnoreCase("StartDate")) {
-            return 9;
-        }
-        else if (fname.equalsIgnoreCase("Comments")) {
-            return 10;
-        }
         
-        return 0;
+        return 1;
     }
     
     void updateRow() {

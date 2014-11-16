@@ -132,89 +132,55 @@ public:
         CommercialActivity->setBounds(lm+2*(teWS+pad), tm+11*teHS, teWS, teHS);
     }
     
-    void updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit) override {
-        setDetailedView(dView);
-        resized();
-        this->row = row;
-        if(qe) {
-            // summary
-            SupplierCodeTE->setText(qe->getFieldFromRow(row, 1));
-            SupplierVATTE->setText(qe->getFieldFromRow(row, 2));
-            TrademarkTE->setText(qe->getFieldFromRow(row, 3));
-            NameTE->setText(qe->getFieldFromRow(row, 4));
-            // detailed view
-            FathersNameTE->setText(qe->getFieldFromRow(row, 5));
-            DateOfBirthTE->setText(qe->getFieldFromRow(row, 6));
-            AddressTE->setText(qe->getFieldFromRow(row, 7));
-            CityTE->setText(qe->getFieldFromRow(row, 8));
-            CountryTE->setText(qe->getFieldFromRow(row, 9));
-            PhonenumberTE->setText(qe->getFieldFromRow(row, 10));
-            FaxnumberTE->setText(qe->getFieldFromRow(row, 11));
-            EmailTE->setText(qe->getFieldFromRow(row, 12));
-            IDcardNumberTE->setText(qe->getFieldFromRow(row, 13));
-            SupplierTransactionsTE->setText(qe->getFieldFromRow(row, 14));
-            PublicRevenueServiceTE->setText(qe->getFieldFromRow(row, 15));
-            CommercialActivityTE->setText(qe->getFieldFromRow(row, 16));
-            
-            SupplierCodeTE->setEnabled(edit);
-            SupplierVATTE->setEnabled(edit);
-            TrademarkTE->setEnabled(edit);
-            NameTE->setEnabled(edit);
-            // detailed view
-            FathersNameTE->setEnabled(edit);
-            DateOfBirthTE->setEnabled(edit);
-            AddressTE->setEnabled(edit);
-            CityTE->setEnabled(edit);
-            CountryTE->setEnabled(edit);
-            PhonenumberTE->setEnabled(edit);
-            FaxnumberTE->setEnabled(edit);
-            EmailTE->setEnabled(edit);
-            IDcardNumberTE->setEnabled(edit);
-            SupplierTransactionsTE->setEnabled(edit);
-            PublicRevenueServiceTE->setEnabled(edit);
-            CommercialActivityTE->setEnabled(edit);
-        }
-    }
-    
-    void updateFromMapForRow(std::map<String, String>, int row, bool dView, bool edit) override {
-        
-    }
-    
     int fieldNameToIndex(String fname) const override {
-        if (fname.equalsIgnoreCase("CompanyName")) {
-            return 0;
-        }
-        else if (fname.equalsIgnoreCase("LegalInc")) {
+        if (fname.equalsIgnoreCase("SupplierCode")) {
             return 1;
         }
-        else if (fname.equalsIgnoreCase("Telephone")) {
+        else if (fname.equalsIgnoreCase("SupplierVAT")) {
             return 2;
         }
-        else if (fname.equalsIgnoreCase("Activity")) {
+        else if (fname.equalsIgnoreCase("Trademark")) {
             return 3;
         }
-        else if (fname.equalsIgnoreCase("VAT")) {
+        else if (fname.equalsIgnoreCase("Name")) {
             return 4;
         }
-        else if (fname.equalsIgnoreCase("IRS")) {
+        else if (fname.equalsIgnoreCase("FathersName")) {
             return 5;
         }
-        else if (fname.equalsIgnoreCase("Address")) {
+        else if (fname.equalsIgnoreCase("DateOfBirth")) {
             return 6;
         }
-        else if (fname.equalsIgnoreCase("AddressNumber")) {
+        else if (fname.equalsIgnoreCase("Address")) {
             return 7;
         }
-        else if (fname.equalsIgnoreCase("PersonInCharge")) {
+        else if (fname.equalsIgnoreCase("City")) {
             return 8;
         }
-        else if (fname.equalsIgnoreCase("StartDate")) {
+        else if (fname.equalsIgnoreCase("Country")) {
             return 9;
         }
-        else if (fname.equalsIgnoreCase("Comments")) {
+        else if (fname.equalsIgnoreCase("Phonenumber")) {
             return 10;
         }
-        
+        else if (fname.equalsIgnoreCase("Faxnumber")) {
+            return 11;
+        }
+        else if (fname.equalsIgnoreCase("Email")) {
+            return 12;
+        }
+        else if (fname.equalsIgnoreCase("IDcardNumber")) {
+            return 13;
+        }
+        else if (fname.equalsIgnoreCase("SupplierTransactions")) {
+            return 14;
+        }
+        else if (fname.equalsIgnoreCase("PublicRevenueService")) {
+            return 15;
+        }
+        else if (fname.equalsIgnoreCase("CommercialActivity")) {
+            return 16;
+        }
         return 0;
     }
     
