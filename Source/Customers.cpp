@@ -136,7 +136,7 @@ public:
         CommercialActivity->setBounds(lm+2*(teWS+pad), tm+11*teHS, teWS, teHS);
     }
 
-    void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) override {
+    void updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit) override {
         setDetailedView(dView);
         resized();
         this->row = row;
@@ -160,6 +160,25 @@ public:
             CustomerTransactionsTE->setText(qe->getFieldFromRow(row, 15));
             PublicRevenueServiceTE->setText(qe->getFieldFromRow(row, 16));
             CommercialActivityTE->setText(qe->getFieldFromRow(row, 17));
+            
+            CustomerCodeTE->setEnabled(edit);
+            NameTE->setEnabled(edit);
+            FathersNameTE->setEnabled(edit);
+            PhonenumberTE->setEnabled(edit);
+            // detailed view
+            TrademarkTE->setEnabled(edit);
+            CustomerVATTE->setEnabled(edit);
+            DateOfBirthTE->setEnabled(edit);
+            AddressTE->setEnabled(edit);
+            CityTE->setEnabled(edit);
+            CountryTE->setEnabled(edit);
+            ShippingAdressTE->setEnabled(edit);
+            FaxnumberTE->setEnabled(edit);
+            EmailTE->setEnabled(edit);
+            IDcardNumberTE->setEnabled(edit);
+            CustomerTransactionsTE->setEnabled(edit);
+            PublicRevenueServiceTE->setEnabled(edit);
+            CommercialActivityTE->setEnabled(edit);
         }
     }
 
@@ -233,7 +252,7 @@ CoeusListRowComponent * CustomersTableListBoxModel::refreshComponentForRow(int r
 
         // TODO
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CustomersRowComponent::maxRowSize : false;
-        newComp->updateFromQueryForRow(qe, rowNumber,  dView);
+        newComp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
         newComp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
 
         return newComp;
@@ -244,7 +263,7 @@ CoeusListRowComponent * CustomersTableListBoxModel::refreshComponentForRow(int r
 
         if(cmp) {
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CustomersRowComponent::maxRowSize : false;
-            cmp->updateFromQueryForRow(qe, rowNumber, dView);
+            cmp->updateFromQueryForRow(qe, rowNumber, dView, edit);
             cmp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
         }
 
@@ -348,4 +367,10 @@ void CustomersComponent::searchButtonPressed()
 void CustomersComponent::addButtonPressed()
 {
     // show add overlay
+}
+
+void CustomersComponent::editButtonPressed()
+{
+    customersTableListBoxModel->setEdit(editButton->getToggleState());
+    customersTableListBoxModel->update();    
 }

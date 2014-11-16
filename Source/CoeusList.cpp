@@ -185,7 +185,7 @@ void CoeusListRowComponent::buttonClicked (Button *btn) {
 //===============================================================================
 
 CoeusList::CoeusList()
-:   sb(true), qe(nullptr), rowUnderMouse(-1)
+:   sb(true), qe(nullptr), rowUnderMouse(-1), edit(false)
 {
     selectedRow.add(-1);
     sb.setRangeLimits(0.0, 1.0);

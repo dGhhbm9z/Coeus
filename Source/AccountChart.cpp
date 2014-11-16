@@ -63,7 +63,7 @@ public:
 
     }
     
-    void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) override {
+    void updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit) override {
         setDetailedView(dView);
         resized();
         this->row = row;
@@ -73,6 +73,11 @@ public:
             NameTE->setText(qe->getFieldFromRow(row, 2));
             AccountTypeTE->setText(qe->getFieldFromRow(row, 3));
             XreosPistTE->setText(qe->getFieldFromRow(row, 4));
+            
+            CodeTE->setEnabled(edit);
+            NameTE->setEnabled(edit);
+            AccountTypeTE->setEnabled(edit);
+            XreosPistTE->setEnabled(edit);
         }
     }
     
@@ -144,7 +149,7 @@ CoeusListRowComponent * AccountChartTableListBoxModel::refreshComponentForRow(in
         
         // TODO
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountChartRowComponent::maxRowSize : false;
-        newComp->updateFromQueryForRow(qe, rowNumber,  dView);
+        newComp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
         newComp->shouldShowControls(false);
         
         return newComp;
@@ -155,7 +160,7 @@ CoeusListRowComponent * AccountChartTableListBoxModel::refreshComponentForRow(in
         
         if(cmp) {
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountChartRowComponent::maxRowSize : false;
-            cmp->updateFromQueryForRow(qe, rowNumber, dView);
+            cmp->updateFromQueryForRow(qe, rowNumber, dView, edit);
             cmp->shouldShowControls(false);
         }
         
@@ -239,4 +244,9 @@ void AccountChartComponent::searchButtonPressed()
 void AccountChartComponent::addButtonPressed()
 {
     // show add overlay
+}
+
+void AccountChartComponent::editButtonPressed()
+{
+    accountChartTableListBoxModel->setEdit(editButton->getToggleState());
 }

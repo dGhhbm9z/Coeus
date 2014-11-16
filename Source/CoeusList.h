@@ -39,7 +39,7 @@ class CoeusListRowComponent :   public Component,
 public:
     CoeusListRowComponent();
     virtual int getCoeusListHeight() = 0;
-    virtual void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) = 0;
+    virtual void updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit) = 0;
     virtual int getMinRowSize() = 0;
     virtual int getMaxRowSize() = 0;
     virtual void resizeForSummary() = 0;
@@ -49,6 +49,7 @@ public:
     
     virtual void updateRow() = 0;
     virtual void insertRow() = 0;
+    virtual void setEdit(bool ed) { };
     
     void buttonClicked (Button *btn) override;
     
@@ -97,6 +98,7 @@ public:
     void resized() override;
     void selectRow(int rowNumber);
     void addSelectRow(int rowNumber);
+    virtual void setEdit(bool ed) { edit = ed; };
     
     //
     void scrollBarMoved (ScrollBar *scrollBarThatHasMoved, double newRangeStart) override;
@@ -127,6 +129,7 @@ protected:
     QueryEntry *qe;
     int rowUnderMouse;
     HeapBlock<int> rowSizes;
+    bool edit;
     
 private:
     virtual void updateComponents();

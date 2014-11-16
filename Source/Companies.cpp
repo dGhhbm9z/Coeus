@@ -55,6 +55,21 @@ public:
     ~CompaniesRowComponent() {
     }
 
+    void setEdit(bool ed) {
+        companyNameTE->setEnabled(ed);
+        legalIncTE->setEnabled(ed);
+        telephoneTE->setEnabled(ed);
+        activityTE->setEnabled(ed);
+        
+        VATTE->setEnabled(ed);
+        IRSTE->setEnabled(ed);
+        AddressTE->setEnabled(ed);
+        AddressNumberTE->setEnabled(ed);
+        PersonInChargeTE->setEnabled(ed);
+        StartDateTE->setEnabled(ed);
+        CommentsTE->setEnabled(ed);
+    }
+    
     int getCoeusListHeight() override {
         if (detailedView) {
             return maxRowSize;
@@ -108,7 +123,7 @@ public:
         Comments->setBounds(lm, tm+11*teHS, teWS, teHS);
     }
 
-    void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) override {
+    void updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit) override {
         setDetailedView(dView);
         resized();
         this->row = row;
@@ -126,6 +141,19 @@ public:
             PersonInChargeTE->setText(qe->getFieldFromRow(row, 8));
             StartDateTE->setText(qe->getFieldFromRow(row, 9));
             CommentsTE->setText(qe->getFieldFromRow(row, 10));
+            
+            companyNameTE->setEnabled(edit);
+            legalIncTE->setEnabled(edit);
+            telephoneTE->setEnabled(edit);
+            activityTE->setEnabled(edit);
+            // detailed view
+            VATTE->setEnabled(edit);
+            IRSTE->setEnabled(edit);
+            AddressTE->setEnabled(edit);
+            AddressNumberTE->setEnabled(edit);
+            PersonInChargeTE->setEnabled(edit);
+            StartDateTE->setEnabled(edit);
+            CommentsTE->setEnabled(edit);
         }
     }
     
@@ -197,7 +225,7 @@ CoeusListRowComponent * CompaniesTableListBoxModel::refreshComponentForRow(int r
 
         // TODO
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize : false;
-        newComp->updateFromQueryForRow(qe, rowNumber,  dView);
+        newComp->updateFromQueryForRow(qe, rowNumber, dView, edit);
         newComp->shouldShowControls(isRowSelected);
 
 		return newComp;
@@ -208,7 +236,7 @@ CoeusListRowComponent * CompaniesTableListBoxModel::refreshComponentForRow(int r
 
         if(cmp) {
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize : false;
-            cmp->updateFromQueryForRow(qe, rowNumber, dView);
+            cmp->updateFromQueryForRow(qe, rowNumber, dView, edit);
             cmp->shouldShowControls(isRowSelected);
         }
 
@@ -304,4 +332,9 @@ void CompaniesComponent::searchButtonPressed()
 void CompaniesComponent::addButtonPressed()
 {
     // show add overlay
+}
+
+void CompaniesComponent::editButtonPressed()
+{
+    companiesTableListBoxModel->setEdit(editButton->getToggleState());
 }

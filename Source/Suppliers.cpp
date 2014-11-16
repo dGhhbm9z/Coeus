@@ -132,7 +132,7 @@ public:
         CommercialActivity->setBounds(lm+2*(teWS+pad), tm+11*teHS, teWS, teHS);
     }
     
-    void updateFromQueryForRow(QueryEntry *qe, int row, bool dView) override {
+    void updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit) override {
         setDetailedView(dView);
         resized();
         this->row = row;
@@ -155,6 +155,24 @@ public:
             SupplierTransactionsTE->setText(qe->getFieldFromRow(row, 14));
             PublicRevenueServiceTE->setText(qe->getFieldFromRow(row, 15));
             CommercialActivityTE->setText(qe->getFieldFromRow(row, 16));
+            
+            SupplierCodeTE->setEnabled(edit);
+            SupplierVATTE->setEnabled(edit);
+            TrademarkTE->setEnabled(edit);
+            NameTE->setEnabled(edit);
+            // detailed view
+            FathersNameTE->setEnabled(edit);
+            DateOfBirthTE->setEnabled(edit);
+            AddressTE->setEnabled(edit);
+            CityTE->setEnabled(edit);
+            CountryTE->setEnabled(edit);
+            PhonenumberTE->setEnabled(edit);
+            FaxnumberTE->setEnabled(edit);
+            EmailTE->setEnabled(edit);
+            IDcardNumberTE->setEnabled(edit);
+            SupplierTransactionsTE->setEnabled(edit);
+            PublicRevenueServiceTE->setEnabled(edit);
+            CommercialActivityTE->setEnabled(edit);
         }
     }
     
@@ -227,7 +245,7 @@ CoeusListRowComponent * SuppliersTableListBoxModel::refreshComponentForRow(int r
         
         // TODO
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == SuppliersRowComponent::maxRowSize : false;
-        newComp->updateFromQueryForRow(qe, rowNumber,  dView);
+        newComp->updateFromQueryForRow(qe, rowNumber, dView, edit);
         newComp->shouldShowControls(isRowSelected);
         
         return newComp;
@@ -238,7 +256,7 @@ CoeusListRowComponent * SuppliersTableListBoxModel::refreshComponentForRow(int r
         
         if(cmp) {
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == SuppliersRowComponent::maxRowSize : false;
-            cmp->updateFromQueryForRow(qe, rowNumber, dView);
+            cmp->updateFromQueryForRow(qe, rowNumber, dView, edit);
             cmp->shouldShowControls(isRowSelected);
         }
         
@@ -338,4 +356,9 @@ void SuppliersComponent::searchButtonPressed()
 void SuppliersComponent::addButtonPressed()
 {
     // show add overlay
+}
+
+void SuppliersComponent::editButtonPressed()
+{
+    suppliersTableListBoxModel->setEdit(editButton->getToggleState());
 }

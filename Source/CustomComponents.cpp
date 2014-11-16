@@ -148,6 +148,7 @@ CustomTabContent::CustomTabContent() {
                       imageMouseOver, 1.0f, Colours::transparentBlack,
                       imageMouseDown, 1.0f, Colours::transparentBlack,
                       0.0f);
+    editButton->setClickingTogglesState(true);
     editButton->addListener(this);
     addAndMakeVisible(editButton);
     

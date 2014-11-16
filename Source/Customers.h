@@ -36,6 +36,7 @@ public:
 
 	void searchButtonPressed() override;
 	void addButtonPressed() override;
+    void editButtonPressed() override;    
     
 private:
 	ScopedPointer<CustomersTableListBoxModel> customersTableListBoxModel;

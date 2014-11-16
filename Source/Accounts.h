@@ -60,7 +60,8 @@ public:
 	void receivedResults(QueryEntry *qe_) override;
 
 	void searchButtonPressed() override;
-	void addButtonPressed() override;    
+	void addButtonPressed() override;
+    void editButtonPressed() override;    
 
 private:
 	ScopedPointer<AccountsTableListBoxModel> accounts;
