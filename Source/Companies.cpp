@@ -13,7 +13,7 @@ public:
     const int teHS = getMinRowSize() - tm - bm;
     const int teWS = 250;
     
-    CompaniesRowComponent() {
+    CompaniesRowComponent(CoeusList &owner_) : CoeusListRowComponent(owner_) {
         detailedView = false;
         editView = false;
         showControls = false;
@@ -122,39 +122,63 @@ public:
         StartDate->setBounds(lm, tm+10*teHS, teWS, teHS);
         Comments->setBounds(lm, tm+11*teHS, teWS, teHS);
     }
-
+    
     void updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit) override {
         setDetailedView(dView);
         resized();
         this->row = row;
         if(qe) {
             // summary
-            companyNameTE->setText(qe->getFieldFromRow(row, 0));
-            legalIncTE->setText(qe->getFieldFromRow(row, 1));
-            telephoneTE->setText(qe->getFieldFromRow(row, 2));
-            activityTE->setText(qe->getFieldFromRow(row, 3));
-            // detailed view
-            VATTE->setText(qe->getFieldFromRow(row, 4));
-            IRSTE->setText(qe->getFieldFromRow(row, 5));
-            AddressTE->setText(qe->getFieldFromRow(row, 6));
-            AddressNumberTE->setText(qe->getFieldFromRow(row, 7));
-            PersonInChargeTE->setText(qe->getFieldFromRow(row, 8));
-            StartDateTE->setText(qe->getFieldFromRow(row, 9));
-            CommentsTE->setText(qe->getFieldFromRow(row, 10));
-            
-            companyNameTE->setEnabled(edit);
-            legalIncTE->setEnabled(edit);
-            telephoneTE->setEnabled(edit);
-            activityTE->setEnabled(edit);
-            // detailed view
-            VATTE->setEnabled(edit);
-            IRSTE->setEnabled(edit);
-            AddressTE->setEnabled(edit);
-            AddressNumberTE->setEnabled(edit);
-            PersonInChargeTE->setEnabled(edit);
-            StartDateTE->setEnabled(edit);
-            CommentsTE->setEnabled(edit);
+            for (int i=0; getNumChildComponents(); i++) {
+                TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
+                if (te) {
+                    te->setText(qe->getFieldFromRow(row, fieldNameToIndex(te->getName())));
+                    te->setEnabled(edit);
+                }
+            }
         }
+    }
+    
+    void updateFromMapForRow(std::map<String, String>, int row, bool dView, bool edit) override {
+        
+    }
+    
+    int fieldNameToIndex(String fname) const override {
+        if (fname.equalsIgnoreCase("CompanyName")) {
+            return 0;
+        }
+        else if (fname.equalsIgnoreCase("LegalInc")) {
+            return 1;
+        }
+        else if (fname.equalsIgnoreCase("Telephone")) {
+            return 2;
+        }
+        else if (fname.equalsIgnoreCase("Activity")) {
+            return 3;
+        }
+        else if (fname.equalsIgnoreCase("VAT")) {
+            return 4;
+        }
+        else if (fname.equalsIgnoreCase("IRS")) {
+            return 5;
+        }
+        else if (fname.equalsIgnoreCase("Address")) {
+            return 6;
+        }
+        else if (fname.equalsIgnoreCase("AddressNumber")) {
+            return 7;
+        }
+        else if (fname.equalsIgnoreCase("PersonInCharge")) {
+            return 8;
+        }
+        else if (fname.equalsIgnoreCase("StartDate")) {
+            return 9;
+        }
+        else if (fname.equalsIgnoreCase("Comments")) {
+            return 10;
+        }
+        
+        return 0;
     }
     
     void updateRow() {
@@ -218,7 +242,7 @@ CoeusListRowComponent * CompaniesTableListBoxModel::refreshComponentForRow(int r
 {
 	// create
 	if (existingComponentToUpdate == nullptr) {
-        CompaniesRowComponent *newComp = new CompaniesRowComponent();
+        CompaniesRowComponent *newComp = new CompaniesRowComponent(*this);
         newComp->addMouseListener(this, true);
         newComp->addChangeListener(this);
         newComp->setRow(rowNumber);

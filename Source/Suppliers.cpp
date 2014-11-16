@@ -13,7 +13,7 @@ public:
     const int teHS = getMinRowSize() - tm - bm;
     const int teWS = 250;
     
-    SuppliersRowComponent() {
+    SuppliersRowComponent(CoeusList &owner_) : CoeusListRowComponent(owner_) {
         detailedView = false;
         editView = false;
         showControls = false;
@@ -176,6 +176,48 @@ public:
         }
     }
     
+    void updateFromMapForRow(std::map<String, String>, int row, bool dView, bool edit) override {
+        
+    }
+    
+    int fieldNameToIndex(String fname) const override {
+        if (fname.equalsIgnoreCase("CompanyName")) {
+            return 0;
+        }
+        else if (fname.equalsIgnoreCase("LegalInc")) {
+            return 1;
+        }
+        else if (fname.equalsIgnoreCase("Telephone")) {
+            return 2;
+        }
+        else if (fname.equalsIgnoreCase("Activity")) {
+            return 3;
+        }
+        else if (fname.equalsIgnoreCase("VAT")) {
+            return 4;
+        }
+        else if (fname.equalsIgnoreCase("IRS")) {
+            return 5;
+        }
+        else if (fname.equalsIgnoreCase("Address")) {
+            return 6;
+        }
+        else if (fname.equalsIgnoreCase("AddressNumber")) {
+            return 7;
+        }
+        else if (fname.equalsIgnoreCase("PersonInCharge")) {
+            return 8;
+        }
+        else if (fname.equalsIgnoreCase("StartDate")) {
+            return 9;
+        }
+        else if (fname.equalsIgnoreCase("Comments")) {
+            return 10;
+        }
+        
+        return 0;
+    }
+    
     void updateRow() {
     }
     
@@ -243,7 +285,7 @@ CoeusListRowComponent * SuppliersTableListBoxModel::refreshComponentForRow(int r
 {
     // create
     if (existingComponentToUpdate == nullptr) {
-        SuppliersRowComponent *newComp = new SuppliersRowComponent();
+        SuppliersRowComponent *newComp = new SuppliersRowComponent(*this);
         newComp->addMouseListener(this, true);
         newComp->addChangeListener(this);
         newComp->setRow(rowNumber);

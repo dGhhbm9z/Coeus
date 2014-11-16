@@ -13,7 +13,7 @@ public:
     const int teHS = getMinRowSize() - tm - bm;
     const int teWS = 250;
 
-    CustomersRowComponent() {
+    CustomersRowComponent(CoeusList &owner_) : CoeusListRowComponent(owner_) {
         detailedView = false;
         editView = false;
         showControls = false;
@@ -24,6 +24,10 @@ public:
         addAndMakeVisible(NameTE = new TextEditor("Name"));
         addAndMakeVisible(FathersNameTE = new TextEditor("FathersName"));
         addAndMakeVisible(PhonenumberTE = new TextEditor("Phonenumber"));
+        CustomerCodeTE->addListener(&owner);
+        NameTE->addListener(&owner);
+        FathersNameTE->addListener(&owner);
+        PhonenumberTE->addListener(&owner);
 
         // summary labels
         addAndMakeVisible(CustomerCode = new Label("Customer Code", "Customer Code"));
@@ -45,7 +49,18 @@ public:
         addAndMakeVisible(CustomerTransactionsTE = new TextEditor("CustomerTransactions"));
         addAndMakeVisible(PublicRevenueServiceTE = new TextEditor("PublicRevenueService"));
         addAndMakeVisible(CommercialActivityTE = new TextEditor("CommercialActivity"));
-
+        TrademarkTE->addListener(&owner);
+        CustomerVATTE->addListener(&owner);
+        DateOfBirthTE->addListener(&owner);
+        CityTE->addListener(&owner);
+        CountryTE->addListener(&owner);
+        ShippingAdressTE->addListener(&owner);
+        FaxnumberTE->addListener(&owner);
+        EmailTE->addListener(&owner);
+        IDcardNumberTE->addListener(&owner);
+        CustomerTransactionsTE->addListener(&owner);
+        PublicRevenueServiceTE->addListener(&owner);
+        CommercialActivityTE->addListener(&owner);
 
         // detailed view labels
         addAndMakeVisible(Trademark = new Label("Trademark", "Trademark"));
@@ -142,46 +157,76 @@ public:
         this->row = row;
         if(qe) {
             // summary
-            CustomerCodeTE->setText(qe->getFieldFromRow(row, 0));
-            NameTE->setText(qe->getFieldFromRow(row, 4));
-            FathersNameTE->setText(qe->getFieldFromRow(row, 5));
-            PhonenumberTE->setText(qe->getFieldFromRow(row, 11));
-            // detailed view
-            TrademarkTE->setText(qe->getFieldFromRow(row, 3));
-            CustomerVATTE->setText(qe->getFieldFromRow(row, 2));
-            DateOfBirthTE->setText(qe->getFieldFromRow(row, 6));
-            AddressTE->setText(qe->getFieldFromRow(row, 7));
-            CityTE->setText(qe->getFieldFromRow(row, 8));
-            CountryTE->setText(qe->getFieldFromRow(row, 9));
-            ShippingAdressTE->setText(qe->getFieldFromRow(row, 10));
-            FaxnumberTE->setText(qe->getFieldFromRow(row, 12));
-            EmailTE->setText(qe->getFieldFromRow(row, 13));
-            IDcardNumberTE->setText(qe->getFieldFromRow(row, 14));
-            CustomerTransactionsTE->setText(qe->getFieldFromRow(row, 15));
-            PublicRevenueServiceTE->setText(qe->getFieldFromRow(row, 16));
-            CommercialActivityTE->setText(qe->getFieldFromRow(row, 17));
-            
-            CustomerCodeTE->setEnabled(edit);
-            NameTE->setEnabled(edit);
-            FathersNameTE->setEnabled(edit);
-            PhonenumberTE->setEnabled(edit);
-            // detailed view
-            TrademarkTE->setEnabled(edit);
-            CustomerVATTE->setEnabled(edit);
-            DateOfBirthTE->setEnabled(edit);
-            AddressTE->setEnabled(edit);
-            CityTE->setEnabled(edit);
-            CountryTE->setEnabled(edit);
-            ShippingAdressTE->setEnabled(edit);
-            FaxnumberTE->setEnabled(edit);
-            EmailTE->setEnabled(edit);
-            IDcardNumberTE->setEnabled(edit);
-            CustomerTransactionsTE->setEnabled(edit);
-            PublicRevenueServiceTE->setEnabled(edit);
-            CommercialActivityTE->setEnabled(edit);
+            for (int i=0; i<getNumChildComponents(); i++) {
+                TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
+                if (te) {
+                    te->setText(qe->getFieldFromRow(row, fieldNameToIndex(te->getName())));
+                    te->setEnabled(edit);
+                }
+            }
         }
     }
+    
+    void updateFromMapForRow(std::map<String, String>, int row, bool dView, bool edit) override {
+        
+    }
 
+    int fieldNameToIndex(String fname) const override {
+        if (fname.equalsIgnoreCase("CustomerCode")) {
+            return 0;
+        }
+        else if (fname.equalsIgnoreCase("CustomerVAT")) {
+            return 2;
+        }
+        else if (fname.equalsIgnoreCase("Trademark")) {
+            return 3;
+        }
+        else if (fname.equalsIgnoreCase("Name")) {
+            return 4;
+        }
+        else if (fname.equalsIgnoreCase("FathersName")) {
+            return 5;
+        }
+        else if (fname.equalsIgnoreCase("DateOfBirth")) {
+            return 6;
+        }
+        else if (fname.equalsIgnoreCase("Address")) {
+            return 7;
+        }
+        else if (fname.equalsIgnoreCase("City")) {
+            return 8;
+        }
+        else if (fname.equalsIgnoreCase("Country")) {
+            return 9;
+        }
+        else if (fname.equalsIgnoreCase("ShippingAdress")) {
+            return 10;
+        }
+        else if (fname.equalsIgnoreCase("Phonenumber")) {
+            return 11;
+        }
+        else if (fname.equalsIgnoreCase("Faxnumber")) {
+            return 12;
+        }
+        else if (fname.equalsIgnoreCase("Email")) {
+            return 13;
+        }
+        else if (fname.equalsIgnoreCase("IDcardNumber")) {
+            return 14;
+        }
+        else if (fname.equalsIgnoreCase("CustomerTransactions")) {
+            return 15;
+        }
+        else if (fname.equalsIgnoreCase("PublicRevenueService")) {
+            return 16;
+        }
+        else if (fname.equalsIgnoreCase("CommercialActivity")) {
+            return 17;
+        }
+        
+        return 0;
+    }
+    
     void updateRow() {
 
     }
@@ -245,14 +290,20 @@ CoeusListRowComponent * CustomersTableListBoxModel::refreshComponentForRow(int r
 {
     // create
     if (existingComponentToUpdate == nullptr) {
-        CustomersRowComponent *newComp = new CustomersRowComponent();
+        CustomersRowComponent *newComp = new CustomersRowComponent(*this);
         newComp->addMouseListener(this, true);
         newComp->addChangeListener(this);
         newComp->setRow(rowNumber);
 
         // TODO
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CustomersRowComponent::maxRowSize : false;
-        newComp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
+        const String key = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : String::empty;
+        if (key.isNotEmpty() && (rowsToUpdate.find(key) != rowsToUpdate.end())) {
+            newComp->updateFromMapForRow(rowsToUpdate[key], rowNumber, dView, edit);
+        }
+        else {
+            newComp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
+        }
         newComp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
 
         return newComp;
@@ -263,7 +314,13 @@ CoeusListRowComponent * CustomersTableListBoxModel::refreshComponentForRow(int r
 
         if(cmp) {
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CustomersRowComponent::maxRowSize : false;
-            cmp->updateFromQueryForRow(qe, rowNumber, dView, edit);
+            const String key = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : String::empty;
+            if (key.isNotEmpty() && (rowsToUpdate.find(key) != rowsToUpdate.end())) {
+                cmp->updateFromMapForRow(rowsToUpdate[key], rowNumber, dView, edit);
+            }
+            else {
+                cmp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
+            }
             cmp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
         }
 

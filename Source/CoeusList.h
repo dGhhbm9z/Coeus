@@ -13,6 +13,9 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "CacheSystem.h"
 #include "CustomComponents.h"
+#include <map>
+
+//==============================================================================
 
 class CoeusHeap
 {
@@ -32,14 +35,17 @@ private:
     int numEl;
 };
 
+class CoeusList;
+
 class CoeusListRowComponent :   public Component,
                                 public ChangeBroadcaster,
                                 public ButtonListener
 {
 public:
-    CoeusListRowComponent();
+    CoeusListRowComponent(CoeusList &owner_);
     virtual int getCoeusListHeight() = 0;
     virtual void updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit) = 0;
+    virtual void updateFromMapForRow(std::map<String, String>, int row, bool dView, bool edit) = 0;
     virtual int getMinRowSize() = 0;
     virtual int getMaxRowSize() = 0;
     virtual void resizeForSummary() = 0;
@@ -49,6 +55,7 @@ public:
     
     virtual void updateRow() = 0;
     virtual void insertRow() = 0;
+    virtual int fieldNameToIndex(String fname) const = 0;
     virtual void setEdit(bool ed) { };
     
     void buttonClicked (Button *btn) override;
@@ -65,7 +72,8 @@ protected:
     
     bool detailedView, editView, showControls;
     int row;
-    
+
+    CoeusList &owner;
 };
 
 class CoeusList :   public Component,
@@ -93,7 +101,7 @@ public:
     
     virtual int *getRowSizes(int *pointer) { return nullptr; }
     CoeusListRowComponent *getComponentForRow(int row) const;
-    virtual int getKeyField() = 0;
+    virtual int getKeyField() { return 0; };
 
     void rowChangedSize(int rowNumber, int newSize);
     void update();
@@ -124,9 +132,10 @@ public:
     
     //
     void textEditorTextChanged (TextEditor &) override;
+    void textEditorReturnKeyPressed (TextEditor &te) override;    
     
 protected:
-    HashMap<String, StringArray> rowsToUpdate;    
+    std::map<String, std::map<String, String>> rowsToUpdate;
     Array<int> selectedRow;
     virtual int getYStartForRow(int index) const;
     int getViewStartHeight() const;

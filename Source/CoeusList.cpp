@@ -114,7 +114,7 @@ int CoeusHeap::getSum() const
 
 //===============================================================================
 
-CoeusListRowComponent::CoeusListRowComponent() : detailedView(false)
+CoeusListRowComponent::CoeusListRowComponent(CoeusList &owner_) : detailedView(false), owner(owner_)
 {
     // control
     details = new ImageButton();
@@ -505,10 +505,18 @@ void CoeusList::textEditorTextChanged (TextEditor &te)
 {
     CoeusListRowComponent *rcomp = getFirstAncestorOf<CoeusListRowComponent*, CoeusList *>(te.getParentComponent());
     
-    if (rcomp) {
-        rowsToUpdate.set(qe->getFieldFromRow(rcomp->getRow(), getKeyField()), te.getText());
-        
+    const String text = te.getText();
+    const String fname = te.getName();
+    const String dbText = qe->getFieldFromRow(rcomp->getRow(), rcomp->fieldNameToIndex(fname));
+    if (rcomp && (dbText.compare(text) != 0)) {
+        const String key = qe->getFieldFromRow(rcomp->getRow(), getKeyField());
+        rowsToUpdate[key][fname] = text;
     }
+}
+
+void CoeusList::textEditorReturnKeyPressed (TextEditor &te)
+{
+    te.moveKeyboardFocusToSibling(true);
 }
 
 template <typename PointerType, typename ExcludedType> PointerType CoeusList::getFirstAncestorOf(Component * comp) const
