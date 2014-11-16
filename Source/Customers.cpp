@@ -167,8 +167,18 @@ public:
         }
     }
     
-    void updateFromMapForRow(std::map<String, String>, int row, bool dView, bool edit) override {
-        
+    void updateFromMapForRow(std::map<String, String> rowUpdates, int row, bool dView, bool edit) override {
+        setDetailedView(dView);
+        resized();
+        this->row = row;
+
+        for (int i=0; i<getNumChildComponents(); i++) {
+            TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
+            if (te) {
+                te->setText(rowUpdates[te->getName()]);
+                te->setEnabled(edit);
+            }
+        }
     }
 
     int fieldNameToIndex(String fname) const override {
