@@ -93,6 +93,7 @@ public:
     
     virtual int *getRowSizes(int *pointer) { return nullptr; }
     CoeusListRowComponent *getComponentForRow(int row) const;
+    virtual int getKeyField() = 0;
 
     void rowChangedSize(int rowNumber, int newSize);
     void update();
@@ -125,6 +126,7 @@ public:
     void textEditorTextChanged (TextEditor &) override;
     
 protected:
+    HashMap<String, StringArray> rowsToUpdate;    
     Array<int> selectedRow;
     virtual int getYStartForRow(int index) const;
     int getViewStartHeight() const;

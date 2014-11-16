@@ -16,6 +16,7 @@ public:
     int getRowSize(int rowNumber) override;
     int getMinRowSize() override;
     int getMaxRowSize() override;
+    int getKeyField() override;
     
     void paintRowBackground(Graphics &g, int rowNumber, int x, int y, int width, int height, bool rowIsSelected) override;
     CoeusListRowComponent * refreshComponentForRow(int rowNumber, bool isRowSelected, CoeusListRowComponent *existingComponentToUpdate) override;

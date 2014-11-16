@@ -20,10 +20,10 @@ public:
         
         // add fields
         // summary
-        addAndMakeVisible(SupplierCodeTE = new TextEditor());
-        addAndMakeVisible(NameTE = new TextEditor());
-        addAndMakeVisible(FathersNameTE = new TextEditor());
-        addAndMakeVisible(PhonenumberTE = new TextEditor());
+        addAndMakeVisible(SupplierCodeTE = new TextEditor("SupplierCode"));
+        addAndMakeVisible(NameTE = new TextEditor("Name"));
+        addAndMakeVisible(FathersNameTE = new TextEditor("FathersName"));
+        addAndMakeVisible(PhonenumberTE = new TextEditor("Phonenumber"));
         
         // summary labels
         addAndMakeVisible(SupplierCode = new Label("Supplier Code", "Supplier Code"));
@@ -32,18 +32,18 @@ public:
         addAndMakeVisible(Phonenumber = new Label("Phonenumber", "Phonenumber"));
         
         // detailed view
-        addAndMakeVisible(TrademarkTE = new TextEditor());
-        addAndMakeVisible(SupplierVATTE = new TextEditor());
-        addAndMakeVisible(DateOfBirthTE = new TextEditor());
-        addAndMakeVisible(AddressTE = new TextEditor());
-        addAndMakeVisible(CityTE = new TextEditor());
-        addAndMakeVisible(CountryTE = new TextEditor());
-        addAndMakeVisible(FaxnumberTE = new TextEditor());
-        addAndMakeVisible(EmailTE = new TextEditor());
-        addAndMakeVisible(IDcardNumberTE = new TextEditor());
-        addAndMakeVisible(SupplierTransactionsTE = new TextEditor());
-        addAndMakeVisible(PublicRevenueServiceTE = new TextEditor());
-        addAndMakeVisible(CommercialActivityTE = new TextEditor());
+        addAndMakeVisible(TrademarkTE = new TextEditor("Trademark"));
+        addAndMakeVisible(SupplierVATTE = new TextEditor("SupplierVAT"));
+        addAndMakeVisible(DateOfBirthTE = new TextEditor("DateOfBirth"));
+        addAndMakeVisible(AddressTE = new TextEditor("Address"));
+        addAndMakeVisible(CityTE = new TextEditor("City"));
+        addAndMakeVisible(CountryTE = new TextEditor("Country"));
+        addAndMakeVisible(FaxnumberTE = new TextEditor("FaxNumber"));
+        addAndMakeVisible(EmailTE = new TextEditor("Email"));
+        addAndMakeVisible(IDcardNumberTE = new TextEditor("IDcardNumber"));
+        addAndMakeVisible(SupplierTransactionsTE = new TextEditor("SupplierTransactions"));
+        addAndMakeVisible(PublicRevenueServiceTE = new TextEditor("PublicRevenueService"));
+        addAndMakeVisible(CommercialActivityTE = new TextEditor("CommercialActivity"));
         
         
         // detailed view labels
@@ -201,6 +201,11 @@ SuppliersTableListBoxModel::SuppliersTableListBoxModel()
 {
     update();
     rowSizes.calloc(1); //hack +1
+}
+
+int SuppliersTableListBoxModel::getKeyField()
+{
+    return 0;
 }
 
 int SuppliersTableListBoxModel::getNumRows()

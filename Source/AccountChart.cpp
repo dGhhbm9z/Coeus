@@ -20,10 +20,10 @@ public:
         
         // add fields
         // summary
-        addAndMakeVisible(CodeTE = new TextEditor());
-        addAndMakeVisible(NameTE = new TextEditor());
-        addAndMakeVisible(AccountTypeTE = new TextEditor());
-        addAndMakeVisible(XreosPistTE = new TextEditor());
+        addAndMakeVisible(CodeTE = new TextEditor("Code"));
+        addAndMakeVisible(NameTE = new TextEditor("Name"));
+        addAndMakeVisible(AccountTypeTE = new TextEditor("AccountType"));
+        addAndMakeVisible(XreosPistTE = new TextEditor("XreosPist"));
         
         resized();
     }

@@ -20,10 +20,10 @@ public:
 
         // add fields
         // summary
-        addAndMakeVisible(CustomerCodeTE = new TextEditor());
-        addAndMakeVisible(NameTE = new TextEditor());
-        addAndMakeVisible(FathersNameTE = new TextEditor());
-        addAndMakeVisible(PhonenumberTE = new TextEditor());
+        addAndMakeVisible(CustomerCodeTE = new TextEditor("CustomerCode"));
+        addAndMakeVisible(NameTE = new TextEditor("Name"));
+        addAndMakeVisible(FathersNameTE = new TextEditor("FathersName"));
+        addAndMakeVisible(PhonenumberTE = new TextEditor("Phonenumber"));
 
         // summary labels
         addAndMakeVisible(CustomerCode = new Label("Customer Code", "Customer Code"));
@@ -32,19 +32,19 @@ public:
         addAndMakeVisible(Phonenumber = new Label("Phonenumber", "Phonenumber"));
 
         // detailed view
-        addAndMakeVisible(TrademarkTE = new TextEditor());
-        addAndMakeVisible(CustomerVATTE = new TextEditor());
-        addAndMakeVisible(DateOfBirthTE = new TextEditor());
-        addAndMakeVisible(AddressTE = new TextEditor());
-        addAndMakeVisible(CityTE = new TextEditor());
-        addAndMakeVisible(CountryTE = new TextEditor());
-        addAndMakeVisible(ShippingAdressTE = new TextEditor());
-        addAndMakeVisible(FaxnumberTE = new TextEditor());
-        addAndMakeVisible(EmailTE = new TextEditor());
-        addAndMakeVisible(IDcardNumberTE = new TextEditor());
-        addAndMakeVisible(CustomerTransactionsTE = new TextEditor());
-        addAndMakeVisible(PublicRevenueServiceTE = new TextEditor());
-        addAndMakeVisible(CommercialActivityTE = new TextEditor());
+        addAndMakeVisible(TrademarkTE = new TextEditor("Trademark"));
+        addAndMakeVisible(CustomerVATTE = new TextEditor("CustomerVAT"));
+        addAndMakeVisible(DateOfBirthTE = new TextEditor("DateOfBirth"));
+        addAndMakeVisible(AddressTE = new TextEditor("Address"));
+        addAndMakeVisible(CityTE = new TextEditor("City"));
+        addAndMakeVisible(CountryTE = new TextEditor("Country"));
+        addAndMakeVisible(ShippingAdressTE = new TextEditor("ShippingAddress"));
+        addAndMakeVisible(FaxnumberTE = new TextEditor("FaxNumber"));
+        addAndMakeVisible(EmailTE = new TextEditor("Email"));
+        addAndMakeVisible(IDcardNumberTE = new TextEditor("IDcardNumber"));
+        addAndMakeVisible(CustomerTransactionsTE = new TextEditor("CustomerTransactions"));
+        addAndMakeVisible(PublicRevenueServiceTE = new TextEditor("PublicRevenueService"));
+        addAndMakeVisible(CommercialActivityTE = new TextEditor("CommercialActivity"));
 
 
         // detailed view labels

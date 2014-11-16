@@ -501,9 +501,14 @@ void CoeusList::mouseWheelMove (const MouseEvent &event, const MouseWheelDetails
     sb.setCurrentRangeStart(nCStart);
 }
 
-void CoeusList::textEditorTextChanged (TextEditor &)
+void CoeusList::textEditorTextChanged (TextEditor &te)
 {
+    CoeusListRowComponent *rcomp = getFirstAncestorOf<CoeusListRowComponent*, CoeusList *>(te.getParentComponent());
     
+    if (rcomp) {
+        rowsToUpdate.set(qe->getFieldFromRow(rcomp->getRow(), getKeyField()), te.getText());
+        
+    }
 }
 
 template <typename PointerType, typename ExcludedType> PointerType CoeusList::getFirstAncestorOf(Component * comp) const

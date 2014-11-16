@@ -21,6 +21,8 @@ private:
 	friend class WeakReference<CacheSystemClient>;
 };
 
+//================================================================================
+
 class CacheReadyMessage : public CallbackMessage
 {
 public:
@@ -38,6 +40,8 @@ private:
 	QueryEntry *qe;
 };
 
+//================================================================================
+
 class QueryEntry{
 public:
     enum QueryTable { Events=0, Accounts, Companies, Customers, Suppliers, QueryTableSize};
@@ -45,13 +49,13 @@ public:
 	QueryEntry() : result(nullptr), num_fields(0), size(0) {
 	}
 
-	~QueryEntry() {
+	virtual ~QueryEntry() {
 		if (result != nullptr) {
 			free(result);
 		}
 	}
 
-	String getFieldFromRow(int row, int field) {
+	virtual String getFieldFromRow(int row, int field) {
 		const int sz = fieldSizes[row*num_fields + field];
 		char *str = (char *) malloc(sz+1);
 		str[sz] = '\0';
@@ -81,6 +85,41 @@ public:
 private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(QueryEntry)
 };
+
+//================================================================================
+
+class QueryUpdateEntry
+{
+public:
+    QueryUpdateEntry() {
+    }
+    
+    virtual ~QueryUpdateEntry() {
+    }
+    
+    bool containsKey(String key) {
+        return rowsToUpdate.contains(key);
+    }
+    
+    String getFieldFromKey(String key, int field) {
+        return rowsToUpdate[key][field];
+    }
+    
+    void setFieldForKey(String key, int field, String &value) {
+        rowsToUpdate[key].set(field, value);
+    }
+    
+    bool commitChanges() {
+        return true;
+    }
+    
+private:
+    HashMap<String, StringArray> rowsToUpdate;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(QueryUpdateEntry)
+};
+
+//================================================================================
+
 
 class CacheSystem	:	public Thread
 {
