@@ -70,6 +70,7 @@ protected:
 
 class CoeusList :   public Component,
                     public ScrollBar::Listener,
+                    public TextEditor::Listener,
                     public ChangeListener
 {
 public:
@@ -120,6 +121,9 @@ public:
     virtual int getMinRowSize() = 0;
     virtual int getMaxRowSize() = 0;
     
+    //
+    void textEditorTextChanged (TextEditor &) override;
+    
 protected:
     Array<int> selectedRow;
     virtual int getYStartForRow(int index) const;
@@ -134,6 +138,8 @@ protected:
 private:
     virtual void updateComponents();
     virtual void positionComponents();
+    
+    template <typename PointerType, typename ExcludedType> PointerType getFirstAncestorOf(Component * component) const;
     
     Array<CoeusListRowComponent *> items;
     Array<CoeusListRowComponent *> pool;

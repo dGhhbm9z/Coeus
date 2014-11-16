@@ -414,24 +414,7 @@ void CoeusList::changeListenerCallback(ChangeBroadcaster *source)
 void CoeusList::mouseDown (const MouseEvent &event)
 {
     // selected row
-    CoeusListRowComponent *rcomp = dynamic_cast<CoeusListRowComponent *>(event.eventComponent);
-    Component *parent = event.eventComponent->getParentComponent();
-    Button *btn = dynamic_cast<Button *>(event.eventComponent);
-    if (btn != nullptr) {
-        // buttons should handle themhselves
-        return;
-    }
-    
-    while (!rcomp && parent) {
-        rcomp = dynamic_cast<CoeusListRowComponent *>(parent);
-        btn = dynamic_cast<Button *>(parent);
-        if (btn != nullptr) {
-            // buttons should handle themhselves
-            return;
-        }
-        
-        parent = parent->getParentComponent();
-    }
+    CoeusListRowComponent *rcomp = getFirstAncestorOf<CoeusListRowComponent*, Button *>(event.eventComponent);
     
     if (rcomp != nullptr) {
         CoeusListRowComponent *prevComp = dynamic_cast<CoeusListRowComponent*>(getComponentForRow(selectedRow.getLast()));
@@ -475,13 +458,7 @@ void CoeusList::mouseDown (const MouseEvent &event)
 
 void CoeusList::mouseMove(const MouseEvent &event)
 {
-    CoeusListRowComponent *rcomp = dynamic_cast<CoeusListRowComponent *>(event.eventComponent);
-    Component *parent = event.eventComponent->getParentComponent();
-    
-    while (!rcomp && parent) {
-        rcomp = dynamic_cast<CoeusListRowComponent *>(parent);
-        parent = parent->getParentComponent();
-    }
+    CoeusListRowComponent *rcomp = getFirstAncestorOf<CoeusListRowComponent*, CoeusList *>(event.eventComponent);
     
     if (rcomp && (rowUnderMouse != rcomp->getRow())) {
         CoeusListRowComponent *prevComp = dynamic_cast<CoeusListRowComponent*>(getComponentForRow(rowUnderMouse));
@@ -522,4 +499,32 @@ void CoeusList::mouseWheelMove (const MouseEvent &event, const MouseWheelDetails
     const double cStart = sb.getCurrentRangeStart();
     const double nCStart = cStart + wheel.deltaY;
     sb.setCurrentRangeStart(nCStart);
+}
+
+void CoeusList::textEditorTextChanged (TextEditor &)
+{
+    
+}
+
+template <typename PointerType, typename ExcludedType> PointerType CoeusList::getFirstAncestorOf(Component * comp) const
+{
+    PointerType rcomp = dynamic_cast<PointerType>(comp);
+    ExcludedType excl = dynamic_cast<ExcludedType>(comp);
+    Component *parent = comp->getParentComponent();
+    
+    if (excl) {
+        return nullptr;
+    }
+    
+    while (!rcomp && parent) {
+        rcomp = dynamic_cast<PointerType>(parent);
+        parent = parent->getParentComponent();
+        
+        excl = dynamic_cast<ExcludedType>(comp);
+        if (excl) {
+            return nullptr;
+        }
+    }
+    
+    return rcomp;
 }
