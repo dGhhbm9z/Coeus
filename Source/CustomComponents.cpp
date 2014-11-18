@@ -236,6 +236,11 @@ void CustomTabContent::comboBoxChanged(ComboBox *comboBoxThatHasChanged)
 
 }
 
+void CustomTabContent::changeListenerCallback(ChangeBroadcaster *source)
+{
+
+}
+
 void CustomTabContent::buttonClicked(Button *btn)
 {
 	if (btn == searchButton) {

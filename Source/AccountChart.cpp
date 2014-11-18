@@ -184,6 +184,7 @@ AccountChartComponent::AccountChartComponent()
     title->setText("AccountChart", dontSendNotification);
     accountChartTableListBoxModel = new AccountChartTableListBoxModel();
     addAndMakeVisible(accountChartTableListBoxModel);
+    accountChartTableListBoxModel->addChangeListener(this);
     
     tableHeader1->setText("Code", dontSendNotification);
     tableHeader2->setText("Name", dontSendNotification);
@@ -248,4 +249,21 @@ void AccountChartComponent::addButtonPressed()
 void AccountChartComponent::editButtonPressed()
 {
     accountChartTableListBoxModel->setEdit(editButton->getToggleState());
+}
+
+void AccountChartComponent::changeListenerCallback(ChangeBroadcaster *source)
+{
+    CoeusListRowComponent *src = dynamic_cast<CoeusListRowComponent*>(source);
+    if(src && src->isDetailed()) {
+        tableHeader1->setVisible(false);
+        tableHeader2->setVisible(false);
+        tableHeader3->setVisible(false);
+        tableHeader4->setVisible(false);
+    }
+    else {
+        tableHeader1->setVisible(true);
+        tableHeader2->setVisible(true);
+        tableHeader3->setVisible(true);
+        tableHeader4->setVisible(true);
+    }
 }

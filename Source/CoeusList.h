@@ -56,12 +56,14 @@ public:
     virtual void updateRow() = 0;
     virtual void insertRow() = 0;
     virtual int fieldNameToIndex(String fname) const = 0;
-    virtual void setEdit(bool ed) { };
+    virtual void setEdit(bool ed) { }
     
     void buttonClicked (Button *btn) override;
-    
+
     int getRow() const;
     void setRow(int r);
+
+    bool isDetailed() const { return detailedView; }
     
 protected:
     void setDetailedView(bool s, bool force=false);
@@ -79,7 +81,8 @@ protected:
 class CoeusList :   public Component,
                     public ScrollBar::Listener,
                     public TextEditor::Listener,
-                    public ChangeListener
+                    public ChangeListener,
+                    public ChangeBroadcaster
 {
 public:
     CoeusList();
@@ -101,14 +104,14 @@ public:
     
     virtual int *getRowSizes(int *pointer) { return nullptr; }
     CoeusListRowComponent *getComponentForRow(int row) const;
-    virtual int getKeyField() { return 0; };
+    virtual int getKeyField() { return 0; }
 
     void rowChangedSize(int rowNumber, int newSize);
     void update();
     void resized() override;
     void selectRow(int rowNumber);
     void addSelectRow(int rowNumber);
-    virtual void setEdit(bool ed) { edit = ed; };
+    virtual void setEdit(bool ed) { edit = ed; }
     
     //
     void scrollBarMoved (ScrollBar *scrollBarThatHasMoved, double newRangeStart) override;
@@ -132,7 +135,9 @@ public:
     
     //
     void textEditorTextChanged (TextEditor &) override;
-    void textEditorReturnKeyPressed (TextEditor &te) override;    
+    void textEditorReturnKeyPressed (TextEditor &te) override;
+
+    bool getWantsHeader() const { return wantsHeader; }
     
 protected:
     std::map<String, std::map<String, String>> rowsToUpdate;
@@ -144,7 +149,7 @@ protected:
     QueryEntry *qe;
     int rowUnderMouse;
     HeapBlock<int> rowSizes;
-    bool edit;
+    bool edit, wantsHeader;
     
 private:
     virtual void updateComponents();

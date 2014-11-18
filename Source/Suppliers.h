@@ -38,6 +38,7 @@ public:
     void searchButtonPressed() override;
 	void addButtonPressed() override;
     void editButtonPressed() override;    
+    void changeListenerCallback(ChangeBroadcaster *source) override;
     
 private:
     ScopedPointer<SuppliersTableListBoxModel> suppliersTableListBoxModel;

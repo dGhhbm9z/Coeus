@@ -265,6 +265,7 @@ CompaniesComponent::CompaniesComponent()
     title->setText("Companies", dontSendNotification);
 	companiesTableListBoxModel = new CompaniesTableListBoxModel();
 	addAndMakeVisible(companiesTableListBoxModel);
+    companiesTableListBoxModel->addChangeListener(this);
 
     tableHeader1->setText("Company Name", dontSendNotification);
     tableHeader2->setText("Legan Inc.", dontSendNotification);
@@ -341,4 +342,21 @@ void CompaniesComponent::addButtonPressed()
 void CompaniesComponent::editButtonPressed()
 {
     companiesTableListBoxModel->setEdit(editButton->getToggleState());
+}
+
+void CompaniesComponent::changeListenerCallback(ChangeBroadcaster *source)
+{
+    CoeusList *src = dynamic_cast<CoeusList*>(source);
+    if(src && !src->getWantsHeader()) {
+        tableHeader1->setVisible(false);
+        tableHeader2->setVisible(false);
+        tableHeader3->setVisible(false);
+        tableHeader4->setVisible(false);
+    }
+    else {
+        tableHeader1->setVisible(true);
+        tableHeader2->setVisible(true);
+        tableHeader3->setVisible(true);
+        tableHeader4->setVisible(true);
+    }
 }

@@ -4,6 +4,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "CacheSystem.h"
 #include "CustomComponents.h"
+#include "CoeusList.h"
 
 //=======================================================================================================
 class AccountCellButtons : public Component
@@ -39,7 +40,7 @@ public:
 
 	void changeListenerCallback(ChangeBroadcaster *source) override;
 	void mouseMove(const MouseEvent &event) override;
-	void mouseExit(const MouseEvent &event) override;
+    void mouseExit(const MouseEvent &event) override;
 
 private:
 	QueryEntry *qe;
@@ -61,7 +62,8 @@ public:
 
 	void searchButtonPressed() override;
 	void addButtonPressed() override;
-    void editButtonPressed() override;    
+    void editButtonPressed() override;
+    void changeListenerCallback(ChangeBroadcaster *source) override;
 
 private:
 	ScopedPointer<AccountsTableListBoxModel> accounts;

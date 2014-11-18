@@ -120,7 +120,8 @@ public:
 
 class CustomTabContent :	public Component,
 							public ComboBox::Listener,
-							public Button::Listener
+                            public Button::Listener,
+                            public ChangeListener
 {
 public:
 	CustomTabContent();
@@ -133,9 +134,11 @@ public:
 
 	virtual void searchButtonPressed() = 0;
 	virtual void addButtonPressed() = 0;
-    virtual void editButtonPressed() {};
-    virtual void removeButtonPressed() {};
-    virtual void duplicateButtonPressed() {};
+    virtual void editButtonPressed() {}
+    virtual void removeButtonPressed() {}
+    virtual void duplicateButtonPressed() {}
+
+    void changeListenerCallback(ChangeBroadcaster *source) override = 0;
     
 	void buttonClicked(Button *) override;
 

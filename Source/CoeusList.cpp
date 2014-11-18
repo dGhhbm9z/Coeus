@@ -410,6 +410,16 @@ void CoeusList::positionComponents()
             items[i]->setBounds(0, itemStartHeight, getWidth()-sb.getWidth(), height);
         }
     }
+
+    // message to hide headers
+    if(items.size() && items[0]->isDetailed()) {
+        wantsHeader = false;
+        sendChangeMessage();
+    }
+    else if (items.size() && wantsHeader == items[0]->isDetailed()) {
+        wantsHeader = true;
+        sendChangeMessage();
+    }
 }
 
 void CoeusList::scrollBarMoved (ScrollBar *scrollBarThatHasMoved, double newRangeStart)
