@@ -410,7 +410,18 @@ void CustomersComponent::addButtonPressed()
 void CustomersComponent::editButtonPressed()
 {
     customersTableListBoxModel->setEdit(editButton->getToggleState());
-    customersTableListBoxModel->update();    
+
+    if (!editButton->getToggleState()) {
+        //
+        StringArray pkNames;
+        pkNames.add("CustomerCode");
+        pkNames.add("CustomerVAT");
+
+        customersTableListBoxModel->updateDatabaseTable("Customers", pkNames);
+
+    }
+
+    customersTableListBoxModel->update();
 }
 
 void CustomersComponent::changeListenerCallback(ChangeBroadcaster *source)

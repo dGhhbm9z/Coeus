@@ -1,7 +1,7 @@
 	remove edit/add details
 
     remove summary labels
-save only on details next to add
+    save only on details next to add
 	remove next to add
 	enable multiline selection
 
@@ -22,7 +22,9 @@ allow renaming/resizing tabs
 
 autocomplete
 
+color coding in accounts
 
 ====================
 
+add...
 add qe functionality to handle inserts/updates

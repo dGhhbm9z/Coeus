@@ -57,6 +57,9 @@ public:
     virtual void insertRow() = 0;
     virtual int fieldNameToIndex(String fname) const = 0;
     virtual void setEdit(bool ed) { }
+
+    // TODO
+    // getValueForFieldName
     
     void buttonClicked (Button *btn) override;
 
@@ -137,8 +140,13 @@ public:
     void textEditorTextChanged (TextEditor &) override;
     void textEditorReturnKeyPressed (TextEditor &te) override;
 
+    // database updates
+    bool updateDatabaseTable(String &table, StringArray &pkName);
+    bool updateDatabaseTableForEntry(String &table, StringArray &pkName, StringArray &pk);
+
     bool getWantsHeader() const { return wantsHeader; }
-    
+    std::map<String, std::map<String, String>> &getChanges() { return rowsToUpdate; }
+
 protected:
     std::map<String, std::map<String, String>> rowsToUpdate;
     Array<int> selectedRow;

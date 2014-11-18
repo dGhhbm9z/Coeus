@@ -589,3 +589,44 @@ template <typename PointerType, typename ExcludedType> PointerType CoeusList::ge
     
     return rcomp;
 }
+
+bool CoeusList::updateDatabaseTable(String &table, StringArray &pkName)
+{
+    bool success = true;
+
+    const auto send = rowsToUpdate.end();
+    for(auto rit = rowsToUpdate.begin(); rit != send; rit++) {
+        if (!updateDatabaseTableForEntry(table, pkName, /**/)) {
+            success = false;
+        }
+    }
+
+    return success;
+}
+
+bool CoeusList::updateDatabaseTableForEntry(String &table, StringArray &pkName, StringArray &pk)
+{
+    // TODO: fix ? [0]
+    std::map<String, String> columns = rowsToUpdate[pk[0]];
+    String queryStr = "UPDATE "+table+" SET ";
+    const auto send = columns.end();
+    for(auto cit = columns.begin(); cit != send;) {
+        queryStr += cit->first+"=\""+cit->second;
+        if(cit++ != send) {
+            queryStr += "\", ";
+        }
+    }
+    queryStr += " WHERE ";
+    const auto pkNend = pkName.end();
+    const auto pkend = pkName.end();
+    for(auto pkNit = pkName.begin(), pkit = pk.begin();
+        pkNit != pkNend && pkit != pkend;) {
+        queryStr += *pkNit+"=\""+*pkit+"\" ";
+        if(pkNit++ != pkNend && pkNit++ != pkNend) {
+            queryStr += " AND ";
+        }
+    }
+
+    std::cout << queryStr << std::endl;
+    return true;
+}
