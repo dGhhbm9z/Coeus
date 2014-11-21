@@ -168,6 +168,7 @@ void CacheSystem::getResultsFor(String &str, QueryEntry::QueryTable tableType, C
 
 void CacheSystem::serveNextQuery()
 {
+    std::cout << "serveNextQuery():" << std::endl;
 	QueryEntry *query;
 	int nextQuery;
 
