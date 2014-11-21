@@ -72,6 +72,16 @@ public:
 		return res;
 	}
 
+    virtual StringArray getFieldFromRow(int row, Array<int> field) {
+        StringArray result;
+        for(int i=0; i<field.size(); i++) {
+            result.add(getFieldFromRow(row, field[i]));
+        }
+
+        return result;
+    }
+
+
 	String request;
 	Array<WeakReference<CacheSystemClient>> clientList;
 	void *result;

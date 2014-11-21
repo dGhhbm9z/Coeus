@@ -106,6 +106,13 @@ AccountChartTableListBoxModel::AccountChartTableListBoxModel()
     rowSizes.calloc(1); //hack +1
 }
 
+Array<int> AccountChartTableListBoxModel::getKeyField()
+{
+    Array<int> kf;
+    kf.add(0);
+    return kf;
+}
+
 int AccountChartTableListBoxModel::getNumRows()
 {
     if (qe != nullptr) {

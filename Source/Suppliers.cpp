@@ -211,9 +211,11 @@ SuppliersTableListBoxModel::SuppliersTableListBoxModel()
     rowSizes.calloc(1); //hack +1
 }
 
-int SuppliersTableListBoxModel::getKeyField()
+Array<int> SuppliersTableListBoxModel::getKeyField()
 {
-    return 0;
+    Array<int> kf;
+    kf.add(0);
+    return kf;
 }
 
 int SuppliersTableListBoxModel::getNumRows()

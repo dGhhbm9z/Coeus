@@ -14,7 +14,33 @@
 #include "CacheSystem.h"
 #include "CustomComponents.h"
 #include <map>
+#include <unordered_map>
 
+namespace std {
+    template <>
+    struct hash<StringArray>
+    {
+        std::size_t operator()(const StringArray& k) const
+        {
+          using std::size_t;
+          using std::hash;
+          using std::string;
+
+          // Compute individual hash values for first,
+          // second and third and combine them using XOR
+          // and bit shifting:
+
+            size_t h = 0;
+            int c = 0;
+            for(auto ind = k.begin(); ind != k.end(); ind++) {
+                h ^= hash<string>()(ind->toRawUTF8()) << c;
+                c = c==1 ? -1 : 1;
+            }
+
+          return h;
+        }
+    };
+}
 //==============================================================================
 
 class CoeusHeap
@@ -107,7 +133,7 @@ public:
     
     virtual int *getRowSizes(int *pointer) { return nullptr; }
     CoeusListRowComponent *getComponentForRow(int row) const;
-    virtual int getKeyField() { return 0; }
+    virtual Array<int> getKeyField() = 0;
 
     void rowChangedSize(int rowNumber, int newSize);
     void update();
@@ -141,14 +167,14 @@ public:
     void textEditorReturnKeyPressed (TextEditor &te) override;
 
     // database updates
-    bool updateDatabaseTable(String &table, StringArray &pkName);
-    bool updateDatabaseTableForEntry(String &table, StringArray &pkName, StringArray &pk);
+    bool updateDatabaseTable(const String &table, const StringArray &pkName);
+    bool updateDatabaseTableForEntry(const String &table, const StringArray &pkName, const StringArray &pk);
 
     bool getWantsHeader() const { return wantsHeader; }
-    std::map<String, std::map<String, String>> &getChanges() { return rowsToUpdate; }
+    std::unordered_map<StringArray, std::map<String, String>> &getChanges() { return rowsToUpdate; }
 
 protected:
-    std::map<String, std::map<String, String>> rowsToUpdate;
+    std::unordered_map<StringArray, std::map<String, String>> rowsToUpdate;
     Array<int> selectedRow;
     virtual int getYStartForRow(int index) const;
     int getViewStartHeight() const;

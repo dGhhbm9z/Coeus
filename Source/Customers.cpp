@@ -235,6 +235,14 @@ CustomersTableListBoxModel::CustomersTableListBoxModel()
     rowSizes.calloc(1); //hack +1
 }
 
+Array<int> CustomersTableListBoxModel::getKeyField()
+{
+    Array<int> kf;
+    kf.add(0);
+    kf.add(2);
+    return kf;
+}
+
 int CustomersTableListBoxModel::getNumRows()
 {
     if (qe != nullptr) {
@@ -277,9 +285,9 @@ CoeusListRowComponent * CustomersTableListBoxModel::refreshComponentForRow(int r
 
         // TODO
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CustomersRowComponent::maxRowSize : false;
-        const String key = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : String::empty;
-        if (key.isNotEmpty() && (rowsToUpdate.find(key) != rowsToUpdate.end())) {
-            newComp->updateFromMapForRow(qe, rowsToUpdate[key], rowNumber, dView, edit);
+        const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
+        if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
+            newComp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, edit);
         }
         else {
             newComp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
@@ -294,9 +302,9 @@ CoeusListRowComponent * CustomersTableListBoxModel::refreshComponentForRow(int r
 
         if(cmp) {
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CustomersRowComponent::maxRowSize : false;
-            const String key = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : String::empty;
-            if (key.isNotEmpty() && (rowsToUpdate.find(key) != rowsToUpdate.end())) {
-                cmp->updateFromMapForRow(qe, rowsToUpdate[key], rowNumber, dView, edit);
+            const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
+            if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
+                cmp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, edit);
             }
             else {
                 cmp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
@@ -417,7 +425,7 @@ void CustomersComponent::editButtonPressed()
         pkNames.add("CustomerCode");
         pkNames.add("CustomerVAT");
 
-        customersTableListBoxModel->updateDatabaseTable("Customers", pkNames);
+        customersTableListBoxModel->updateDatabaseTable("customers", pkNames);
 
     }
 

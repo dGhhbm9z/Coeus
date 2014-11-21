@@ -208,13 +208,7 @@ void CoeusListRowComponent::updateFromMapForRow(QueryEntry *qe, std::map<String,
     for (int i=0; i<getNumChildComponents(); i++) {
         TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
         if (te) {
-            const String key = (qe != nullptr) ? qe->getFieldFromRow(row, owner.getKeyField()) : String::empty;
-            if (key.isNotEmpty() && (rowUpdates.find(key) != rowUpdates.end())) {
-                te->setText(rowUpdates[te->getName()]);
-            }
-            else {
-                te->setText(qe->getFieldFromRow(row, fieldNameToIndex(te->getName())));
-            }
+            te->setText(rowUpdates[te->getName()]);
             te->setEnabled(edit);
         }
     }
@@ -557,7 +551,7 @@ void CoeusList::textEditorTextChanged (TextEditor &te)
     const String fname = te.getName();
     const String dbText = qe->getFieldFromRow(rcomp->getRow(), rcomp->fieldNameToIndex(fname));
     if (rcomp && (dbText.compare(text) != 0)) {
-        const String key = qe->getFieldFromRow(rcomp->getRow(), getKeyField());
+        const StringArray key = qe->getFieldFromRow(rcomp->getRow(), getKeyField());
         rowsToUpdate[key][fname] = text;
     }
 }
@@ -590,13 +584,13 @@ template <typename PointerType, typename ExcludedType> PointerType CoeusList::ge
     return rcomp;
 }
 
-bool CoeusList::updateDatabaseTable(String &table, StringArray &pkName)
+bool CoeusList::updateDatabaseTable(const String &table, const StringArray &pkName)
 {
     bool success = true;
 
     const auto send = rowsToUpdate.end();
     for(auto rit = rowsToUpdate.begin(); rit != send; rit++) {
-        if (!updateDatabaseTableForEntry(table, pkName, /**/)) {
+        if (!updateDatabaseTableForEntry(table, pkName, rit->first)) {
             success = false;
         }
     }
@@ -604,16 +598,16 @@ bool CoeusList::updateDatabaseTable(String &table, StringArray &pkName)
     return success;
 }
 
-bool CoeusList::updateDatabaseTableForEntry(String &table, StringArray &pkName, StringArray &pk)
+bool CoeusList::updateDatabaseTableForEntry(const String &table, const StringArray &pkName, const StringArray &pk)
 {
     // TODO: fix ? [0]
-    std::map<String, String> columns = rowsToUpdate[pk[0]];
+    std::map<String, String> columns = rowsToUpdate[pk];
     String queryStr = "UPDATE "+table+" SET ";
     const auto send = columns.end();
     for(auto cit = columns.begin(); cit != send;) {
-        queryStr += cit->first+"=\""+cit->second;
-        if(cit++ != send) {
-            queryStr += "\", ";
+        queryStr += cit->first+"=\""+cit->second+"\"";
+        if(++cit != send) {
+            queryStr += ", ";
         }
     }
     queryStr += " WHERE ";
@@ -622,7 +616,7 @@ bool CoeusList::updateDatabaseTableForEntry(String &table, StringArray &pkName, 
     for(auto pkNit = pkName.begin(), pkit = pk.begin();
         pkNit != pkNend && pkit != pkend;) {
         queryStr += *pkNit+"=\""+*pkit+"\" ";
-        if(pkNit++ != pkNend && pkNit++ != pkNend) {
+        if(++pkNit != pkNend && ++pkit != pkend) {
             queryStr += " AND ";
         }
     }
