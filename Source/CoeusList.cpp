@@ -590,13 +590,13 @@ template <typename PointerType, typename ExcludedType> PointerType CoeusList::ge
     return rcomp;
 }
 
-bool CoeusList::updateDatabaseTable(const String &table, const StringArray &pkName)
+bool CoeusList::updateDatabaseTable(const String &table, const StringArray &pkName, CacheSystemClient *ccc)
 {
     bool success = true;
 
     const auto send = rowsToUpdate.end();
     for(auto rit = rowsToUpdate.begin(); rit != send; rit++) {
-        if (!updateDatabaseTableForEntry(table, pkName, rit->first)) {
+        if (!updateDatabaseTableForEntry(table, pkName, rit->first, ccc)) {
             success = false;
         }
     }
@@ -604,7 +604,7 @@ bool CoeusList::updateDatabaseTable(const String &table, const StringArray &pkNa
     return success;
 }
 
-bool CoeusList::updateDatabaseTableForEntry(const String &table, const StringArray &pkName, const StringArray &pk)
+bool CoeusList::updateDatabaseTableForEntry(const String &table, const StringArray &pkName, const StringArray &pk, CacheSystemClient *ccc)
 {
     // TODO: fix ? [0]
     std::map<String, String> columns = rowsToUpdate[pk];
@@ -626,6 +626,9 @@ bool CoeusList::updateDatabaseTableForEntry(const String &table, const StringArr
             queryStr += " AND ";
         }
     }
+
+    CacheSystem *cs = CacheSystem::getInstance();
+    cs->getResultsFor(queryStr, QueryEntry::Accounts, ccc);
 
     std::cout << queryStr << std::endl;
     return true;

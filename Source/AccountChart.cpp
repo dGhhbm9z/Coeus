@@ -278,7 +278,7 @@ void AccountChartComponent::editButtonPressed()
         StringArray pkNames;
         pkNames.add("VAT");
 
-        accountChartTableListBoxModel->updateDatabaseTable("acounts", pkNames);
+        accountChartTableListBoxModel->updateDatabaseTable("accounts", pkNames, this);
 
     }
 

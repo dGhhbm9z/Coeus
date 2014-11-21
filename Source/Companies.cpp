@@ -317,9 +317,9 @@ void CompaniesComponent::resized()
 
 void CompaniesComponent::receivedResults(QueryEntry *qe_)
 {
-	qe = qe_;
-	companiesTableListBoxModel->setQueryEntry(qe);
-	companiesTableListBoxModel->update();
+    qe = qe_;
+    companiesTableListBoxModel->setQueryEntry(qe);
+    companiesTableListBoxModel->update();
 }
 
 void CompaniesComponent::mouseExit(const MouseEvent &event)
@@ -377,7 +377,7 @@ void CompaniesComponent::editButtonPressed()
         StringArray pkNames;
         pkNames.add("VAT");
 
-        companiesTableListBoxModel->updateDatabaseTable("companies", pkNames);
+        companiesTableListBoxModel->updateDatabaseTable("companies", pkNames, this);
 
     }
 

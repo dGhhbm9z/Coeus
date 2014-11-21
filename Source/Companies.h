@@ -24,7 +24,7 @@ public:
 
 //=======================================================================================================
 class CompaniesComponent :	public CustomTabContent,
-							public CacheSystemClient
+                            public CacheSystemClient
 {
 public:
 	CompaniesComponent();
@@ -34,7 +34,7 @@ public:
     
 	void mouseExit(const MouseEvent &event) override;
 
-	void receivedResults(QueryEntry *qe_) override;
+    void receivedResults(QueryEntry *qe_) override;
 
 	void searchButtonPressed() override;
 	void addButtonPressed() override;
@@ -43,7 +43,7 @@ public:
 
 private:
 	ScopedPointer<CompaniesTableListBoxModel> companiesTableListBoxModel;    
-	QueryEntry *qe;
+    QueryEntry *qe;
 };
 
 #endif

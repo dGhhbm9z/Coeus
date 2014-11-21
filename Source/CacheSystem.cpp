@@ -198,6 +198,7 @@ void CacheSystem::serveNextQuery()
 	if (mysql_real_query(con, query->request.toUTF8().getAddress(), query->request.getNumBytesAsUTF8()) != 0) {
 		// TODO: failure
 		std::cout << "query failed" << std::endl;
+        nextQueryToServeIndex = nextQuery;
 		mysql_close(con);
 		return;
 	}
@@ -205,8 +206,17 @@ void CacheSystem::serveNextQuery()
 		// query succeded
 		MYSQL_RES *res = mysql_store_result(con);
 		if (res == NULL) {
-			// TODO: failure
-			fprintf(stderr, "%s\n", mysql_error(con));
+            if(mysql_field_count(con) == 0) {
+                // query does not return data
+                // (it was not a SELECT)
+//                num_rows = mysql_affected_rows(&mysql);
+            }
+            else {
+                // TODO: failure
+                fprintf(stderr, "%s\n", mysql_error(con));
+            }
+
+            nextQueryToServeIndex = nextQuery;
 			mysql_close(con);
 			return;
 		}
@@ -217,7 +227,8 @@ void CacheSystem::serveNextQuery()
 		query->usedSpace = 0;
 		if (query->result == nullptr) {
 			// TODO : failed
-			std::cout << "Allocation for results failed" << std::endl;
+            std::cout << "Allocation for results failed" << std::endl;
+            nextQueryToServeIndex = nextQuery;
 			mysql_close(con);
 			return;
 		}

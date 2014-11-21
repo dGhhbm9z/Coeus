@@ -400,7 +400,7 @@ void SuppliersComponent::editButtonPressed()
         pkNames.add("SupplierCode");
         pkNames.add("SupplierVAT");
 
-        suppliersTableListBoxModel->updateDatabaseTable("suppliers", pkNames);
+        suppliersTableListBoxModel->updateDatabaseTable("suppliers", pkNames, this);
 
     }
 

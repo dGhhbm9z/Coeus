@@ -86,7 +86,7 @@ public:
 
     // TODO
     // getValueForFieldName
-    
+
     void buttonClicked (Button *btn) override;
 
     int getRow() const;
@@ -167,8 +167,8 @@ public:
     void textEditorReturnKeyPressed (TextEditor &te) override;
 
     // database updates
-    bool updateDatabaseTable(const String &table, const StringArray &pkName);
-    bool updateDatabaseTableForEntry(const String &table, const StringArray &pkName, const StringArray &pk);
+    bool updateDatabaseTable(const String &table, const StringArray &pkName, CacheSystemClient *ccc);
+    bool updateDatabaseTableForEntry(const String &table, const StringArray &pkName, const StringArray &pk, CacheSystemClient *ccc);
 
     bool getWantsHeader() const { return wantsHeader; }
     std::unordered_map<StringArray, std::map<String, String>> &getChanges() { return rowsToUpdate; }

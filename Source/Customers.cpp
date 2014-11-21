@@ -424,7 +424,7 @@ void CustomersComponent::editButtonPressed()
         pkNames.add("CustomerCode");
         pkNames.add("CustomerVAT");
 
-        customersTableListBoxModel->updateDatabaseTable("customers", pkNames);
+        customersTableListBoxModel->updateDatabaseTable("customers", pkNames, this);
 
     }
 
