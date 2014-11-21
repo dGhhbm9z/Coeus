@@ -158,11 +158,16 @@ CoeusListRowComponent * AccountChartTableListBoxModel::refreshComponentForRow(in
         newComp->addChangeListener(this);
         newComp->setRow(rowNumber);
         
-        // TODO
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountChartRowComponent::maxRowSize : false;
-        newComp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
-        newComp->shouldShowControls(false);
-        
+        const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
+        if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
+            newComp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, edit);
+        }
+        else {
+            newComp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
+        }
+        newComp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
+
         return newComp;
     }
     // update
@@ -171,10 +176,16 @@ CoeusListRowComponent * AccountChartTableListBoxModel::refreshComponentForRow(in
         
         if(cmp) {
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountChartRowComponent::maxRowSize : false;
-            cmp->updateFromQueryForRow(qe, rowNumber, dView, edit);
-            cmp->shouldShowControls(false);
+            const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
+            if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
+                cmp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, edit);
+            }
+            else {
+                cmp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
+            }
+            cmp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
         }
-        
+
         return existingComponentToUpdate;
     }
 }
