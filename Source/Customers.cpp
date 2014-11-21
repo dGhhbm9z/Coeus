@@ -283,7 +283,6 @@ CoeusListRowComponent * CustomersTableListBoxModel::refreshComponentForRow(int r
         newComp->addChangeListener(this);
         newComp->setRow(rowNumber);
 
-        // TODO
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CustomersRowComponent::maxRowSize : false;
         const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
         if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {

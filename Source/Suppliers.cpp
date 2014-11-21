@@ -24,7 +24,11 @@ public:
         addAndMakeVisible(NameTE = new TextEditor("Name"));
         addAndMakeVisible(FathersNameTE = new TextEditor("FathersName"));
         addAndMakeVisible(PhonenumberTE = new TextEditor("Phonenumber"));
-        
+        SupplierCodeTE->addListener(&owner);
+        NameTE->addListener(&owner);
+        FathersNameTE->addListener(&owner);
+        PhonenumberTE->addListener(&owner);
+
         // summary labels
         addAndMakeVisible(SupplierCode = new Label("Supplier Code", "Supplier Code"));
         addAndMakeVisible(Name = new Label("Name", "Name"));
@@ -44,7 +48,19 @@ public:
         addAndMakeVisible(SupplierTransactionsTE = new TextEditor("SupplierTransactions"));
         addAndMakeVisible(PublicRevenueServiceTE = new TextEditor("PublicRevenueService"));
         addAndMakeVisible(CommercialActivityTE = new TextEditor("CommercialActivity"));
-        
+        TrademarkTE->addListener(&owner);
+        SupplierVATTE->addListener(&owner);
+        DateOfBirthTE->addListener(&owner);
+        AddressTE->addListener(&owner);
+        CityTE->addListener(&owner);
+        CountryTE->addListener(&owner);
+        FaxnumberTE->addListener(&owner);
+        EmailTE->addListener(&owner);
+        IDcardNumberTE->addListener(&owner);
+        SupplierTransactionsTE->addListener(&owner);
+        PublicRevenueServiceTE->addListener(&owner);
+        CommercialActivityTE->addListener(&owner);
+
         
         // detailed view labels
         addAndMakeVisible(Trademark = new Label("Trademark", "Trademark"));
@@ -377,11 +393,18 @@ void SuppliersComponent::addButtonPressed()
 void SuppliersComponent::editButtonPressed()
 {
     suppliersTableListBoxModel->setEdit(editButton->getToggleState());
+
     if (!editButton->getToggleState()) {
-        // TODO
-        // for key in rowUpdates
-        // update db
+        //
+        StringArray pkNames;
+        pkNames.add("SupplierCode");
+        pkNames.add("SupplierVAT");
+
+        suppliersTableListBoxModel->updateDatabaseTable("suppliers", pkNames);
+
     }
+
+    suppliersTableListBoxModel->update();
 }
 
 void SuppliersComponent::changeListenerCallback(ChangeBroadcaster *source)

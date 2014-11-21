@@ -24,6 +24,10 @@ public:
         addAndMakeVisible(legalIncTE = new TextEditor("LegalInc"));
         addAndMakeVisible(telephoneTE = new TextEditor("Telephone"));
         addAndMakeVisible(activityTE = new TextEditor("Activity"));
+        companyNameTE->addListener(&owner);
+        legalIncTE->addListener(&owner);
+        telephoneTE->addListener(&owner);
+        activityTE->addListener(&owner);
         
         // summary labels
         addAndMakeVisible(companyName = new Label("Company Name", "Company Name"));
@@ -39,6 +43,13 @@ public:
         addAndMakeVisible(PersonInChargeTE = new TextEditor("PersonInCharge"));
         addAndMakeVisible(StartDateTE = new TextEditor("StartDate"));
         addAndMakeVisible(CommentsTE = new TextEditor("Comments"));
+        VATTE->addListener(&owner);
+        IRSTE->addListener(&owner);
+        AddressTE->addListener(&owner);
+        AddressNumberTE->addListener(&owner);
+        PersonInChargeTE->addListener(&owner);
+        StartDateTE->addListener(&owner);
+        CommentsTE->addListener(&owner);
 
         // detailed view labels
         addAndMakeVisible(VAT = new Label("VAT", "VAT"));
@@ -234,12 +245,17 @@ CoeusListRowComponent * CompaniesTableListBoxModel::refreshComponentForRow(int r
         newComp->addChangeListener(this);
         newComp->setRow(rowNumber);
 
-        // TODO
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize : false;
-        newComp->updateFromQueryForRow(qe, rowNumber, dView, edit);
-        newComp->shouldShowControls(isRowSelected);
+        const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
+        if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
+            newComp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, edit);
+        }
+        else {
+            newComp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
+        }
+        newComp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
 
-		return newComp;
+        return newComp;
 	}
 	// update
 	else {
@@ -247,8 +263,14 @@ CoeusListRowComponent * CompaniesTableListBoxModel::refreshComponentForRow(int r
 
         if(cmp) {
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize : false;
-            cmp->updateFromQueryForRow(qe, rowNumber, dView, edit);
-            cmp->shouldShowControls(isRowSelected);
+            const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
+            if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
+                cmp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, edit);
+            }
+            else {
+                cmp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
+            }
+            cmp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
         }
 
 		return existingComponentToUpdate;
@@ -349,6 +371,17 @@ void CompaniesComponent::addButtonPressed()
 void CompaniesComponent::editButtonPressed()
 {
     companiesTableListBoxModel->setEdit(editButton->getToggleState());
+
+    if (!editButton->getToggleState()) {
+        //
+        StringArray pkNames;
+        pkNames.add("VAT");
+
+        companiesTableListBoxModel->updateDatabaseTable("companies", pkNames);
+
+    }
+
+    companiesTableListBoxModel->update();
 }
 
 void CompaniesComponent::changeListenerCallback(ChangeBroadcaster *source)

@@ -24,6 +24,11 @@ public:
         addAndMakeVisible(NameTE = new TextEditor("Name"));
         addAndMakeVisible(AccountTypeTE = new TextEditor("AccountType"));
         addAndMakeVisible(XreosPistTE = new TextEditor("XreosPist"));
+
+        CodeTE->addListener(&owner);
+        NameTE->addListener(&owner);
+        AccountTypeTE->addListener(&owner);
+        XreosPistTE->addListener(&owner);
         
         resized();
     }
@@ -256,6 +261,17 @@ void AccountChartComponent::addButtonPressed()
 void AccountChartComponent::editButtonPressed()
 {
     accountChartTableListBoxModel->setEdit(editButton->getToggleState());
+
+    if (!editButton->getToggleState()) {
+        //
+        StringArray pkNames;
+        pkNames.add("VAT");
+
+        accountChartTableListBoxModel->updateDatabaseTable("acounts", pkNames);
+
+    }
+
+    accountChartTableListBoxModel->update();
 }
 
 void AccountChartComponent::changeListenerCallback(ChangeBroadcaster *source)
