@@ -204,11 +204,17 @@ void CoeusListRowComponent::updateFromMapForRow(QueryEntry *qe, std::map<String,
     setDetailedView(dView);
     resized();
     this->row = row;
-    
+
     for (int i=0; i<getNumChildComponents(); i++) {
         TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
         if (te) {
-            te->setText(rowUpdates[te->getName()]);
+            const StringArray key = (qe != nullptr) ? qe->getFieldFromRow(row, owner.getKeyField()) : StringArray();
+            if (key.size() && (rowUpdates.find(te->getName()) != rowUpdates.end())) {
+                te->setText(rowUpdates[te->getName()]);
+            }
+            else {
+                te->setText(qe->getFieldFromRow(row, fieldNameToIndex(te->getName())));
+            }
             te->setEnabled(edit);
         }
     }
