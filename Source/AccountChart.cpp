@@ -231,9 +231,11 @@ void AccountChartComponent::resized()
 
 void AccountChartComponent::receivedResults(QueryEntry *qe_)
 {
-    qe = qe_;
-    accountChartTableListBoxModel->setQueryEntry(qe);
-    accountChartTableListBoxModel->update();
+    if (qe_->num_fields > 1) {
+        qe = qe_;
+        accountChartTableListBoxModel->setQueryEntry(qe);
+        accountChartTableListBoxModel->update();
+    }
 }
 
 void AccountChartComponent::mouseExit(const MouseEvent &event)

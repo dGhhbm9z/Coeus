@@ -210,7 +210,14 @@ void CacheSystem::serveNextQuery()
             if(mysql_field_count(con) == 0) {
                 // query does not return data
                 // (it was not a SELECT)
-//                num_rows = mysql_affected_rows(&mysql);
+                int resNumRows = mysql_affected_rows(con);
+                query->size = sizeof(long int);
+                query->result = (void *)malloc(query->size);
+                *((long int *)query->result) = resNumRows;
+                query->usedSpace = query->size;
+                query->num_fields = 1;
+                query->fieldSizes.add(query->size);
+                query->num_rows = 1;
             }
             else {
                 // TODO: failure
@@ -218,64 +225,63 @@ void CacheSystem::serveNextQuery()
             }
 
             nextQueryToServeIndex = nextQuery;
-			mysql_close(con);
-			return;
 		}
+        else {
+            // result size estimation and allocation
+            query->size = QUERYBLOCKSIZE;
+            query->result = (void *)malloc(query->size); // 2MB
+            query->usedSpace = 0;
+            if (query->result == nullptr) {
+                // TODO : failed
+                std::cout << "Allocation for results failed" << std::endl;
+                nextQueryToServeIndex = nextQuery;
+                mysql_close(con);
+                return;
+            }
 
-		// result size estimation and allocation
-		query->size = QUERYBLOCKSIZE;
-		query->result = (void *)malloc(query->size); // 2MB
-		query->usedSpace = 0;
-		if (query->result == nullptr) {
-			// TODO : failed
-            std::cout << "Allocation for results failed" << std::endl;
-            nextQueryToServeIndex = nextQuery;
-			mysql_close(con);
-			return;
-		}
+            MYSQL_ROW row;
+            unsigned int num_fields;
+            unsigned int i;
 
-		MYSQL_ROW row;
-		unsigned int num_fields;
-		unsigned int i;
+            num_fields = mysql_num_fields(res);
+            query->num_fields = num_fields;
+            while ((row = mysql_fetch_row(res)))
+            {
+                unsigned long *lengths;
+                lengths = mysql_fetch_lengths(res);
 
-		num_fields = mysql_num_fields(res);
-		query->num_fields = num_fields;
-		while ((row = mysql_fetch_row(res)))
-		{
-			unsigned long *lengths;
-			lengths = mysql_fetch_lengths(res);
+                // if needed reallocate query result buffer
+                unsigned long totalRowSize = 0;
+                for (i = 0; i < num_fields; i++) {
+                    totalRowSize += lengths[i];
+                }
 
-			// if needed reallocate query result buffer
-			unsigned long totalRowSize = 0;
-			for (i = 0; i < num_fields; i++) {
-				totalRowSize += lengths[i];
-			}
+                if (query->usedSpace + totalRowSize > query->size) {
+                    unsigned long newSize = query->size +  jmax(totalRowSize, (unsigned long)QUERYBLOCKSIZE);
+                    void *r = realloc(query->result, newSize);
+                    if (r == NULL) {
+                        // TODO: failed
+                        std::cout << "Reallocation failed" << std::endl;
+                        return;
+                    }
+                    else {
+                        query->result = r;
+                        std::cout << "Reallocated space for results" << std::endl;
+                    }
+                }
 
-			if (query->usedSpace + totalRowSize > query->size) {
-				unsigned long newSize = query->size +  jmax(totalRowSize, (unsigned long)QUERYBLOCKSIZE);
-				void *r = realloc(query->result, newSize);
-				if (r == NULL) {
-					// TODO: failed
-					std::cout << "Reallocation failed" << std::endl;
-					return;
-				}
-				else {
-					query->result = r;
-					std::cout << "Reallocated space for results" << std::endl;
-				}
-			}
+                // copy data
+                for (i = 0; i < num_fields; i++) {
+                    memcpy((uint8 *)(query->result) + query->usedSpace, row[i], lengths[i]);
+                    query->fieldSizes.add(lengths[i]);
+                    query->usedSpace += lengths[i];
+                }
+            }
 
-			// copy data
-			for (i = 0; i < num_fields; i++) {
-				memcpy((uint8 *)(query->result) + query->usedSpace, row[i], lengths[i]);
-				query->fieldSizes.add(lengths[i]);
-				query->usedSpace += lengths[i];
-			}
-		}
+            query->num_rows = mysql_num_rows(res);
+        }
 
-		query->num_rows = mysql_num_rows(res);
-
-		// on sucess - update next query position
+        // update next query position
 		nextQueryToServeIndex = nextQuery;
 	}
 

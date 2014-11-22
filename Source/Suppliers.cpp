@@ -335,9 +335,11 @@ void SuppliersComponent::resized()
 
 void SuppliersComponent::receivedResults(QueryEntry *qe_)
 {
-    qe = qe_;
-    suppliersTableListBoxModel->setQueryEntry(qe);
-    suppliersTableListBoxModel->update();
+    if (qe_->num_fields > 1) {
+        qe = qe_;
+        suppliersTableListBoxModel->setQueryEntry(qe);
+        suppliersTableListBoxModel->update();
+    }
 }
 
 void SuppliersComponent::mouseExit(const MouseEvent &event)

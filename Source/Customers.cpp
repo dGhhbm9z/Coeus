@@ -357,9 +357,11 @@ void CustomersComponent::resized()
 
 void CustomersComponent::receivedResults(QueryEntry *qe_)
 {
-	qe = qe_;
-	customersTableListBoxModel->setQueryEntry(qe);
-    customersTableListBoxModel->update();
+    if (qe_->num_fields > 1) {
+        qe = qe_;
+        customersTableListBoxModel->setQueryEntry(qe);
+        customersTableListBoxModel->update();
+    }
 }
 
 void CustomersComponent::mouseExit(const MouseEvent &event)

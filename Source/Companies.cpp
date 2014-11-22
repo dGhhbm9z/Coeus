@@ -317,9 +317,11 @@ void CompaniesComponent::resized()
 
 void CompaniesComponent::receivedResults(QueryEntry *qe_)
 {
-    qe = qe_;
-    companiesTableListBoxModel->setQueryEntry(qe);
-    companiesTableListBoxModel->update();
+    if (qe_->num_fields > 1) {
+        qe = qe_;
+        companiesTableListBoxModel->setQueryEntry(qe);
+        companiesTableListBoxModel->update();
+    }
 }
 
 void CompaniesComponent::mouseExit(const MouseEvent &event)

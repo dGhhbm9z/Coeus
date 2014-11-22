@@ -295,9 +295,11 @@ void AccountsComponent::mouseExit(const MouseEvent &event)
 
 void AccountsComponent::receivedResults(QueryEntry *qe_)
 {
-	qe = qe_;
-	accounts->setQueryEntry(qe);
-	accounts->updateContent();
+    if (qe_->num_fields > 1) {
+        qe = qe_;
+        accounts->setQueryEntry(qe);
+        accounts->updateContent();
+    }
 }
 
 void AccountsComponent::searchButtonPressed()
