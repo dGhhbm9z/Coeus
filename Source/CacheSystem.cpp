@@ -1,5 +1,5 @@
 #include "CacheSystem.h"
-#include <mysql/mysql.h>
+#include <mysql.h>
 
 CacheSystem* CacheSystem::instancePointer = nullptr;
 

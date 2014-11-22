@@ -66,7 +66,7 @@ HelloWorldWindow::HelloWorldWindow()
 
     // Create an instance of our main content component, and add it to our window..
     cmp = new MainComponent();
-    Rectangle<int> r = Desktop::getInstance().getDisplays().getMainDisplay().userArea;
+	juce::Rectangle<int> r = Desktop::getInstance().getDisplays().getMainDisplay().userArea;
     cmp->setBounds(0.1f*r.getX(), 0.1f*r.getY(), 0.8f*r.getWidth(), 0.8f*r.getHeight());
 
     splash = new CoeusSplashScreen(this, cmp);
@@ -122,7 +122,7 @@ void HelloWorldWindow::login() {
 //    setMinimumHeight(920);
 //    setConstrainer(this);
     
-    Rectangle<int> r = Desktop::getInstance().getDisplays().getMainDisplay().userArea;
+	juce::Rectangle<int> r = Desktop::getInstance().getDisplays().getMainDisplay().userArea;
     this->setBounds(0.1f*r.getX(), 0.1f*r.getY(), 0.8f*r.getWidth(), 0.8f*r.getHeight());
 }
 

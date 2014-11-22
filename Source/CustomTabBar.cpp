@@ -257,8 +257,8 @@ void CustomTabComponent::timerCallback()
 
     if (!isBeingResized) {
         ComponentAnimator &an = Desktop::getInstance().getAnimator();
-        Rectangle<int> finalBoundsVisible = Rectangle<int>(0, tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
-        Rectangle<int> finalBoundsHidden = Rectangle<int>(-tabButtons->getWidth(), tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
+		juce::Rectangle<int> finalBoundsVisible = juce::Rectangle<int>(0, tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
+		juce::Rectangle<int> finalBoundsHidden = juce::Rectangle<int>(-tabButtons->getWidth(), tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
 
         if (getMouseXYRelative().getY() > 0 && getMouseXYRelative().getX() > 0 && getMouseXYRelative().getX() < 120 && tabButtons->getX() < 0 && an.getComponentDestination(tabButtons) == finalBoundsHidden) {
             an.cancelAnimation(tabButtons, false);
