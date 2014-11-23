@@ -151,13 +151,11 @@ void CoeusListRowComponent::setDetailedView(bool s, bool force) {
         if (showControls) {
             const int lm = 4;
             const int tm = 2+getMinRowSize()*0.15f;
-            const int bm = 2;
             const int pad = 4;
-            const int teHS = getMinRowSize()*0.7f - tm - bm;
             const int teWS = 250;
-            const int btnW=66;
+            const int btnW=25;
             
-            details->setBounds(lm+3*(teWS+pad)+pad+150+10+btnW, tm, btnW, teHS);
+            details->setBounds(lm+3*(teWS+pad)+pad+150+10+btnW, tm, btnW, btnW);
         }
     }
 }
