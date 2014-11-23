@@ -299,7 +299,7 @@ void CustomTabComponent::timerCallback()
         }
     }
     else {
-        Rectangle<int> finalBoundsVisible = Rectangle<int>(0, tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
+        juce::Rectangle<int> finalBoundsVisible = juce::Rectangle<int>(0, tabButtons->getY(), tabButtons->getWidth(), tabButtons->getHeight());
         ComponentAnimator &an = Desktop::getInstance().getAnimator();
         an.cancelAnimation(tabButtons, false);
         tabButtons->setBounds(finalBoundsVisible);
