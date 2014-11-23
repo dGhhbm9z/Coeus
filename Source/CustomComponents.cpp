@@ -184,6 +184,16 @@ CustomTabContent::CustomTabContent() {
     tableHeader3->setJustificationType(Justification::centred);
     tableHeader4->setJustificationType(Justification::centred);
     
+    tableHeader1->setColour(Label::textColourId, Colour(0xff1a7b82));
+    tableHeader2->setColour(Label::textColourId, Colour(0xff1a7b82));
+    tableHeader3->setColour(Label::textColourId, Colour(0xff1a7b82));
+    tableHeader4->setColour(Label::textColourId, Colour(0xff1a7b82));
+
+    tableHeader1->setFont(Font(20, Font::bold));
+    tableHeader2->setFont(Font(20, Font::bold));
+    tableHeader3->setFont(Font(20, Font::bold));
+    tableHeader4->setFont(Font(20, Font::bold));
+    
     addChildComponent(addOverlayComp = new OverlayComp());
 }
 
