@@ -206,8 +206,8 @@ CustomTabContent::~CustomTabContent()
 
 void CustomTabContent::resized()
 {
-	title->setBoundsRelative(0.5f - 0.125f - 120.0f/(float)getParentWidth(), 0.01, 0.25f, 0.05f);
-	search->setBoundsRelative(0.5f - 0.125f - 120.0f / (float)getParentWidth(), 0.01 + 0.05f, 0.25f, 0.05f);
+	title->setBoundsRelative(0.0f, 0.01, 0.25f, 0.05f);
+	search->setBoundsRelative(0.5f - 0.125f - 120.0f / (float)getParentWidth(), 0.01, 0.25f, 0.05f);
     
     Rectangle<int> compBounds = getComponentArea();
     const int starty = compBounds.getY()-40;
@@ -229,9 +229,9 @@ void CustomTabContent::resized()
 	const float sbz = getHeight()*0.05f;
 	const float sbwp = sbz / (float)getWidth();
 	const float sbhp = sbz / (float)getHeight();
-	searchButton->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f - 120.0f / (float)getParentWidth(), 0.01 + 0.05f, sbwp, sbhp);
+	searchButton->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f - 120.0f / (float)getParentWidth(), 0.01, sbwp, sbhp);
 
-	searchFilter->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f + sbwp + 0.01f - 120.0f / (float)getParentWidth(), 0.01 + 0.05f, 0.1f, 0.05f);
+	searchFilter->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f + sbwp + 0.01f - 120.0f / (float)getParentWidth(), 0.01, 0.1f, 0.05f);
     
     addOverlayComp->setBounds(compBounds);
 }
