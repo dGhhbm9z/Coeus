@@ -273,18 +273,17 @@ void AccountChartComponent::addButtonPressed()
 
 void AccountChartComponent::editButtonPressed()
 {
-    accountChartTableListBoxModel->setEdit(editButton->getToggleState());
 
-    if (!editButton->getToggleState()) {
-        //
-        StringArray pkNames;
-        pkNames.add("VAT");
-
-        accountChartTableListBoxModel->updateDatabaseTable("accounts", pkNames, this);
-
-    }
-
-    accountChartTableListBoxModel->update();
+//    if (!editButton->getToggleState()) {
+//        //
+//        StringArray pkNames;
+//        pkNames.add("VAT");
+//
+//        accountChartTableListBoxModel->updateDatabaseTable("accounts", pkNames, this);
+//
+//    }
+//
+//    accountChartTableListBoxModel->update();
 }
 
 void AccountChartComponent::changeListenerCallback(ChangeBroadcaster *source)

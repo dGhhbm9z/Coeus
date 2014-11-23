@@ -139,19 +139,6 @@ CustomTabContent::CustomTabContent() {
     duplicateButton->addListener(this);
     addAndMakeVisible(duplicateButton);
     
-    editButton = new ImageButton();
-    imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/normal.png"));
-    imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/hover.png"));
-    imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/clicked.png"));
-    editButton->setImages(false, true, true,
-                      imageNormal, 1.0f, Colours::transparentBlack,
-                      imageMouseOver, 1.0f, Colours::transparentBlack,
-                      imageMouseDown, 1.0f, Colours::transparentBlack,
-                      0.0f);
-    editButton->setClickingTogglesState(true);
-    editButton->addListener(this);
-    addAndMakeVisible(editButton);
-    
     removeButton = new ImageButton();
     imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/removeButton/normal.png"));
     imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/removeButton/hover.png"));
@@ -223,8 +210,7 @@ void CustomTabContent::resized()
     tableHeader4->setBounds(lm+2*(teWS+pad)+pad+150, starty+tm, teWS, teHS);
     addButton->setBounds(lm+3*(teWS+pad)+pad+150+50, starty+tm, 25, 25);
     duplicateButton->setBounds(lm+3*(teWS+pad)+pad+150+100, starty+tm, 25, 25);
-    editButton->setBounds(lm+3*(teWS+pad)+pad+150+100+50, starty+tm, 25, 25);
-    removeButton->setBounds(lm+3*(teWS+pad)+pad+150+100+100, starty+tm, 25, 25);
+    removeButton->setBounds(lm+3*(teWS+pad)+pad+150+100+50, starty+tm, 25, 25);
     
 	const float sbz = getHeight()*0.05f;
 	const float sbwp = sbz / (float)getWidth();
@@ -263,9 +249,6 @@ void CustomTabContent::buttonClicked(Button *btn)
     }
     else if (btn == duplicateButton) {
         duplicateButtonPressed();
-    }
-    else if (btn == editButton) {
-        editButtonPressed();
     }
     else if (btn == removeButton) {
         removeButtonPressed();

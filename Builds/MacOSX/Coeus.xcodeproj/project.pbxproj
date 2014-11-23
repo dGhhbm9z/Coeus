@@ -19,6 +19,16 @@
 		3BB038AB0663A49C94927129 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA9473E5A30CA8AB16E89132 /* CoreAudio.framework */; };
 		3BFBB1BE62F131EA03D181A9 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67936926BEB4B3B55458681A /* WebKit.framework */; };
 		3E5653FBD8B6E91F9EA499DE /* juce_data_structures.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F9E0E37EA93EEA0C6915A30 /* juce_data_structures.mm */; };
+		3F1AC29F1A226EEC001820EB /* addButton in Resources */ = {isa = PBXBuildFile; fileRef = 3F1AC2951A226EEC001820EB /* addButton */; };
+		3F1AC2A01A226EEC001820EB /* duplicateButton in Resources */ = {isa = PBXBuildFile; fileRef = 3F1AC2961A226EEC001820EB /* duplicateButton */; };
+		3F1AC2A11A226EEC001820EB /* editButton in Resources */ = {isa = PBXBuildFile; fileRef = 3F1AC2971A226EEC001820EB /* editButton */; };
+		3F1AC2A21A226EEC001820EB /* listButton in Resources */ = {isa = PBXBuildFile; fileRef = 3F1AC2981A226EEC001820EB /* listButton */; };
+		3F1AC2A31A226EEC001820EB /* pinButton in Resources */ = {isa = PBXBuildFile; fileRef = 3F1AC2991A226EEC001820EB /* pinButton */; };
+		3F1AC2A41A226EEC001820EB /* removeButton in Resources */ = {isa = PBXBuildFile; fileRef = 3F1AC29A1A226EEC001820EB /* removeButton */; };
+		3F1AC2A51A226EEC001820EB /* saveButton in Resources */ = {isa = PBXBuildFile; fileRef = 3F1AC29B1A226EEC001820EB /* saveButton */; };
+		3F1AC2A61A226EEC001820EB /* search in Resources */ = {isa = PBXBuildFile; fileRef = 3F1AC29C1A226EEC001820EB /* search */; };
+		3F1AC2A71A226EEC001820EB /* sidebar in Resources */ = {isa = PBXBuildFile; fileRef = 3F1AC29D1A226EEC001820EB /* sidebar */; };
+		3F1AC2A81A226EEC001820EB /* splash in Resources */ = {isa = PBXBuildFile; fileRef = 3F1AC29E1A226EEC001820EB /* splash */; };
 		3F745D4F7018373DD993B897 /* Splash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8FD4D7A4A66879A216FF795 /* Splash.cpp */; };
 		4F17A49082DA18803863D153 /* juce_gui_basics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D6066344B307728903DF455 /* juce_gui_basics.mm */; };
 		51C53B33262B46BE8736D7D1 /* juce_core.mm in Sources */ = {isa = PBXBuildFile; fileRef = F20B2F0DFB09615CF3D28096 /* juce_core.mm */; };
@@ -269,6 +279,16 @@
 		3D4F5D95FFC5A3688E82E9A4 /* juce_LowLevelGraphicsPostScriptRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_LowLevelGraphicsPostScriptRenderer.h; path = ../../JuceLibraryCode/modules/juce_graphics/contexts/juce_LowLevelGraphicsPostScriptRenderer.h; sourceTree = SOURCE_ROOT; };
 		3E212DC6ED6AEF7D4E602F13 /* juce_DeletedAtShutdown.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_DeletedAtShutdown.h; path = ../../JuceLibraryCode/modules/juce_events/messages/juce_DeletedAtShutdown.h; sourceTree = SOURCE_ROOT; };
 		3F0DB3DF294AD8CB20C9090C /* juce_Result.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_Result.cpp; path = ../../JuceLibraryCode/modules/juce_core/misc/juce_Result.cpp; sourceTree = SOURCE_ROOT; };
+		3F1AC2951A226EEC001820EB /* addButton */ = {isa = PBXFileReference; lastKnownFileType = folder; name = addButton; path = ../../Resources/addButton; sourceTree = "<group>"; };
+		3F1AC2961A226EEC001820EB /* duplicateButton */ = {isa = PBXFileReference; lastKnownFileType = folder; name = duplicateButton; path = ../../Resources/duplicateButton; sourceTree = "<group>"; };
+		3F1AC2971A226EEC001820EB /* editButton */ = {isa = PBXFileReference; lastKnownFileType = folder; name = editButton; path = ../../Resources/editButton; sourceTree = "<group>"; };
+		3F1AC2981A226EEC001820EB /* listButton */ = {isa = PBXFileReference; lastKnownFileType = folder; name = listButton; path = ../../Resources/listButton; sourceTree = "<group>"; };
+		3F1AC2991A226EEC001820EB /* pinButton */ = {isa = PBXFileReference; lastKnownFileType = folder; name = pinButton; path = ../../Resources/pinButton; sourceTree = "<group>"; };
+		3F1AC29A1A226EEC001820EB /* removeButton */ = {isa = PBXFileReference; lastKnownFileType = folder; name = removeButton; path = ../../Resources/removeButton; sourceTree = "<group>"; };
+		3F1AC29B1A226EEC001820EB /* saveButton */ = {isa = PBXFileReference; lastKnownFileType = folder; name = saveButton; path = ../../Resources/saveButton; sourceTree = "<group>"; };
+		3F1AC29C1A226EEC001820EB /* search */ = {isa = PBXFileReference; lastKnownFileType = folder; name = search; path = ../../Resources/search; sourceTree = "<group>"; };
+		3F1AC29D1A226EEC001820EB /* sidebar */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sidebar; path = ../../Resources/sidebar; sourceTree = "<group>"; };
+		3F1AC29E1A226EEC001820EB /* splash */ = {isa = PBXFileReference; lastKnownFileType = folder; name = splash; path = ../../Resources/splash; sourceTree = "<group>"; };
 		3F41B7F22E2F0662A3BDA949 /* juce_FileInputSource.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_FileInputSource.cpp; path = ../../JuceLibraryCode/modules/juce_core/streams/juce_FileInputSource.cpp; sourceTree = SOURCE_ROOT; };
 		3F67AB233DC2AFA5775D022B /* juce_MarkerList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_MarkerList.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/positioning/juce_MarkerList.h; sourceTree = SOURCE_ROOT; };
 		3F79B149D2741DBE01D77DFE /* juce_FileSearchPath.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_FileSearchPath.cpp; path = ../../JuceLibraryCode/modules/juce_core/files/juce_FileSearchPath.cpp; sourceTree = SOURCE_ROOT; };
@@ -1850,6 +1870,16 @@
 		8F54CCF1DEA6D95492BC9AA4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3F1AC2951A226EEC001820EB /* addButton */,
+				3F1AC2961A226EEC001820EB /* duplicateButton */,
+				3F1AC2971A226EEC001820EB /* editButton */,
+				3F1AC2981A226EEC001820EB /* listButton */,
+				3F1AC2991A226EEC001820EB /* pinButton */,
+				3F1AC29A1A226EEC001820EB /* removeButton */,
+				3F1AC29B1A226EEC001820EB /* saveButton */,
+				3F1AC29C1A226EEC001820EB /* search */,
+				3F1AC29D1A226EEC001820EB /* sidebar */,
+				3F1AC29E1A226EEC001820EB /* splash */,
 				340C2788F7BBD4D99B298C7D /* Info.plist */,
 				CEF598E16C7BBF2C8A11E6A4 /* RecentFilesMenuTemplate.nib */,
 			);
@@ -2747,6 +2777,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F1AC2A81A226EEC001820EB /* splash in Resources */,
+				3F1AC2A21A226EEC001820EB /* listButton in Resources */,
+				3F1AC2A11A226EEC001820EB /* editButton in Resources */,
+				3F1AC2A31A226EEC001820EB /* pinButton in Resources */,
+				3F1AC29F1A226EEC001820EB /* addButton in Resources */,
+				3F1AC2A01A226EEC001820EB /* duplicateButton in Resources */,
+				3F1AC2A51A226EEC001820EB /* saveButton in Resources */,
+				3F1AC2A41A226EEC001820EB /* removeButton in Resources */,
+				3F1AC2A71A226EEC001820EB /* sidebar in Resources */,
+				3F1AC2A61A226EEC001820EB /* search in Resources */,
 				9A96F767A95CC2454CAF4B2C /* RecentFilesMenuTemplate.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

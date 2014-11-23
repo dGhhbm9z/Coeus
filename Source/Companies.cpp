@@ -372,18 +372,16 @@ void CompaniesComponent::addButtonPressed()
 
 void CompaniesComponent::editButtonPressed()
 {
-    companiesTableListBoxModel->setEdit(editButton->getToggleState());
-
-    if (!editButton->getToggleState()) {
-        //
-        StringArray pkNames;
-        pkNames.add("VAT");
-
-        companiesTableListBoxModel->updateDatabaseTable("companies", pkNames, this);
-
-    }
-
-    companiesTableListBoxModel->update();
+//    if (!editButton->getToggleState()) {
+//        //
+//        StringArray pkNames;
+//        pkNames.add("VAT");
+//
+//        companiesTableListBoxModel->updateDatabaseTable("companies", pkNames, this);
+//
+//    }
+//
+//    companiesTableListBoxModel->update();
 }
 
 void CompaniesComponent::changeListenerCallback(ChangeBroadcaster *source)

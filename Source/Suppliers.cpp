@@ -394,19 +394,17 @@ void SuppliersComponent::addButtonPressed()
 
 void SuppliersComponent::editButtonPressed()
 {
-    suppliersTableListBoxModel->setEdit(editButton->getToggleState());
-
-    if (!editButton->getToggleState()) {
-        //
-        StringArray pkNames;
-        pkNames.add("SupplierCode");
-        pkNames.add("SupplierVAT");
-
-        suppliersTableListBoxModel->updateDatabaseTable("suppliers", pkNames, this);
-
-    }
-
-    suppliersTableListBoxModel->update();
+//    if (!editButton->getToggleState()) {
+//        //
+//        StringArray pkNames;
+//        pkNames.add("SupplierCode");
+//        pkNames.add("SupplierVAT");
+//
+//        suppliersTableListBoxModel->updateDatabaseTable("suppliers", pkNames, this);
+//
+//    }
+//
+//    suppliersTableListBoxModel->update();
 }
 
 void SuppliersComponent::changeListenerCallback(ChangeBroadcaster *source)

@@ -418,19 +418,17 @@ void CustomersComponent::addButtonPressed()
 
 void CustomersComponent::editButtonPressed()
 {
-    customersTableListBoxModel->setEdit(editButton->getToggleState());
-
-    if (!editButton->getToggleState()) {
-        //
-        StringArray pkNames;
-        pkNames.add("CustomerCode");
-        pkNames.add("CustomerVAT");
-
-        customersTableListBoxModel->updateDatabaseTable("customers", pkNames, this);
-
-    }
-
-    customersTableListBoxModel->update();
+//    if (!editButton->getToggleState()) {
+//        //
+//        StringArray pkNames;
+//        pkNames.add("CustomerCode");
+//        pkNames.add("CustomerVAT");
+//
+//        customersTableListBoxModel->updateDatabaseTable("customers", pkNames, this);
+//
+//    }
+//
+//    customersTableListBoxModel->update();
 }
 
 void CustomersComponent::changeListenerCallback(ChangeBroadcaster *source)

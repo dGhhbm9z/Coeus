@@ -131,6 +131,32 @@ CoeusListRowComponent::CoeusListRowComponent(CoeusList &owner_) : detailedView(f
     
     details->addListener(this);
     addAndMakeVisible(details);
+    
+    editButton = new ImageButton();
+    imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/normal.png"));
+    imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/hover.png"));
+    imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/clicked.png"));
+    editButton->setImages(false, true, true,
+                          imageNormal, 1.0f, Colours::transparentBlack,
+                          imageMouseOver, 1.0f, Colours::transparentBlack,
+                          imageMouseDown, 1.0f, Colours::transparentBlack,
+                          0.0f);
+    editButton->setClickingTogglesState(true);
+    editButton->addListener(this);
+    addAndMakeVisible(editButton);
+    
+    saveButton = new ImageButton();
+    imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/saveButton/normal.png"));
+    imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/saveButton/hover.png"));
+    imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/saveButton/clicked.png"));
+    saveButton->setImages(false, true, true,
+                          imageNormal, 1.0f, Colours::transparentBlack,
+                          imageMouseOver, 1.0f, Colours::transparentBlack,
+                          imageMouseDown, 1.0f, Colours::transparentBlack,
+                          0.0f);
+    saveButton->setClickingTogglesState(true);
+    saveButton->addListener(this);
+    addAndMakeVisible(saveButton);
 }
 
 int CoeusListRowComponent::getRow() const
@@ -155,7 +181,9 @@ void CoeusListRowComponent::setDetailedView(bool s, bool force) {
             const int teWS = 250;
             const int btnW=25;
             
-            details->setBounds(lm+3*(teWS+pad)+pad+150+10+btnW, tm, btnW, btnW);
+            details->setBounds(lm+3*(teWS+pad)+pad+150+25, tm, btnW, btnW);
+            editButton->setBounds(lm+3*(teWS+pad)+pad+150+55, tm, btnW, btnW);
+            saveButton->setBounds(lm+3*(teWS+pad)+pad+150+85, tm, btnW, btnW);
         }
     }
 }
@@ -163,6 +191,8 @@ void CoeusListRowComponent::setDetailedView(bool s, bool force) {
 void CoeusListRowComponent::shouldShowControls(bool show) {
     showControls = show;
     details->setVisible(show);
+    editButton->setVisible(show);
+    saveButton->setVisible(show);
     setDetailedView(detailedView, true);
 }
 
@@ -175,8 +205,9 @@ void CoeusListRowComponent::buttonClicked (Button *btn) {
         setDetailedView(!detailedView);
         sendChangeMessage();
     }
-    else {
-
+    else if (btn == editButton) {
+//        editButtonPressed();
+        setEdit(editButton->getToggleState());
     }
 }
 

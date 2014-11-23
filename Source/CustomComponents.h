@@ -148,7 +148,7 @@ protected:
 	ScopedPointer<ComboBox> searchFilter;
 	ScopedPointer<ImageButton> searchButton;    
     ScopedPointer<Label> tableHeader1, tableHeader2, tableHeader3, tableHeader4;
-    ScopedPointer<ImageButton> addButton, duplicateButton, editButton, removeButton;
+    ScopedPointer<ImageButton> addButton, duplicateButton, removeButton;
     ScopedPointer<OverlayComp> addOverlayComp;
 
 	Image imageNormal;
