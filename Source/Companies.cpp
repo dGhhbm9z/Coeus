@@ -133,44 +133,6 @@ public:
         Comments->setBounds(lm, tm+11*teHS, teWS, teHS);
     }
     
-    int fieldNameToIndex(String fname) const override {
-        if (fname.equalsIgnoreCase("CompanyName")) {
-            return 0;
-        }
-        else if (fname.equalsIgnoreCase("LegalInc")) {
-            return 1;
-        }
-        else if (fname.equalsIgnoreCase("Telephone")) {
-            return 2;
-        }
-        else if (fname.equalsIgnoreCase("Activity")) {
-            return 3;
-        }
-        else if (fname.equalsIgnoreCase("VAT")) {
-            return 4;
-        }
-        else if (fname.equalsIgnoreCase("IRS")) {
-            return 5;
-        }
-        else if (fname.equalsIgnoreCase("Address")) {
-            return 6;
-        }
-        else if (fname.equalsIgnoreCase("AddressNumber")) {
-            return 7;
-        }
-        else if (fname.equalsIgnoreCase("PersonInCharge")) {
-            return 8;
-        }
-        else if (fname.equalsIgnoreCase("StartDate")) {
-            return 9;
-        }
-        else if (fname.equalsIgnoreCase("Comments")) {
-            return 10;
-        }
-        
-        return 0;
-    }
-    
     void updateRow() {
         
     }
@@ -191,10 +153,25 @@ private:
 
 //================================================================================
 
-CompaniesTableListBoxModel::CompaniesTableListBoxModel()
+CompaniesTableListBoxModel::CompaniesTableListBoxModel(CacheSystemClient *ccc_)
+: CoeusList(ccc_)
 {
     update();
     rowSizes.calloc(1); //hack +1
+    
+    fieldNames.add("CompanyName");
+    fieldNames.add("LegalInc");
+    fieldNames.add("Telephone");
+    fieldNames.add("Activity");
+    fieldNames.add("VAT");
+    
+    fieldNames.add("IRS");
+    fieldNames.add("Address");
+    fieldNames.add("AddressNumber");
+    fieldNames.add("PersonInCharge");
+    fieldNames.add("StartDate");
+    fieldNames.add("Comments");
+
 }
 
 Array<int> CompaniesTableListBoxModel::getKeyField()
@@ -291,7 +268,7 @@ int CompaniesTableListBoxModel::getMaxRowSize()
 CompaniesComponent::CompaniesComponent()
 {
     title->setText("Companies", dontSendNotification);
-	companiesTableListBoxModel = new CompaniesTableListBoxModel();
+	companiesTableListBoxModel = new CompaniesTableListBoxModel(this);
 	addAndMakeVisible(companiesTableListBoxModel);
     companiesTableListBoxModel->addChangeListener(this);
 
@@ -369,7 +346,7 @@ void CompaniesComponent::addButtonPressed()
     // show add overlay
 }
 
-void CompaniesComponent::editButtonPressed()
+void CompaniesComponent::saveButtonPressed()
 {
 //    if (!editButton->getToggleState()) {
 //        //

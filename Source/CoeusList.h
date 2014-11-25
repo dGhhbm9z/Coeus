@@ -81,10 +81,8 @@ public:
     
     virtual void updateRow() = 0;
     virtual void insertRow() = 0;
-    virtual int fieldNameToIndex(String fname) const = 0;
     void setEdit(bool ed) { edit = ed; }
     bool isEditable() const { return edit; }
-    
 
     // TODO
     // getValueForFieldName
@@ -116,7 +114,7 @@ class CoeusList :   public Component,
                     public ChangeBroadcaster
 {
 public:
-    CoeusList();
+    CoeusList(CacheSystemClient *ccc_);
     ~CoeusList();
     
     virtual int getNumRows() = 0;
@@ -177,8 +175,12 @@ public:
 
     bool getWantsHeader() const { return wantsHeader; }
     std::unordered_map<StringArray, std::map<String, String>> &getChanges() { return rowsToUpdate; }
-    Array<int> editedRows;
     
+    String tableName;
+    StringArray fieldNames;
+    Array<int> editedRows;
+    CacheSystemClient *ccc;
+    QueryEntry *qe;    
     
 protected:
     std::unordered_map<StringArray, std::map<String, String>> rowsToUpdate;
@@ -187,7 +189,6 @@ protected:
     int getViewStartHeight() const;
     ScrollBar sb;
     
-    QueryEntry *qe;
     int rowUnderMouse;
     HeapBlock<int> rowSizes;
     bool wantsHeader;

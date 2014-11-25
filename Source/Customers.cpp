@@ -149,62 +149,6 @@ public:
         PublicRevenueService->setBounds(lm+2*(teWS+pad), tm+10*teHS, teWS, teHS);
         CommercialActivity->setBounds(lm+2*(teWS+pad), tm+11*teHS, teWS, teHS);
     }
-
-    int fieldNameToIndex(String fname) const override {
-        if (fname.equalsIgnoreCase("CustomerCode")) {
-            return 0;
-        }
-        else if (fname.equalsIgnoreCase("CustomerVAT")) {
-            return 2;
-        }
-        else if (fname.equalsIgnoreCase("Trademark")) {
-            return 3;
-        }
-        else if (fname.equalsIgnoreCase("Name")) {
-            return 4;
-        }
-        else if (fname.equalsIgnoreCase("FathersName")) {
-            return 5;
-        }
-        else if (fname.equalsIgnoreCase("DateOfBirth")) {
-            return 6;
-        }
-        else if (fname.equalsIgnoreCase("Address")) {
-            return 7;
-        }
-        else if (fname.equalsIgnoreCase("City")) {
-            return 8;
-        }
-        else if (fname.equalsIgnoreCase("Country")) {
-            return 9;
-        }
-        else if (fname.equalsIgnoreCase("ShippingAdress")) {
-            return 10;
-        }
-        else if (fname.equalsIgnoreCase("Phonenumber")) {
-            return 11;
-        }
-        else if (fname.equalsIgnoreCase("Faxnumber")) {
-            return 12;
-        }
-        else if (fname.equalsIgnoreCase("Email")) {
-            return 13;
-        }
-        else if (fname.equalsIgnoreCase("IDcardNumber")) {
-            return 14;
-        }
-        else if (fname.equalsIgnoreCase("CustomerTransactions")) {
-            return 15;
-        }
-        else if (fname.equalsIgnoreCase("PublicRevenueService")) {
-            return 16;
-        }
-        else if (fname.equalsIgnoreCase("CommercialActivity")) {
-            return 17;
-        }
-        
-        return 0;
-    }
     
     void updateRow() {
 
@@ -228,10 +172,34 @@ private:
 
 //================================================================================
 
-CustomersTableListBoxModel::CustomersTableListBoxModel()
+CustomersTableListBoxModel::CustomersTableListBoxModel(CacheSystemClient *ccc_)
+: CoeusList(ccc_)
 {
     update();
     rowSizes.calloc(1); //hack +1
+    
+    fieldNames.add("CustomerCode");
+    fieldNames.add("CompanyVAT");
+    fieldNames.add("CustomerVAT");
+    fieldNames.add("Trademark");
+    fieldNames.add("Name");
+    fieldNames.add("FathersName");
+    
+    fieldNames.add("DateOfBirth");
+    fieldNames.add("Address");
+    
+    fieldNames.add("City");
+    fieldNames.add("Country");
+    fieldNames.add("ShippingAdress");
+    fieldNames.add("Phonenumber");
+    
+    fieldNames.add("Faxnumber");
+    fieldNames.add("Email");
+    fieldNames.add("IDcardNumber");
+    fieldNames.add("CustomerTransactions");
+
+    fieldNames.add("PublicRevenueService");
+    fieldNames.add("CommercialActivity");
 }
 
 Array<int> CustomersTableListBoxModel::getKeyField()
@@ -329,7 +297,7 @@ int CustomersTableListBoxModel::getMaxRowSize()
 CustomersComponent::CustomersComponent()
 {
 	title->setText("Customers", dontSendNotification);
-    customersTableListBoxModel = new CustomersTableListBoxModel();
+    customersTableListBoxModel = new CustomersTableListBoxModel(this);
 	addAndMakeVisible(customersTableListBoxModel);
     customersTableListBoxModel->addChangeListener(this);
 
@@ -415,7 +383,7 @@ void CustomersComponent::addButtonPressed()
     // show add overlay
 }
 
-void CustomersComponent::editButtonPressed()
+void CustomersComponent::saveButtonPressed()
 {
 //    if (!editButton->getToggleState()) {
 //        //

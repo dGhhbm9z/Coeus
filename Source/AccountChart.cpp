@@ -67,23 +67,6 @@ public:
 
     }
     
-    int fieldNameToIndex(String fname) const override {
-        if (fname.equalsIgnoreCase("Code")) {
-            return 1;
-        }
-        else if (fname.equalsIgnoreCase("Name")) {
-            return 2;
-        }
-        else if (fname.equalsIgnoreCase("AccountType")) {
-            return 3;
-        }
-        else if (fname.equalsIgnoreCase("XreosPist")) {
-            return 4;
-        }
-        
-        return 1;
-    }
-    
     void updateRow() {
         
     }
@@ -104,10 +87,17 @@ private:
 
 //================================================================================
 
-AccountChartTableListBoxModel::AccountChartTableListBoxModel()
+AccountChartTableListBoxModel::AccountChartTableListBoxModel(CacheSystemClient *ccc_)
+: CoeusList(ccc_)
 {
     update();
     rowSizes.calloc(1); //hack +1
+
+    fieldNames.add("VAT");
+    fieldNames.add("Code");
+    fieldNames.add("Name");
+    fieldNames.add("AccountType");
+    fieldNames.add("XreosPist");
 }
 
 Array<int> AccountChartTableListBoxModel::getKeyField()
@@ -204,7 +194,7 @@ int AccountChartTableListBoxModel::getMaxRowSize()
 AccountChartComponent::AccountChartComponent()
 {
     title->setText("AccountChart", dontSendNotification);
-    accountChartTableListBoxModel = new AccountChartTableListBoxModel();
+    accountChartTableListBoxModel = new AccountChartTableListBoxModel(this);
     addAndMakeVisible(accountChartTableListBoxModel);
     accountChartTableListBoxModel->addChangeListener(this);
     
@@ -270,7 +260,7 @@ void AccountChartComponent::addButtonPressed()
     // show add overlay
 }
 
-void AccountChartComponent::editButtonPressed()
+void AccountChartComponent::saveButtonPressed()
 {
 
 //    if (!editButton->getToggleState()) {

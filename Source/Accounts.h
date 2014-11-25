@@ -62,7 +62,7 @@ public:
 
 	void searchButtonPressed() override;
 	void addButtonPressed() override;
-    void editButtonPressed() override;
+    void saveButtonPressed() override;
     void changeListenerCallback(ChangeBroadcaster *source) override;
 
 private:

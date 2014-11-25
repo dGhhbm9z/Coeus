@@ -217,6 +217,18 @@ void CoeusListRowComponent::buttonClicked (Button *btn) {
         }
         owner.updateComponents();
     }
+    else if (btn == saveButton) {
+        StringArray pkNames;
+        StringArray pk;
+        Array<int> ki = owner.getKeyField();
+        for (int i=0; i<ki.size(); i++) {
+            pkNames.add(owner.fieldNames[ki[i]]);
+            pk.add(owner.qe->getFieldFromRow(row, ki[i]));
+        }
+        
+        owner.updateDatabaseTableForEntry(owner.tableName, pkNames, pk, owner.ccc);
+        owner.update();
+    }
 }
 
 void CoeusListRowComponent::updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit)
@@ -230,7 +242,7 @@ void CoeusListRowComponent::updateFromQueryForRow(QueryEntry *qe, int row, bool 
         for (int i=0; i<getNumChildComponents(); i++) {
             TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
             if (te) {
-                te->setText(qe->getFieldFromRow(row, fieldNameToIndex(te->getName())));
+                te->setText(qe->getFieldFromRow(row, owner.fieldNames.indexOf(te->getName())));
                 te->setEnabled(edit);
             }
         }
@@ -251,7 +263,7 @@ void CoeusListRowComponent::updateFromMapForRow(QueryEntry *qe, std::map<String,
                 te->setText(rowUpdates[te->getName()]);
             }
             else {
-                te->setText(qe->getFieldFromRow(row, fieldNameToIndex(te->getName())));
+                te->setText(qe->getFieldFromRow(row, owner.fieldNames.indexOf(te->getName())));
             }
             te->setEnabled(edit);
         }
@@ -260,8 +272,8 @@ void CoeusListRowComponent::updateFromMapForRow(QueryEntry *qe, std::map<String,
 
 //===============================================================================
 
-CoeusList::CoeusList()
-:   sb(true), qe(nullptr), rowUnderMouse(-1)
+CoeusList::CoeusList(CacheSystemClient *ccc_)
+:   ccc(ccc_), sb(true), qe(nullptr), rowUnderMouse(-1)
 {
     selectedRow.add(-1);
     sb.setRangeLimits(0.0, 1.0);
@@ -593,7 +605,7 @@ void CoeusList::textEditorTextChanged (TextEditor &te)
     
     const String text = te.getText();
     const String fname = te.getName();
-    const String dbText = qe->getFieldFromRow(rcomp->getRow(), rcomp->fieldNameToIndex(fname));
+    const String dbText = qe->getFieldFromRow(rcomp->getRow(), fieldNames.indexOf(fname));
     if (rcomp && (dbText.compare(text) != 0)) {
         const StringArray key = qe->getFieldFromRow(rcomp->getRow(), getKeyField());
         rowsToUpdate[key][fname] = text;

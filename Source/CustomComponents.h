@@ -134,7 +134,7 @@ public:
 
 	virtual void searchButtonPressed() = 0;
 	virtual void addButtonPressed() = 0;
-    virtual void editButtonPressed() {}
+    virtual void saveButtonPressed() {}
     virtual void removeButtonPressed() {}
     virtual void duplicateButtonPressed() {}
 
