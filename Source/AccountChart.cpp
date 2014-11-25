@@ -15,7 +15,6 @@ public:
     
     AccountChartRowComponent(CoeusList &owner_) : CoeusListRowComponent(owner_) {
         detailedView = false;
-        editView = false;
         showControls = false;
         
         // add fields
@@ -161,10 +160,10 @@ CoeusListRowComponent * AccountChartTableListBoxModel::refreshComponentForRow(in
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountChartRowComponent::maxRowSize : false;
         const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
         if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
-            newComp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, edit);
+            newComp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
         }
         else {
-            newComp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
+            newComp->updateFromQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
         }
         newComp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
 
@@ -178,10 +177,10 @@ CoeusListRowComponent * AccountChartTableListBoxModel::refreshComponentForRow(in
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountChartRowComponent::maxRowSize : false;
             const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
             if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
-                cmp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, edit);
+                cmp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
             }
             else {
-                cmp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
+                cmp->updateFromQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
             }
             cmp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
         }

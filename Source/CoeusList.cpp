@@ -208,12 +208,21 @@ void CoeusListRowComponent::buttonClicked (Button *btn) {
     else if (btn == editButton) {
 //        editButtonPressed();
         setEdit(editButton->getToggleState());
+        Array<int> &eR = owner.editedRows;
+        if (eR.contains(row)) {
+            eR.removeAllInstancesOf(row);
+        }
+        else {
+            eR.add(row);
+        }
+        owner.updateComponents();
     }
 }
 
 void CoeusListRowComponent::updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit)
 {
     setDetailedView(dView);
+    setEdit(edit);
     resized();
     this->row = row;
     if(qe) {
@@ -252,7 +261,7 @@ void CoeusListRowComponent::updateFromMapForRow(QueryEntry *qe, std::map<String,
 //===============================================================================
 
 CoeusList::CoeusList()
-:   sb(true), qe(nullptr), rowUnderMouse(-1), edit(false)
+:   sb(true), qe(nullptr), rowUnderMouse(-1)
 {
     selectedRow.add(-1);
     sb.setRangeLimits(0.0, 1.0);
@@ -524,7 +533,7 @@ void CoeusList::mouseDown (const MouseEvent &event)
         // show/hide controls
         rcomp->shouldShowControls(true);
         if (prevComp) {
-            prevComp->shouldShowControls(false);
+            prevComp->shouldShowControls(false || selectedRow.contains(prevComp->getRow()));
         }
         
         // repaint

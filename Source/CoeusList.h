@@ -82,7 +82,9 @@ public:
     virtual void updateRow() = 0;
     virtual void insertRow() = 0;
     virtual int fieldNameToIndex(String fname) const = 0;
-    virtual void setEdit(bool ed) { }
+    void setEdit(bool ed) { edit = ed; }
+    bool isEditable() const { return edit; }
+    
 
     // TODO
     // getValueForFieldName
@@ -101,7 +103,7 @@ protected:
     Image imageNormal, imageMouseOver, imageMouseDown;
     ScopedPointer<ImageButton> details, editButton, saveButton;
     
-    bool detailedView, editView, showControls;
+    bool detailedView, edit, showControls;
     int row;
 
     CoeusList &owner;
@@ -140,7 +142,6 @@ public:
     void resized() override;
     void selectRow(int rowNumber);
     void addSelectRow(int rowNumber);
-    virtual void setEdit(bool ed) { edit = ed; }
     
     //
     void scrollBarMoved (ScrollBar *scrollBarThatHasMoved, double newRangeStart) override;
@@ -166,13 +167,19 @@ public:
     void textEditorTextChanged (TextEditor &) override;
     void textEditorReturnKeyPressed (TextEditor &te) override;
 
+    // refresh children
+    virtual void positionComponents();
+    virtual void updateComponents();
+    
     // database updates
     bool updateDatabaseTable(const String &table, const StringArray &pkName, CacheSystemClient *ccc);
     bool updateDatabaseTableForEntry(const String &table, const StringArray &pkName, const StringArray &pk, CacheSystemClient *ccc);
 
     bool getWantsHeader() const { return wantsHeader; }
     std::unordered_map<StringArray, std::map<String, String>> &getChanges() { return rowsToUpdate; }
-
+    Array<int> editedRows;
+    
+    
 protected:
     std::unordered_map<StringArray, std::map<String, String>> rowsToUpdate;
     Array<int> selectedRow;
@@ -183,12 +190,9 @@ protected:
     QueryEntry *qe;
     int rowUnderMouse;
     HeapBlock<int> rowSizes;
-    bool edit, wantsHeader;
+    bool wantsHeader;
     
 private:
-    virtual void updateComponents();
-    virtual void positionComponents();
-    
     template <typename PointerType, typename ExcludedType> PointerType getFirstAncestorOf(Component * component) const;
     
     Array<CoeusListRowComponent *> items;

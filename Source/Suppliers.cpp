@@ -15,7 +15,6 @@ public:
     
     SuppliersRowComponent(CoeusList &owner_) : CoeusListRowComponent(owner_) {
         detailedView = false;
-        editView = false;
         showControls = false;
         
         // add fields
@@ -276,7 +275,7 @@ CoeusListRowComponent * SuppliersTableListBoxModel::refreshComponentForRow(int r
         
         // TODO
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == SuppliersRowComponent::maxRowSize : false;
-        newComp->updateFromQueryForRow(qe, rowNumber, dView, edit);
+        newComp->updateFromQueryForRow(qe, rowNumber, dView, editedRows.contains(rowNumber));
         newComp->shouldShowControls(isRowSelected);
         
         return newComp;
@@ -287,7 +286,7 @@ CoeusListRowComponent * SuppliersTableListBoxModel::refreshComponentForRow(int r
         
         if(cmp) {
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == SuppliersRowComponent::maxRowSize : false;
-            cmp->updateFromQueryForRow(qe, rowNumber, dView, edit);
+            cmp->updateFromQueryForRow(qe, rowNumber, dView, editedRows.contains(rowNumber));
             cmp->shouldShowControls(isRowSelected);
         }
         
