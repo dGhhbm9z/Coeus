@@ -98,6 +98,8 @@ AccountChartTableListBoxModel::AccountChartTableListBoxModel(CacheSystemClient *
     fieldNames.add("Name");
     fieldNames.add("AccountType");
     fieldNames.add("XreosPist");
+    
+    tableName = "accounts";
 }
 
 Array<int> AccountChartTableListBoxModel::getKeyField()

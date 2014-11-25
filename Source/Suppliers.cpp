@@ -196,6 +196,8 @@ SuppliersTableListBoxModel::SuppliersTableListBoxModel(CacheSystemClient *ccc_)
     
     fieldNames.add("PublicRevenueService");
     fieldNames.add("CommercialActivity");
+    
+    tableName = "suppliers";
 }
 
 Array<int> SuppliersTableListBoxModel::getKeyField()

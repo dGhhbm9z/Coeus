@@ -200,6 +200,8 @@ CustomersTableListBoxModel::CustomersTableListBoxModel(CacheSystemClient *ccc_)
 
     fieldNames.add("PublicRevenueService");
     fieldNames.add("CommercialActivity");
+    
+    tableName = "customers";
 }
 
 Array<int> CustomersTableListBoxModel::getKeyField()
