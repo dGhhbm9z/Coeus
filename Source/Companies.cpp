@@ -159,18 +159,19 @@ CompaniesTableListBoxModel::CompaniesTableListBoxModel(CacheSystemClient *ccc_)
     update();
     rowSizes.calloc(1); //hack +1
     
+    fieldNames.add("VAT");
+    fieldNames.add("IRS");
     fieldNames.add("CompanyName");
     fieldNames.add("LegalInc");
-    fieldNames.add("Telephone");
-    fieldNames.add("Activity");
-    fieldNames.add("VAT");
-    
-    fieldNames.add("IRS");
     fieldNames.add("Address");
     fieldNames.add("AddressNumber");
     fieldNames.add("PersonInCharge");
+    fieldNames.add("Telephone");
+    fieldNames.add("Activity");
     fieldNames.add("StartDate");
     fieldNames.add("Comments");
+    
+    tableName = "companies";
 
 }
 
