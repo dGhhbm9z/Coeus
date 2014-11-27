@@ -734,8 +734,8 @@ void Theme::drawTableHeaderColumn(Graphics &g, const String &columnName, int col
 void Theme::drawDocumentWindowTitleBar(DocumentWindow &, Graphics &g, int w, int h, int titleSpaceX, int titleSpaceW, const Image *icon, bool drawTitleTextOnLeft)
 {
 	g.fillAll(Colour(0xff3a3a3a));
-	g.setColour(Colour(0xff1a7b83));
-	g.setFont(Font(16, Font::bold));
+	g.setColour(Colour(0xffffffff));
+	g.setFont(Font(16));
 	g.drawText("Coeus Finance", 0, 0, w, h, Justification::centred, false);
 }
 
