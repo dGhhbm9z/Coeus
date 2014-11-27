@@ -15,7 +15,6 @@ public:
     
     SuppliersRowComponent(CoeusList &owner_) : CoeusListRowComponent(owner_) {
         detailedView = false;
-        editView = false;
         showControls = false;
         
         // add fields
@@ -148,58 +147,6 @@ public:
         CommercialActivity->setBounds(lm+2*(teWS+pad), tm+11*teHS, teWS, teHS);
     }
     
-    int fieldNameToIndex(String fname) const override {
-        if (fname.equalsIgnoreCase("SupplierCode")) {
-            return 1;
-        }
-        else if (fname.equalsIgnoreCase("SupplierVAT")) {
-            return 2;
-        }
-        else if (fname.equalsIgnoreCase("Trademark")) {
-            return 3;
-        }
-        else if (fname.equalsIgnoreCase("Name")) {
-            return 4;
-        }
-        else if (fname.equalsIgnoreCase("FathersName")) {
-            return 5;
-        }
-        else if (fname.equalsIgnoreCase("DateOfBirth")) {
-            return 6;
-        }
-        else if (fname.equalsIgnoreCase("Address")) {
-            return 7;
-        }
-        else if (fname.equalsIgnoreCase("City")) {
-            return 8;
-        }
-        else if (fname.equalsIgnoreCase("Country")) {
-            return 9;
-        }
-        else if (fname.equalsIgnoreCase("Phonenumber")) {
-            return 10;
-        }
-        else if (fname.equalsIgnoreCase("Faxnumber")) {
-            return 11;
-        }
-        else if (fname.equalsIgnoreCase("Email")) {
-            return 12;
-        }
-        else if (fname.equalsIgnoreCase("IDcardNumber")) {
-            return 13;
-        }
-        else if (fname.equalsIgnoreCase("SupplierTransactions")) {
-            return 14;
-        }
-        else if (fname.equalsIgnoreCase("PublicRevenueService")) {
-            return 15;
-        }
-        else if (fname.equalsIgnoreCase("CommercialActivity")) {
-            return 16;
-        }
-        return 0;
-    }
-    
     void updateRow() {
     }
     
@@ -221,10 +168,36 @@ private:
 
 //================================================================================
 
-SuppliersTableListBoxModel::SuppliersTableListBoxModel()
+SuppliersTableListBoxModel::SuppliersTableListBoxModel(CacheSystemClient *ccc_)
+: CoeusList(ccc_)
 {
     update();
     rowSizes.calloc(1); //hack +1
+    
+    fieldNames.add("SupplierCode");
+    fieldNames.add("CompanyVAT");
+    fieldNames.add("SupplierVAT");
+    fieldNames.add("Trademark");
+    fieldNames.add("Name");
+    fieldNames.add("FathersName");
+    
+    fieldNames.add("DateOfBirth");
+    fieldNames.add("Address");
+    
+    fieldNames.add("City");
+    fieldNames.add("Country");
+    fieldNames.add("ShippingAdress");
+    fieldNames.add("Phonenumber");
+    
+    fieldNames.add("Faxnumber");
+    fieldNames.add("Email");
+    fieldNames.add("IDcardNumber");
+    fieldNames.add("SupplierTransactions");
+    
+    fieldNames.add("PublicRevenueService");
+    fieldNames.add("CommercialActivity");
+    
+    tableName = "suppliers";
 }
 
 Array<int> SuppliersTableListBoxModel::getKeyField()
@@ -276,7 +249,7 @@ CoeusListRowComponent * SuppliersTableListBoxModel::refreshComponentForRow(int r
         
         // TODO
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == SuppliersRowComponent::maxRowSize : false;
-        newComp->updateFromQueryForRow(qe, rowNumber, dView, edit);
+        newComp->updateFromQueryForRow(qe, rowNumber, dView, editedRows.contains(rowNumber));
         newComp->shouldShowControls(isRowSelected);
         
         return newComp;
@@ -287,7 +260,7 @@ CoeusListRowComponent * SuppliersTableListBoxModel::refreshComponentForRow(int r
         
         if(cmp) {
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == SuppliersRowComponent::maxRowSize : false;
-            cmp->updateFromQueryForRow(qe, rowNumber, dView, edit);
+            cmp->updateFromQueryForRow(qe, rowNumber, dView, editedRows.contains(rowNumber));
             cmp->shouldShowControls(isRowSelected);
         }
         
@@ -310,7 +283,7 @@ int SuppliersTableListBoxModel::getMaxRowSize()
 SuppliersComponent::SuppliersComponent()
 {
     title->setText("Suppliers", dontSendNotification);
-    suppliersTableListBoxModel = new SuppliersTableListBoxModel();
+    suppliersTableListBoxModel = new SuppliersTableListBoxModel(this);
     addAndMakeVisible(suppliersTableListBoxModel);
     suppliersTableListBoxModel->addChangeListener(this);
     
@@ -392,21 +365,19 @@ void SuppliersComponent::addButtonPressed()
     // show add overlay
 }
 
-void SuppliersComponent::editButtonPressed()
+void SuppliersComponent::saveButtonPressed()
 {
-    suppliersTableListBoxModel->setEdit(editButton->getToggleState());
-
-    if (!editButton->getToggleState()) {
-        //
-        StringArray pkNames;
-        pkNames.add("SupplierCode");
-        pkNames.add("SupplierVAT");
-
-        suppliersTableListBoxModel->updateDatabaseTable("suppliers", pkNames, this);
-
-    }
-
-    suppliersTableListBoxModel->update();
+//    if (!editButton->getToggleState()) {
+//        //
+//        StringArray pkNames;
+//        pkNames.add("SupplierCode");
+//        pkNames.add("SupplierVAT");
+//
+//        suppliersTableListBoxModel->updateDatabaseTable("suppliers", pkNames, this);
+//
+//    }
+//
+//    suppliersTableListBoxModel->update();
 }
 
 void SuppliersComponent::changeListenerCallback(ChangeBroadcaster *source)

@@ -10,7 +10,7 @@
 class AccountChartTableListBoxModel : public CoeusList
 {
 public:
-    AccountChartTableListBoxModel();
+    AccountChartTableListBoxModel(CacheSystemClient *ccc_);
     
     int getNumRows() override;
     int getRowSize(int rowNumber) override;
@@ -37,7 +37,7 @@ public:
     
     void searchButtonPressed() override;
 	void addButtonPressed() override;
-    void editButtonPressed() override;
+    void saveButtonPressed() override;
     void changeListenerCallback(ChangeBroadcaster *source) override;
     
 private:

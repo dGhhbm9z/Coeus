@@ -335,7 +335,7 @@ void AccountsComponent::addButtonPressed()
     // show add overlay
 }
 
-void AccountsComponent::editButtonPressed()
+void AccountsComponent::saveButtonPressed()
 {
 //    accounts->setEdit(editButton->getToggleState());
 }

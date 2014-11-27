@@ -15,7 +15,6 @@ public:
     
     AccountChartRowComponent(CoeusList &owner_) : CoeusListRowComponent(owner_) {
         detailedView = false;
-        editView = false;
         showControls = false;
         
         // add fields
@@ -68,23 +67,6 @@ public:
 
     }
     
-    int fieldNameToIndex(String fname) const override {
-        if (fname.equalsIgnoreCase("Code")) {
-            return 1;
-        }
-        else if (fname.equalsIgnoreCase("Name")) {
-            return 2;
-        }
-        else if (fname.equalsIgnoreCase("AccountType")) {
-            return 3;
-        }
-        else if (fname.equalsIgnoreCase("XreosPist")) {
-            return 4;
-        }
-        
-        return 1;
-    }
-    
     void updateRow() {
         
     }
@@ -105,10 +87,19 @@ private:
 
 //================================================================================
 
-AccountChartTableListBoxModel::AccountChartTableListBoxModel()
+AccountChartTableListBoxModel::AccountChartTableListBoxModel(CacheSystemClient *ccc_)
+: CoeusList(ccc_)
 {
     update();
     rowSizes.calloc(1); //hack +1
+
+    fieldNames.add("VAT");
+    fieldNames.add("Code");
+    fieldNames.add("Name");
+    fieldNames.add("AccountType");
+    fieldNames.add("XreosPist");
+    
+    tableName = "accounts";
 }
 
 Array<int> AccountChartTableListBoxModel::getKeyField()
@@ -161,10 +152,10 @@ CoeusListRowComponent * AccountChartTableListBoxModel::refreshComponentForRow(in
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountChartRowComponent::maxRowSize : false;
         const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
         if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
-            newComp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, edit);
+            newComp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
         }
         else {
-            newComp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
+            newComp->updateFromQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
         }
         newComp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
 
@@ -178,10 +169,10 @@ CoeusListRowComponent * AccountChartTableListBoxModel::refreshComponentForRow(in
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountChartRowComponent::maxRowSize : false;
             const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
             if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
-                cmp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, edit);
+                cmp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
             }
             else {
-                cmp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
+                cmp->updateFromQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
             }
             cmp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
         }
@@ -205,7 +196,7 @@ int AccountChartTableListBoxModel::getMaxRowSize()
 AccountChartComponent::AccountChartComponent()
 {
     title->setText("AccountChart", dontSendNotification);
-    accountChartTableListBoxModel = new AccountChartTableListBoxModel();
+    accountChartTableListBoxModel = new AccountChartTableListBoxModel(this);
     addAndMakeVisible(accountChartTableListBoxModel);
     accountChartTableListBoxModel->addChangeListener(this);
     
@@ -271,20 +262,19 @@ void AccountChartComponent::addButtonPressed()
     // show add overlay
 }
 
-void AccountChartComponent::editButtonPressed()
+void AccountChartComponent::saveButtonPressed()
 {
-    accountChartTableListBoxModel->setEdit(editButton->getToggleState());
 
-    if (!editButton->getToggleState()) {
-        //
-        StringArray pkNames;
-        pkNames.add("VAT");
-
-        accountChartTableListBoxModel->updateDatabaseTable("accounts", pkNames, this);
-
-    }
-
-    accountChartTableListBoxModel->update();
+//    if (!editButton->getToggleState()) {
+//        //
+//        StringArray pkNames;
+//        pkNames.add("VAT");
+//
+//        accountChartTableListBoxModel->updateDatabaseTable("accounts", pkNames, this);
+//
+//    }
+//
+//    accountChartTableListBoxModel->update();
 }
 
 void AccountChartComponent::changeListenerCallback(ChangeBroadcaster *source)

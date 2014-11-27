@@ -15,7 +15,6 @@ public:
     
     CompaniesRowComponent(CoeusList &owner_) : CoeusListRowComponent(owner_) {
         detailedView = false;
-        editView = false;
         showControls = false;
 
         // add fields
@@ -134,44 +133,6 @@ public:
         Comments->setBounds(lm, tm+11*teHS, teWS, teHS);
     }
     
-    int fieldNameToIndex(String fname) const override {
-        if (fname.equalsIgnoreCase("CompanyName")) {
-            return 0;
-        }
-        else if (fname.equalsIgnoreCase("LegalInc")) {
-            return 1;
-        }
-        else if (fname.equalsIgnoreCase("Telephone")) {
-            return 2;
-        }
-        else if (fname.equalsIgnoreCase("Activity")) {
-            return 3;
-        }
-        else if (fname.equalsIgnoreCase("VAT")) {
-            return 4;
-        }
-        else if (fname.equalsIgnoreCase("IRS")) {
-            return 5;
-        }
-        else if (fname.equalsIgnoreCase("Address")) {
-            return 6;
-        }
-        else if (fname.equalsIgnoreCase("AddressNumber")) {
-            return 7;
-        }
-        else if (fname.equalsIgnoreCase("PersonInCharge")) {
-            return 8;
-        }
-        else if (fname.equalsIgnoreCase("StartDate")) {
-            return 9;
-        }
-        else if (fname.equalsIgnoreCase("Comments")) {
-            return 10;
-        }
-        
-        return 0;
-    }
-    
     void updateRow() {
         
     }
@@ -192,10 +153,26 @@ private:
 
 //================================================================================
 
-CompaniesTableListBoxModel::CompaniesTableListBoxModel()
+CompaniesTableListBoxModel::CompaniesTableListBoxModel(CacheSystemClient *ccc_)
+: CoeusList(ccc_)
 {
     update();
     rowSizes.calloc(1); //hack +1
+    
+    fieldNames.add("VAT");
+    fieldNames.add("IRS");
+    fieldNames.add("CompanyName");
+    fieldNames.add("LegalInc");
+    fieldNames.add("Address");
+    fieldNames.add("AddressNumber");
+    fieldNames.add("PersonInCharge");
+    fieldNames.add("Telephone");
+    fieldNames.add("Activity");
+    fieldNames.add("StartDate");
+    fieldNames.add("Comments");
+    
+    tableName = "companies";
+
 }
 
 Array<int> CompaniesTableListBoxModel::getKeyField()
@@ -248,10 +225,10 @@ CoeusListRowComponent * CompaniesTableListBoxModel::refreshComponentForRow(int r
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize : false;
         const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
         if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
-            newComp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, edit);
+            newComp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
         }
         else {
-            newComp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
+            newComp->updateFromQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
         }
         newComp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
 
@@ -265,10 +242,10 @@ CoeusListRowComponent * CompaniesTableListBoxModel::refreshComponentForRow(int r
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize : false;
             const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
             if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
-                cmp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, edit);
+                cmp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
             }
             else {
-                cmp->updateFromQueryForRow(qe, rowNumber,  dView, edit);
+                cmp->updateFromQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
             }
             cmp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
         }
@@ -292,7 +269,7 @@ int CompaniesTableListBoxModel::getMaxRowSize()
 CompaniesComponent::CompaniesComponent()
 {
     title->setText("Companies", dontSendNotification);
-	companiesTableListBoxModel = new CompaniesTableListBoxModel();
+	companiesTableListBoxModel = new CompaniesTableListBoxModel(this);
 	addAndMakeVisible(companiesTableListBoxModel);
     companiesTableListBoxModel->addChangeListener(this);
 
@@ -370,20 +347,18 @@ void CompaniesComponent::addButtonPressed()
     // show add overlay
 }
 
-void CompaniesComponent::editButtonPressed()
+void CompaniesComponent::saveButtonPressed()
 {
-    companiesTableListBoxModel->setEdit(editButton->getToggleState());
-
-    if (!editButton->getToggleState()) {
-        //
-        StringArray pkNames;
-        pkNames.add("VAT");
-
-        companiesTableListBoxModel->updateDatabaseTable("companies", pkNames, this);
-
-    }
-
-    companiesTableListBoxModel->update();
+//    if (!editButton->getToggleState()) {
+//        //
+//        StringArray pkNames;
+//        pkNames.add("VAT");
+//
+//        companiesTableListBoxModel->updateDatabaseTable("companies", pkNames, this);
+//
+//    }
+//
+//    companiesTableListBoxModel->update();
 }
 
 void CompaniesComponent::changeListenerCallback(ChangeBroadcaster *source)

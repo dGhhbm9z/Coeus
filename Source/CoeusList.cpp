@@ -131,6 +131,32 @@ CoeusListRowComponent::CoeusListRowComponent(CoeusList &owner_) : detailedView(f
     
     details->addListener(this);
     addAndMakeVisible(details);
+    
+    editButton = new ImageButton();
+    imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/normal.png"));
+    imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/hover.png"));
+    imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/clicked.png"));
+    editButton->setImages(false, true, true,
+                          imageNormal, 1.0f, Colours::transparentBlack,
+                          imageMouseOver, 1.0f, Colours::transparentBlack,
+                          imageMouseDown, 1.0f, Colours::transparentBlack,
+                          0.0f);
+    editButton->setClickingTogglesState(true);
+    editButton->addListener(this);
+    addAndMakeVisible(editButton);
+    
+    saveButton = new ImageButton();
+    imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/saveButton/normal.png"));
+    imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/saveButton/hover.png"));
+    imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/saveButton/clicked.png"));
+    saveButton->setImages(false, true, true,
+                          imageNormal, 1.0f, Colours::transparentBlack,
+                          imageMouseOver, 1.0f, Colours::transparentBlack,
+                          imageMouseDown, 1.0f, Colours::transparentBlack,
+                          0.0f);
+    saveButton->setClickingTogglesState(true);
+    saveButton->addListener(this);
+    addAndMakeVisible(saveButton);
 }
 
 int CoeusListRowComponent::getRow() const
@@ -151,13 +177,13 @@ void CoeusListRowComponent::setDetailedView(bool s, bool force) {
         if (showControls) {
             const int lm = 4;
             const int tm = 2+getMinRowSize()*0.15f;
-            const int bm = 2;
             const int pad = 4;
-            const int teHS = getMinRowSize()*0.7f - tm - bm;
             const int teWS = 250;
-            const int btnW=66;
+            const int btnW=25;
             
-            details->setBounds(lm+3*(teWS+pad)+pad+150+10+btnW, tm, btnW, teHS);
+            details->setBounds(lm+3*(teWS+pad)+pad+150+25, tm, btnW, btnW);
+            editButton->setBounds(lm+3*(teWS+pad)+pad+150+55, tm, btnW, btnW);
+            saveButton->setBounds(lm+3*(teWS+pad)+pad+150+85, tm, btnW, btnW);
         }
     }
 }
@@ -165,6 +191,8 @@ void CoeusListRowComponent::setDetailedView(bool s, bool force) {
 void CoeusListRowComponent::shouldShowControls(bool show) {
     showControls = show;
     details->setVisible(show);
+    editButton->setVisible(show);
+    saveButton->setVisible(show);
     setDetailedView(detailedView, true);
 }
 
@@ -177,14 +205,36 @@ void CoeusListRowComponent::buttonClicked (Button *btn) {
         setDetailedView(!detailedView);
         sendChangeMessage();
     }
-    else {
-
+    else if (btn == editButton) {
+//        editButtonPressed();
+        setEdit(editButton->getToggleState());
+        Array<int> &eR = owner.editedRows;
+        if (eR.contains(row)) {
+            eR.removeAllInstancesOf(row);
+        }
+        else {
+            eR.add(row);
+        }
+        owner.updateComponents();
+    }
+    else if (btn == saveButton) {
+        StringArray pkNames;
+        StringArray pk;
+        Array<int> ki = owner.getKeyField();
+        for (int i=0; i<ki.size(); i++) {
+            pkNames.add(owner.fieldNames[ki[i]]);
+            pk.add(owner.qe->getFieldFromRow(row, ki[i]));
+        }
+        
+        owner.updateDatabaseTableForEntry(owner.tableName, pkNames, pk, owner.ccc);
+        owner.update();
     }
 }
 
 void CoeusListRowComponent::updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit)
 {
     setDetailedView(dView);
+    setEdit(edit);
     resized();
     this->row = row;
     if(qe) {
@@ -192,7 +242,7 @@ void CoeusListRowComponent::updateFromQueryForRow(QueryEntry *qe, int row, bool 
         for (int i=0; i<getNumChildComponents(); i++) {
             TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
             if (te) {
-                te->setText(qe->getFieldFromRow(row, fieldNameToIndex(te->getName())));
+                te->setText(qe->getFieldFromRow(row, owner.fieldNames.indexOf(te->getName())));
                 te->setEnabled(edit);
             }
         }
@@ -213,7 +263,7 @@ void CoeusListRowComponent::updateFromMapForRow(QueryEntry *qe, std::map<String,
                 te->setText(rowUpdates[te->getName()]);
             }
             else {
-                te->setText(qe->getFieldFromRow(row, fieldNameToIndex(te->getName())));
+                te->setText(qe->getFieldFromRow(row, owner.fieldNames.indexOf(te->getName())));
             }
             te->setEnabled(edit);
         }
@@ -222,8 +272,8 @@ void CoeusListRowComponent::updateFromMapForRow(QueryEntry *qe, std::map<String,
 
 //===============================================================================
 
-CoeusList::CoeusList()
-:   sb(true), qe(nullptr), rowUnderMouse(-1), edit(false)
+CoeusList::CoeusList(CacheSystemClient *ccc_)
+:   ccc(ccc_), sb(true), qe(nullptr), rowUnderMouse(-1)
 {
     selectedRow.add(-1);
     sb.setRangeLimits(0.0, 1.0);
@@ -376,7 +426,7 @@ void CoeusList::updateComponents()
             res->repaint();            
         }
         else {
-            CoeusListRowComponent *res = refreshComponentForRow(r, selectedRow.getLast() == r, items[r-startRow]);
+            CoeusListRowComponent *res = refreshComponentForRow(r, selectedRow.contains(r), items[r-startRow]);
             if (res != items[r-startRow]) {
                 if (items[r-startRow] != nullptr) {
                     items[r-startRow]->setVisible(false);
@@ -495,7 +545,7 @@ void CoeusList::mouseDown (const MouseEvent &event)
         // show/hide controls
         rcomp->shouldShowControls(true);
         if (prevComp) {
-            prevComp->shouldShowControls(false);
+            prevComp->shouldShowControls(false || selectedRow.contains(prevComp->getRow()));
         }
         
         // repaint
@@ -519,7 +569,7 @@ void CoeusList::mouseMove(const MouseEvent &event)
         rcomp->shouldShowControls(true);
         
         if (prevComp && (selectedRow.getLast() != prevComp->getRow())) {
-            prevComp->shouldShowControls(false);
+            prevComp->shouldShowControls(false || selectedRow.contains(prevComp->getRow()));
         }
         
         // repaint
@@ -555,7 +605,7 @@ void CoeusList::textEditorTextChanged (TextEditor &te)
     
     const String text = te.getText();
     const String fname = te.getName();
-    const String dbText = qe->getFieldFromRow(rcomp->getRow(), rcomp->fieldNameToIndex(fname));
+    const String dbText = qe->getFieldFromRow(rcomp->getRow(), fieldNames.indexOf(fname));
     if (rcomp && (dbText.compare(text) != 0)) {
         const StringArray key = qe->getFieldFromRow(rcomp->getRow(), getKeyField());
         rowsToUpdate[key][fname] = text;
