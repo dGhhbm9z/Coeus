@@ -140,11 +140,10 @@ void CustomTabbedButtonBar::resized()
 	openSourceInnovation->setBounds(0, 348, getWidth(), 75);
 	reportGenerator->setBounds(0, 448, getWidth(), 75);
 
+	accounting->setBounds(0, 0, 66, 28);
+	reporting->setBounds(67, 0, 66, 28);
 
-	reporting->setBounds(65, 0, 56, 28);
-	accounting->setBounds(0, 0, 65, 28);
-
-	logout->setBounds(0, getHeight() - 34, 120, 34);
+	logout->setBounds(0, getHeight() - 34, 132, 34);
 }
 
 int CustomTabbedButtonBar::getCurrentTabIndex() const
@@ -273,7 +272,7 @@ void CustomTabComponent::resized()
 	suppliersComponent->setBounds(120, 0, width-120, height);
 	customersComponent->setBounds(120, 0, width-120, height);
 	companiesComponent->setBounds(120, 0, width-120, height);
-	tabButtons->setBounds(0, (getHeight()-575) / 2, 120, 575);
+	tabButtons->setBounds(0, (getHeight()-575) / 2, 132, 575);
 }
 
 void CustomTabComponent::timerCallback()

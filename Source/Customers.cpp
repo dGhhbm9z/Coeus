@@ -230,15 +230,15 @@ int CustomersTableListBoxModel::getRowSize(int rowNumber)
 void CustomersTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, int x, int y, int width, int height, bool rowIsSelected)
 {
     if (rowIsSelected) {
-        g.setColour(Colours::grey.brighter().brighter());
+        g.setColour(Colour(0xff9d9d9d));
         g.fillRect(x, y, width, height);
     }
-    else if (rowNumber == rowUnderMouse) {
+    else if (rowNumber == rowUnderMouse && (rowSizes[rowNumber] != CustomersRowComponent::maxRowSize)) {
         g.setColour(Colours::lightgrey.brighter().brighter());
         g.fillRect(x, y, width, height);
     }
     else if (getNumRows() && (rowSizes[rowNumber] == CustomersRowComponent::maxRowSize)) {
-        g.setColour(Colours::lightgrey.brighter().brighter().brighter());
+        g.setColour(Colour(Colour(0xffbebebe)));
         g.fillRect(x, y, width, height);
     }
 }

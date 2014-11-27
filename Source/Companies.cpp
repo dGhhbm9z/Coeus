@@ -199,16 +199,16 @@ int CompaniesTableListBoxModel::getRowSize(int rowNumber)
 
 void CompaniesTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, int x, int y, int width, int height, bool rowIsSelected)
 {
-	if (rowIsSelected) {
-		g.setColour(Colours::grey.brighter().brighter());
+    if (rowIsSelected) {
+        g.setColour(Colour(0xff9d9d9d));
         g.fillRect(x, y, width, height);
-	}
-    else if (rowNumber == rowUnderMouse) {
-		g.setColour(Colours::lightgrey.brighter().brighter());
+    }
+    else if (rowNumber == rowUnderMouse && (rowSizes[rowNumber] != CompaniesRowComponent::maxRowSize)) {
+        g.setColour(Colours::lightgrey.brighter().brighter());
         g.fillRect(x, y, width, height);
-	}
+    }
     else if (getNumRows() && (rowSizes[rowNumber] == CompaniesRowComponent::maxRowSize)) {
-        g.setColour(Colours::lightgrey.brighter().brighter().brighter());
+        g.setColour(Colour(Colour(0xffbebebe)));
         g.fillRect(x, y, width, height);
     }
 }

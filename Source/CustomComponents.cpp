@@ -209,8 +209,8 @@ void CustomTabContent::resized()
     tableHeader3->setBounds(lm+2*(teWS+pad), starty+tm, 150, teHS);
     tableHeader4->setBounds(lm+2*(teWS+pad)+pad+150, starty+tm, teWS, teHS);
     addButton->setBounds(lm+3*(teWS+pad)+pad+150+50, starty+tm, 25, 25);
-    duplicateButton->setBounds(lm+3*(teWS+pad)+pad+150+100, starty+tm, 25, 25);
-    removeButton->setBounds(lm+3*(teWS+pad)+pad+150+100+50, starty+tm, 25, 25);
+    removeButton->setBounds(lm+3*(teWS+pad)+pad+150+100, starty+tm, 25, 25);
+    duplicateButton->setBounds(lm+3*(teWS+pad)+pad+150+100+50, starty+tm, 25, 25);
     
 	const float sbz = getHeight()*0.05f;
 	const float sbwp = sbz / (float)getWidth();
