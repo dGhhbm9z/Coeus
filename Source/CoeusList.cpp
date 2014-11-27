@@ -426,7 +426,7 @@ void CoeusList::updateComponents()
             res->repaint();            
         }
         else {
-            CoeusListRowComponent *res = refreshComponentForRow(r, selectedRow.getLast() == r, items[r-startRow]);
+            CoeusListRowComponent *res = refreshComponentForRow(r, selectedRow.contains(r), items[r-startRow]);
             if (res != items[r-startRow]) {
                 if (items[r-startRow] != nullptr) {
                     items[r-startRow]->setVisible(false);
@@ -569,7 +569,7 @@ void CoeusList::mouseMove(const MouseEvent &event)
         rcomp->shouldShowControls(true);
         
         if (prevComp && (selectedRow.getLast() != prevComp->getRow())) {
-            prevComp->shouldShowControls(false);
+            prevComp->shouldShowControls(false || selectedRow.contains(prevComp->getRow()));
         }
         
         // repaint
