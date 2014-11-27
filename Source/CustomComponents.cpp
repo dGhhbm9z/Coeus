@@ -93,7 +93,7 @@ void CustomMenuBarButton::paint(Graphics &g) {
 CustomTabContent::CustomTabContent() {
 	title = new Label("", "-title-");
 	title->setFont(22);
-	title->setJustificationType(Justification::centred);
+	title->setJustificationType(Justification::left);
 
 	search = new TextEditor();
 	search->setFont(Font(22));
