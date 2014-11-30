@@ -93,7 +93,7 @@ void CustomMenuBarButton::paint(Graphics &g) {
 CustomTabContent::CustomTabContent() {
 	title = new Label("", "-title-");
 	title->setFont(22);
-	title->setJustificationType(Justification::centred);
+	title->setJustificationType(Justification::left);
 
 	search = new TextEditor();
 	search->setFont(Font(22));
@@ -139,19 +139,6 @@ CustomTabContent::CustomTabContent() {
     duplicateButton->addListener(this);
     addAndMakeVisible(duplicateButton);
     
-    editButton = new ImageButton();
-    imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/normal.png"));
-    imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/hover.png"));
-    imageMouseDown = ImageCache::getFromFile(RESOURCE_FILE("./Resources/editButton/clicked.png"));
-    editButton->setImages(false, true, true,
-                      imageNormal, 1.0f, Colours::transparentBlack,
-                      imageMouseOver, 1.0f, Colours::transparentBlack,
-                      imageMouseDown, 1.0f, Colours::transparentBlack,
-                      0.0f);
-    editButton->setClickingTogglesState(true);
-    editButton->addListener(this);
-    addAndMakeVisible(editButton);
-    
     removeButton = new ImageButton();
     imageNormal = ImageCache::getFromFile(RESOURCE_FILE("./Resources/removeButton/normal.png"));
     imageMouseOver = ImageCache::getFromFile(RESOURCE_FILE("./Resources/removeButton/hover.png"));
@@ -184,6 +171,16 @@ CustomTabContent::CustomTabContent() {
     tableHeader3->setJustificationType(Justification::centred);
     tableHeader4->setJustificationType(Justification::centred);
     
+    tableHeader1->setColour(Label::textColourId, Colour(0xff1a7b82));
+    tableHeader2->setColour(Label::textColourId, Colour(0xff1a7b82));
+    tableHeader3->setColour(Label::textColourId, Colour(0xff1a7b82));
+    tableHeader4->setColour(Label::textColourId, Colour(0xff1a7b82));
+
+    tableHeader1->setFont(Font(20, Font::bold));
+    tableHeader2->setFont(Font(20, Font::bold));
+    tableHeader3->setFont(Font(20, Font::bold));
+    tableHeader4->setFont(Font(20, Font::bold));
+    
     addChildComponent(addOverlayComp = new OverlayComp());
 }
 
@@ -196,8 +193,8 @@ CustomTabContent::~CustomTabContent()
 
 void CustomTabContent::resized()
 {
-	title->setBoundsRelative(0.5f - 0.125f - 120.0f/(float)getParentWidth(), 0.01, 0.25f, 0.05f);
-	search->setBoundsRelative(0.5f - 0.125f - 120.0f / (float)getParentWidth(), 0.01 + 0.05f, 0.25f, 0.05f);
+	title->setBoundsRelative(0.0f, 0.01, 0.25f, 0.05f);
+	search->setBoundsRelative(0.5f - 0.125f - 120.0f / (float)getParentWidth(), 0.01, 0.25f, 0.05f);
     
     Rectangle<int> compBounds = getComponentArea();
     const int starty = compBounds.getY()-40;
@@ -212,16 +209,15 @@ void CustomTabContent::resized()
     tableHeader3->setBounds(lm+2*(teWS+pad), starty+tm, 150, teHS);
     tableHeader4->setBounds(lm+2*(teWS+pad)+pad+150, starty+tm, teWS, teHS);
     addButton->setBounds(lm+3*(teWS+pad)+pad+150+50, starty+tm, 25, 25);
-    duplicateButton->setBounds(lm+3*(teWS+pad)+pad+150+100, starty+tm, 25, 25);
-    editButton->setBounds(lm+3*(teWS+pad)+pad+150+100+50, starty+tm, 25, 25);
-    removeButton->setBounds(lm+3*(teWS+pad)+pad+150+100+100, starty+tm, 25, 25);
+    removeButton->setBounds(lm+3*(teWS+pad)+pad+150+100, starty+tm, 25, 25);
+    duplicateButton->setBounds(lm+3*(teWS+pad)+pad+150+100+50, starty+tm, 25, 25);
     
 	const float sbz = getHeight()*0.05f;
 	const float sbwp = sbz / (float)getWidth();
 	const float sbhp = sbz / (float)getHeight();
-	searchButton->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f - 120.0f / (float)getParentWidth(), 0.01 + 0.05f, sbwp, sbhp);
+	searchButton->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f - 120.0f / (float)getParentWidth(), 0.01, sbwp, sbhp);
 
-	searchFilter->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f + sbwp + 0.01f - 120.0f / (float)getParentWidth(), 0.01 + 0.05f, 0.1f, 0.05f);
+	searchFilter->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f + sbwp + 0.01f - 120.0f / (float)getParentWidth(), 0.01, 0.1f, 0.05f);
     
     addOverlayComp->setBounds(compBounds);
 }
@@ -253,9 +249,6 @@ void CustomTabContent::buttonClicked(Button *btn)
     }
     else if (btn == duplicateButton) {
         duplicateButtonPressed();
-    }
-    else if (btn == editButton) {
-        editButtonPressed();
     }
     else if (btn == removeButton) {
         removeButtonPressed();
