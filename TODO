@@ -17,5 +17,4 @@ color coding in accounts
 add...
 add qe functionality to handle inserts/updates
 
-query entry leak
 fix persistant column entry after edit/save

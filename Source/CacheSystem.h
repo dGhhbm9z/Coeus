@@ -37,7 +37,7 @@ public:
 
 private:
 	WeakReference<CacheSystemClient> client;
-	QueryEntry *qe;
+	WeakReference<QueryEntry> qe;
 };
 
 //================================================================================
@@ -53,6 +53,7 @@ public:
 		if (result != nullptr) {
 			free(result);
 		}
+        masterReference.clear();
 	}
 
 	virtual String getFieldFromRow(int row, int field) {
@@ -93,6 +94,8 @@ public:
     QueryTable tableType;
 
 private:
+    WeakReference<QueryEntry>::Master masterReference;
+    friend class WeakReference<QueryEntry>;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(QueryEntry)
 };
 
@@ -162,7 +165,7 @@ private:
 	String address;
 	uint32 port;
 
-	Array<QueryEntry *> queries;
+	Array<WeakReference<QueryEntry>> queries;
 	CriticalSection querySection;
 	int nextQueryToServeIndex;
 };

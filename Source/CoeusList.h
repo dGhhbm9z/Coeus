@@ -180,7 +180,7 @@ public:
     StringArray fieldNames;
     Array<int> editedRows;
     CacheSystemClient *ccc;
-    QueryEntry *qe;    
+    WeakReference<QueryEntry> qe;
     
 protected:
     std::unordered_map<StringArray, std::map<String, String>> rowsToUpdate;

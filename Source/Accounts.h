@@ -43,7 +43,7 @@ public:
     void mouseExit(const MouseEvent &event) override;
 
 private:
-	QueryEntry *qe;
+	WeakReference<QueryEntry> qe;
 	int rowUnderMouse;
 };
 
@@ -67,7 +67,7 @@ public:
 
 private:
 	ScopedPointer<AccountsTableListBoxModel> accounts;
-	QueryEntry *qe;
+	WeakReference<QueryEntry> qe;
 };
 
 #endif
