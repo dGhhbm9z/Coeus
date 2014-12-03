@@ -331,6 +331,15 @@ void CustomersComponent::receivedResults(QueryEntry *qe_)
         customersTableListBoxModel->setQueryEntry(qe);
         customersTableListBoxModel->update();
     }
+    else {
+        // if update
+        if (customersTableListBoxModel->savedpks.size()) {
+            // fix this v
+            StringArray pk = customersTableListBoxModel->savedpks[0];
+            customersTableListBoxModel->wasSaved(pk);
+        }
+        // if delete
+    }
 }
 
 void CustomersComponent::mouseExit(const MouseEvent &event)

@@ -151,6 +151,9 @@ public:
     void setQueryEntry(QueryEntry *qe_);
     
     //
+    void wasSaved(StringArray &pk);
+    
+    //
     void changeListenerCallback(ChangeBroadcaster *source) override;
     void mouseMove(const MouseEvent &event) override;
     void mouseExit(const MouseEvent &event) override;
@@ -181,6 +184,7 @@ public:
     Array<int> editedRows;
     CacheSystemClient *ccc;
     WeakReference<QueryEntry> qe;
+    Array<StringArray> savedpks;
     
 protected:
     std::unordered_map<StringArray, std::map<String, String>> rowsToUpdate;
@@ -195,7 +199,7 @@ protected:
     
 private:
     template <typename PointerType, typename ExcludedType> PointerType getFirstAncestorOf(Component * component) const;
-    
+
     Array<CoeusListRowComponent *> items;
     Array<CoeusListRowComponent *> pool;
     Array<int> itemsToRows;
