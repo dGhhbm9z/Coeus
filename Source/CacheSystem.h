@@ -162,7 +162,7 @@ private:
 	String address;
 	uint32 port;
 
-	OwnedArray<QueryEntry> queries;
+	Array<QueryEntry *> queries;
 	CriticalSection querySection;
 	int nextQueryToServeIndex;
 };

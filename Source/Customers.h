@@ -42,7 +42,7 @@ public:
     
 private:
 	ScopedPointer<CustomersTableListBoxModel> customersTableListBoxModel;
-	QueryEntry *qe;
+	ScopedPointer<QueryEntry> qe;
 };
 
 #endif
