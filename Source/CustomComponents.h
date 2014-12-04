@@ -141,6 +141,8 @@ public:
     void changeListenerCallback(ChangeBroadcaster *source) override = 0;
     
 	void buttonClicked(Button *) override;
+    
+    virtual Component *getAddComponent() = 0;
 
 protected:
 	ScopedPointer<Label> title;

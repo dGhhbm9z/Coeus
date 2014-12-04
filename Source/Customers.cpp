@@ -391,7 +391,7 @@ void CustomersComponent::searchButtonPressed()
 
 void CustomersComponent::addButtonPressed()
 {
-    // show add overlay
+
 }
 
 void CustomersComponent::saveButtonPressed()
@@ -424,4 +424,9 @@ void CustomersComponent::changeListenerCallback(ChangeBroadcaster *source)
         tableHeader3->setVisible(true);
         tableHeader4->setVisible(true);
     }
+}
+
+Component * CustomersComponent::getAddComponent()
+{
+    return new CustomersRowComponent(*customersTableListBoxModel);
 }

@@ -182,6 +182,9 @@ CustomTabContent::CustomTabContent() {
     tableHeader4->setFont(Font(20, Font::bold));
     
     addChildComponent(addOverlayComp = new OverlayComp());
+    Component *addComp = this->getAddComponent();
+    addComp->setBoundsRelative(1.0, 1.0, 1.0, 1.0);
+    addOverlayComp->addAndMakeVisible(addComp);
 }
 
 CustomTabContent::~CustomTabContent()

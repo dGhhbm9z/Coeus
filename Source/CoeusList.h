@@ -83,7 +83,7 @@ public:
     virtual void insertRow() = 0;
     void setEdit(bool ed) { edit = ed; }
     bool isEditable() const { return edit; }
-
+    
     // TODO
     // getValueForFieldName
 
