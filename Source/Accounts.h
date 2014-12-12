@@ -43,7 +43,7 @@ public:
     void mouseExit(const MouseEvent &event) override;
 
 private:
-	QueryEntry *qe;
+	WeakReference<QueryEntry> qe;
 	int rowUnderMouse;
 };
 
@@ -65,9 +65,11 @@ public:
     void saveButtonPressed() override;
     void changeListenerCallback(ChangeBroadcaster *source) override;
 
+    CoeusListRowComponent *getAddComponent() override;
+
 private:
 	ScopedPointer<AccountsTableListBoxModel> accounts;
-	QueryEntry *qe;
+	WeakReference<QueryEntry> qe;
 };
 
 #endif

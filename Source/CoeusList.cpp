@@ -227,6 +227,7 @@ void CoeusListRowComponent::buttonClicked (Button *btn) {
         }
         
         owner.updateDatabaseTableForEntry(owner.tableName, pkNames, pk, owner.ccc);
+        
         owner.update();
     }
 }
@@ -496,6 +497,11 @@ void CoeusList::setQueryEntry(QueryEntry *qe_)
     }
 }
 
+void CoeusList::wasSaved(StringArray &pk)
+{
+    rowsToUpdate.erase(pk);
+}
+
 void CoeusList::changeListenerCallback(ChangeBroadcaster *source)
 {
     // row changed size
@@ -680,6 +686,8 @@ bool CoeusList::updateDatabaseTableForEntry(const String &table, const StringArr
     CacheSystem *cs = CacheSystem::getInstance();
     cs->getResultsFor(queryStr, QueryEntry::Accounts, ccc);
 
+    savedpks.add(pk);
+    
     std::cout << queryStr << std::endl;
     return true;
 }

@@ -2839,7 +2839,7 @@
 				HEADER_SEARCH_PATHS = (
 					../../JuceLibraryCode,
 					../../JuceLibraryCode/modules,
-					/opt/local/include/mariadb/,
+					/opt/local/include/mariadb/mysql/,
 					/opt/local/include/mysql55/mysql/,
 					"$(inherited)",
 				);
@@ -2880,7 +2880,7 @@
 				HEADER_SEARCH_PATHS = (
 					../../JuceLibraryCode,
 					../../JuceLibraryCode/modules,
-					/opt/local/include/mariadb/,
+					/opt/local/include/mariadb/mysql/,
 					/opt/local/include/mysql55/mysql/,
 					"$(inherited)",
 				);

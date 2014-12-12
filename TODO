@@ -1,19 +1,7 @@
-	remove edit/add details
-
-    remove summary labels
-    save only on details next to add
-	remove next to add
-	enable multiline selection
-
-	add pin toggle
-
 add date in filters
 add filters
 
-
-fix db and indices
 fix field sizes
-
 
 suppliers: Fathers Name -> trademark
 customers: Fathers Name -> trademark
@@ -28,3 +16,5 @@ color coding in accounts
 
 add...
 add qe functionality to handle inserts/updates
+
+fix persistant column entry after edit/save

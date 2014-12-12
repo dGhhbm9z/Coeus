@@ -377,3 +377,8 @@ void CompaniesComponent::changeListenerCallback(ChangeBroadcaster *source)
         tableHeader4->setVisible(true);
     }
 }
+
+CoeusListRowComponent * CompaniesComponent::getAddComponent()
+{
+    return new CompaniesRowComponent(*companiesTableListBoxModel);
+}

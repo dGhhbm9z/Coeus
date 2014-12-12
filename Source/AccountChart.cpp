@@ -293,3 +293,8 @@ void AccountChartComponent::changeListenerCallback(ChangeBroadcaster *source)
         tableHeader4->setVisible(true);
     }
 }
+
+CoeusListRowComponent * AccountChartComponent::getAddComponent()
+{
+    return new AccountChartRowComponent(*accountChartTableListBoxModel);
+}

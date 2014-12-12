@@ -331,6 +331,15 @@ void CustomersComponent::receivedResults(QueryEntry *qe_)
         customersTableListBoxModel->setQueryEntry(qe);
         customersTableListBoxModel->update();
     }
+    else {
+        // if update
+        if (customersTableListBoxModel->savedpks.size()) {
+            // fix this v
+            StringArray pk = customersTableListBoxModel->savedpks[0];
+            customersTableListBoxModel->wasSaved(pk);
+        }
+        // if delete
+    }
 }
 
 void CustomersComponent::mouseExit(const MouseEvent &event)
@@ -382,7 +391,7 @@ void CustomersComponent::searchButtonPressed()
 
 void CustomersComponent::addButtonPressed()
 {
-    // show add overlay
+
 }
 
 void CustomersComponent::saveButtonPressed()
@@ -415,4 +424,9 @@ void CustomersComponent::changeListenerCallback(ChangeBroadcaster *source)
         tableHeader3->setVisible(true);
         tableHeader4->setVisible(true);
     }
+}
+
+CoeusListRowComponent * CustomersComponent::getAddComponent()
+{
+    return new CustomersRowComponent(*customersTableListBoxModel);
 }

@@ -55,50 +55,6 @@ void *CacheSystem::initialiseConnection()
 	}
 
 	return con;
-/*
-	// command
-	String query = L"SELECT Code, Name, AccountType, XreosPist FROM accounts";
-
-	if ( mysql_real_query(con, query.toRawUTF8(), CharPointer_UTF8::getBytesRequiredFor(query.getCharPointer())) )
-	{
-		fprintf(stderr, "%s\n", mysql_error(con));
-		mysql_close(con);
-		return false;
-	}
-
-	// get results
-	MYSQL_RES *result = mysql_store_result(con);
-
-	if (result) {
-		// 
-		MYSQL_ROW row;
-		unsigned int num_fields;
-		unsigned int i;
-
-		num_fields = mysql_num_fields(result);
-		while ((row = mysql_fetch_row(result)))
-		{
-			unsigned long *lengths;
-			lengths = mysql_fetch_lengths(result);
-			for (i = 0; i < num_fields; i++)
-			{
-				printf("[%.*s] ", (int)lengths[i],
-					row[i] ? row[i] : "NULL");
-			}
-			printf("\n");
-		}
-	}
-	else {
-		fprintf(stderr, "%s\n", mysql_error(con));
-		mysql_close(con);
-		return false;
-	}
-
-	// close connection
-	mysql_close(con);
-
-	return true;
-*/
 }
 
 bool CacheSystem::setUserName(String &user)
@@ -146,6 +102,7 @@ void CacheSystem::getResultsFor(String &str, QueryEntry::QueryTable tableType, C
 				// TODO : notify newly added client
 				CacheReadyMessage *msg = new CacheReadyMessage(client, queries[i]);
 				msg->post();
+                queries.removeAllInstancesOf(queries[i]);
 			}
 
 			break;
@@ -177,7 +134,7 @@ void CacheSystem::serveNextQuery()
 		//ScopedLock requestLock(querySection);
 
 		// get request
-		nextQuery = nextQueryToServeIndex;
+		nextQuery = -1;
 		query = [&]()->decltype(queries[nextQuery]) {
 			while (++nextQuery < queries.size() &&  queries[nextQuery]->result != nullptr)  {}
 			return queries[nextQuery];
@@ -198,6 +155,7 @@ void CacheSystem::serveNextQuery()
 
 	if (mysql_real_query(con, query->request.toUTF8().getAddress(), query->request.getNumBytesAsUTF8()) != 0) {
 		// TODO: failure
+        // try 3-4 times then report failure
 		std::cout << "query failed" << std::endl;
         nextQueryToServeIndex = nextQuery;
 		mysql_close(con);
@@ -293,18 +251,12 @@ void CacheSystem::serveNextQuery()
 		CacheReadyMessage *msg = new CacheReadyMessage(query->clientList[i], query);
 		msg->post();
 	}
-
+    queries.removeAllInstancesOf(query);
 }
 
 bool CacheSystem::hasUnservedQueries() const
 {
-	for (auto q = queries.begin(); q != queries.end(); ++q) {
-		if ((*q)->result == nullptr) {
-			return true;
-		}
-	}
-
-	return false;
+	return queries.size() != 0;
 }
 
 void CacheSystem::run() {

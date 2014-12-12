@@ -40,9 +40,11 @@ public:
     void saveButtonPressed() override;
     void changeListenerCallback(ChangeBroadcaster *source) override;
     
+    CoeusListRowComponent *getAddComponent() override;
+    
 private:
 	ScopedPointer<CustomersTableListBoxModel> customersTableListBoxModel;
-	QueryEntry *qe;
+	ScopedPointer<QueryEntry> qe;
 };
 
 #endif
