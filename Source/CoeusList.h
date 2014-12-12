@@ -9,6 +9,8 @@
 #ifndef __Coeus__CoeusList__
 #define __Coeus__CoeusList__
 
+class CoeusListRowComponent;
+
 #include <iostream>
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "CacheSystem.h"
@@ -93,10 +95,9 @@ public:
     void setRow(int r);
 
     bool isDetailed() const { return detailedView; }
+    void setDetailedView(bool s, bool force=false);
     
 protected:
-    void setDetailedView(bool s, bool force=false);
-
     // control buttons
     Image imageNormal, imageMouseOver, imageMouseDown;
     ScopedPointer<ImageButton> details, editButton, saveButton;

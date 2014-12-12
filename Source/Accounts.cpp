@@ -356,3 +356,8 @@ void AccountsComponent::changeListenerCallback(ChangeBroadcaster *source)
         tableHeader4->setVisible(true);
     }
 }
+
+CoeusListRowComponent * AccountsComponent::getAddComponent()
+{
+    return nullptr;
+}

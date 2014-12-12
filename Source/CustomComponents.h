@@ -2,6 +2,7 @@
 #define CustomComponentsGuard
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "CoeusList.h"
 
 class CustomMenuBarButton : public TextButton
 {
@@ -142,7 +143,7 @@ public:
     
 	void buttonClicked(Button *) override;
     
-    virtual Component *getAddComponent() = 0;
+    virtual CoeusListRowComponent *getAddComponent() = 0;
 
 protected:
 	ScopedPointer<Label> title;

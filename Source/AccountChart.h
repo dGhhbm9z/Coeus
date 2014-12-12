@@ -39,6 +39,8 @@ public:
 	void addButtonPressed() override;
     void saveButtonPressed() override;
     void changeListenerCallback(ChangeBroadcaster *source) override;
+
+    CoeusListRowComponent *getAddComponent() override;
     
 private:
     ScopedPointer<AccountChartTableListBoxModel> accountChartTableListBoxModel;

@@ -1,5 +1,6 @@
 #include "CustomComponents.h"
 #include "PortDefinitions.h"
+#include "CoeusList.h"
 
 CustomMenuBarButton::CustomMenuBarButton(ButtonType btntype) {
 	switch (btntype) {
@@ -182,9 +183,6 @@ CustomTabContent::CustomTabContent() {
     tableHeader4->setFont(Font(20, Font::bold));
     
     addChildComponent(addOverlayComp = new OverlayComp());
-    Component *addComp = this->getAddComponent();
-    addComp->setBoundsRelative(1.0, 1.0, 1.0, 1.0);
-    addOverlayComp->addAndMakeVisible(addComp);
 }
 
 CustomTabContent::~CustomTabContent()
@@ -223,6 +221,15 @@ void CustomTabContent::resized()
 	searchFilter->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f + sbwp + 0.01f - 120.0f / (float)getParentWidth(), 0.01, 0.1f, 0.05f);
     
     addOverlayComp->setBounds(compBounds);
+
+    if(addOverlayComp->getNumChildComponents() == 0) {
+        CoeusListRowComponent *addComp = this->getAddComponent();
+        if (addComp) {
+            addOverlayComp->addAndMakeVisible(addComp);
+            addComp->setBounds(compBounds);
+            addComp->setDetailedView(true, true);
+        }
+    }
 }
 
 Rectangle<int> CustomTabContent::getComponentArea()

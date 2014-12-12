@@ -40,7 +40,7 @@ public:
     void saveButtonPressed() override;
     void changeListenerCallback(ChangeBroadcaster *source) override;
     
-    Component *getAddComponent() override;
+    CoeusListRowComponent *getAddComponent() override;
     
 private:
 	ScopedPointer<CustomersTableListBoxModel> customersTableListBoxModel;

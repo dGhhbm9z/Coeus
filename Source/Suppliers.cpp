@@ -396,3 +396,8 @@ void SuppliersComponent::changeListenerCallback(ChangeBroadcaster *source)
         tableHeader4->setVisible(true);
     }
 }
+
+CoeusListRowComponent * SuppliersComponent::getAddComponent()
+{
+    return new SuppliersRowComponent(*suppliersTableListBoxModel);
+}

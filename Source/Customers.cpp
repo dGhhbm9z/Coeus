@@ -426,7 +426,7 @@ void CustomersComponent::changeListenerCallback(ChangeBroadcaster *source)
     }
 }
 
-Component * CustomersComponent::getAddComponent()
+CoeusListRowComponent * CustomersComponent::getAddComponent()
 {
     return new CustomersRowComponent(*customersTableListBoxModel);
 }

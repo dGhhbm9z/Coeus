@@ -65,6 +65,8 @@ public:
     void saveButtonPressed() override;
     void changeListenerCallback(ChangeBroadcaster *source) override;
 
+    CoeusListRowComponent *getAddComponent() override;
+
 private:
 	ScopedPointer<AccountsTableListBoxModel> accounts;
 	WeakReference<QueryEntry> qe;
