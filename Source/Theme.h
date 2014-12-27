@@ -130,6 +130,12 @@ public:
 	void drawTableHeaderColumn(Graphics &, const String &columnName, int columnId, int width, int height, bool isMouseOver, bool isMouseDown, int columnFlags) override;
 
 	void drawDocumentWindowTitleBar(DocumentWindow &, Graphics &, int w, int h, int titleSpaceX, int titleSpaceW, const Image *icon, bool drawTitleTextOnLeft) override;
+
+	// combobox stuff
+	void drawComboBox(Graphics &, int width, int height, bool isButtonDown, int buttonX, int buttonY, int buttonW, int buttonH, ComboBox &) override;
+	juce::Font getComboBoxFont(ComboBox &) override;
+	Label * createComboBoxTextBox(ComboBox &) override;
+	void positionComboBoxText(ComboBox &, Label &) override;
 };
 
 

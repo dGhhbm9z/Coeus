@@ -739,6 +739,59 @@ void Theme::drawDocumentWindowTitleBar(DocumentWindow &, Graphics &g, int w, int
 	g.drawText("Coeus Finance", 0, 0, w, h, Justification::centred, false);
 }
 
+void Theme::drawComboBox(Graphics &g, int width, int height, bool isButtonDown, int buttonX, int buttonY, int buttonW, int buttonH, ComboBox &box)
+{
+	ColourGradient gc(Colour(0xff3a3a3a), 0, 0, Colour(0xffd1cfcf), width*0.2, height * 3, false);
+	g.setGradientFill(gc);
+	g.fillRoundedRectangle(0, 0, width, height, 5);
+
+	float wf = 1 - 0.68;
+	float sz = height / 3.0f;
+	float startx = width*0.68 + (wf*width - sz) / 2.0f;
+	if (isButtonDown) {
+		g.setColour(Colour(0xff2cc2cd));
+	}
+	else if (box.isMouseOver()) {
+		g.setColour(Colour(0xff1a7b82));
+	}
+	else {
+		g.setColour(Colours::white);
+	}
+	g.fillEllipse(startx, sz, sz, sz);
+
+	g.setColour(Colour(0xff3a3a3a));
+	float vX1 = startx + sz/4.0f;
+	float vX2 = startx + sz/2.0f;
+	float vY1 = sz + sz/4.0f;
+	float vY2 = 2.0f*sz - sz/4.0f;
+	float vX3 = startx + sz - sz / 4.0f;
+	float vY3 = sz + sz/4.0f;
+	g.drawLine(vX1, vY1, vX2, vY2, 2.0f);
+	g.drawLine(vX3, vY3, vX2, vY2, 2.0f);
+}
+
+juce::Font Theme::getComboBoxFont(ComboBox &)
+{
+	return Font();
+}
+
+Label * Theme::createComboBoxTextBox(ComboBox &box)
+{
+	String comboText = box.getItemText(box.getSelectedId());
+	Label *lbl = new Label(comboText, comboText);
+	lbl->setColour(Label::textColourId, Colours::white);
+	return lbl;
+}
+
+void Theme::positionComboBoxText(ComboBox &box, Label &lbl)
+{
+	Rectangle<int> rect(0, 0, box.getWidth()*0.68, box.getHeight());
+	lbl.setBounds(rect);
+	lbl.setJustificationType(Justification::centred);
+	// TODO: wtf/remove next line
+	lbl.setColour(Label::textColourId, Colours::white);
+}
+
 //---------------------------------------------------------------------
 // Button stuff
 void ThemeAlt::drawButtonBackground(Graphics &g, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown)
