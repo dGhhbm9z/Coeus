@@ -19,10 +19,10 @@ public:
         
         // add fields
         // summary
-        addAndMakeVisible(SupplierCodeTE = new TextEditor("SupplierCode"));
-        addAndMakeVisible(NameTE = new TextEditor("Name"));
-        addAndMakeVisible(FathersNameTE = new TextEditor("FathersName"));
-        addAndMakeVisible(PhonenumberTE = new TextEditor("Phonenumber"));
+        addAndMakeVisible(SupplierCodeTE = new CoeusListTextEditor("SupplierCode"));
+        addAndMakeVisible(NameTE = new CoeusListTextEditor("Name"));
+        addAndMakeVisible(FathersNameTE = new CoeusListTextEditor("FathersName"));
+        addAndMakeVisible(PhonenumberTE = new CoeusListTextEditor("Phonenumber"));
         SupplierCodeTE->addListener(&owner);
         NameTE->addListener(&owner);
         FathersNameTE->addListener(&owner);
@@ -35,18 +35,18 @@ public:
         addAndMakeVisible(Phonenumber = new CoeusListLabel("Phonenumber", "Phonenumber"));
         
         // detailed view
-        addAndMakeVisible(TrademarkTE = new TextEditor("Trademark"));
-        addAndMakeVisible(SupplierVATTE = new TextEditor("SupplierVAT"));
-        addAndMakeVisible(DateOfBirthTE = new TextEditor("DateOfBirth"));
-        addAndMakeVisible(AddressTE = new TextEditor("Address"));
-        addAndMakeVisible(CityTE = new TextEditor("City"));
-        addAndMakeVisible(CountryTE = new TextEditor("Country"));
-        addAndMakeVisible(FaxnumberTE = new TextEditor("FaxNumber"));
-        addAndMakeVisible(EmailTE = new TextEditor("Email"));
-        addAndMakeVisible(IDcardNumberTE = new TextEditor("IDcardNumber"));
-        addAndMakeVisible(SupplierTransactionsTE = new TextEditor("SupplierTransactions"));
-        addAndMakeVisible(PublicRevenueServiceTE = new TextEditor("PublicRevenueService"));
-        addAndMakeVisible(CommercialActivityTE = new TextEditor("CommercialActivity"));
+        addAndMakeVisible(TrademarkTE = new CoeusListTextEditor("Trademark"));
+        addAndMakeVisible(SupplierVATTE = new CoeusListTextEditor("SupplierVAT"));
+        addAndMakeVisible(DateOfBirthTE = new CoeusListTextEditor("DateOfBirth"));
+        addAndMakeVisible(AddressTE = new CoeusListTextEditor("Address"));
+        addAndMakeVisible(CityTE = new CoeusListTextEditor("City"));
+        addAndMakeVisible(CountryTE = new CoeusListTextEditor("Country"));
+        addAndMakeVisible(FaxnumberTE = new CoeusListTextEditor("FaxNumber"));
+        addAndMakeVisible(EmailTE = new CoeusListTextEditor("Email"));
+        addAndMakeVisible(IDcardNumberTE = new CoeusListTextEditor("IDcardNumber"));
+        addAndMakeVisible(SupplierTransactionsTE = new CoeusListTextEditor("SupplierTransactions"));
+        addAndMakeVisible(PublicRevenueServiceTE = new CoeusListTextEditor("PublicRevenueService"));
+        addAndMakeVisible(CommercialActivityTE = new CoeusListTextEditor("CommercialActivity"));
         TrademarkTE->addListener(&owner);
         SupplierVATTE->addListener(&owner);
         DateOfBirthTE->addListener(&owner);

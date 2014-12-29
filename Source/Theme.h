@@ -171,6 +171,10 @@ public:
 	void drawTabButtonText(TabBarButton &, Graphics &, bool isMouseOver, bool isMouseDown) override;
 	void drawTabbedButtonBarBackground(TabbedButtonBar &, Graphics &) override;
 	void drawTabAreaBehindFrontButton(TabbedButtonBar &, Graphics &, int w, int h) override;
+    
+    // text editor
+    void fillTextEditorBackground (Graphics &, int width, int height, TextEditor &) override;
+    void drawTextEditorOutline (Graphics &g, int width, int height, TextEditor &) override;
 };
 
 class CoeusTabbedComponent :   public TabbedComponent

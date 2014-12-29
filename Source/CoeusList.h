@@ -17,6 +17,7 @@ class CoeusListRowComponent;
 #include "CustomComponents.h"
 #include <map>
 #include <unordered_map>
+#include "Theme.h"
 
 namespace std {
     template <>
@@ -61,6 +62,18 @@ public:
         g.setColour(Colours::white);
         g.drawFittedText(getText(), 0, 0, w, h, Justification::centred, 2);
     }
+};
+
+
+//==============================================================================
+
+class CoeusListTextEditor    :   public TextEditor
+{
+public:
+    CoeusListTextEditor (const String& componentName) : TextEditor(componentName) {
+        setOpaque(false);
+    }
+    
 };
 
 
@@ -220,6 +233,7 @@ protected:
     bool wantsHeader;
     
 private:
+    ThemeAlt themeAlt;
     template <typename PointerType, typename ExcludedType> PointerType getFirstAncestorOf(Component * component) const;
 
     Array<CoeusListRowComponent *> items;

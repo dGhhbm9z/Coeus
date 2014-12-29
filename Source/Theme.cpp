@@ -854,6 +854,8 @@ void Theme::drawPopupMenuBackground (Graphics &g, int width, int height)
 }
 
 //---------------------------------------------------------------------
+
+//---------------------------------------------------------------------
 // Button stuff
 void ThemeAlt::drawButtonBackground(Graphics &g, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown)
 {
@@ -951,6 +953,25 @@ void ThemeAlt::drawTabbedButtonBarBackground(TabbedButtonBar &tabButton, Graphic
 
 void ThemeAlt::drawTabAreaBehindFrontButton(TabbedButtonBar &tabBar, Graphics &g, int w, int h)
 {
+}
+
+void ThemeAlt::fillTextEditorBackground (Graphics &g, int width, int height, TextEditor &te)
+{
+    if (te.isEnabled()) {
+        g.setColour(Colours::white);
+    }
+    else {
+        g.setColour(Colour(0xffefefef));
+    }
+    g.fillRoundedRectangle(-20, 1, width+20, height-2, 10);
+}
+
+void ThemeAlt::drawTextEditorOutline (Graphics &g, int width, int height, TextEditor &te)
+{
+    if (te.hasKeyboardFocus(false)) {
+        g.setColour(Colour(0xff008080));
+        g.drawRoundedRectangle(-20, 1, width+19, height-2, 10, 2);
+    }
 }
 
 

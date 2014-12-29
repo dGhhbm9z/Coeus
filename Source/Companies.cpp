@@ -19,10 +19,10 @@ public:
 
         // add fields
         // summary
-        addAndMakeVisible(companyNameTE = new TextEditor("CompanyName"));
-        addAndMakeVisible(legalIncTE = new TextEditor("LegalInc"));
-        addAndMakeVisible(telephoneTE = new TextEditor("Telephone"));
-        addAndMakeVisible(activityTE = new TextEditor("Activity"));
+        addAndMakeVisible(companyNameTE = new CoeusListTextEditor("CompanyName"));
+        addAndMakeVisible(legalIncTE = new CoeusListTextEditor("LegalInc"));
+        addAndMakeVisible(telephoneTE = new CoeusListTextEditor("Telephone"));
+        addAndMakeVisible(activityTE = new CoeusListTextEditor("Activity"));
         companyNameTE->addListener(&owner);
         legalIncTE->addListener(&owner);
         telephoneTE->addListener(&owner);
@@ -35,13 +35,13 @@ public:
         addAndMakeVisible(activity = new CoeusListLabel("Activity", "Activity"));
 
         // detailed view
-        addAndMakeVisible(VATTE = new TextEditor("VAT"));
-        addAndMakeVisible(IRSTE = new TextEditor("IRS"));
-        addAndMakeVisible(AddressTE = new TextEditor("Address"));
-        addAndMakeVisible(AddressNumberTE = new TextEditor("AddressNumber"));
-        addAndMakeVisible(PersonInChargeTE = new TextEditor("PersonInCharge"));
-        addAndMakeVisible(StartDateTE = new TextEditor("StartDate"));
-        addAndMakeVisible(CommentsTE = new TextEditor("Comments"));
+        addAndMakeVisible(VATTE = new CoeusListTextEditor("VAT"));
+        addAndMakeVisible(IRSTE = new CoeusListTextEditor("IRS"));
+        addAndMakeVisible(AddressTE = new CoeusListTextEditor("Address"));
+        addAndMakeVisible(AddressNumberTE = new CoeusListTextEditor("AddressNumber"));
+        addAndMakeVisible(PersonInChargeTE = new CoeusListTextEditor("PersonInCharge"));
+        addAndMakeVisible(StartDateTE = new CoeusListTextEditor("StartDate"));
+        addAndMakeVisible(CommentsTE = new CoeusListTextEditor("Comments"));
         VATTE->addListener(&owner);
         IRSTE->addListener(&owner);
         AddressTE->addListener(&owner);

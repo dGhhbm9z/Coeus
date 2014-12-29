@@ -276,6 +276,8 @@ void CoeusListRowComponent::updateFromMapForRow(QueryEntry *qe, std::map<String,
 CoeusList::CoeusList(CacheSystemClient *ccc_)
 :   ccc(ccc_), sb(true), qe(nullptr), rowUnderMouse(-1)
 {
+    setLookAndFeel(&themeAlt);
+    
     selectedRow.add(-1);
     sb.setRangeLimits(0.0, 1.0);
     sb.setCurrentRange(0.0, 0.5, dontSendNotification);
