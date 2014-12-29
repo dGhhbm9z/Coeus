@@ -136,6 +136,17 @@ public:
 	juce::Font getComboBoxFont(ComboBox &) override;
 	Label * createComboBoxTextBox(ComboBox &) override;
 	void positionComboBoxText(ComboBox &, Label &) override;
+    
+    // pop up menus
+    void drawPopupMenuBackground (Graphics &, int width, int height) override;
+    
+//    void drawPopupMenuItem (Graphics &, const Rectangle< int > &area, bool isSeparator, bool isActive, bool isHighlighted, bool isTicked, bool hasSubMenu, const String &text, const String &shortcutKeyText, const Drawable *icon, const Colour *textColour) override
+//    
+//    void drawPopupMenuSectionHeader (Graphics &, const Rectangle< int > &area, const String &sectionName) override
+//    Font getPopupMenuFont () override
+//    
+//    void drawPopupMenuUpDownArrow (Graphics &, int width, int height, bool isScrollUpArrow) override
+//    void getIdealPopupMenuItemSize (const String &text, bool isSeparator, int standardMenuItemHeight, int &idealWidth, int &idealHeight) override
 };
 
 

@@ -792,6 +792,14 @@ void Theme::positionComboBoxText(ComboBox &box, Label &lbl)
 	lbl.setColour(Label::textColourId, Colours::white);
 }
 
+void Theme::drawPopupMenuBackground (Graphics &g, int width, int height)
+{
+    ColourGradient gc(Colour(0xff3a3a3a), 0, 0, Colour(0xffd1cfcf), width*0.2, height * 3, false);
+    g.setGradientFill(gc);
+    g.fillAll();
+//    g.fillRectangle(0, 0, width, height);
+}
+
 //---------------------------------------------------------------------
 // Button stuff
 void ThemeAlt::drawButtonBackground(Graphics &g, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown)

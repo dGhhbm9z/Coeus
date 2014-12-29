@@ -52,6 +52,7 @@ MainComponent::~MainComponent()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
+    tabs->clearTabs();
 	tabs = nullptr;
 
 	delete CacheSystem::getInstance();

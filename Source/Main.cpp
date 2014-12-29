@@ -93,6 +93,9 @@ HelloWorldWindow::HelloWorldWindow()
 
 HelloWorldWindow::~HelloWorldWindow()
 {
+    setContentNonOwned(nullptr, false);
+    splash = nullptr;
+    cmp = nullptr;
 }
 
 //==============================================================================

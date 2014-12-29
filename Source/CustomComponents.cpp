@@ -156,6 +156,7 @@ CustomTabContent::CustomTabContent() {
 	searchFilter->addItem(L"Any", 1);
 	searchFilter->addItem(L"All", 2);
 	searchFilter->addListener(this);
+    searchFilter->setSelectedId(1);
 
 	addAndMakeVisible(title);
 	addAndMakeVisible(search);
@@ -190,6 +191,10 @@ CustomTabContent::~CustomTabContent()
 	title = nullptr;
 	search = nullptr;
 	searchFilter = nullptr;
+    searchButton = nullptr;
+    addButton = nullptr;
+    duplicateButton = nullptr;
+    removeButton = nullptr;
 }
 
 void CustomTabContent::resized()
