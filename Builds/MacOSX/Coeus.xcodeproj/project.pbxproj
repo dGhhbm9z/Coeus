@@ -30,6 +30,7 @@
 		3F77F6F71A51E20E009C9474 /* search in Resources */ = {isa = PBXBuildFile; fileRef = 3F77F6ED1A51E20E009C9474 /* search */; };
 		3F77F6F81A51E20E009C9474 /* sidebar in Resources */ = {isa = PBXBuildFile; fileRef = 3F77F6EE1A51E20E009C9474 /* sidebar */; };
 		3F77F6F91A51E20E009C9474 /* splash in Resources */ = {isa = PBXBuildFile; fileRef = 3F77F6EF1A51E20E009C9474 /* splash */; };
+		3F77F6FB1A51E742009C9474 /* tabcomponent in Resources */ = {isa = PBXBuildFile; fileRef = 3F77F6FA1A51E742009C9474 /* tabcomponent */; };
 		4F17A49082DA18803863D153 /* juce_gui_basics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D6066344B307728903DF455 /* juce_gui_basics.mm */; };
 		51C53B33262B46BE8736D7D1 /* juce_core.mm in Sources */ = {isa = PBXBuildFile; fileRef = F20B2F0DFB09615CF3D28096 /* juce_core.mm */; };
 		52A2BB607D9FE675F3527694 /* juce_audio_formats.mm in Sources */ = {isa = PBXBuildFile; fileRef = AD7DFAFF7F55003353A79F51 /* juce_audio_formats.mm */; };
@@ -291,6 +292,7 @@
 		3F77F6ED1A51E20E009C9474 /* search */ = {isa = PBXFileReference; lastKnownFileType = folder; name = search; path = ../../Resources/search; sourceTree = "<group>"; };
 		3F77F6EE1A51E20E009C9474 /* sidebar */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sidebar; path = ../../Resources/sidebar; sourceTree = "<group>"; };
 		3F77F6EF1A51E20E009C9474 /* splash */ = {isa = PBXFileReference; lastKnownFileType = folder; name = splash; path = ../../Resources/splash; sourceTree = "<group>"; };
+		3F77F6FA1A51E742009C9474 /* tabcomponent */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tabcomponent; path = ../../Resources/tabcomponent; sourceTree = "<group>"; };
 		3F79B149D2741DBE01D77DFE /* juce_FileSearchPath.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_FileSearchPath.cpp; path = ../../JuceLibraryCode/modules/juce_core/files/juce_FileSearchPath.cpp; sourceTree = SOURCE_ROOT; };
 		4003409D748813F44CB4B176 /* juce_Colour.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_Colour.cpp; path = ../../JuceLibraryCode/modules/juce_graphics/colour/juce_Colour.cpp; sourceTree = SOURCE_ROOT; };
 		40278A4EE842D8A5A748F01A /* juce_mac_AudioCDReader.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_mac_AudioCDReader.mm; path = ../../JuceLibraryCode/modules/juce_audio_devices/native/juce_mac_AudioCDReader.mm; sourceTree = SOURCE_ROOT; };
@@ -1889,6 +1891,7 @@
 		8F54CCF1DEA6D95492BC9AA4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3F77F6FA1A51E742009C9474 /* tabcomponent */,
 				3F77F6E61A51E20E009C9474 /* addButton */,
 				3F77F6E71A51E20E009C9474 /* duplicateButton */,
 				3F77F6E81A51E20E009C9474 /* editButton */,
@@ -2795,6 +2798,7 @@
 			files = (
 				3F77F6F91A51E20E009C9474 /* splash in Resources */,
 				3F77F6F31A51E20E009C9474 /* listButton in Resources */,
+				3F77F6FB1A51E742009C9474 /* tabcomponent in Resources */,
 				3F77F6F21A51E20E009C9474 /* editButton in Resources */,
 				3F77F6F41A51E20E009C9474 /* pinButton in Resources */,
 				3F77F6F01A51E20E009C9474 /* addButton in Resources */,

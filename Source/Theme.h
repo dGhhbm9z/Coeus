@@ -101,6 +101,8 @@ private:
 class Theme	:	public LookAndFeel_V2
 {
 public:
+    Theme();
+    
 	// Button stuff
 	void drawButtonBackground (Graphics &, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown) override; 
     Font getTextButtonFont (TextButton&, int) override;
@@ -147,6 +149,9 @@ public:
 //    
 //    void drawPopupMenuUpDownArrow (Graphics &, int width, int height, bool isScrollUpArrow) override
 //    void getIdealPopupMenuItemSize (const String &text, bool isSeparator, int standardMenuItemHeight, int &idealWidth, int &idealHeight) override
+    
+private:
+    Image ac, bp, bmc, com, cst, vnt, fr, inIm, rg, sup;
 };
 
 

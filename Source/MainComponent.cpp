@@ -168,8 +168,8 @@ bool MainComponent::perform(const InvocationInfo &info)
 		break;
 	}
 	case CoeusCommandIDs::NewTab: {
-		Component *comp = new CustomTabComponent();
-		tabs->addTab(String("Main"), Colours::beige, comp, true);
+		Component *comp = new CustomTabComponent(*tabs);
+		tabs->addTab(String("CST"), Colours::beige, comp, true);
 		break;
 	}
 	case CoeusCommandIDs::CloseTab: {

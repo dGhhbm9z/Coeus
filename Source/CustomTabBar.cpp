@@ -228,7 +228,7 @@ bool CustomTabbedButtonBar::wantsToHide() const
 
 //=======================================================================
 
-CustomTabComponent::CustomTabComponent()
+CustomTabComponent::CustomTabComponent(TabbedComponent &owner_) : owner(owner_)
 {
     isBeingResized = false;
 	setWantsKeyboardFocus(false);
@@ -307,11 +307,12 @@ void CustomTabComponent::timerCallback()
 
 void CustomTabComponent::changeListenerCallback(ChangeBroadcaster *source)
 {
-	if (source == tabButtons) {
+	if (source == tabButtons && owner.getCurrentContentComponent() == this) {
 		switch (tabButtons->getCurrentTabIndex()) {
 		case 0:
 			break;
 		case 1:
+            owner.setTabName(owner.getCurrentTabIndex(), "CST");
 			accountChartComponent->setVisible(false);
 			accountsComponent->setVisible(false);
 			suppliersComponent->setVisible(false);
@@ -319,6 +320,7 @@ void CustomTabComponent::changeListenerCallback(ChangeBroadcaster *source)
 			companiesComponent->setVisible(false);
 			break;
 		case 2:
+            owner.setTabName(owner.getCurrentTabIndex(), "SUP");
 			accountChartComponent->setVisible(false);
 			accountsComponent->setVisible(false);
 			suppliersComponent->setVisible(true);
@@ -326,6 +328,7 @@ void CustomTabComponent::changeListenerCallback(ChangeBroadcaster *source)
 			companiesComponent->setVisible(false);
 			break;
 		case 3:
+            owner.setTabName(owner.getCurrentTabIndex(), "VNT");
 			accountChartComponent->setVisible(false);
 			accountsComponent->setVisible(true);
 			suppliersComponent->setVisible(false);
@@ -333,6 +336,7 @@ void CustomTabComponent::changeListenerCallback(ChangeBroadcaster *source)
 			companiesComponent->setVisible(false);
 			break;
 		case 4:
+            owner.setTabName(owner.getCurrentTabIndex(), "AC");
 			accountChartComponent->setVisible(true);
 			accountsComponent->setVisible(false);
 			suppliersComponent->setVisible(false);
@@ -340,6 +344,7 @@ void CustomTabComponent::changeListenerCallback(ChangeBroadcaster *source)
 			companiesComponent->setVisible(false);
 			break;
 		case 5:
+            owner.setTabName(owner.getCurrentTabIndex(), "CMP");
 			accountChartComponent->setVisible(false);
 			accountsComponent->setVisible(false);
 			suppliersComponent->setVisible(false);
@@ -347,6 +352,7 @@ void CustomTabComponent::changeListenerCallback(ChangeBroadcaster *source)
 			companiesComponent->setVisible(true);
 			break;
 		case 6:
+            owner.setTabName(owner.getCurrentTabIndex(), "");
 			accountChartComponent->setVisible(false);
 			accountsComponent->setVisible(false);
 			suppliersComponent->setVisible(false);

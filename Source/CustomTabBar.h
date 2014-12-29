@@ -55,7 +55,7 @@ class CustomTabComponent : public Component,
 	public Timer
 {
 public:
-	CustomTabComponent();
+	CustomTabComponent(TabbedComponent &owner_);
 	~CustomTabComponent();
 	void resized() override;
 	void timerCallback() override;
@@ -64,6 +64,7 @@ public:
     void resizeEnd();
 
 private:
+    TabbedComponent &owner;
 	ScopedPointer<AccountChartComponent> accountChartComponent;
 	ScopedPointer<AccountsComponent> accountsComponent;
 	ScopedPointer<SuppliersComponent> suppliersComponent;

@@ -1,4 +1,5 @@
 #include "Theme.h"
+#include "PortDefinitions.h"
 
 Colour tabButtonBackgroundWhenSelected = Colour(0xffffffff);
 //Gradient from 0xffd3d3d3 to 0xffd7d7d7
@@ -557,6 +558,21 @@ Path Theme::createRectPath(int x, int y, int w, int h, int pad, int padB, int cD
 
 //---------------------------------------------------------------------
 // Button stuff
+Theme::Theme()
+{
+    ac = ImageCache::getFromFile(RESOURCE_FILE("./Resources/tabcomponent/AccountChart.png"));
+    bp = ImageCache::getFromFile(RESOURCE_FILE("./Resources/tabcomponent/BusinessPlan.png"));
+    bmc = ImageCache::getFromFile(RESOURCE_FILE("./Resources/tabcomponent/BusinessModelCanvas.png"));
+    com = ImageCache::getFromFile(RESOURCE_FILE("./Resources/tabcomponent/Companies.png"));
+    cst = ImageCache::getFromFile(RESOURCE_FILE("./Resources/tabcomponent/Customers.png"));
+    vnt = ImageCache::getFromFile(RESOURCE_FILE("./Resources/tabcomponent/Events.png"));
+    fr = ImageCache::getFromFile(RESOURCE_FILE("./Resources/tabcomponent/FinancialRatio.png"));
+    inIm = ImageCache::getFromFile(RESOURCE_FILE("./Resources/tabcomponent/Innovation.png"));
+    rg = ImageCache::getFromFile(RESOURCE_FILE("./Resources/tabcomponent/ReportGenerator.png"));
+    sup = ImageCache::getFromFile(RESOURCE_FILE("./Resources/tabcomponent/Suppliers.png"));
+
+}
+
 void Theme::drawButtonBackground (Graphics &g, Button &button, const Colour &backgroundColour, bool isMouseOverButton, bool isButtonDown)
 {
 	Path rect = createRectPath(2, 2, button.getWidth()-4, button.getHeight()-4, 1, 1, 5);
@@ -626,8 +642,9 @@ int Theme::getTabButtonOverlap (int tabDepth)
 
 int Theme::getTabButtonBestWidth (TabBarButton &tabButton, int tabDepth)
 {
-	Font f(12);
-	return f.getStringWidth(tabButton.getButtonText()) + 26;
+//	Font f(12);
+//	return f.getStringWidth(tabButton.getButtonText()) + 26;
+    return 40;
 }
 
 void Theme::drawTabButton(TabBarButton &tabButton, Graphics &g, bool isMouseOver, bool isMouseDown)
@@ -676,9 +693,45 @@ void Theme::drawTabButton(TabBarButton &tabButton, Graphics &g, bool isMouseOver
 		g.drawLine(2, tabButton.getHeight(), tabButton.getWidth()-2, tabButton.getHeight(), 0.4f);
 	}
 
-	g.setFont(Font(12));
-	g.setColour(c);
-	g.drawText(tabButton.getButtonText(), 0, topY1, tabButton.getWidth(), tabButton.getHeight() * 3 / 4, Justification::centred, true);
+//	g.setFont(Font(12));
+//	g.setColour(c);
+//	g.drawText(tabButton.getButtonText(), 0, topY1, tabButton.getWidth(), tabButton.getHeight() * 3 / 4, Justification::centred, true);
+    
+    const int imSz = rightX1 - leftX1 - 10;
+    const int imSX = leftX1 + 5;
+    const int imSY = topY1 + 4;
+    
+    String name = tabButton.getButtonText();
+    if (name.equalsIgnoreCase("AC")) {
+        g.drawImage(ac, imSX, imSY, imSz, imSz, 0, 0, ac.getWidth(), ac.getHeight());
+    }
+    else if (name.equalsIgnoreCase("BP")) {
+        g.drawImage(bp, imSX, imSY, imSz, imSz, 0, 0, bp.getWidth(), bp.getHeight());
+    }
+    else if (name.equalsIgnoreCase("BMC")) {
+        g.drawImage(bmc, imSX, imSY, imSz, imSz, 0, 0, bmc.getWidth(), bmc.getHeight());
+    }
+    else if (name.equalsIgnoreCase("CMP")) {
+        g.drawImage(com, imSX, imSY, imSz, imSz, 0, 0, com.getWidth(), com.getHeight());
+    }
+    else if (name.equalsIgnoreCase("CST")) {
+        g.drawImage(cst, imSX, imSY, imSz, imSz, 0, 0, cst.getWidth(), cst.getHeight());
+    }
+    else if (name.equalsIgnoreCase("VNT")) {
+        g.drawImage(vnt, imSX, imSY, imSz, imSz, 0, 0, vnt.getWidth(), vnt.getHeight());
+    }
+    else if (name.equalsIgnoreCase("FR")) {
+        g.drawImage(fr, imSX, imSY, imSz, imSz, 0, 0, fr.getWidth(), fr.getHeight());
+    }
+    else if (name.equalsIgnoreCase("IN")) {
+        g.drawImage(inIm, imSX, imSY, imSz, imSz, 0, 0, inIm.getWidth(), inIm.getHeight());
+    }
+    else if (name.equalsIgnoreCase("RG")) {
+        g.drawImage(rg, imSX, imSY, imSz, imSz, 0, 0, rg.getWidth(), rg.getHeight());
+    }
+    else if (name.equalsIgnoreCase("SUP")) {
+        g.drawImage(sup, imSX, imSY, imSz, imSz, 0, 0, sup.getWidth(), sup.getHeight());
+    }
 }
 
 void Theme::drawTabButtonText (TabBarButton &tabButton, Graphics &g, bool isMouseOver, bool isMouseDown)
