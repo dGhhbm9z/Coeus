@@ -29,10 +29,10 @@ public:
         PhonenumberTE->addListener(&owner);
 
         // summary labels
-        addAndMakeVisible(SupplierCode = new Label("Supplier Code", "Supplier Code"));
-        addAndMakeVisible(Name = new Label("Name", "Name"));
-        addAndMakeVisible(FathersName = new Label("FathersName", "FathersName"));
-        addAndMakeVisible(Phonenumber = new Label("Phonenumber", "Phonenumber"));
+        addAndMakeVisible(SupplierCode = new CoeusListLabel("Supplier Code", "Supplier Code"));
+        addAndMakeVisible(Name = new CoeusListLabel("Name", "Name"));
+        addAndMakeVisible(FathersName = new CoeusListLabel("FathersName", "FathersName"));
+        addAndMakeVisible(Phonenumber = new CoeusListLabel("Phonenumber", "Phonenumber"));
         
         // detailed view
         addAndMakeVisible(TrademarkTE = new TextEditor("Trademark"));
@@ -62,18 +62,18 @@ public:
 
         
         // detailed view labels
-        addAndMakeVisible(Trademark = new Label("Trademark", "Trademark"));
-        addAndMakeVisible(SupplierVAT = new Label("VAT", "VAT"));
-        addAndMakeVisible(DateOfBirth = new Label("Date Of Birth", "Date Of Birth"));
-        addAndMakeVisible(Address = new Label("Address", "Address"));
-        addAndMakeVisible(City = new Label("City", "City"));
-        addAndMakeVisible(Country = new Label("Country", "Country"));
-        addAndMakeVisible(Faxnumber = new Label("Fax number", "Fax number"));
-        addAndMakeVisible(Email = new Label("Email", "Email"));
-        addAndMakeVisible(IDcardNumber = new Label("IDcardNumber", "IDcardNumber"));
-        addAndMakeVisible(SupplierTransactions = new Label("SupplierTransactions", "Supplier Transactions"));
-        addAndMakeVisible(PublicRevenueService = new Label("PublicRevenueService", "PublicRevenueService"));
-        addAndMakeVisible(CommercialActivity = new Label("CommercialActivity", "CommercialActivity"));
+        addAndMakeVisible(Trademark = new CoeusListLabel("Trademark", "Trademark"));
+        addAndMakeVisible(SupplierVAT = new CoeusListLabel("VAT", "VAT"));
+        addAndMakeVisible(DateOfBirth = new CoeusListLabel("Date Of Birth", "Date Of Birth"));
+        addAndMakeVisible(Address = new CoeusListLabel("Address", "Address"));
+        addAndMakeVisible(City = new CoeusListLabel("City", "City"));
+        addAndMakeVisible(Country = new CoeusListLabel("Country", "Country"));
+        addAndMakeVisible(Faxnumber = new CoeusListLabel("Fax number", "Fax number"));
+        addAndMakeVisible(Email = new CoeusListLabel("Email", "Email"));
+        addAndMakeVisible(IDcardNumber = new CoeusListLabel("IDcardNumber", "IDcardNumber"));
+        addAndMakeVisible(SupplierTransactions = new CoeusListLabel("SupplierTransactions", "Supplier Transactions"));
+        addAndMakeVisible(PublicRevenueService = new CoeusListLabel("PublicRevenueService", "PublicRevenueService"));
+        addAndMakeVisible(CommercialActivity = new CoeusListLabel("CommercialActivity", "CommercialActivity"));
         
         resized();
     }

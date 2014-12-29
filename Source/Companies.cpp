@@ -29,10 +29,10 @@ public:
         activityTE->addListener(&owner);
         
         // summary labels
-        addAndMakeVisible(companyName = new Label("Company Name", "Company Name"));
-        addAndMakeVisible(legalInc = new Label("Inc", "Inc"));
-        addAndMakeVisible(telephone = new Label("Telephone", "Telephone"));
-        addAndMakeVisible(activity = new Label("Activity", "Activity"));
+        addAndMakeVisible(companyName = new CoeusListLabel("Company Name", "Company Name"));
+        addAndMakeVisible(legalInc = new CoeusListLabel("Inc", "Inc"));
+        addAndMakeVisible(telephone = new CoeusListLabel("Telephone", "Telephone"));
+        addAndMakeVisible(activity = new CoeusListLabel("Activity", "Activity"));
 
         // detailed view
         addAndMakeVisible(VATTE = new TextEditor("VAT"));
@@ -51,13 +51,13 @@ public:
         CommentsTE->addListener(&owner);
 
         // detailed view labels
-        addAndMakeVisible(VAT = new Label("VAT", "VAT"));
-        addAndMakeVisible(IRS = new Label("IRS", "IRS"));
-        addAndMakeVisible(Address = new Label("Address", "Address"));
-        addAndMakeVisible(AddressNumber = new Label("Address Number", "Address Number"));
-        addAndMakeVisible(PersonInCharge = new Label("Owner/CEO", "Owner/CEO"));
-        addAndMakeVisible(StartDate = new Label("Start date", "Start date"));
-        addAndMakeVisible(Comments = new Label("Comments", "Comments"));
+        addAndMakeVisible(VAT = new CoeusListLabel("VAT", "VAT"));
+        addAndMakeVisible(IRS = new CoeusListLabel("IRS", "IRS"));
+        addAndMakeVisible(Address = new CoeusListLabel("Address", "Address"));
+        addAndMakeVisible(AddressNumber = new CoeusListLabel("Address Number", "Address Number"));
+        addAndMakeVisible(PersonInCharge = new CoeusListLabel("Owner/CEO", "Owner/CEO"));
+        addAndMakeVisible(StartDate = new CoeusListLabel("Start date", "Start date"));
+        addAndMakeVisible(Comments = new CoeusListLabel("Comments", "Comments"));
 
         resized();
     }

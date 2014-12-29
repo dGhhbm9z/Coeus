@@ -45,6 +45,27 @@ namespace std {
 }
 //==============================================================================
 
+class CoeusListLabel    :   public Label
+{
+public:
+    CoeusListLabel (const String& componentName,
+                    const String& labelText) : Label(componentName, labelText) {
+        
+    }
+    
+    void paint(Graphics &g) override {
+        const int w = getWidth();
+        const int h = getHeight();
+        g.setColour(Colour(0xff008080));
+        g.fillRoundedRectangle(1, 1, w+20, h-1, 10);
+        g.setColour(Colours::white);
+        g.drawFittedText(getText(), 0, 0, w, h, Justification::centred, 2);
+    }
+};
+
+
+//==============================================================================
+
 class CoeusHeap
 {
 public:
