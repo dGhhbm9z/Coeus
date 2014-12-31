@@ -53,17 +53,17 @@ public:
     
     void resizeForSummary() override {
         // summary
-        CodeTE->setBounds(lm, tm, teWS, teHS);
-        NameTE->setBounds(lm+teWS+pad, tm, teWS, teHS);
-        AccountTypeTE->setBounds(lm+2*(teWS+pad), tm, 150, teHS);
-        XreosPistTE->setBounds(lm+2*(teWS+pad)+pad+150, tm, teWS, teHS);
+        CodeTE->setBounds(lm, tm, teWS/2, teHS);
+        NameTE->setBounds(lm+teWS/2+pad, tm, 2*teWS, teHS);
+        AccountTypeTE->setBounds(lm+2*(teWS+pad)+teWS/2, tm, 150, teHS);
+        XreosPistTE->setBounds(lm+2*(teWS+pad)+pad+150+teWS/2, tm, teWS/2, teHS);
     }
     
     void resizeForDetailed() override {
-        CodeTE->setBounds(lm+teWS+pad, tm+teHS, teWS, teHS);
-        NameTE->setBounds(lm+teWS+pad, tm+2*teHS, teWS, teHS);
-        AccountTypeTE->setBounds(lm+teWS+pad, tm+3*teHS, 150, teHS);
-        XreosPistTE->setBounds(lm+teWS+pad, tm+4*teHS, teWS, teHS);
+        CodeTE->setBounds(lm+teWS+pad, tm+teHS, teWS/2, teHS);
+        NameTE->setBounds(lm+teWS/2+pad, tm, 2*teWS, teHS);
+        AccountTypeTE->setBounds(lm+2*(teWS+pad)+teWS/2, tm, 150, teHS);
+        XreosPistTE->setBounds(lm+2*(teWS+pad)+pad+150+teWS/2, tm, teWS/2, teHS);
 
     }
     
@@ -218,6 +218,18 @@ void AccountChartComponent::resized()
     CustomTabContent::resized();
     Rectangle<int> compBounds = getComponentArea();
     accountChartTableListBoxModel->setBounds(compBounds);
+    
+    const int starty = compBounds.getY()-40;
+    const int lm = 4;
+    const int tm = 2;
+    const int pad = 4;
+    const int teHS = 40;
+    const int teWS = 250;
+    
+    tableHeader1->setBounds(lm, starty+tm, teWS/2, teHS);
+    tableHeader2->setBounds(lm+teWS/2+pad, starty+tm, teWS+teWS/2, teHS);
+    tableHeader3->setBounds(lm+2*(teWS+pad)+teWS/2, starty+tm, 150, teHS);
+    tableHeader4->setBounds(lm+2*(teWS+pad)+pad+150+teWS/2, starty+tm, teWS/2, teHS);
 }
 
 void AccountChartComponent::receivedResults(QueryEntry *qe_)
