@@ -7,69 +7,44 @@
 #include "CoeusList.h"
 
 //=======================================================================================================
-class AccountCellButtons : public Component
+class AccountsTableListBoxModel : public CoeusList
 {
 public:
-	AccountCellButtons();
-
-	~AccountCellButtons();
-
-	void resized() override;
-
-	int rowIndex;
-
-private:
-
-	ScopedPointer<TextButton> save;
-	ScopedPointer<TextButton> restore;
-	ScopedPointer<TextButton> remove;
-};
-
-//=======================================================================================================
-class AccountsTableListBoxModel :	public TableListBox,
-									public TableListBoxModel,
-									public ChangeListener
-{
-public:
-	AccountsTableListBoxModel();
-	int getNumRows() override;
-	void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override;
-	void paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override;
-	Component * refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate) override;
-	void setQueryEntry(QueryEntry *qe_);
-
-	void changeListenerCallback(ChangeBroadcaster *source) override;
-	void mouseMove(const MouseEvent &event) override;
-    void mouseExit(const MouseEvent &event) override;
-
-private:
-	WeakReference<QueryEntry> qe;
-	int rowUnderMouse;
+    AccountsTableListBoxModel(CacheSystemClient *ccc_);
+    
+    int getNumRows() override;
+    int getRowSize(int rowNumber) override;
+    int getMinRowSize() override;
+    int getMaxRowSize() override;
+    Array<int> getKeyField() override;
+    
+    void paintRowBackground(Graphics &g, int rowNumber, int x, int y, int width, int height, bool rowIsSelected) override;
+    CoeusListRowComponent * refreshComponentForRow(int rowNumber, bool isRowSelected, CoeusListRowComponent *existingComponentToUpdate) override;
 };
 
 //=======================================================================================================
 class AccountsComponent :	public CustomTabContent,
-							public CacheSystemClient
+public CacheSystemClient
 {
 public:
-	AccountsComponent();
-	~AccountsComponent();
-
-	void resized() override;
-	void mouseExit(const MouseEvent &event) override;
-
-	void receivedResults(QueryEntry *qe_) override;
-
-	void searchButtonPressed() override;
-	void addButtonPressed() override;
+    AccountsComponent();
+    ~AccountsComponent();
+    
+    void resized() override;
+    void mouseExit(const MouseEvent &event) override;
+    
+    void receivedResults(QueryEntry *qe_) override;
+    
+    void searchButtonPressed() override;
+    void addButtonPressed() override;
     void saveButtonPressed() override;
     void changeListenerCallback(ChangeBroadcaster *source) override;
-
+    
     CoeusListRowComponent *getAddComponent() override;
-
+    
 private:
-	ScopedPointer<AccountsTableListBoxModel> accounts;
-	WeakReference<QueryEntry> qe;
+    ScopedPointer<AccountsTableListBoxModel> AccountsTableListBoxModel;
+    ScopedPointer<QueryEntry> qe;
 };
 
 #endif

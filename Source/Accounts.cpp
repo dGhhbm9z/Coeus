@@ -1,343 +1,331 @@
 #include "Accounts.h"
+#include "CustomComponents.h"
 
-AccountCellButtons::AccountCellButtons()
+class AccountsRowComponent :   public CoeusListRowComponent
 {
-	save = new TextButton(L"save");
-	restore = new TextButton(L"restore");
-	remove = new TextButton(L"remove");
-	addAndMakeVisible(save);
-	addAndMakeVisible(restore);
-	addAndMakeVisible(remove);
+public:
+    static const int minRowSize = 40;
+    static const int maxRowSize = 480;
+    const int lm = 4;
+    const int tm = 2;
+    const int bm = 2;
+    const int pad = 4;
+    const int teHS = getMinRowSize() - tm - bm;
+    const int teWS = 250;
+    
+    AccountsRowComponent(CoeusList &owner_) : CoeusListRowComponent(owner_) {
+        detailedView = false;
+        showControls = false;
+        
+        // add fields
+        // summary
+        addAndMakeVisible(InvoiceTE = new CoeusListTextEditor("Invoice"));
+        addAndMakeVisible(RecordDateTE = new CoeusListTextEditor("RecordDate"));
+        addAndMakeVisible(RecordTypeTE = new CoeusListTextEditor("RecordType"));
+        addAndMakeVisible(ReasoningTE = new CoeusListTextEditor("Reasoning"));
+        InvoiceTE->addListener(&owner);
+        RecordDateTE->addListener(&owner);
+        RecordTypeTE->addListener(&owner);
+        ReasoningTE->addListener(&owner);
+        
+        // summary labels
+        addAndMakeVisible(Invoice = new CoeusListLabel("Invoice", "Invoice"));
+        addAndMakeVisible(RecordDate = new CoeusListLabel("RecordDate", "Record Date"));
+        addAndMakeVisible(RecordType = new CoeusListLabel("RecordType", "Record Type"));
+        addAndMakeVisible(Reasoning = new CoeusListLabel("Reasoning", "Reasoning"));
+        
+        // detailed view
+        addAndMakeVisible(CommentsTE = new CoeusListTextEditor("Comments"));
+        addAndMakeVisible(anrticlenumbertextTE = new CoeusListTextEditor("anrticlenumbertextTE"));
+        CommentsTE->addListener(&owner);
+        anrticlenumbertextTE->addListener(&owner);
+        
+        // detailed view labels
+        addAndMakeVisible(Comments = new CoeusListLabel("Comments", "Comments"));
+        addAndMakeVisible(anrticlenumbertext = new CoeusListLabel("anrticlenumbertext", "anrticlenumbertext"));
+        
+        resized();
+    }
+    
+    ~AccountsRowComponent() {
+    }
+    
+    int getCoeusListHeight() override {
+        if (detailedView) {
+            return maxRowSize;
+        }
+        
+        return minRowSize;
+    }
+    
+    int getMinRowSize() override {
+        return minRowSize;
+    }
+    
+    int getMaxRowSize() override {
+        return maxRowSize;
+    }
+    
+    void resizeForSummary() override {
+        // summary
+        InvoiceTE->setBounds(lm, tm, teWS, teHS);
+        RecordDateTE->setBounds(lm+teWS+pad, tm, teWS, teHS);
+        RecordTypeTE->setBounds(lm+2*(teWS+pad), tm, 150, teHS);
+        ReasoningTE->setBounds(lm+2*(teWS+pad)+pad+150, tm, teWS, teHS);
+    }
+    
+    void resizeForDetailed() override {
+        // detailed
+        InvoiceTE->setBounds(lm+teWS+pad, tm+teHS, teWS, teHS);
+        RecordDateTE->setBounds(lm+teWS+pad, tm+2*teHS, teWS, teHS);
+        RecordTypeTE->setBounds(lm+teWS+pad, tm+3*teHS, teWS, teHS);
+        // summary labels
+        Invoice->setBounds(lm, tm+teHS, teWS, teHS);
+        RecordDate->setBounds(lm, tm+2*teHS, teWS, teHS);
+        RecordType->setBounds(lm, tm+3*teHS, teWS, teHS);
+
+        // detailed view
+        ReasoningTE->setBounds(lm+3*(teWS+pad), tm+teHS, teWS, teHS);
+        CommentsTE->setBounds(lm+3*(teWS+pad), tm+2*teHS, teWS, teHS);
+        anrticlenumbertextTE->setBounds(lm+3*(teWS+pad), tm+3*teHS, teWS, teHS);
+        
+        // detailed view labels
+        Reasoning->setBounds(lm+2*(teWS+pad), tm+teHS, teWS, teHS);
+        Comments->setBounds(lm+2*(teWS+pad), tm+2*teHS, teWS, teHS);
+        anrticlenumbertext->setBounds(lm+2*(teWS+pad), tm+3*teHS, teWS, teHS);
+    }
+    
+    void updateRow() {
+        
+    }
+    
+    void insertRow() {
+        
+    }
+    
+private:
+    // summary
+    ScopedPointer<TextEditor> RecordDateTE, anrticlenumbertextTE, InvoiceTE, CommentsTE, RecordTypeTE, ReasoningTE;
+    ScopedPointer<Label> RecordDate, anrticlenumbertext, Invoice, Comments, RecordType, Reasoning;
+    
+    // detailed
+
+
+};
+
+//================================================================================
+
+AccountsTableListBoxModel::AccountsTableListBoxModel(CacheSystemClient *ccc_)
+: CoeusList(ccc_)
+{
+    update();
+    rowSizes.calloc(1); //hack +1
+
+/* TODO
+    ScopedPointer<Label> accountLabel;
+    ScopedPointer<Label> accountNameLabel;
+    ScopedPointer<Label> creditLabel;
+    ScopedPointer<Label> debtLabel;
+ */
+ 
+    fieldNames.add("RecordDate");
+// TODO
+//    fieldNames.add("anrticlenumbertext");
+    
+    fieldNames.add("Invoice");
+    fieldNames.add("Comments");
+    fieldNames.add("RecordType");
+    fieldNames.add("Reasoning");
+    
+    tableName = "events";
 }
 
-AccountCellButtons::~AccountCellButtons()
+Array<int> AccountsTableListBoxModel::getKeyField()
 {
-	save = nullptr;
-	restore = nullptr;
-	remove = nullptr;
+    Array<int> kf;
+    kf.add(0);
+    kf.add(1);
+    return kf;
 }
-
-void AccountCellButtons::resized()
-{
-	save->setBoundsRelative(0.0f, 0.1f, 0.33f, 0.9f);
-	restore->setBoundsRelative(0.33f, 0.1f, 0.33f, 0.9f);
-	remove->setBoundsRelative(0.66f, 0.1f, 0.33f, 0.9f);
-}
-
-//=======================================================================================================
-
-
-AccountsTableListBoxModel::AccountsTableListBoxModel() : TableListBox(String::empty, this), qe(nullptr), rowUnderMouse(-1) {}
 
 int AccountsTableListBoxModel::getNumRows()
 {
-	if (qe != nullptr) {
-		return qe->num_rows;
-	}
-	else {
-		return 0;
-	}
+    if (qe != nullptr) {
+        return qe->num_rows;
+    }
+    else {
+        return 0;
+    }
 }
 
-void AccountsTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected)
+int AccountsTableListBoxModel::getRowSize(int rowNumber)
 {
-	if (rowIsSelected) {
-		g.setColour(Colours::grey.brighter().brighter());
-		g.fillAll();
-	}
-	else if (rowNumber == rowUnderMouse) {
-		g.setColour(Colours::lightgrey.brighter().brighter());
-		g.fillAll();
-	}
+    return (rowNumber >= 0 && rowNumber < getNumRows()) ? rowSizes[rowNumber] : 0;
 }
 
-void AccountsTableListBoxModel::paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
+void AccountsTableListBoxModel::paintRowBackground(Graphics &g, int rowNumber, int x, int y, int width, int height, bool rowIsSelected)
 {
-
+    if (rowIsSelected) {
+        g.setColour(Colour(0xff9d9d9d));
+        g.fillRect(x, y, width, height);
+    }
+    else if (rowNumber == rowUnderMouse && (rowSizes[rowNumber] != AccountsRowComponent::maxRowSize)) {
+        g.setColour(Colours::lightgrey.brighter().brighter());
+        g.fillRect(x, y, width, height);
+    }
+    else if (getNumRows() && (rowSizes[rowNumber] == AccountsRowComponent::maxRowSize)) {
+        g.setColour(Colour(Colour(0xffbebebe)));
+        g.fillRect(x, y, width, height);
+    }
 }
 
-Component * AccountsTableListBoxModel::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate)
+CoeusListRowComponent * AccountsTableListBoxModel::refreshComponentForRow(int rowNumber, bool isRowSelected, CoeusListRowComponent *existingComponentToUpdate)
 {
-	// create
-	if (existingComponentToUpdate == nullptr) {
-		if (columnId == 1) {
-			TextEditFocusReport *payload = new TextEditFocusReport();
-			payload->rowIndex = rowNumber;
-			
-			if (qe != nullptr && payload != nullptr) {
-				payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1));
-			}
-
-			payload->addChangeListener(this);
-			MarginComponent *newComponent = new MarginComponent(payload);
-			return (Component *)newComponent;
-		}
-		else if (columnId == 2) {
-			TextEditFocusReport *payload = new TextEditFocusReport();
-			payload->rowIndex = rowNumber;
-			
-			if (qe != nullptr && payload != nullptr) {
-				payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1));
-			}
-
-			payload->addChangeListener(this);
-			MarginComponent *newComponent = new MarginComponent(payload);
-			return (Component *)newComponent;
-		}
-		else if (columnId == 3) {
-			ComboBoxFocusReport *payload = new ComboBoxFocusReport();
-			payload->rowIndex = rowNumber;
-			payload->addItem(L"Type I", 1);
-			payload->addItem(L"Type II", 2);
-			payload->addItem(L"Type III", 3);
-			payload->addItem(L"Type IV", 4);
-			payload->addItem(L"Type V", 5);
-			payload->addChangeListener(this);
-			MarginComponent *newComponent = new MarginComponent(payload);
-			return (Component *)newComponent;
-		}
-		else if (columnId == 4) {
-			LabelFocusReport *payload = new LabelFocusReport();
-			payload->rowIndex = rowNumber;
-
-			if (qe != nullptr && payload != nullptr) {
-				payload->setText(qe->getFieldFromRow(rowNumber, columnId - 1), dontSendNotification);
-			}
-
-			payload->setEditable(false);
-			payload->addChangeListener(this);
-			payload->setJustificationType(Justification::centred);
-			MarginComponent *newComponent = new MarginComponent(payload);
-			return (Component *)newComponent;
-		}
-		else if (columnId == 5 && isRowSelected) {
-			AccountCellButtons *newComponent = new AccountCellButtons();
-			newComponent->setVisible(true);
-			newComponent->rowIndex = rowNumber;
-			return (Component *)newComponent;
-		}
-		else if (columnId == 5 && !isRowSelected) {
-			LabelFocusReport *payload = new LabelFocusReport();
-			payload->rowIndex = rowNumber;
-			payload->setText(String::empty, dontSendNotification);
-			payload->setEditable(false);
-			payload->addChangeListener(this);
-			payload->setJustificationType(Justification::centred);
-			MarginComponent *newComponent = new MarginComponent(payload);
-			return (Component *)newComponent;
-		}
-
-		return nullptr;
-	}
-	// update
-	else {
-		if (columnId >= 1 && columnId <= 4) {
-			MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
-			if (newComponent) {
-				TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(newComponent->getEnclosedComp());
-				ComboBoxFocusReport *cbfr = dynamic_cast<ComboBoxFocusReport *>(newComponent->getEnclosedComp());
-				LabelFocusReport *lbfr = dynamic_cast<LabelFocusReport *>(newComponent->getEnclosedComp());
-				if (tefr) {
-					tefr->rowIndex = rowNumber;
-				}
-				else if (cbfr) {
-					cbfr->rowIndex = rowNumber;
-				}
-				else if (lbfr) {
-					lbfr->rowIndex = rowNumber;
-				}
-			}
-		}
-		else if (columnId == 5) {
-			AccountCellButtons *acb = dynamic_cast<AccountCellButtons *>(existingComponentToUpdate);
-			MarginComponent *newComponent = dynamic_cast<MarginComponent *>(existingComponentToUpdate);
-			LabelFocusReport *lbfr = nullptr;
-			if (newComponent) {
-				lbfr = dynamic_cast<LabelFocusReport *>(newComponent->getEnclosedComp());
-			}
-
-			if (acb && isRowSelected) {
-				acb->rowIndex = rowNumber;
-			}
-			else if (lbfr && !isRowSelected) {
-				lbfr->rowIndex = rowNumber;
-			}
-			else if (acb && !isRowSelected) {
-				delete existingComponentToUpdate;
-
-				LabelFocusReport *payload = new LabelFocusReport();
-				payload->rowIndex = rowNumber;
-				payload->setText(String::empty, dontSendNotification);
-				payload->setEditable(false);
-				payload->addChangeListener(this);
-				payload->setJustificationType(Justification::centred);
-				MarginComponent *newComponent = new MarginComponent(payload);
-				return (Component *)newComponent;
-			}
-			else if (lbfr && isRowSelected) {
-				delete existingComponentToUpdate;
-
-				AccountCellButtons *newComponent = new AccountCellButtons();
-				newComponent->rowIndex = rowNumber;
-				newComponent->setVisible(true);
-				return (Component *)newComponent;
-			}
-		}
-
-		return existingComponentToUpdate;
-	}
+    // create
+    if (existingComponentToUpdate == nullptr) {
+        AccountsRowComponent *newComp = new AccountsRowComponent(*this);
+        newComp->addMouseListener(this, true);
+        newComp->addChangeListener(this);
+        newComp->setRow(rowNumber);
+        
+        const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountsRowComponent::maxRowSize : false;
+        const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
+        if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
+            newComp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
+        }
+        else {
+            newComp->updateFromQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
+        }
+        newComp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
+        
+        return newComp;
+    }
+    // update
+    else {
+        AccountsRowComponent * cmp = dynamic_cast<AccountsRowComponent *>(existingComponentToUpdate);
+        
+        if(cmp) {
+            const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountsRowComponent::maxRowSize : false;
+            const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
+            if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
+                cmp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
+            }
+            else {
+                cmp->updateFromQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
+            }
+            cmp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
+        }
+        
+        return existingComponentToUpdate;
+    }
 }
 
-void AccountsTableListBoxModel::setQueryEntry(QueryEntry *qe_)
+int AccountsTableListBoxModel::getMinRowSize()
 {
-	qe = qe_;
+    return AccountsRowComponent::minRowSize;
 }
 
-void AccountsTableListBoxModel::changeListenerCallback(ChangeBroadcaster *source)
+int AccountsTableListBoxModel::getMaxRowSize()
 {
-	TextEditFocusReport *tefr = dynamic_cast<TextEditFocusReport *>(source);
-	ComboBoxFocusReport *cbfr = dynamic_cast<ComboBoxFocusReport *>(source);
-	LabelFocusReport *lbfr = dynamic_cast<LabelFocusReport *>(source);
-
-	if (tefr) {
-		if (tefr->focus) {
-			selectRow(tefr->rowIndex);
-		}
-		else {
-			const int prevR = rowUnderMouse;
-			rowUnderMouse = tefr->rowIndex;
-			repaintRow(rowUnderMouse);
-			repaintRow(prevR);
-		}
-	}
-	else if (cbfr) {
-		if (cbfr->focus) {
-			selectRow(cbfr->rowIndex);
-		}
-		else {
-			const int prevR = rowUnderMouse;
-			rowUnderMouse = cbfr->rowIndex;
-			repaintRow(rowUnderMouse);
-			repaintRow(prevR);
-		}
-	}
-	else if (lbfr) {
-		if (lbfr->focus) {
-			selectRow(lbfr->rowIndex);
-		}
-		else {
-			const int prevR = rowUnderMouse;
-			rowUnderMouse = lbfr->rowIndex;
-			repaintRow(rowUnderMouse);
-			repaintRow(prevR);
-		}
-	}
+    return AccountsRowComponent::maxRowSize;
 }
 
-void AccountsTableListBoxModel::mouseMove(const MouseEvent &event)
+//================================================================
+
+AccountsComponent::AccountsComponent()
 {
-	const int x = event.getPosition().getX();
-	const int y = event.getPosition().getY();
-	const int r = getRowContainingPosition(x, y);
-	if (r != rowUnderMouse) {
-		const int prevR = rowUnderMouse;
-		rowUnderMouse = r;
-		repaintRow(rowUnderMouse);
-		repaintRow(prevR);
-	}
+    title->setText("Events", dontSendNotification);
+    AccountsTableListBoxModel = new class AccountsTableListBoxModel(this);
+    addAndMakeVisible(AccountsTableListBoxModel);
+    AccountsTableListBoxModel->addChangeListener(this);
+    
+    tableHeader1->setText("Invoice", dontSendNotification);
+    tableHeader2->setText("Date", dontSendNotification);
+    tableHeader3->setText("Comments", dontSendNotification);
+    tableHeader4->setText("Reasoning", dontSendNotification);
+    
+    //searchButtonPressed();
 }
 
-void AccountsTableListBoxModel::mouseExit(const MouseEvent &event)
+AccountsComponent::~AccountsComponent()
 {
-	const int prevR = rowUnderMouse;
-	rowUnderMouse = -1;
-	repaintRow(rowUnderMouse);
-	repaintRow(prevR);
+    AccountsTableListBoxModel = nullptr;
 }
 
-//=======================================================================================================
-
-AccountsComponent::AccountsComponent() {
-	title->setText("Accounts", dontSendNotification);
-
-	TableHeaderComponent *accountsHeaderComponent = new TableHeaderComponent();
-	accountsHeaderComponent->addColumn(L"Accounts1", 1, 250, 100, 250);
-	accountsHeaderComponent->addColumn(L"Accounts2", 2, 250, 100, 250);
-	accountsHeaderComponent->addColumn(L"Accounts3", 3, 150, 100, 250);
-	accountsHeaderComponent->addColumn(L"Accounts4", 4, 250, 100, 250);
-	accountsHeaderComponent->addColumn(String::empty, 5, 200, 100, 250);
-
-	accounts = new AccountsTableListBoxModel();
-	accounts->setRowHeight(40);
-	accounts->setHeader(accountsHeaderComponent);
-	accounts->setHeaderHeight(40);
-
-	addAndMakeVisible(accounts);
-
-	//searchButtonPressed();
-}
-
-AccountsComponent::~AccountsComponent() 
+void AccountsComponent::resized()
 {
-	accounts = nullptr;
-}
-
-void AccountsComponent::resized() 
-{
-	CustomTabContent::resized();
-	accounts->setBounds(getComponentArea());
-}
-
-void AccountsComponent::mouseExit(const MouseEvent &event)
-{
-	accounts->mouseExit(event);
+    CustomTabContent::resized();
+    Rectangle<int> compBounds = getComponentArea();
+    compBounds.setY(compBounds.getY());
+    AccountsTableListBoxModel->setBounds(compBounds);
 }
 
 void AccountsComponent::receivedResults(QueryEntry *qe_)
 {
     if (qe_->num_fields > 1) {
         qe = qe_;
-        accounts->setQueryEntry(qe);
-        accounts->updateContent();
+        AccountsTableListBoxModel->setQueryEntry(qe);
+        AccountsTableListBoxModel->update();
     }
+    else {
+        // if update
+        if (AccountsTableListBoxModel->savedpks.size()) {
+            // fix this v
+            StringArray pk = AccountsTableListBoxModel->savedpks[0];
+            AccountsTableListBoxModel->wasSaved(pk);
+        }
+        // if delete
+    }
+}
+
+void AccountsComponent::mouseExit(const MouseEvent &event)
+{
+    AccountsTableListBoxModel->mouseExit(event);
 }
 
 void AccountsComponent::searchButtonPressed()
 {
-	String andOr = (searchFilter->getSelectedId() == 2) ? " AND " : " OR ";
-	String orStr = " OR ";
-	StringArray terms;
-	terms.addTokens(search->getText(), true);
-
-	String queryStr = "SELECT Code, Name, AccountType, XreosPist FROM accounts WHERE ";
-
-	for (int i = 0; i < terms.size(); i++) {
-		queryStr += "VAT like '%" + terms[i] + "%' " + orStr;
-		queryStr += "Code like '%" + terms[i] + "%' " + orStr;
-		queryStr += "Name like '%" + terms[i] + "%' " + orStr;
-		queryStr += "ShortName like '%" + terms[i] + "%' " + orStr;
-		queryStr += "AccountType like '%" + terms[i] + "%' " + orStr;
-		queryStr += "XreosPist like '%" + terms[i] + "%' " + andOr;
-	}
-
-	queryStr += (searchFilter->getSelectedId() == 2 || terms.size() == 0) ? " 1 = 1" : " 1 = 0";
-
-	//		CompanyVAT varchar(10) NOT NULL,
-
-	CacheSystem *cs = CacheSystem::getInstance();
+    String andOr = (searchFilter->getSelectedId() == 2) ? " AND " : " OR ";
+    String orStr = " OR ";
+    StringArray terms;
+    terms.addTokens(search->getText(), true);
+    
+    String queryStr = "SELECT * FROM events WHERE ";
+    
+    for (int i = 0; i < terms.size(); i++) {
+        queryStr += "Invoice like '%" + terms[i] + "%' " + orStr;
+        queryStr += "RecordDate like '%" + terms[i] + "%' " + orStr;
+        queryStr += "RecordType like '%" + terms[i] + "%' " + orStr;
+        queryStr += "Comments like '%" + terms[i] + "%' " + orStr;
+        queryStr += "Reasoning like '%" + terms[i] + "%' " + andOr;
+    }
+    
+    queryStr += (searchFilter->getSelectedId() == 2 || terms.size() == 0) ? " 1 = 1" : " 1 = 0";
+    
+    CacheSystem *cs = CacheSystem::getInstance();
     cs->getResultsFor(queryStr, QueryEntry::Accounts, this);
-
-	std::cout << queryStr << std::endl;
+    
+    std::cout << queryStr << std::endl;
 }
 
 void AccountsComponent::addButtonPressed()
 {
-    // show add overlay
+    
 }
 
 void AccountsComponent::saveButtonPressed()
 {
-//    accounts->setEdit(editButton->getToggleState());
+    //    if (!editButton->getToggleState()) {
+    //        //
+    //        StringArray pkNames;
+    //        pkNames.add("CustomerCode");
+    //        pkNames.add("CustomerVAT");
+    //
+    //        AccountsTableListBoxModel->updateDatabaseTable("Accounts", pkNames, this);
+    //
+    //    }
+    //
+    //    AccountsTableListBoxModel->update();
 }
 
 void AccountsComponent::changeListenerCallback(ChangeBroadcaster *source)
@@ -359,5 +347,5 @@ void AccountsComponent::changeListenerCallback(ChangeBroadcaster *source)
 
 CoeusListRowComponent * AccountsComponent::getAddComponent()
 {
-    return nullptr;
+    return new AccountsRowComponent(*AccountsTableListBoxModel);
 }
