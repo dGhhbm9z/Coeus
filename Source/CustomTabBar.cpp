@@ -256,11 +256,11 @@ CustomTabComponent::CustomTabComponent(TabbedComponent &owner_) : owner(owner_)
 
 CustomTabComponent::~CustomTabComponent() 
 {
-	accountChartComponent = nullptr;
-	accountsComponent = nullptr;
-	suppliersComponent = nullptr;
-	customersComponent = nullptr;
-	companiesComponent = nullptr;
+//	accountChartComponent = nullptr;
+//	accountsComponent = nullptr;
+//	suppliersComponent = nullptr;
+//	customersComponent = nullptr;
+//	companiesComponent = nullptr;
 }
 
 void CustomTabComponent::resized()

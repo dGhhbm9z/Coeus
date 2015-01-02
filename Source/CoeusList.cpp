@@ -274,7 +274,7 @@ void CoeusListRowComponent::updateFromMapForRow(QueryEntry *qe, std::map<String,
 //===============================================================================
 
 CoeusList::CoeusList(CacheSystemClient *ccc_)
-:   ccc(ccc_), sb(true), qe(nullptr), rowUnderMouse(-1)
+:   ccc(ccc_), qe(nullptr), sb(true), rowUnderMouse(-1)
 {
     setLookAndFeel(&themeAlt);
     
@@ -421,7 +421,7 @@ void CoeusList::updateComponents()
     
     // refresh children content
     for(int r = startRow; r <= endRow; r++) {
-        if (items.size() <= r-endRow) {
+        if (items.size() <= r - startRow) {
             CoeusListRowComponent *res = refreshComponentForRow(r, selectedRow.contains(r), nullptr);
             addAndMakeVisible(res);
             items.insert(r-startRow, res);
@@ -436,6 +436,7 @@ void CoeusList::updateComponents()
                 }
                 removeChildComponent(items[r-startRow]);
                 addAndMakeVisible(res);
+                delete items[r-startRow];
                 items.set(r-startRow, res);
             }
             itemsToRows.set(r-startRow, r);
