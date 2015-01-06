@@ -24,6 +24,7 @@ CacheSystem::~CacheSystem()
 {
 	stopThread(10000);
     //deleteAndZero(instancePointer);
+    
 }
 
 void *CacheSystem::initialiseConnection()

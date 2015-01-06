@@ -44,7 +44,7 @@ public:
 
 private:
     ScopedPointer<SuppliersTableListBoxModel> suppliersTableListBoxModel;
-    WeakReference<QueryEntry> qe;
+    ScopedPointer<QueryEntry> qe;
 };
 
 #endif

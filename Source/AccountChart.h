@@ -44,7 +44,7 @@ public:
     
 private:
     ScopedPointer<AccountChartTableListBoxModel> accountChartTableListBoxModel;
-    WeakReference<QueryEntry> qe;
+    ScopedPointer<QueryEntry> qe;
 };
 
 #endif

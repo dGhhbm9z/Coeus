@@ -165,7 +165,7 @@ private:
 	String address;
 	uint32 port;
 
-	Array<WeakReference<QueryEntry>> queries;
+	Array<QueryEntry *> queries;
 	CriticalSection querySection;
 	int nextQueryToServeIndex;
 };
