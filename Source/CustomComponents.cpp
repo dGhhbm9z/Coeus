@@ -91,7 +91,7 @@ void CustomMenuBarButton::paint(Graphics &g) {
 
 //=======================================================================================
 
-CustomTabContent::CustomTabContent() {
+CustomTabContent::CustomTabContent() : addComp(nullptr) {
 	title = new Label("", "-title-");
 	title->setFont(22);
 	title->setJustificationType(Justification::left);
@@ -227,8 +227,8 @@ void CustomTabContent::resized()
     
     addOverlayComp->setBounds(compBounds);
 
-    if(addOverlayComp->getNumChildComponents() == 0) {
-        CoeusListRowComponent *addComp = this->getAddComponent();
+    if(addComp == nullptr) {
+        addComp = this->getAddComponent();
         if (addComp) {
             addOverlayComp->addAndMakeVisible(addComp);
             addComp->setBounds(compBounds);

@@ -153,6 +153,7 @@ protected:
     ScopedPointer<Label> tableHeader1, tableHeader2, tableHeader3, tableHeader4;
     ScopedPointer<ImageButton> addButton, duplicateButton, removeButton;
     ScopedPointer<OverlayComp> addOverlayComp;
+    ScopedPointer<CoeusListRowComponent> addComp;
 
 	Image imageNormal;
 	Image imageMouseOver;
