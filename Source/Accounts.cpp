@@ -103,13 +103,52 @@ public:
         
     }
     
+    void updateFromTransactionsQueryForRow(QueryEntry *qe, int row, bool dView, bool edit)
+    {
+        setDetailedView(dView);
+        setEdit(edit);
+        resized();
+        this->row = row;
+        if(qe) {
+            // summary
+            for (int i=0; i<getNumChildComponents(); i++) {
+                TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
+                if (te) {
+                    te->setText(qe->getFieldFromRow(row, owner.fieldNames.indexOf(te->getName())));
+                    te->setEnabled(edit);
+                }
+            }
+        }
+    }
+    
+    void updateFromTransactionsMapForRow(QueryEntry *qe, std::map<String, String> rowUpdates, int row, bool dView, bool edit)
+    {
+        setDetailedView(dView);
+        resized();
+        this->row = row;
+        
+        for (int i=0; i<getNumChildComponents(); i++) {
+            TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
+            if (te) {
+                const StringArray key = (qe != nullptr) ? qe->getFieldFromRow(row, owner.getKeyField()) : StringArray();
+                if (key.size() && (rowUpdates.find(te->getName()) != rowUpdates.end())) {
+                    te->setText(rowUpdates[te->getName()]);
+                }
+                else {
+                    te->setText(qe->getFieldFromRow(row, owner.fieldNames.indexOf(te->getName())));
+                }
+                te->setEnabled(edit);
+            }
+        }
+    }
+    
 private:
     // summary
     ScopedPointer<TextEditor> RecordDateTE, anrticlenumbertextTE, InvoiceTE, CommentsTE, RecordTypeTE, ReasoningTE;
     ScopedPointer<Label> RecordDate, anrticlenumbertext, Invoice, Comments, RecordType, Reasoning;
     
     // detailed
-
+    OwnedArray<TextEditor> transactions;
 
 };
 
@@ -192,9 +231,11 @@ CoeusListRowComponent * AccountsTableListBoxModel::refreshComponentForRow(int ro
         const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
         if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
             newComp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
+            newComp->updateFromTransactionsMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
         }
         else {
             newComp->updateFromQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
+            newComp->updateFromTransactionsQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
         }
         newComp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
         
@@ -209,14 +250,30 @@ CoeusListRowComponent * AccountsTableListBoxModel::refreshComponentForRow(int ro
             const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
             if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
                 cmp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
+                cmp->updateFromTransactionsMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
             }
             else {
                 cmp->updateFromQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
+                cmp->updateFromTransactionsQueryForRow(qeTransactions, rowNumber,  dView, editedRows.contains(rowNumber));
             }
             cmp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
         }
         
         return existingComponentToUpdate;
+    }
+}
+
+void AccountsTableListBoxModel::setQueryEntryForTransactions(QueryEntry *qe_)
+{
+    if(qe_) {
+        qeTransactions = qe_;
+        rowSizes.realloc(qe->num_rows);
+        // fill in row sizes
+        for(int i=0; i<qe->num_rows; i++) {
+            rowSizes[i] = getMinRowSize();
+        }
+        update();
+        repaint();
     }
 }
 
@@ -263,9 +320,16 @@ void AccountsComponent::resized()
 void AccountsComponent::receivedResults(QueryEntry *qe_)
 {
     if (qe_->num_fields > 1) {
-        qe = qe_;
-        AccountsTableListBoxModel->setQueryEntry(qe);
-        AccountsTableListBoxModel->update();
+        if (qe_->request.startsWith("SELECT * FROM events WHERE ")) {
+            qe = qe_;
+            AccountsTableListBoxModel->setQueryEntry(qe);
+//            AccountsTableListBoxModel->update();
+        }
+        else {
+            qeTransactions = qe_;
+            AccountsTableListBoxModel->setQueryEntryForTransactions(qeTransactions);
+            AccountsTableListBoxModel->update();
+        }
     }
     else {
         // if update
@@ -285,27 +349,53 @@ void AccountsComponent::mouseExit(const MouseEvent &event)
 
 void AccountsComponent::searchButtonPressed()
 {
-    String andOr = (searchFilter->getSelectedId() == 2) ? " AND " : " OR ";
-    String orStr = " OR ";
-    StringArray terms;
-    terms.addTokens(search->getText(), true);
-    
-    String queryStr = "SELECT * FROM events WHERE ";
-    
-    for (int i = 0; i < terms.size(); i++) {
-        queryStr += "Invoice like '%" + terms[i] + "%' " + orStr;
-        queryStr += "RecordDate like '%" + terms[i] + "%' " + orStr;
-        queryStr += "RecordType like '%" + terms[i] + "%' " + orStr;
-        queryStr += "Comments like '%" + terms[i] + "%' " + orStr;
-        queryStr += "Reasoning like '%" + terms[i] + "%' " + andOr;
+    { // Common info
+        String andOr = (searchFilter->getSelectedId() == 2) ? " AND " : " OR ";
+        String orStr = " OR ";
+        StringArray terms;
+        terms.addTokens(search->getText(), true);
+        
+        String queryStr = "SELECT * FROM events WHERE ";
+        
+        for (int i = 0; i < terms.size(); i++) {
+            queryStr += "Invoice like '%" + terms[i] + "%' " + orStr;
+            queryStr += "RecordDate like '%" + terms[i] + "%' " + orStr;
+            queryStr += "RecordType like '%" + terms[i] + "%' " + orStr;
+            queryStr += "Comments like '%" + terms[i] + "%' " + orStr;
+            queryStr += "Reasoning like '%" + terms[i] + "%' " + andOr;
+        }
+        
+        queryStr += (searchFilter->getSelectedId() == 2 || terms.size() == 0) ? " 1 = 1" : " 1 = 0";
+        
+        std::cout << queryStr << std::endl;
+        
+        CacheSystem *cs = CacheSystem::getInstance();
+        cs->getResultsFor(queryStr, QueryEntry::Accounts, this);
     }
-    
-    queryStr += (searchFilter->getSelectedId() == 2 || terms.size() == 0) ? " 1 = 1" : " 1 = 0";
-    
-    CacheSystem *cs = CacheSystem::getInstance();
-    cs->getResultsFor(queryStr, QueryEntry::Accounts, this);
-    
-    std::cout << queryStr << std::endl;
+    { // Event transactions
+        String andOr = (searchFilter->getSelectedId() == 2) ? " AND " : " OR ";
+        String orStr = " OR ";
+        StringArray terms;
+        terms.addTokens(search->getText(), true);
+        
+        String queryStr = "SELECT events2accounts.* FROM events RIGHT JOIN events2accounts ON events.invoice=events2accounts.invoice AND events.VAT=events2accounts.VAT WHERE ";
+        
+        for (int i = 0; i < terms.size(); i++) {
+            queryStr += "events.Invoice like '%" + terms[i] + "%' " + orStr;
+            queryStr += "events.RecordDate like '%" + terms[i] + "%' " + orStr;
+            queryStr += "events.RecordType like '%" + terms[i] + "%' " + orStr;
+            queryStr += "events.Comments like '%" + terms[i] + "%' " + orStr;
+            queryStr += "events.Reasoning like '%" + terms[i] + "%' " + andOr;
+            // TODO : add events2accounts field search
+        }
+        
+        queryStr += (searchFilter->getSelectedId() == 2 || terms.size() == 0) ? " 1 = 1" : " 1 = 0";
+        std::cout << queryStr << std::endl;
+        
+        CacheSystem *cs = CacheSystem::getInstance();
+        cs->getResultsFor(queryStr, QueryEntry::Accounts, this);
+
+    }
 }
 
 void AccountsComponent::addButtonPressed()

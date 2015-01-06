@@ -20,6 +20,11 @@ public:
     
     void paintRowBackground(Graphics &g, int rowNumber, int x, int y, int width, int height, bool rowIsSelected) override;
     CoeusListRowComponent * refreshComponentForRow(int rowNumber, bool isRowSelected, CoeusListRowComponent *existingComponentToUpdate) override;
+    
+    void setQueryEntryForTransactions(QueryEntry *qe_);
+    
+private:
+    WeakReference<QueryEntry> qeTransactions;
 };
 
 //=======================================================================================================
@@ -44,7 +49,7 @@ public:
     
 private:
     ScopedPointer<AccountsTableListBoxModel> AccountsTableListBoxModel;
-    ScopedPointer<QueryEntry> qe;
+    ScopedPointer<QueryEntry> qe, qeTransactions;
 };
 
 #endif
