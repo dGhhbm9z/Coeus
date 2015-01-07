@@ -247,7 +247,7 @@ CoeusListRowComponent * SuppliersTableListBoxModel::refreshComponentForRow(int r
         newComp->addChangeListener(this);
         newComp->setRow(rowNumber);
         
-        // TODO
+        // TODO substitute checks for detailed view (will not work for varying size)
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == SuppliersRowComponent::maxRowSize : false;
         newComp->updateFromQueryForRow(qe, rowNumber, dView, editedRows.contains(rowNumber));
         newComp->shouldShowControls(isRowSelected);

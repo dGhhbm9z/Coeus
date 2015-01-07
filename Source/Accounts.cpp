@@ -102,7 +102,7 @@ public:
     void insertRow() {
         
     }
-    //TODO
+    //TODO : implement correct version
     void updateFromTransactionsQueryForRow(QueryEntry *qe, int row, bool dView, bool edit)
     {
         setDetailedView(dView);
@@ -120,7 +120,7 @@ public:
             }
         }
     }
-    //TODO
+    //TODO : implement correct version
     void updateFromTransactionsMapForRow(QueryEntry *qe, std::map<String, String> rowUpdates, int row, bool dView, bool edit)
     {
         setDetailedView(dView);
@@ -161,7 +161,7 @@ AccountsTableListBoxModel::AccountsTableListBoxModel(CacheSystemClient *ccc_)
     update();
     rowSizes.calloc(1); //hack +1
 
-/* TODO
+/* TODO : correct naming and add labels
     ScopedPointer<Label> accountLabel;
     ScopedPointer<Label> accountNameLabel;
     ScopedPointer<Label> creditLabel;
@@ -169,7 +169,7 @@ AccountsTableListBoxModel::AccountsTableListBoxModel(CacheSystemClient *ccc_)
  */
  
     fieldNames.add("RecordDate");
-// TODO
+// TODO : wtf is that?
 //    fieldNames.add("anrticlenumbertext");
     
     fieldNames.add("Invoice");

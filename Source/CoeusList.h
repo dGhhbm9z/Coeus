@@ -120,7 +120,7 @@ public:
     void setEdit(bool ed) { edit = ed; }
     bool isEditable() const { return edit; }
     
-    // TODO
+    // TODO : implement for insert/add
     // getValueForFieldName
 
     void buttonClicked (Button *btn) override;
