@@ -2876,7 +2876,7 @@
 					../../JuceLibraryCode,
 					../../JuceLibraryCode/modules,
 					/opt/local/include/mariadb/mysql/,
-					/opt/local/include/mysql55/,
+					/opt/local/include/mysql55/mysql/,
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = Info.plist;
@@ -2917,7 +2917,7 @@
 					../../JuceLibraryCode,
 					../../JuceLibraryCode/modules,
 					/opt/local/include/mariadb/mysql/,
-					/opt/local/include/mysql55/,
+					/opt/local/include/mysql55/mysql/,
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = Info.plist;
