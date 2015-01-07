@@ -102,7 +102,7 @@ public:
     void insertRow() {
         
     }
-    
+    //TODO
     void updateFromTransactionsQueryForRow(QueryEntry *qe, int row, bool dView, bool edit)
     {
         setDetailedView(dView);
@@ -120,7 +120,7 @@ public:
             }
         }
     }
-    
+    //TODO
     void updateFromTransactionsMapForRow(QueryEntry *qe, std::map<String, String> rowUpdates, int row, bool dView, bool edit)
     {
         setDetailedView(dView);
@@ -141,6 +141,7 @@ public:
             }
         }
     }
+    //TODO: add function to addRemove transactions
     
 private:
     // summary
@@ -272,6 +273,9 @@ void AccountsTableListBoxModel::setQueryEntryForTransactions(QueryEntry *qe_)
         for(int i=0; i<qe->num_rows; i++) {
             rowSizes[i] = getMinRowSize();
         }
+        
+        //TODO : add components for each row | consider using "pages"
+        
         update();
         repaint();
     }
