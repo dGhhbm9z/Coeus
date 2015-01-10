@@ -141,6 +141,7 @@ public:
             }
         }
     }
+    
     //TODO: add function to addRemove transactions
     
 private:
@@ -169,7 +170,7 @@ AccountsTableListBoxModel::AccountsTableListBoxModel(CacheSystemClient *ccc_)
  */
  
     fieldNames.add("RecordDate");
-// TODO : wtf is that?
+// TODO : remove that from everywhere
 //    fieldNames.add("anrticlenumbertext");
     
     fieldNames.add("Invoice");
@@ -274,7 +275,20 @@ void AccountsTableListBoxModel::setQueryEntryForTransactions(QueryEntry *qe_)
             rowSizes[i] = getMinRowSize();
         }
         
-        //TODO : add components for each row | consider using "pages"
+        //TODOODOT : add components for each row | consider using "pages"
+        numTransactions.clear();
+        
+        const auto kf = getKeyField();
+        for (int i=0; i<qeTransactions->num_rows; i++) {
+            const auto val = qeTransactions->getFieldFromRow(i, kf);
+            std::unordered_map<StringArray, int>::iterator transIt = numTransactions.find(val);
+            if (transIt == numTransactions.end()) {
+                numTransactions[val] = 1;
+            }
+            else {
+                numTransactions[val]++;
+            }
+        }
         
         update();
         repaint();

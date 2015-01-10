@@ -220,6 +220,7 @@ public:
     CacheSystemClient *ccc;
     WeakReference<QueryEntry> qe;
     Array<StringArray> savedpks;
+    std::unordered_map<StringArray, int> numTransactions;
     
 protected:
     std::unordered_map<StringArray, std::map<String, String>> rowsToUpdate;
