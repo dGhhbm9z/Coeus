@@ -304,7 +304,7 @@ void SuppliersComponent::resized()
 {
     CustomTabContent::resized();
 	Rectangle<int> compBounds = getComponentArea();
-	compBounds.setY(compBounds.getY());
+	compBounds.setHeight(compBounds.getHeight() - bottomDemoImage.getHeight());
 	compBounds.setWidth(compBounds.getWidth()*0.8);
 	suppliersTableListBoxModel->setBounds(compBounds);
 }
