@@ -184,6 +184,13 @@ CustomTabContent::CustomTabContent() : addComp(nullptr) {
     tableHeader4->setFont(Font(20, Font::bold));
     
     addChildComponent(addOverlayComp = new OverlayComp());
+
+	rightDemoImage = ImageCache::getFromFile(RESOURCE_FILE("./Resources/demoRightSide.png"));
+	bottomDemoImage = ImageCache::getFromFile(RESOURCE_FILE("./Resources/demoBottomSide.png"));
+	addAndMakeVisible(rightDemo = new ImageComponent());
+	addAndMakeVisible(bottomDemo = new ImageComponent());
+	rightDemo->setImage(rightDemoImage);
+	bottomDemo->setImage(bottomDemoImage);
 }
 
 CustomTabContent::~CustomTabContent()
@@ -203,6 +210,7 @@ void CustomTabContent::resized()
 	search->setBoundsRelative(0.5f - 0.125f - 120.0f / (float)getParentWidth(), 0.01, 0.25f, 0.05f);
     
     Rectangle<int> compBounds = getComponentArea();
+
     const int starty = compBounds.getY()-40;
     const int lm = 4;
     const int tm = 2;
@@ -226,6 +234,11 @@ void CustomTabContent::resized()
 	searchFilter->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f + sbwp + 0.01f - 120.0f / (float)getParentWidth(), 0.01, 0.1f, 0.05f);
     
     addOverlayComp->setBounds(compBounds);
+
+	// DEMO STUFF
+	rightDemo->setBounds(compBounds.getWidth()*0.8, compBounds.getY(), rightDemoImage.getWidth(), rightDemoImage.getHeight());
+	bottomDemo->setBounds(50, getHeight() - bottomDemoImage.getHeight(), getWidth()*0.8-50, bottomDemoImage.getHeight());
+	// END DEMO STUFF
 
     if(addComp == nullptr) {
         addComp = this->getAddComponent();

@@ -155,6 +155,10 @@ protected:
     ScopedPointer<OverlayComp> addOverlayComp;
     ScopedPointer<CoeusListRowComponent> addComp;
 
+	ScopedPointer<ImageComponent> rightDemo;
+	ScopedPointer<ImageComponent> bottomDemo;
+	Image rightDemoImage, bottomDemoImage;
+
 	Image imageNormal;
 	Image imageMouseOver;
 	Image imageMouseDown;
