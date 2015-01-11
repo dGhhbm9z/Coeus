@@ -46,7 +46,7 @@ class QueryEntry{
 public:
     enum QueryTable { Events=0, Accounts, Companies, Customers, Suppliers, QueryTableSize};
     
-	QueryEntry() : result(nullptr), num_fields(0), size(0) {
+	QueryEntry() : result(nullptr), num_fields(0), size(0), trials(0) {
 	}
 
 	virtual ~QueryEntry() {
@@ -92,6 +92,7 @@ public:
 	unsigned long size;
 	unsigned long usedSpace;
     QueryTable tableType;
+	int trials;
 
 private:
     WeakReference<QueryEntry>::Master masterReference;

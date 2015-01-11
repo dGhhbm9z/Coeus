@@ -157,6 +157,10 @@ void CacheSystem::serveNextQuery()
 	if (mysql_real_query(con, query->request.toUTF8().getAddress(), query->request.getNumBytesAsUTF8()) != 0) {
 		// TODO: failure
         // try 3-4 times then report failure
+		query->trials++;
+		if (query->trials > 3) {
+			queries.removeAllInstancesOf(query);
+		}
 		std::cout << "query failed" << std::endl;
         nextQueryToServeIndex = nextQuery;
 		mysql_close(con);

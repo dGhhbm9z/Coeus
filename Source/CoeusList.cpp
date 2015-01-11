@@ -704,19 +704,17 @@ bool CoeusList::insertIntoDatabaseTable(const String &table, CacheSystemClient *
 {
 	// TODO: make this insert
 	String queryStr = "INSERT INTO " + table + " ( ";
-	const int end = contentComp->getNumChildComponents() - 1;
+	const int end = contentComp->getNumChildComponents();
 
-	queryStr += " VAT, ";
+	queryStr += " CompanyVAT, ";
 	for (int i = 0; i<end; i++) {
 		TextEditor *te = dynamic_cast<TextEditor*>(contentComp->getChildComponent(i));
 		if (te && !te->getName().startsWith("#")) {
 			queryStr += " " + te->getName() + ", ";
 		}
 	}
-	TextEditor *te = dynamic_cast<TextEditor*>(contentComp->getChildComponent(end));
-	if (te && !te->getName().startsWith("#")) {
-		queryStr += " " + te->getName();
-	}
+	queryStr = queryStr.substring(0, queryStr.length() - 2);
+
 	queryStr += ") VALUES ( ";
 	queryStr += " '193782465', "; // TODO : replace with var
 	for (int i = 0; i<end; i++) {
@@ -725,10 +723,8 @@ bool CoeusList::insertIntoDatabaseTable(const String &table, CacheSystemClient *
 			queryStr += " '" + te->getText() + "', ";
 		}
 	}
-	te = dynamic_cast<TextEditor*>(contentComp->getChildComponent(end));
-	if (te && !te->getName().startsWith("#")) {
-		queryStr += " '" + te->getText() + "' )";
-	}
+	queryStr = queryStr.substring(0, queryStr.length() - 2);
+	queryStr += " )";
 
 	CacheSystem *cs = CacheSystem::getInstance();
 	cs->getResultsFor(queryStr, QueryEntry::Accounts, ccc);
