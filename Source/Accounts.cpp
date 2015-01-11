@@ -361,9 +361,10 @@ AccountsComponent::~AccountsComponent()
 void AccountsComponent::resized()
 {
     CustomTabContent::resized();
-    Rectangle<int> compBounds = getComponentArea();
-    compBounds.setY(compBounds.getY());
-    AccountsTableListBoxModel->setBounds(compBounds);
+	Rectangle<int> compBounds = getComponentArea();
+	compBounds.setY(compBounds.getY());
+	compBounds.setWidth(compBounds.getWidth()*0.8);
+	AccountsTableListBoxModel->setBounds(compBounds);
 }
 
 void AccountsComponent::receivedResults(QueryEntry *qe_)

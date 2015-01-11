@@ -303,7 +303,10 @@ SuppliersComponent::~SuppliersComponent()
 void SuppliersComponent::resized()
 {
     CustomTabContent::resized();
-    suppliersTableListBoxModel->setBounds(getComponentArea());
+	Rectangle<int> compBounds = getComponentArea();
+	compBounds.setY(compBounds.getY());
+	compBounds.setWidth(compBounds.getWidth()*0.8);
+	suppliersTableListBoxModel->setBounds(compBounds);
 }
 
 void SuppliersComponent::receivedResults(QueryEntry *qe_)

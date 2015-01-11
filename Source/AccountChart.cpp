@@ -216,7 +216,9 @@ AccountChartComponent::~AccountChartComponent()
 void AccountChartComponent::resized()
 {
     CustomTabContent::resized();
-    Rectangle<int> compBounds = getComponentArea();
+	Rectangle<int> compBounds = getComponentArea();
+	compBounds.setY(compBounds.getY());
+	compBounds.setWidth(compBounds.getWidth()*0.8);
     accountChartTableListBoxModel->setBounds(compBounds);
     
     const int starty = compBounds.getY()-40;

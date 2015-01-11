@@ -289,7 +289,10 @@ CompaniesComponent::~CompaniesComponent()
 void CompaniesComponent::resized()
 {
 	CustomTabContent::resized();
-	companiesTableListBoxModel->setBounds(getComponentArea());
+	Rectangle<int> compBounds = getComponentArea();
+	compBounds.setY(compBounds.getY());
+	compBounds.setWidth(compBounds.getWidth()*0.8);
+	companiesTableListBoxModel->setBounds(compBounds);
 }
 
 void CompaniesComponent::receivedResults(QueryEntry *qe_)

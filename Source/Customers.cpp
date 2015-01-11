@@ -321,6 +321,7 @@ void CustomersComponent::resized()
 	CustomTabContent::resized();
     Rectangle<int> compBounds = getComponentArea();
     compBounds.setY(compBounds.getY());
+	compBounds.setWidth(compBounds.getWidth()*0.8);
     customersTableListBoxModel->setBounds(compBounds);
 }
 
