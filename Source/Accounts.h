@@ -17,11 +17,14 @@ public:
     int getMinRowSize() override;
     int getMaxRowSize() override;
     Array<int> getKeyField() override;
-    
+	Array<int> getKeyFieldForTransaction();
+
     void paintRowBackground(Graphics &g, int rowNumber, int x, int y, int width, int height, bool rowIsSelected) override;
     CoeusListRowComponent * refreshComponentForRow(int rowNumber, bool isRowSelected, CoeusListRowComponent *existingComponentToUpdate) override;
     
     void setQueryEntryForTransactions(QueryEntry *qe_);
+
+	void textEditorTextChanged(TextEditor &te) override;
     
 private:
     WeakReference<QueryEntry> qeTransactions;

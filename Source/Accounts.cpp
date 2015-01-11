@@ -28,7 +28,17 @@ public:
         RecordTypeTE->addListener(&owner);
         ReasoningTE->addListener(&owner);
         
-        // summary labels
+		const int maxRows = 6;
+		const int numFields = 4;
+		const int numComponents = maxRows*numFields;
+		for (int i = 0; i < numComponents; i++) {
+			auto comp = new CoeusListTextEditor("#" + String(i));
+			comp->addListener(&owner);
+			transactions.add(comp);
+			addAndMakeVisible(comp);
+		}
+		
+		// summary labels
         addAndMakeVisible(Invoice = new CoeusListLabel("Invoice", "Invoice"));
         addAndMakeVisible(RecordDate = new CoeusListLabel("RecordDate", "Record Date"));
         addAndMakeVisible(RecordType = new CoeusListLabel("RecordType", "Record Type"));
@@ -36,13 +46,10 @@ public:
         
         // detailed view
         addAndMakeVisible(CommentsTE = new CoeusListTextEditor("Comments"));
-        addAndMakeVisible(anrticlenumbertextTE = new CoeusListTextEditor("anrticlenumbertextTE"));
         CommentsTE->addListener(&owner);
-        anrticlenumbertextTE->addListener(&owner);
         
         // detailed view labels
         addAndMakeVisible(Comments = new CoeusListLabel("Comments", "Comments"));
-        addAndMakeVisible(anrticlenumbertext = new CoeusListLabel("anrticlenumbertext", "anrticlenumbertext"));
         
         resized();
     }
@@ -87,12 +94,18 @@ public:
         // detailed view
         ReasoningTE->setBounds(lm+3*(teWS+pad), tm+teHS, teWS, teHS);
         CommentsTE->setBounds(lm+3*(teWS+pad), tm+2*teHS, teWS, teHS);
-        anrticlenumbertextTE->setBounds(lm+3*(teWS+pad), tm+3*teHS, teWS, teHS);
         
         // detailed view labels
         Reasoning->setBounds(lm+2*(teWS+pad), tm+teHS, teWS, teHS);
         Comments->setBounds(lm+2*(teWS+pad), tm+2*teHS, teWS, teHS);
-        anrticlenumbertext->setBounds(lm+2*(teWS+pad), tm+3*teHS, teWS, teHS);
+
+		const int numFields = 4;
+		const int startRow = 6;
+		for (int i = 0; i < transactions.size(); i++) {
+			const int x = i % numFields;
+			const int y = startRow + i / numFields;
+			transactions[i]->setBounds(lm + x * (teWS + pad), tm + y * teHS, teWS, teHS);
+		}
     }
     
     void updateRow() {
@@ -102,8 +115,8 @@ public:
     void insertRow() {
         
     }
-    //TODO : implement correct version
-    void updateFromTransactionsQueryForRow(QueryEntry *qe, int row, bool dView, bool edit)
+    //TODOODOT : implement correct version
+    void updateFromTransactionsQueryForRow(QueryEntry *qe, Array<int> numTransactions, int row, bool dView, bool edit)
     {
         setDetailedView(dView);
         setEdit(edit);
@@ -111,12 +124,23 @@ public:
         this->row = row;
         if(qe) {
             // summary
+			const int numFields = 4;
             for (int i=0; i<getNumChildComponents(); i++) {
                 TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
-                if (te) {
-                    te->setText(qe->getFieldFromRow(row, owner.fieldNames.indexOf(te->getName())));
-                    te->setEnabled(edit);
-                }
+				if (te && te->getName().startsWith("#")) {
+					const int ord = te->getName().substring(1).getIntValue();
+					const int row = ord/numFields;
+					const int field = ord%numFields;
+
+					if (row < numTransactions.size()) {
+						te->setText(qe->getFieldFromRow(row, field));
+						te->setEnabled(edit);
+						te->setVisible(true);
+					}
+					else {
+						te->setVisible(false);
+					}
+				}
             }
         }
     }
@@ -142,12 +166,20 @@ public:
         }
     }
     
-    //TODO: add function to addRemove transactions
+	void setNumTransactions(int num) {
+		const int numFields = 4;
+		for (int i = 0; i < num*numFields && transactions.size(); i++) {
+			transactions[i]->setVisible(true);
+		}
+		for (int i = num*numFields; i < transactions.size(); i++) {
+			transactions[i]->setVisible(false);
+		}
+	}
     
 private:
     // summary
-    ScopedPointer<TextEditor> RecordDateTE, anrticlenumbertextTE, InvoiceTE, CommentsTE, RecordTypeTE, ReasoningTE;
-    ScopedPointer<Label> RecordDate, anrticlenumbertext, Invoice, Comments, RecordType, Reasoning;
+    ScopedPointer<TextEditor> RecordDateTE, InvoiceTE, CommentsTE, RecordTypeTE, ReasoningTE;
+    ScopedPointer<Label> RecordDate, Invoice, Comments, RecordType, Reasoning;
     
     // detailed
     OwnedArray<TextEditor> transactions;
@@ -162,17 +194,7 @@ AccountsTableListBoxModel::AccountsTableListBoxModel(CacheSystemClient *ccc_)
     update();
     rowSizes.calloc(1); //hack +1
 
-/* TODO : correct naming and add labels
-    ScopedPointer<Label> accountLabel;
-    ScopedPointer<Label> accountNameLabel;
-    ScopedPointer<Label> creditLabel;
-    ScopedPointer<Label> debtLabel;
- */
- 
     fieldNames.add("RecordDate");
-// TODO : remove that from everywhere
-//    fieldNames.add("anrticlenumbertext");
-    
     fieldNames.add("Invoice");
     fieldNames.add("Comments");
     fieldNames.add("RecordType");
@@ -187,6 +209,14 @@ Array<int> AccountsTableListBoxModel::getKeyField()
     kf.add(0);
     kf.add(1);
     return kf;
+}
+
+Array<int> AccountsTableListBoxModel::getKeyFieldForTransaction()
+{
+	Array<int> kf;
+	kf.add(0);
+	kf.add(2);
+	return kf;
 }
 
 int AccountsTableListBoxModel::getNumRows()
@@ -231,13 +261,14 @@ CoeusListRowComponent * AccountsTableListBoxModel::refreshComponentForRow(int ro
         
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountsRowComponent::maxRowSize : false;
         const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
+		const auto keysT = (qeTransactions != nullptr) ? qeTransactions->getFieldFromRow(rowNumber, getKeyFieldForTransaction()) : StringArray();
         if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
             newComp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
-            newComp->updateFromTransactionsMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
+			newComp->updateFromTransactionsMapForRow(qe, rowsToUpdate[keysT], rowNumber, dView, editedRows.contains(rowNumber));
         }
         else {
             newComp->updateFromQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
-            newComp->updateFromTransactionsQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
+			newComp->updateFromTransactionsQueryForRow(qe, numTransactions[keysT], rowNumber, dView, editedRows.contains(rowNumber));
         }
         newComp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
         
@@ -250,13 +281,14 @@ CoeusListRowComponent * AccountsTableListBoxModel::refreshComponentForRow(int ro
         if(cmp) {
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == AccountsRowComponent::maxRowSize : false;
             const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
+			const auto keysT = (qeTransactions != nullptr) ? qeTransactions->getFieldFromRow(rowNumber, getKeyFieldForTransaction()) : StringArray();
             if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
                 cmp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
-                cmp->updateFromTransactionsMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
+				cmp->updateFromTransactionsMapForRow(qe, rowsToUpdate[keysT], rowNumber, dView, editedRows.contains(rowNumber));
             }
             else {
                 cmp->updateFromQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
-                cmp->updateFromTransactionsQueryForRow(qeTransactions, rowNumber,  dView, editedRows.contains(rowNumber));
+				cmp->updateFromTransactionsQueryForRow(qeTransactions, numTransactions[keysT], rowNumber, dView, editedRows.contains(rowNumber));
             }
             cmp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
         }
@@ -275,19 +307,12 @@ void AccountsTableListBoxModel::setQueryEntryForTransactions(QueryEntry *qe_)
             rowSizes[i] = getMinRowSize();
         }
         
-        //TODOODOT : add components for each row | consider using "pages"
         numTransactions.clear();
         
-        const auto kf = getKeyField();
+		const auto kf = getKeyFieldForTransaction();
         for (int i=0; i<qeTransactions->num_rows; i++) {
             const auto val = qeTransactions->getFieldFromRow(i, kf);
-            std::unordered_map<StringArray, int>::iterator transIt = numTransactions.find(val);
-            if (transIt == numTransactions.end()) {
-                numTransactions[val] = 1;
-            }
-            else {
-                numTransactions[val]++;
-            }
+			numTransactions[val].addIfNotAlreadyThere(i);
         }
         
         update();
@@ -303,6 +328,12 @@ int AccountsTableListBoxModel::getMinRowSize()
 int AccountsTableListBoxModel::getMaxRowSize()
 {
     return AccountsRowComponent::maxRowSize;
+}
+
+// TODO :: populate a var to contain changes
+void AccountsTableListBoxModel::textEditorTextChanged(TextEditor &te)
+{
+	CoeusList::textEditorTextChanged(te);
 }
 
 //================================================================

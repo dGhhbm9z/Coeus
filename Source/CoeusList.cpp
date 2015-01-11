@@ -242,7 +242,7 @@ void CoeusListRowComponent::updateFromQueryForRow(QueryEntry *qe, int row, bool 
         // summary
         for (int i=0; i<getNumChildComponents(); i++) {
             TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
-            if (te) {
+			if (te && !te->getName().startsWith("#")) {
                 te->setText(qe->getFieldFromRow(row, owner.fieldNames.indexOf(te->getName())));
                 te->setEnabled(edit);
             }
@@ -258,7 +258,7 @@ void CoeusListRowComponent::updateFromMapForRow(QueryEntry *qe, std::map<String,
 
     for (int i=0; i<getNumChildComponents(); i++) {
         TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
-        if (te) {
+		if (te && !te->getName().startsWith("#")) {
             const StringArray key = (qe != nullptr) ? qe->getFieldFromRow(row, owner.getKeyField()) : StringArray();
             if (key.size() && (rowUpdates.find(te->getName()) != rowUpdates.end())) {
                 te->setText(rowUpdates[te->getName()]);
@@ -615,7 +615,8 @@ void CoeusList::textEditorTextChanged (TextEditor &te)
     const String text = te.getText();
     const String fname = te.getName();
     const String dbText = qe->getFieldFromRow(rcomp->getRow(), fieldNames.indexOf(fname));
-    if (rcomp && (dbText.compare(text) != 0)) {
+	// TODO: events hack
+	if (rcomp && (dbText.compare(text) != 0) && !fname.startsWith("#")) {
         const StringArray key = qe->getFieldFromRow(rcomp->getRow(), getKeyField());
         rowsToUpdate[key][fname] = text;
     }
