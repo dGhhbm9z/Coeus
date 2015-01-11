@@ -23,17 +23,21 @@ public:
         addAndMakeVisible(RecordDateTE = new CoeusListTextEditor("RecordDate"));
         addAndMakeVisible(RecordTypeTE = new CoeusListTextEditor("RecordType"));
         addAndMakeVisible(ReasoningTE = new CoeusListTextEditor("Reasoning"));
-        InvoiceTE->addListener(&owner);
-        RecordDateTE->addListener(&owner);
-        RecordTypeTE->addListener(&owner);
-        ReasoningTE->addListener(&owner);
+		if (!addComp) {
+			InvoiceTE->addListener(&owner);
+			RecordDateTE->addListener(&owner);
+			RecordTypeTE->addListener(&owner);
+			ReasoningTE->addListener(&owner);
+		}
         
 		const int maxRows = 6;
 		const int numFields = 4;
 		const int numComponents = maxRows*numFields;
 		for (int i = 0; i < numComponents; i++) {
 			auto comp = new CoeusListTextEditor("#" + String(i));
-			comp->addListener(&owner);
+			if (!addComp) {
+				comp->addListener(&owner);
+			}
 			transactions.add(comp);
 			addAndMakeVisible(comp);
 		}
@@ -46,7 +50,9 @@ public:
         
         // detailed view
         addAndMakeVisible(CommentsTE = new CoeusListTextEditor("Comments"));
-        CommentsTE->addListener(&owner);
+		if (!addComp) {
+			CommentsTE->addListener(&owner);
+		}
         
         // detailed view labels
         addAndMakeVisible(Comments = new CoeusListLabel("Comments", "Comments"));

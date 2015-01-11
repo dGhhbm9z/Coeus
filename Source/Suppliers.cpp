@@ -23,10 +23,12 @@ public:
         addAndMakeVisible(NameTE = new CoeusListTextEditor("Name"));
         addAndMakeVisible(FathersNameTE = new CoeusListTextEditor("FathersName"));
         addAndMakeVisible(PhonenumberTE = new CoeusListTextEditor("Phonenumber"));
-        SupplierCodeTE->addListener(&owner);
-        NameTE->addListener(&owner);
-        FathersNameTE->addListener(&owner);
-        PhonenumberTE->addListener(&owner);
+		if (!addComp) {
+			SupplierCodeTE->addListener(&owner);
+			NameTE->addListener(&owner);
+			FathersNameTE->addListener(&owner);
+			PhonenumberTE->addListener(&owner);
+		}
 
         // summary labels
         addAndMakeVisible(SupplierCode = new CoeusListLabel("Supplier Code", "Supplier Code"));
@@ -47,19 +49,20 @@ public:
         addAndMakeVisible(SupplierTransactionsTE = new CoeusListTextEditor("SupplierTransactions"));
         addAndMakeVisible(PublicRevenueServiceTE = new CoeusListTextEditor("PublicRevenueService"));
         addAndMakeVisible(CommercialActivityTE = new CoeusListTextEditor("CommercialActivity"));
-        TrademarkTE->addListener(&owner);
-        SupplierVATTE->addListener(&owner);
-        DateOfBirthTE->addListener(&owner);
-        AddressTE->addListener(&owner);
-        CityTE->addListener(&owner);
-        CountryTE->addListener(&owner);
-        FaxnumberTE->addListener(&owner);
-        EmailTE->addListener(&owner);
-        IDcardNumberTE->addListener(&owner);
-        SupplierTransactionsTE->addListener(&owner);
-        PublicRevenueServiceTE->addListener(&owner);
-        CommercialActivityTE->addListener(&owner);
-
+		if (!addComp) {
+			TrademarkTE->addListener(&owner);
+			SupplierVATTE->addListener(&owner);
+			DateOfBirthTE->addListener(&owner);
+			AddressTE->addListener(&owner);
+			CityTE->addListener(&owner);
+			CountryTE->addListener(&owner);
+			FaxnumberTE->addListener(&owner);
+			EmailTE->addListener(&owner);
+			IDcardNumberTE->addListener(&owner);
+			SupplierTransactionsTE->addListener(&owner);
+			PublicRevenueServiceTE->addListener(&owner);
+			CommercialActivityTE->addListener(&owner);
+		}
         
         // detailed view labels
         addAndMakeVisible(Trademark = new CoeusListLabel("Trademark", "Trademark"));

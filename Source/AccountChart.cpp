@@ -24,11 +24,13 @@ public:
         addAndMakeVisible(AccountTypeTE = new CoeusListTextEditor("AccountType"));
         addAndMakeVisible(XreosPistTE = new CoeusListTextEditor("XreosPist"));
 
-        CodeTE->addListener(&owner);
-        NameTE->addListener(&owner);
-        AccountTypeTE->addListener(&owner);
-        XreosPistTE->addListener(&owner);
-        
+		if (!addComp) {
+			CodeTE->addListener(&owner);
+			NameTE->addListener(&owner);
+			AccountTypeTE->addListener(&owner);
+			XreosPistTE->addListener(&owner);
+		}
+
         resized();
     }
     

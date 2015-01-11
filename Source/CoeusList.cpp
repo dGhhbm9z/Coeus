@@ -706,6 +706,7 @@ bool CoeusList::insertIntoDatabaseTable(const String &table, CacheSystemClient *
 	String queryStr = "INSERT INTO " + table + " ( ";
 	const int end = contentComp->getNumChildComponents() - 1;
 
+	queryStr += " VAT, ";
 	for (int i = 0; i<end; i++) {
 		TextEditor *te = dynamic_cast<TextEditor*>(contentComp->getChildComponent(i));
 		if (te && !te->getName().startsWith("#")) {
@@ -717,6 +718,7 @@ bool CoeusList::insertIntoDatabaseTable(const String &table, CacheSystemClient *
 		queryStr += " " + te->getName();
 	}
 	queryStr += ") VALUES ( ";
+	queryStr += " '193782465', "; // TODO : replace with var
 	for (int i = 0; i<end; i++) {
 		TextEditor *te = dynamic_cast<TextEditor*>(contentComp->getChildComponent(i));
 		if (te && !te->getName().startsWith("#")) {

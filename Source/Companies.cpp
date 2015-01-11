@@ -23,10 +23,12 @@ public:
         addAndMakeVisible(legalIncTE = new CoeusListTextEditor("LegalInc"));
         addAndMakeVisible(telephoneTE = new CoeusListTextEditor("Telephone"));
         addAndMakeVisible(activityTE = new CoeusListTextEditor("Activity"));
-        companyNameTE->addListener(&owner);
-        legalIncTE->addListener(&owner);
-        telephoneTE->addListener(&owner);
-        activityTE->addListener(&owner);
+		if (!addComp) {
+			companyNameTE->addListener(&owner);
+			legalIncTE->addListener(&owner);
+			telephoneTE->addListener(&owner);
+			activityTE->addListener(&owner);
+		}
         
         // summary labels
         addAndMakeVisible(companyName = new CoeusListLabel("Company Name", "Company Name"));
@@ -42,13 +44,15 @@ public:
         addAndMakeVisible(PersonInChargeTE = new CoeusListTextEditor("PersonInCharge"));
         addAndMakeVisible(StartDateTE = new CoeusListTextEditor("StartDate"));
         addAndMakeVisible(CommentsTE = new CoeusListTextEditor("Comments"));
-        VATTE->addListener(&owner);
-        IRSTE->addListener(&owner);
-        AddressTE->addListener(&owner);
-        AddressNumberTE->addListener(&owner);
-        PersonInChargeTE->addListener(&owner);
-        StartDateTE->addListener(&owner);
-        CommentsTE->addListener(&owner);
+		if (!addComp) {
+			VATTE->addListener(&owner);
+			IRSTE->addListener(&owner);
+			AddressTE->addListener(&owner);
+			AddressNumberTE->addListener(&owner);
+			PersonInChargeTE->addListener(&owner);
+			StartDateTE->addListener(&owner);
+			CommentsTE->addListener(&owner);
+		}
 
         // detailed view labels
         addAndMakeVisible(VAT = new CoeusListLabel("VAT", "VAT"));
