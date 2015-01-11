@@ -240,8 +240,6 @@ void CoeusListRowComponent::buttonClicked (Button *btn) {
 		}
 
 		//owner.updateDatabaseTableForEntry(owner.tableName, pkNames, pk, owner.ccc);
-
-		//owner.update();
 	}
 
 }
@@ -708,4 +706,36 @@ bool CoeusList::updateDatabaseTableForEntry(const String &table, const StringArr
     
     std::cout << queryStr << std::endl;
     return true;
+}
+
+bool CoeusList::insertIntoDatabaseTable(const String &table, const StringArray &pkName, const StringArray &pk, CacheSystemClient *ccc)
+{
+	// TODO: make this insert
+	std::map<String, String> columns = rowsToUpdate[pk];
+	String queryStr = "UPDATE " + table + " SET ";
+	const auto send = columns.end();
+	for (auto cit = columns.begin(); cit != send;) {
+		queryStr += cit->first + "=\"" + cit->second + "\"";
+		if (++cit != send) {
+			queryStr += ", ";
+		}
+	}
+	queryStr += " WHERE ";
+	const auto pkNend = pkName.end();
+	const auto pkend = pkName.end();
+	for (auto pkNit = pkName.begin(), pkit = pk.begin();
+		pkNit != pkNend && pkit != pkend;) {
+		queryStr += *pkNit + "=\"" + *pkit + "\" ";
+		if (++pkNit != pkNend && ++pkit != pkend) {
+			queryStr += " AND ";
+		}
+	}
+
+	CacheSystem *cs = CacheSystem::getInstance();
+	cs->getResultsFor(queryStr, QueryEntry::Accounts, ccc);
+
+	savedpks.add(pk);
+
+	std::cout << queryStr << std::endl;
+	return true;
 }

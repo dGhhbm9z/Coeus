@@ -211,6 +211,9 @@ public:
     bool updateDatabaseTable(const String &table, const StringArray &pkName, CacheSystemClient *ccc);
     bool updateDatabaseTableForEntry(const String &table, const StringArray &pkName, const StringArray &pk, CacheSystemClient *ccc);
 
+	// database inserts
+	bool insertIntoDatabaseTable(const String &table, const StringArray &pkName, const StringArray &pk, CacheSystemClient *ccc);
+
     bool getWantsHeader() const { return wantsHeader; }
     std::unordered_map<StringArray, std::map<String, String>> &getChanges() { return rowsToUpdate; }
     
