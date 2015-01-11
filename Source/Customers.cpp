@@ -13,7 +13,7 @@ public:
     const int teHS = getMinRowSize() - tm - bm;
     const int teWS = 250;
 
-    CustomersRowComponent(CoeusList &owner_) : CoeusListRowComponent(owner_) {
+	CustomersRowComponent(CoeusList &owner_, bool addComp_) : CoeusListRowComponent(owner_, addComp_) {
         detailedView = false;
         showControls = false;
 
@@ -247,7 +247,7 @@ CoeusListRowComponent * CustomersTableListBoxModel::refreshComponentForRow(int r
 {
     // create
     if (existingComponentToUpdate == nullptr) {
-        CustomersRowComponent *newComp = new CustomersRowComponent(*this);
+        CustomersRowComponent *newComp = new CustomersRowComponent(*this, false);
         newComp->addMouseListener(this, true);
         newComp->addChangeListener(this);
         newComp->setRow(rowNumber);
@@ -429,5 +429,5 @@ void CustomersComponent::changeListenerCallback(ChangeBroadcaster *source)
 
 CoeusListRowComponent * CustomersComponent::getAddComponent()
 {
-    return new CustomersRowComponent(*customersTableListBoxModel);
+    return new CustomersRowComponent(*customersTableListBoxModel, true);
 }

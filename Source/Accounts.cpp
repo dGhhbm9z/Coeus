@@ -13,7 +13,7 @@ public:
     const int teHS = getMinRowSize() - tm - bm;
     const int teWS = 250;
     
-    AccountsRowComponent(CoeusList &owner_) : CoeusListRowComponent(owner_) {
+	AccountsRowComponent(CoeusList &owner_, bool addComp_) : CoeusListRowComponent(owner_, addComp_) {
         detailedView = false;
         showControls = false;
         
@@ -254,7 +254,7 @@ CoeusListRowComponent * AccountsTableListBoxModel::refreshComponentForRow(int ro
 {
     // create
     if (existingComponentToUpdate == nullptr) {
-        AccountsRowComponent *newComp = new AccountsRowComponent(*this);
+        AccountsRowComponent *newComp = new AccountsRowComponent(*this, false);
         newComp->addMouseListener(this, true);
         newComp->addChangeListener(this);
         newComp->setRow(rowNumber);
@@ -487,5 +487,5 @@ void AccountsComponent::changeListenerCallback(ChangeBroadcaster *source)
 
 CoeusListRowComponent * AccountsComponent::getAddComponent()
 {
-    return new AccountsRowComponent(*AccountsTableListBoxModel);
+    return new AccountsRowComponent(*AccountsTableListBoxModel, true);
 }

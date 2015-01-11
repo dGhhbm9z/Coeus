@@ -104,7 +104,7 @@ class CoeusListRowComponent :   public Component,
                                 public ButtonListener
 {
 public:
-    CoeusListRowComponent(CoeusList &owner_);
+    CoeusListRowComponent(CoeusList &owner_, bool addComp_ = false);
     virtual int getCoeusListHeight() = 0;
     virtual void updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit);
     virtual void updateFromMapForRow(QueryEntry *qe, std::map<String, String>, int row, bool dView, bool edit);
@@ -136,7 +136,7 @@ protected:
     Image imageNormal, imageMouseOver, imageMouseDown;
     ScopedPointer<ImageButton> details, editButton, saveButton;
     
-    bool detailedView, edit, showControls;
+	bool detailedView, edit, showControls, addComp;
     int row;
 
     CoeusList &owner;

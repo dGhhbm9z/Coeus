@@ -13,7 +13,7 @@ public:
     const int teHS = getMinRowSize() - tm - bm;
     const int teWS = 250;
     
-    AccountChartRowComponent(CoeusList &owner_) : CoeusListRowComponent(owner_) {
+    AccountChartRowComponent(CoeusList &owner_, bool addComp_) : CoeusListRowComponent(owner_, addComp_) {
         detailedView = false;
         showControls = false;
         
@@ -144,7 +144,7 @@ CoeusListRowComponent * AccountChartTableListBoxModel::refreshComponentForRow(in
 {
     // create
     if (existingComponentToUpdate == nullptr) {
-        AccountChartRowComponent *newComp = new AccountChartRowComponent(*this);
+        AccountChartRowComponent *newComp = new AccountChartRowComponent(*this, false);
         newComp->addMouseListener(this, true);
         newComp->addChangeListener(this);
         newComp->setRow(rowNumber);
@@ -310,5 +310,5 @@ void AccountChartComponent::changeListenerCallback(ChangeBroadcaster *source)
 
 CoeusListRowComponent * AccountChartComponent::getAddComponent()
 {
-    return new AccountChartRowComponent(*accountChartTableListBoxModel);
+    return new AccountChartRowComponent(*accountChartTableListBoxModel, true);
 }

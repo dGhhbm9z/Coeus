@@ -114,7 +114,7 @@ int CoeusHeap::getSum() const
 
 //===============================================================================
 
-CoeusListRowComponent::CoeusListRowComponent(CoeusList &owner_) : detailedView(false), owner(owner_)
+CoeusListRowComponent::CoeusListRowComponent(CoeusList &owner_, bool addComp_) : detailedView(false), addComp(addComp_), owner(owner_)
 {
     // control
     details = new ImageButton();
@@ -190,8 +190,8 @@ void CoeusListRowComponent::setDetailedView(bool s, bool force) {
 
 void CoeusListRowComponent::shouldShowControls(bool show) {
     showControls = show;
-    details->setVisible(show);
-    editButton->setVisible(show);
+    details->setVisible(show && !addComp);
+	editButton->setVisible(show && !addComp);
     saveButton->setVisible(show);
     setDetailedView(detailedView, true);
 }
@@ -217,7 +217,7 @@ void CoeusListRowComponent::buttonClicked (Button *btn) {
         }
         owner.updateComponents();
     }
-    else if (btn == saveButton) {
+    else if (btn == saveButton && !addComp) {
         StringArray pkNames;
         StringArray pk;
         Array<int> ki = owner.getKeyField();
@@ -230,6 +230,20 @@ void CoeusListRowComponent::buttonClicked (Button *btn) {
         
         owner.update();
     }
+	else if (btn == saveButton && addComp) {
+		StringArray pkNames;
+		StringArray pk;
+		Array<int> ki = owner.getKeyField();
+		for (int i = 0; i<ki.size(); i++) {
+			//pkNames.add(owner.fieldNames[ki[i]]);
+			//pk.add(owner.qe->getFieldFromRow(row, ki[i]));
+		}
+
+		//owner.updateDatabaseTableForEntry(owner.tableName, pkNames, pk, owner.ccc);
+
+		//owner.update();
+	}
+
 }
 
 void CoeusListRowComponent::updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit)

@@ -233,7 +233,7 @@ void CustomTabContent::resized()
 
 	searchFilter->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f + sbwp + 0.01f - 120.0f / (float)getParentWidth(), 0.01, 0.1f, 0.05f);
     
-    addOverlayComp->setBounds(compBounds);
+	addOverlayComp->setBounds(compBounds.getX(), compBounds.getY(), compBounds.getWidth()*0.8, compBounds.getHeight() - bottomDemoImage.getHeight());
 
 	// DEMO STUFF
 	rightDemo->setBounds(compBounds.getWidth()*0.8, compBounds.getY(), rightDemoImage.getWidth(), rightDemoImage.getHeight());
@@ -244,8 +244,9 @@ void CustomTabContent::resized()
         addComp = this->getAddComponent();
         if (addComp) {
             addOverlayComp->addAndMakeVisible(addComp);
-            addComp->setBounds(compBounds);
+            addComp->setBounds(0, 0, addOverlayComp->getWidth(), addOverlayComp->getHeight());
             addComp->setDetailedView(true, true);
+			addComp->shouldShowControls(true);
         }
     }
 }
