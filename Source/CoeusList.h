@@ -212,11 +212,11 @@ public:
     bool updateDatabaseTableForEntry(const String &table, const StringArray &pkName, const StringArray &pk, CacheSystemClient *ccc);
 
 	// database inserts
-	bool insertIntoDatabaseTable(const String &table, const StringArray &pkName, const StringArray &pk, CacheSystemClient *ccc);
+	bool insertIntoDatabaseTable(const String &table, CacheSystemClient *ccc, CoeusListRowComponent *contentComp);
 
     bool getWantsHeader() const { return wantsHeader; }
     std::unordered_map<StringArray, std::map<String, String>> &getChanges() { return rowsToUpdate; }
-    
+
     String tableName;
     StringArray fieldNames;
     Array<int> editedRows;

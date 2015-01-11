@@ -231,15 +231,7 @@ void CoeusListRowComponent::buttonClicked (Button *btn) {
         owner.update();
     }
 	else if (btn == saveButton && addComp) {
-		StringArray pkNames;
-		StringArray pk;
-		Array<int> ki = owner.getKeyField();
-		for (int i = 0; i<ki.size(); i++) {
-			//pkNames.add(owner.fieldNames[ki[i]]);
-			//pk.add(owner.qe->getFieldFromRow(row, ki[i]));
-		}
-
-		//owner.updateDatabaseTableForEntry(owner.tableName, pkNames, pk, owner.ccc);
+		owner.insertIntoDatabaseTable(owner.tableName, owner.ccc, this);
 	}
 
 }
@@ -708,33 +700,36 @@ bool CoeusList::updateDatabaseTableForEntry(const String &table, const StringArr
     return true;
 }
 
-bool CoeusList::insertIntoDatabaseTable(const String &table, const StringArray &pkName, const StringArray &pk, CacheSystemClient *ccc)
+bool CoeusList::insertIntoDatabaseTable(const String &table, CacheSystemClient *ccc, CoeusListRowComponent *contentComp)
 {
 	// TODO: make this insert
-	std::map<String, String> columns = rowsToUpdate[pk];
-	String queryStr = "UPDATE " + table + " SET ";
-	const auto send = columns.end();
-	for (auto cit = columns.begin(); cit != send;) {
-		queryStr += cit->first + "=\"" + cit->second + "\"";
-		if (++cit != send) {
-			queryStr += ", ";
+	String queryStr = "INSERT INTO " + table + " ( ";
+	const int end = contentComp->getNumChildComponents() - 1;
+
+	for (int i = 0; i<end; i++) {
+		TextEditor *te = dynamic_cast<TextEditor*>(contentComp->getChildComponent(i));
+		if (te && !te->getName().startsWith("#")) {
+			queryStr += " " + te->getName() + ", ";
 		}
 	}
-	queryStr += " WHERE ";
-	const auto pkNend = pkName.end();
-	const auto pkend = pkName.end();
-	for (auto pkNit = pkName.begin(), pkit = pk.begin();
-		pkNit != pkNend && pkit != pkend;) {
-		queryStr += *pkNit + "=\"" + *pkit + "\" ";
-		if (++pkNit != pkNend && ++pkit != pkend) {
-			queryStr += " AND ";
+	TextEditor *te = dynamic_cast<TextEditor*>(contentComp->getChildComponent(end));
+	if (te && !te->getName().startsWith("#")) {
+		queryStr += " " + te->getName();
+	}
+	queryStr += ") VALUES ( ";
+	for (int i = 0; i<end; i++) {
+		TextEditor *te = dynamic_cast<TextEditor*>(contentComp->getChildComponent(i));
+		if (te && !te->getName().startsWith("#")) {
+			queryStr += " '" + te->getText() + "', ";
 		}
+	}
+	te = dynamic_cast<TextEditor*>(contentComp->getChildComponent(end));
+	if (te && !te->getName().startsWith("#")) {
+		queryStr += " '" + te->getText() + "' )";
 	}
 
 	CacheSystem *cs = CacheSystem::getInstance();
 	cs->getResultsFor(queryStr, QueryEntry::Accounts, ccc);
-
-	savedpks.add(pk);
 
 	std::cout << queryStr << std::endl;
 	return true;

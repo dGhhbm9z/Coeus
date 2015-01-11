@@ -60,10 +60,11 @@ public:
     }
     
     void resizeForDetailed() override {
-        CodeTE->setBounds(lm+teWS+pad, tm+teHS, teWS/2, teHS);
-        NameTE->setBounds(lm+teWS/2+pad, tm, 2*teWS, teHS);
-        AccountTypeTE->setBounds(lm+2*(teWS+pad)+teWS/2, tm, 150, teHS);
-        XreosPistTE->setBounds(lm+2*(teWS+pad)+pad+150+teWS/2, tm, teWS/2, teHS);
+		// summary
+		CodeTE->setBounds(lm, tm, teWS / 2, teHS);
+		NameTE->setBounds(lm + teWS / 2 + pad, tm, 2 * teWS, teHS);
+		AccountTypeTE->setBounds(lm + 2 * (teWS + pad) + teWS / 2, tm, 150, teHS);
+		XreosPistTE->setBounds(lm + 2 * (teWS + pad) + pad + 150 + teWS / 2, tm, teWS / 2, teHS);
 
     }
     
@@ -76,8 +77,11 @@ public:
     }
     
     void shouldShowControls(bool show) override {
-        showControls = false;
-        details->setVisible(false);
+		showControls = show;
+		details->setVisible(false);
+		editButton->setVisible(show && !addComp);
+		saveButton->setVisible(show);
+		setDetailedView(detailedView, true);
     }
     
 private:
