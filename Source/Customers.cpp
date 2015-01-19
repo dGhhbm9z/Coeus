@@ -106,7 +106,7 @@ public:
         // summary
         CustomerCodeTE->setBounds(lm, tm, teWS, teHS);
         NameTE->setBounds(lm+teWS+pad, tm, teWS, teHS);
-        FathersNameTE->setBounds(lm+2*(teWS+pad), tm, 150, teHS);
+		CustomerVATTE->setBounds(lm + 2 * (teWS + pad), tm, 150, teHS);
         PhonenumberTE->setBounds(lm+2*(teWS+pad)+pad+150, tm, teWS, teHS);
     }
 
@@ -309,7 +309,7 @@ CustomersComponent::CustomersComponent()
 
     tableHeader1->setText("Customer Code", dontSendNotification);
     tableHeader2->setText("Name", dontSendNotification);
-    tableHeader3->setText("Fathers Name", dontSendNotification);
+    tableHeader3->setText("Customer VAT", dontSendNotification);
     tableHeader4->setText("Phone Number", dontSendNotification);
     
 	//searchButtonPressed();

@@ -103,7 +103,7 @@ public:
     void resizeForSummary() override {
         // summary
         companyNameTE->setBounds(lm, tm, teWS, teHS);
-        legalIncTE->setBounds(lm+teWS+pad, tm, teWS, teHS);
+        VATTE->setBounds(lm+teWS+pad, tm, teWS, teHS);
         telephoneTE->setBounds(lm+2*(teWS+pad), tm, 150, teHS);
         activityTE->setBounds(lm+2*(teWS+pad)+pad+150, tm, teWS, teHS);
     }
@@ -278,7 +278,7 @@ CompaniesComponent::CompaniesComponent()
     companiesTableListBoxModel->addChangeListener(this);
 
     tableHeader1->setText("Company Name", dontSendNotification);
-    tableHeader2->setText("Legan Inc.", dontSendNotification);
+    tableHeader2->setText("Company VAT", dontSendNotification);
     tableHeader3->setText("Contact", dontSendNotification);
     tableHeader4->setText("Activity", dontSendNotification);
     
