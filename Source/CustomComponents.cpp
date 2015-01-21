@@ -236,8 +236,8 @@ void CustomTabContent::resized()
 	addOverlayComp->setBounds(compBounds.getX(), compBounds.getY(), compBounds.getWidth()*0.8, compBounds.getHeight() - bottomDemoImage.getHeight());
 
 	// DEMO STUFF
-	rightDemo->setBounds(compBounds.getWidth()*0.8, compBounds.getY(), rightDemoImage.getWidth(), rightDemoImage.getHeight());
-	bottomDemo->setBounds(50, getHeight() - bottomDemoImage.getHeight(), getWidth()*0.8-50, bottomDemoImage.getHeight());
+//	rightDemo->setBounds(compBounds.getWidth()*0.9, compBounds.getY(), rightDemoImage.getWidth(), rightDemoImage.getHeight());
+	bottomDemo->setBounds(50, getHeight() - bottomDemoImage.getHeight() + 30, getWidth()*0.8-50, bottomDemoImage.getHeight());
 	// END DEMO STUFF
 
     if(addComp == nullptr) {
@@ -253,7 +253,7 @@ void CustomTabContent::resized()
 
 Rectangle<int> CustomTabContent::getComponentArea()
 {
-	return Rectangle<int>(0.01f*(float)getWidth(), 0.15f*getHeight()+40, 0.99f*(float)getWidth(), getHeight() - 0.15f*getHeight()-40);
+	return Rectangle<int>(0.01f*(float)getWidth(), 0.15f*getHeight()+40, 0.99f*(float)getWidth(), getHeight() - 0.15f*getHeight());
 }
 
 void CustomTabContent::comboBoxChanged(ComboBox *comboBoxThatHasChanged)

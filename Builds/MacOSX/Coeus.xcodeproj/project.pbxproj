@@ -19,6 +19,8 @@
 		3BB038AB0663A49C94927129 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA9473E5A30CA8AB16E89132 /* CoreAudio.framework */; };
 		3BFBB1BE62F131EA03D181A9 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67936926BEB4B3B55458681A /* WebKit.framework */; };
 		3E5653FBD8B6E91F9EA499DE /* juce_data_structures.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F9E0E37EA93EEA0C6915A30 /* juce_data_structures.mm */; };
+		3F3CD43C1A701EED00751A2B /* demoBottomSide.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F3CD43A1A701EED00751A2B /* demoBottomSide.png */; };
+		3F3CD43D1A701EED00751A2B /* demoRightSide.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F3CD43B1A701EED00751A2B /* demoRightSide.png */; };
 		3F745D4F7018373DD993B897 /* Splash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8FD4D7A4A66879A216FF795 /* Splash.cpp */; };
 		3F77F6F01A51E20E009C9474 /* addButton in Resources */ = {isa = PBXBuildFile; fileRef = 3F77F6E61A51E20E009C9474 /* addButton */; };
 		3F77F6F11A51E20E009C9474 /* duplicateButton in Resources */ = {isa = PBXBuildFile; fileRef = 3F77F6E71A51E20E009C9474 /* duplicateButton */; };
@@ -280,6 +282,8 @@
 		3D4F5D95FFC5A3688E82E9A4 /* juce_LowLevelGraphicsPostScriptRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_LowLevelGraphicsPostScriptRenderer.h; path = ../../JuceLibraryCode/modules/juce_graphics/contexts/juce_LowLevelGraphicsPostScriptRenderer.h; sourceTree = SOURCE_ROOT; };
 		3E212DC6ED6AEF7D4E602F13 /* juce_DeletedAtShutdown.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_DeletedAtShutdown.h; path = ../../JuceLibraryCode/modules/juce_events/messages/juce_DeletedAtShutdown.h; sourceTree = SOURCE_ROOT; };
 		3F0DB3DF294AD8CB20C9090C /* juce_Result.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_Result.cpp; path = ../../JuceLibraryCode/modules/juce_core/misc/juce_Result.cpp; sourceTree = SOURCE_ROOT; };
+		3F3CD43A1A701EED00751A2B /* demoBottomSide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = demoBottomSide.png; path = ../../Resources/demoBottomSide.png; sourceTree = "<group>"; };
+		3F3CD43B1A701EED00751A2B /* demoRightSide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = demoRightSide.png; path = ../../Resources/demoRightSide.png; sourceTree = "<group>"; };
 		3F41B7F22E2F0662A3BDA949 /* juce_FileInputSource.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_FileInputSource.cpp; path = ../../JuceLibraryCode/modules/juce_core/streams/juce_FileInputSource.cpp; sourceTree = SOURCE_ROOT; };
 		3F67AB233DC2AFA5775D022B /* juce_MarkerList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_MarkerList.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/positioning/juce_MarkerList.h; sourceTree = SOURCE_ROOT; };
 		3F77F6E61A51E20E009C9474 /* addButton */ = {isa = PBXFileReference; lastKnownFileType = folder; name = addButton; path = ../../Resources/addButton; sourceTree = "<group>"; };
@@ -1891,6 +1895,8 @@
 		8F54CCF1DEA6D95492BC9AA4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3F3CD43A1A701EED00751A2B /* demoBottomSide.png */,
+				3F3CD43B1A701EED00751A2B /* demoRightSide.png */,
 				3F77F6FA1A51E742009C9474 /* tabcomponent */,
 				3F77F6E61A51E20E009C9474 /* addButton */,
 				3F77F6E71A51E20E009C9474 /* duplicateButton */,
@@ -2798,11 +2804,13 @@
 			files = (
 				3F77F6F91A51E20E009C9474 /* splash in Resources */,
 				3F77F6F31A51E20E009C9474 /* listButton in Resources */,
+				3F3CD43C1A701EED00751A2B /* demoBottomSide.png in Resources */,
 				3F77F6FB1A51E742009C9474 /* tabcomponent in Resources */,
 				3F77F6F21A51E20E009C9474 /* editButton in Resources */,
 				3F77F6F41A51E20E009C9474 /* pinButton in Resources */,
 				3F77F6F01A51E20E009C9474 /* addButton in Resources */,
 				3F77F6F11A51E20E009C9474 /* duplicateButton in Resources */,
+				3F3CD43D1A701EED00751A2B /* demoRightSide.png in Resources */,
 				3F77F6F61A51E20E009C9474 /* saveButton in Resources */,
 				3F77F6F51A51E20E009C9474 /* removeButton in Resources */,
 				3F77F6F81A51E20E009C9474 /* sidebar in Resources */,
