@@ -178,7 +178,7 @@ SuppliersTableListBoxModel::SuppliersTableListBoxModel(CacheSystemClient *ccc_)
     rowSizes.calloc(1); //hack +1
     
     fieldNames.add("SupplierCode");
-    fieldNames.add("CompanyVAT");
+    fieldNames.add("VAT");
     fieldNames.add("SupplierVAT");
     fieldNames.add("Trademark");
     fieldNames.add("Name");
@@ -207,6 +207,8 @@ Array<int> SuppliersTableListBoxModel::getKeyField()
 {
     Array<int> kf;
     kf.add(0);
+    kf.add(1);
+    kf.add(2);
     return kf;
 }
 
@@ -250,10 +252,15 @@ CoeusListRowComponent * SuppliersTableListBoxModel::refreshComponentForRow(int r
         newComp->addChangeListener(this);
         newComp->setRow(rowNumber);
         
-        // TODO substitute checks for detailed view (will not work for varying size)
         const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == SuppliersRowComponent::maxRowSize : false;
-        newComp->updateFromQueryForRow(qe, rowNumber, dView, editedRows.contains(rowNumber));
-        newComp->shouldShowControls(isRowSelected);
+        const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
+        if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
+            newComp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
+        }
+        else {
+            newComp->updateFromQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
+        }
+        newComp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
         
         return newComp;
     }
@@ -263,8 +270,14 @@ CoeusListRowComponent * SuppliersTableListBoxModel::refreshComponentForRow(int r
         
         if(cmp) {
             const bool dView = (rowNumber < getNumRows()) ? rowSizes[rowNumber] == SuppliersRowComponent::maxRowSize : false;
-            cmp->updateFromQueryForRow(qe, rowNumber, dView, editedRows.contains(rowNumber));
-            cmp->shouldShowControls(isRowSelected);
+            const StringArray keys = (qe != nullptr) ? qe->getFieldFromRow(rowNumber, getKeyField()) : StringArray();
+            if (keys.size() && (rowsToUpdate.find(keys) != rowsToUpdate.end())) {
+                cmp->updateFromMapForRow(qe, rowsToUpdate[keys], rowNumber, dView, editedRows.contains(rowNumber));
+            }
+            else {
+                cmp->updateFromQueryForRow(qe, rowNumber,  dView, editedRows.contains(rowNumber));
+            }
+            cmp->shouldShowControls(isRowSelected || rowUnderMouse == rowNumber);
         }
         
         return existingComponentToUpdate;
@@ -358,7 +371,7 @@ void SuppliersComponent::searchButtonPressed()
     
     queryStr += (searchFilter->getSelectedId() == 2 || terms.size() == 0) ? " 1 = 1" : " 1 = 0";
     
-    //		CompanyVAT varchar(10) NOT NULL,
+    //		VAT varchar(10) NOT NULL,
     
     CacheSystem *cs = CacheSystem::getInstance();
     cs->getResultsFor(queryStr, QueryEntry::Suppliers, this);

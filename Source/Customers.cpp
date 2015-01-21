@@ -183,7 +183,7 @@ CustomersTableListBoxModel::CustomersTableListBoxModel(CacheSystemClient *ccc_)
     rowSizes.calloc(1); //hack +1
     
     fieldNames.add("CustomerCode");
-    fieldNames.add("CompanyVAT");
+    fieldNames.add("VAT");
     fieldNames.add("CustomerVAT");
     fieldNames.add("Trademark");
     fieldNames.add("Name");
@@ -386,7 +386,7 @@ void CustomersComponent::searchButtonPressed()
 
 	queryStr += (searchFilter->getSelectedId() == 2 || terms.size() == 0) ? " 1 = 1" : " 1 = 0";
 
-//		CompanyVAT varchar(10) NOT NULL,
+//		VAT varchar(10) NOT NULL,
 	
 	CacheSystem *cs = CacheSystem::getInstance();
     cs->getResultsFor(queryStr, QueryEntry::Customers, this);

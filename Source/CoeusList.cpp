@@ -706,7 +706,7 @@ bool CoeusList::insertIntoDatabaseTable(const String &table, CacheSystemClient *
 	String queryStr = "INSERT INTO " + table + " ( ";
 	const int end = contentComp->getNumChildComponents();
 
-	queryStr += " CompanyVAT, ";
+	queryStr += " VAT, ";
 	for (int i = 0; i<end; i++) {
 		TextEditor *te = dynamic_cast<TextEditor*>(contentComp->getChildComponent(i));
 		if (te && !te->getName().startsWith("#")) {

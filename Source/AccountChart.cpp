@@ -112,6 +112,7 @@ Array<int> AccountChartTableListBoxModel::getKeyField()
 {
     Array<int> kf;
     kf.add(0);
+    kf.add(1);
     return kf;
 }
 
