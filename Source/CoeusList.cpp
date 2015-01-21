@@ -608,7 +608,7 @@ void CoeusList::mouseExit(const MouseEvent &event)
 void CoeusList::mouseWheelMove (const MouseEvent &event, const MouseWheelDetails &wheel)
 {
     const double cStart = sb.getCurrentRangeStart();
-    const double nCStart = cStart + wheel.deltaY;
+    const double nCStart = cStart + wheel.deltaY*0.1;
     sb.setCurrentRangeStart(nCStart);
 }
 
