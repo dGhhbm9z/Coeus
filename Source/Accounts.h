@@ -46,6 +46,7 @@ public:
     void searchButtonPressed() override;
     void addButtonPressed() override;
     void saveButtonPressed() override;
+    void removeButtonPressed() override;    
     void changeListenerCallback(ChangeBroadcaster *source) override;
     
     CoeusListRowComponent *getAddComponent() override;

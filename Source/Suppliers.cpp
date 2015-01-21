@@ -332,6 +332,18 @@ void SuppliersComponent::receivedResults(QueryEntry *qe_)
         suppliersTableListBoxModel->setQueryEntry(qe);
         suppliersTableListBoxModel->update();
     }
+    else {
+        // if update
+        if (suppliersTableListBoxModel->savedpks.size()) {
+            // fix this v
+            StringArray pk = suppliersTableListBoxModel->savedpks[0];
+            suppliersTableListBoxModel->wasSaved(pk);
+        }
+        // if delete
+        else {
+            searchButtonPressed();
+        }
+    }
 }
 
 void SuppliersComponent::mouseExit(const MouseEvent &event)
@@ -397,6 +409,11 @@ void SuppliersComponent::saveButtonPressed()
 //    }
 //
 //    suppliersTableListBoxModel->update();
+}
+
+void SuppliersComponent::removeButtonPressed()
+{
+    suppliersTableListBoxModel->removeSelectedDatabaseTableEntries(this);
 }
 
 void SuppliersComponent::changeListenerCallback(ChangeBroadcaster *source)

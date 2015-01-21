@@ -213,6 +213,10 @@ public:
 
 	// database inserts
 	bool insertIntoDatabaseTable(const String &table, CacheSystemClient *ccc, CoeusListRowComponent *contentComp);
+    
+    // database remove
+    bool removeSelectedDatabaseTableEntries(CacheSystemClient *ccc);
+    bool removeDatabaseTableEntry(const String &table, const StringArray &pkName, const StringArray &pk, CacheSystemClient *ccc);
 
     bool getWantsHeader() const { return wantsHeader; }
     std::unordered_map<StringArray, std::map<String, String>> &getChanges() { return rowsToUpdate; }

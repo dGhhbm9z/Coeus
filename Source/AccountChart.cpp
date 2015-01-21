@@ -248,6 +248,18 @@ void AccountChartComponent::receivedResults(QueryEntry *qe_)
         accountChartTableListBoxModel->setQueryEntry(qe);
         accountChartTableListBoxModel->update();
     }
+    else {
+        // if update
+        if (accountChartTableListBoxModel->savedpks.size()) {
+            // fix this v
+            StringArray pk = accountChartTableListBoxModel->savedpks[0];
+            accountChartTableListBoxModel->wasSaved(pk);
+        }
+        // if delete
+        else {
+            searchButtonPressed();
+        }
+    }
 }
 
 void AccountChartComponent::mouseExit(const MouseEvent &event)
@@ -296,6 +308,11 @@ void AccountChartComponent::saveButtonPressed()
 //    }
 //
 //    accountChartTableListBoxModel->update();
+}
+
+void AccountChartComponent::removeButtonPressed()
+{
+    accountChartTableListBoxModel->removeSelectedDatabaseTableEntries(this);
 }
 
 void AccountChartComponent::changeListenerCallback(ChangeBroadcaster *source)

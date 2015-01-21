@@ -344,6 +344,9 @@ void CustomersComponent::receivedResults(QueryEntry *qe_)
             customersTableListBoxModel->wasSaved(pk);
         }
         // if delete
+        else {
+            searchButtonPressed();
+        }
     }
 }
 
@@ -412,6 +415,11 @@ void CustomersComponent::saveButtonPressed()
 //    }
 //
 //    customersTableListBoxModel->update();
+}
+
+void CustomersComponent::removeButtonPressed()
+{
+    customersTableListBoxModel->removeSelectedDatabaseTableEntries(this);
 }
 
 void CustomersComponent::changeListenerCallback(ChangeBroadcaster *source)

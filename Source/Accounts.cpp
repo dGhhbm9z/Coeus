@@ -395,7 +395,12 @@ void AccountsComponent::receivedResults(QueryEntry *qe_)
             AccountsTableListBoxModel->wasSaved(pk);
         }
         // if delete
+        else {
+            searchButtonPressed();
+        }
     }
+    
+    
 }
 
 void AccountsComponent::mouseExit(const MouseEvent &event)
@@ -472,6 +477,11 @@ void AccountsComponent::saveButtonPressed()
     //    }
     //
     //    AccountsTableListBoxModel->update();
+}
+
+void AccountsComponent::removeButtonPressed()
+{
+    AccountsTableListBoxModel->removeSelectedDatabaseTableEntries(this);    
 }
 
 void AccountsComponent::changeListenerCallback(ChangeBroadcaster *source)

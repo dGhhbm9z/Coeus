@@ -249,6 +249,8 @@ void CacheSystem::serveNextQuery()
 	}
 
 	mysql_close(con);
+    
+    queries.removeAllInstancesOf(query);
 
 	// post message to inform clients
 	const int clsz = query->clientList.size();
@@ -256,7 +258,6 @@ void CacheSystem::serveNextQuery()
 		CacheReadyMessage *msg = new CacheReadyMessage(query->clientList[i], query);
 		msg->post();
 	}
-    queries.removeAllInstancesOf(query);
 }
 
 bool CacheSystem::hasUnservedQueries() const

@@ -306,6 +306,18 @@ void CompaniesComponent::receivedResults(QueryEntry *qe_)
         companiesTableListBoxModel->setQueryEntry(qe);
         companiesTableListBoxModel->update();
     }
+    else {
+        // if update
+        if (companiesTableListBoxModel->savedpks.size()) {
+            // fix this v
+            StringArray pk = companiesTableListBoxModel->savedpks[0];
+            companiesTableListBoxModel->wasSaved(pk);
+        }
+        // if delete
+        else {
+            searchButtonPressed();
+        }
+    }
 }
 
 void CompaniesComponent::mouseExit(const MouseEvent &event)
@@ -366,6 +378,11 @@ void CompaniesComponent::saveButtonPressed()
 //    }
 //
 //    companiesTableListBoxModel->update();
+}
+
+void CompaniesComponent::removeButtonPressed()
+{
+    companiesTableListBoxModel->removeSelectedDatabaseTableEntries(this);
 }
 
 void CompaniesComponent::changeListenerCallback(ChangeBroadcaster *source)

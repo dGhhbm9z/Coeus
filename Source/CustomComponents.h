@@ -136,7 +136,7 @@ public:
 	virtual void searchButtonPressed() = 0;
 	virtual void addButtonPressed() = 0;
     virtual void saveButtonPressed() {}
-    virtual void removeButtonPressed() {}
+    virtual void removeButtonPressed() = 0;
     virtual void duplicateButtonPressed() {}
 
     void changeListenerCallback(ChangeBroadcaster *source) override = 0;

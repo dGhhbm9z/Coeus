@@ -233,7 +233,6 @@ void CoeusListRowComponent::buttonClicked (Button *btn) {
 	else if (btn == saveButton && addComp) {
 		owner.insertIntoDatabaseTable(owner.tableName, owner.ccc, this);
 	}
-
 }
 
 void CoeusListRowComponent::updateFromQueryForRow(QueryEntry *qe, int row, bool dView, bool edit)
@@ -702,7 +701,6 @@ bool CoeusList::updateDatabaseTableForEntry(const String &table, const StringArr
 
 bool CoeusList::insertIntoDatabaseTable(const String &table, CacheSystemClient *ccc, CoeusListRowComponent *contentComp)
 {
-	// TODO: make this insert
 	String queryStr = "INSERT INTO " + table + " ( ";
 	const int end = contentComp->getNumChildComponents();
 
@@ -731,4 +729,47 @@ bool CoeusList::insertIntoDatabaseTable(const String &table, CacheSystemClient *
 
 	std::cout << queryStr << std::endl;
 	return true;
+}
+
+bool CoeusList::removeSelectedDatabaseTableEntries(CacheSystemClient *ccc)
+{
+    // early exit
+    if (qe == nullptr) {
+        return false;
+    }
+
+    StringArray pkNames;
+    Array<int> ki = getKeyField();
+    for (int i=0; i<ki.size(); i++) {
+        pkNames.add(fieldNames[ki[i]]);
+    }
+    
+    for (int i=0; i<selectedRow.size(); i++) {
+        const StringArray key = qe->getFieldFromRow(selectedRow[i], ki);
+        removeDatabaseTableEntry(tableName, pkNames, key, ccc);
+    }
+    
+    return true;
+}
+
+bool CoeusList::removeDatabaseTableEntry(const String &table, const StringArray &pkName, const StringArray &pk, CacheSystemClient *ccc)
+{
+    // TODO: fix ? [0]
+
+    String queryStr = "DELETE FROM "+table+" WHERE ";
+    const auto pkNend = pkName.end();
+    const auto pkend = pkName.end();
+    for(auto pkNit = pkName.begin(), pkit = pk.begin();
+        pkNit != pkNend && pkit != pkend;) {
+        queryStr += *pkNit+"=\""+*pkit+"\" ";
+        if(++pkNit != pkNend && ++pkit != pkend) {
+            queryStr += " AND ";
+        }
+    }
+    
+    CacheSystem *cs = CacheSystem::getInstance();
+    cs->getResultsFor(queryStr, QueryEntry::Accounts, ccc);
+    
+    std::cout << queryStr << std::endl;
+    return true;
 }
