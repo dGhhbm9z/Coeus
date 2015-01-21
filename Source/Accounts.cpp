@@ -368,8 +368,8 @@ void AccountsComponent::resized()
 {
     CustomTabContent::resized();
 	Rectangle<int> compBounds = getComponentArea();
-	compBounds.setHeight(compBounds.getHeight() - bottomDemoImage.getHeight());
-	compBounds.setWidth(compBounds.getWidth());
+	compBounds.setHeight(compBounds.getHeight() - bottomDemo->getHeight());
+//	compBounds.setWidth(compBounds.getWidth());
 	AccountsTableListBoxModel->setBounds(compBounds);
 }
 

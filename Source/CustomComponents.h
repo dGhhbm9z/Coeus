@@ -145,6 +145,8 @@ public:
     
     virtual CoeusListRowComponent *getAddComponent() = 0;
 
+    ScopedPointer<ImageComponent> bottomDemo;
+    
 protected:
 	ScopedPointer<Label> title;
 	ScopedPointer<TextEditor> search;
@@ -156,7 +158,6 @@ protected:
     ScopedPointer<CoeusListRowComponent> addComp;
 
 	ScopedPointer<ImageComponent> rightDemo;
-	ScopedPointer<ImageComponent> bottomDemo;
 	Image rightDemoImage, bottomDemoImage;
 
 	Image imageNormal;

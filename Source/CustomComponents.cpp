@@ -233,11 +233,11 @@ void CustomTabContent::resized()
 
 	searchFilter->setBoundsRelative(0.5f - 0.125f + 0.25f + 0.01f + sbwp + 0.01f - 120.0f / (float)getParentWidth(), 0.01, 0.1f, 0.05f);
     
-	addOverlayComp->setBounds(compBounds.getX(), compBounds.getY(), compBounds.getWidth()*0.8, compBounds.getHeight() - bottomDemoImage.getHeight());
+	addOverlayComp->setBounds(compBounds.getX(), compBounds.getY(), compBounds.getWidth(), compBounds.getHeight() - bottomDemoImage.getHeight());
 
 	// DEMO STUFF
 //	rightDemo->setBounds(compBounds.getWidth()*0.9, compBounds.getY(), rightDemoImage.getWidth(), rightDemoImage.getHeight());
-	bottomDemo->setBounds(50, getHeight() - bottomDemoImage.getHeight() + 30, getWidth()*0.8-50, bottomDemoImage.getHeight());
+	bottomDemo->setBounds(50, getHeight()*0.85, getWidth()*0.8-50, getHeight()*0.15);
 	// END DEMO STUFF
 
     if(addComp == nullptr) {
