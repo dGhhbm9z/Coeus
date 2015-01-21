@@ -1338,7 +1338,7 @@ INSERT INTO `companies` (`VAT`, `IRS`, `CompanyName`, `LegalInc`, `Address`, `Ad
 -- Dumping structure for table com_coeus.customers
 CREATE TABLE IF NOT EXISTS `customers` (
   `CustomerCode` varchar(20) NOT NULL,
-  `CompanyVAT` varchar(10) NOT NULL,
+  `VAT` varchar(10) NOT NULL,
   `CustomerVAT` varchar(10) NOT NULL,
   `Trademark` varchar(50) NOT NULL,
   `Name` varchar(30) NOT NULL,
@@ -1356,13 +1356,13 @@ CREATE TABLE IF NOT EXISTS `customers` (
   `PublicRevenueService` varchar(50) NOT NULL,
   `CommercialActivity` varchar(255) NOT NULL,
   PRIMARY KEY (`CustomerCode`,`CustomerVAT`),
-  KEY `CompanyVAT` (`CompanyVAT`),
-  CONSTRAINT `customers_ibfk_1` FOREIGN KEY (`CompanyVAT`) REFERENCES `companies` (`VAT`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `VAT` (`VAT`),
+  CONSTRAINT `customers_ibfk_1` FOREIGN KEY (`VAT`) REFERENCES `companies` (`VAT`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Dumping data for table com_coeus.customers: ~3 rows (approximately)
 /*!40000 ALTER TABLE `customers` DISABLE KEYS */;
-INSERT INTO `customers` (`CustomerCode`, `CompanyVAT`, `CustomerVAT`, `Trademark`, `Name`, `FathersName`, `DateOfBirth`, `Address`, `City`, `Country`, `ShippingAdress`, `Phonenumber`, `Faxnumber`, `Email`, `IDcardNumber`, `CustomerTransactions`, `PublicRevenueService`, `CommercialActivity`) VALUES
+INSERT INTO `customers` (`CustomerCode`, `VAT`, `CustomerVAT`, `Trademark`, `Name`, `FathersName`, `DateOfBirth`, `Address`, `City`, `Country`, `ShippingAdress`, `Phonenumber`, `Faxnumber`, `Email`, `IDcardNumber`, `CustomerTransactions`, `PublicRevenueService`, `CommercialActivity`) VALUES
 	('30.00.01', '193782465', '484255678', 'ΣΥΜΒΟΥΛΕΥΤΙΚΗ Α.Ε.', 'ΣΤΑΘΗΣ ΕΥΚΑΡΠΙΟΥ', 'ΓΕΩΡΓΙΟΣ', '1975-05-22', 'ΠΟΛΥΔΡΟΣΟΥ 15', 'ΑΘΗΝΑ', 'ΕΛΛΑΔΑ', 'ΠΟΛΥΔΡΟΣΟΥ 15', '2108796388', '2108796389', 's.eykarpiou@gmail.com', 'ΑΧ987759', '', 'Α\' ΑΘΗΝΩΝ', 'ΕΜΠΟΡΙΑ ΡΟΥΧΩΝ'),
 	('30.00.02', '193782465', '998754639', 'ΜΙΧΑΛΟΠΟΥΛΟΣ ΚΑΙ ΣΙΑ', 'ΒΑΣΙΛΗΣ ΜΙΧΑΛΟΠΟΥΛΟΣ', 'ΙΩΑΝΝΗΣ', '1969-04-09', 'ΓΟΥΝΑΡΗ 37', 'ΑΘΗΝΑ ', 'ΕΛΛΑΔΑ', 'ΓΟΥΝΑΡΗ 37', '2105568198', '2105568188', 'mixalopoulos@yahoo.com', 'X453134', '', 'ΧΑΛΑΝΔΡΙΟΥ', 'ΕΜΠΟΡΙΑ ΛΕΥΚΩΝ ΣΥΣΚΕΥΩΝ'),
 	('30.01.01', '193782465', '148225779', 'LOGISTICS S.A.', 'JOHN SMITH', 'EDWARD', '1984-02-15', 'MAINE STR. 84', 'LONDON', 'UNITED KINGDOM', 'MAINE STR. 84', '5551234567', '5551234577', 'smith.j@gmail.com', 'ZU1234567', '', '', 'ΚΑΤΑΣΚΕΥΗ ΣΥΣΤΗΜΑΤΩΝ ΑΣΦΑΛΕΙΑΣ');
@@ -1406,7 +1406,7 @@ CREATE TABLE IF NOT EXISTS `events2accounts` (
 
 -- Dumping structure for table com_coeus.personel
 CREATE TABLE IF NOT EXISTS `personel` (
-  `CompanyVAT` varchar(30) NOT NULL,
+  `VAT` varchar(30) NOT NULL,
   `Code` varchar(30) NOT NULL,
   `PersonalVAT` varchar(30) NOT NULL,
   `IRS` varchar(100) NOT NULL,
@@ -1425,8 +1425,8 @@ CREATE TABLE IF NOT EXISTS `personel` (
   `Experience` varchar(255) NOT NULL,
   `Amount` decimal(10,4) NOT NULL,
   `Department` varchar(255) NOT NULL,
-  PRIMARY KEY (`CompanyVAT`,`Code`,`PersonalVAT`),
-  CONSTRAINT `personel_ibfk_1` FOREIGN KEY (`CompanyVAT`, `Code`) REFERENCES `accounts` (`VAT`, `Code`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`VAT`,`Code`,`PersonalVAT`),
+  CONSTRAINT `personel_ibfk_1` FOREIGN KEY (`VAT`, `Code`) REFERENCES `accounts` (`VAT`, `Code`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Dumping data for table com_coeus.personel: ~0 rows (approximately)
@@ -1437,7 +1437,7 @@ CREATE TABLE IF NOT EXISTS `personel` (
 -- Dumping structure for table com_coeus.suppliers
 CREATE TABLE IF NOT EXISTS `suppliers` (
   `SupplierCode` varchar(20) NOT NULL,
-  `CompanyVAT` varchar(10) NOT NULL,
+  `VAT` varchar(30) NOT NULL,
   `SupplierVAT` varchar(10) NOT NULL,
   `Trademark` varchar(50) NOT NULL,
   `Name` varchar(30) NOT NULL,
@@ -1453,14 +1453,14 @@ CREATE TABLE IF NOT EXISTS `suppliers` (
   `SupplierTransactions` varchar(255) NOT NULL,
   `PublicRevenueService` varchar(50) NOT NULL,
   `CommercialActivity` varchar(255) NOT NULL,
-  PRIMARY KEY (`SupplierCode`,`SupplierVAT`),
-  KEY `CompanyVAT` (`CompanyVAT`),
-  CONSTRAINT `suppliers_ibfk_1` FOREIGN KEY (`CompanyVAT`) REFERENCES `companies` (`VAT`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`SupplierCode`, `SupplierVAT`),
+  KEY `VAT` (`VAT`),
+  CONSTRAINT `suppliers_ibfk_1` FOREIGN KEY (`VAT`) REFERENCES `companies` (`VAT`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Dumping data for table com_coeus.suppliers: ~2 rows (approximately)
 /*!40000 ALTER TABLE `suppliers` DISABLE KEYS */;
-INSERT INTO `suppliers` (`SupplierCode`, `CompanyVAT`, `SupplierVAT`, `Trademark`, `Name`, `FathersName`, `DateOfBirth`, `Address`, `City`, `Country`, `PhoneNumber`, `FaxNumber`, `Email`, `IDcardNumber`, `SupplierTransactions`, `PublicRevenueService`, `CommercialActivity`) VALUES
+INSERT INTO `suppliers` (`SupplierCode`, `VAT`, `SupplierVAT`, `Trademark`, `Name`, `FathersName`, `DateOfBirth`, `Address`, `City`, `Country`, `PhoneNumber`, `FaxNumber`, `Email`, `IDcardNumber`, `SupplierTransactions`, `PublicRevenueService`, `CommercialActivity`) VALUES
 	('50.00.01', '193782465', '828847859', 'COMPUTER SOLUTIONS', 'ΜΑΡΙΑ ΔΗΜΗΤΡΙΟΥ', 'ΜΑΡΙΟΣ', '1980-01-18', 'ΜΕΛΙΣΣΙΩΝ 2', 'ΑΘΗΝΑ', 'ΕΛΛΑΔΑ', '2106897554', '2106897555', 'csdimitriou@hotmail.com', 'ΑΕ132245', '', 'ΚΗΦΙΣΙΑΣ', 'ΕΜΠΟΡΙΑ ΥΠΟΛΟΓΙΣΤΙΚΩΝ ΣΥΣΤΗΜΑΤΩΝ'),
 	('50.00.02', '193782465', '564237110', 'ΕΠΙΠΛΑ ΓΕΡΑΣΙΜΙΔΗΣ', 'ΑΝΤΩΝΗΣ ΓΕΡΑΣΙΜΙΔΗΣ', 'ΦΩΤΙΟΣ', '1969-04-08', 'ΣΩΡΟΥ 22', 'ΑΘΗΝΑ', 'ΕΛΛΑΔΑ', '2103548779', '2103548780', 'gerasimidisae@yahoo.com', 'Ε5446693', '', 'ΑΜΑΡΟΥΣΙΟΥ', 'ΕΜΠΟΡΙΑ ΕΠΙΠΛΩΝ');
 /*!40000 ALTER TABLE `suppliers` ENABLE KEYS */;
