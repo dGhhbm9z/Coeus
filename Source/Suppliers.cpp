@@ -71,7 +71,7 @@ public:
         addAndMakeVisible(Address = new CoeusListLabel("Address", "Address"));
         addAndMakeVisible(City = new CoeusListLabel("City", "City"));
         addAndMakeVisible(Country = new CoeusListLabel("Country", "Country"));
-        addAndMakeVisible(Faxnumber = new CoeusListLabel("Fax number", "Fax number"));
+        addAndMakeVisible(Faxnumber = new CoeusListLabel("FaxNumber", "Fax number"));
         addAndMakeVisible(Email = new CoeusListLabel("Email", "Email"));
         addAndMakeVisible(IDcardNumber = new CoeusListLabel("IDcardNumber", "IDcardNumber"));
         addAndMakeVisible(SupplierTransactions = new CoeusListLabel("SupplierTransactions", "Supplier Transactions"));
@@ -189,7 +189,6 @@ SuppliersTableListBoxModel::SuppliersTableListBoxModel(CacheSystemClient *ccc_)
     
     fieldNames.add("City");
     fieldNames.add("Country");
-    fieldNames.add("ShippingAdress");
     fieldNames.add("Phonenumber");
     
     fieldNames.add("Faxnumber");
