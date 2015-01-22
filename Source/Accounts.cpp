@@ -31,7 +31,7 @@ public:
 		}
         
 		const int maxRows = 6;
-		const int numFields = 4;
+		const int numFields = 3;
 		const int numComponents = maxRows*numFields;
 		for (int i = 0; i < numComponents; i++) {
 			auto comp = new CoeusListTextEditor("#" + String(i));
@@ -56,6 +56,10 @@ public:
         
         // detailed view labels
         addAndMakeVisible(Comments = new CoeusListLabel("Comments", "Comments"));
+        
+        addAndMakeVisible(AccountCode = new CoeusListLabel("AccountCode", "Account Code"));
+        addAndMakeVisible(Debit = new CoeusListLabel("Debit", "Debit"));
+        addAndMakeVisible(Credit = new CoeusListLabel("Credit", "Credit"));
         
         resized();
     }
@@ -104,13 +108,18 @@ public:
         // detailed view labels
         Reasoning->setBounds(lm+2*(teWS+pad), tm+teHS, teWS, teHS);
         Comments->setBounds(lm+2*(teWS+pad), tm+2*teHS, teWS, teHS);
-
-		const int numFields = 4;
-		const int startRow = 6;
+    
+        const int numFields = 3;
+        const int startRow = 6;
+        AccountCode->setBounds(lm, tm + (startRow - 1) * teHS, teWS, teHS);
+        Credit->setBounds(lm + (teWS + pad) + teWS/2, tm + (startRow - 1) * teHS, teWS, teHS);
+        Debit->setBounds(lm + 2 * (teWS + pad) + teWS/2, tm + (startRow - 1) * teHS, teWS, teHS);
+        
 		for (int i = 0; i < transactions.size(); i++) {
 			const int x = i % numFields;
 			const int y = startRow + i / numFields;
-			transactions[i]->setBounds(lm + x * (teWS + pad), tm + y * teHS, teWS, teHS);
+            const int startx = (x == 0) ? lm : lm + x * (teWS + pad) + teWS/2;
+            transactions[i]->setBounds(startx, tm + y * teHS, teWS, teHS);
 		}
     }
     
@@ -130,7 +139,7 @@ public:
         this->row = row;
         if(qe) {
             // summary
-			const int numFields = 4;
+			const int numFields = 3;
             for (int i=0; i<getNumChildComponents(); i++) {
                 TextEditor *te = dynamic_cast<TextEditor*>(getChildComponent(i));
 				if (te && te->getName().startsWith("#")) {
@@ -173,7 +182,7 @@ public:
     }
     
 	void setNumTransactions(int num) {
-		const int numFields = 4;
+		const int numFields = 3;
 		for (int i = 0; i < num*numFields && transactions.size(); i++) {
 			transactions[i]->setVisible(true);
 		}
@@ -188,6 +197,7 @@ private:
     ScopedPointer<Label> RecordDate, Invoice, Comments, RecordType, Reasoning;
     
     // detailed
+    ScopedPointer<Label> AccountCode, Debit, Credit;
     OwnedArray<TextEditor> transactions;
 
 };
