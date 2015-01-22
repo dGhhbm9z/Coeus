@@ -191,7 +191,7 @@ SuppliersTableListBoxModel::SuppliersTableListBoxModel(CacheSystemClient *ccc_)
     fieldNames.add("Country");
     fieldNames.add("Phonenumber");
     
-    fieldNames.add("Faxnumber");
+    fieldNames.add("FaxNumber");
     fieldNames.add("Email");
     fieldNames.add("IDcardNumber");
     fieldNames.add("SupplierTransactions");
