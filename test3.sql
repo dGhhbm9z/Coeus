@@ -1347,7 +1347,7 @@ CREATE TABLE IF NOT EXISTS `customers` (
   `Address` varchar(50) NOT NULL,
   `City` varchar(20) NOT NULL,
   `Country` varchar(20) NOT NULL,
-  `ShippingAdress` varchar(60) NOT NULL,
+  `ShippingAddress` varchar(60) NOT NULL,
   `Phonenumber` varchar(20) NOT NULL,
   `Faxnumber` varchar(20) NOT NULL,
   `Email` varchar(30) NOT NULL,
@@ -1362,7 +1362,7 @@ CREATE TABLE IF NOT EXISTS `customers` (
 
 -- Dumping data for table com_coeus.customers: ~3 rows (approximately)
 /*!40000 ALTER TABLE `customers` DISABLE KEYS */;
-INSERT INTO `customers` (`CustomerCode`, `VAT`, `CustomerVAT`, `Trademark`, `Name`, `FathersName`, `DateOfBirth`, `Address`, `City`, `Country`, `ShippingAdress`, `Phonenumber`, `Faxnumber`, `Email`, `IDcardNumber`, `CustomerTransactions`, `PublicRevenueService`, `CommercialActivity`) VALUES
+INSERT INTO `customers` (`CustomerCode`, `VAT`, `CustomerVAT`, `Trademark`, `Name`, `FathersName`, `DateOfBirth`, `Address`, `City`, `Country`, `ShippingAddress`, `Phonenumber`, `Faxnumber`, `Email`, `IDcardNumber`, `CustomerTransactions`, `PublicRevenueService`, `CommercialActivity`) VALUES
 	('30.00.01', '193782465', '484255678', 'ΣΥΜΒΟΥΛΕΥΤΙΚΗ Α.Ε.', 'ΣΤΑΘΗΣ ΕΥΚΑΡΠΙΟΥ', 'ΓΕΩΡΓΙΟΣ', '1975-05-22', 'ΠΟΛΥΔΡΟΣΟΥ 15', 'ΑΘΗΝΑ', 'ΕΛΛΑΔΑ', 'ΠΟΛΥΔΡΟΣΟΥ 15', '2108796388', '2108796389', 's.eykarpiou@gmail.com', 'ΑΧ987759', '', 'Α\' ΑΘΗΝΩΝ', 'ΕΜΠΟΡΙΑ ΡΟΥΧΩΝ'),
 	('30.00.02', '193782465', '998754639', 'ΜΙΧΑΛΟΠΟΥΛΟΣ ΚΑΙ ΣΙΑ', 'ΒΑΣΙΛΗΣ ΜΙΧΑΛΟΠΟΥΛΟΣ', 'ΙΩΑΝΝΗΣ', '1969-04-09', 'ΓΟΥΝΑΡΗ 37', 'ΑΘΗΝΑ ', 'ΕΛΛΑΔΑ', 'ΓΟΥΝΑΡΗ 37', '2105568198', '2105568188', 'mixalopoulos@yahoo.com', 'X453134', '', 'ΧΑΛΑΝΔΡΙΟΥ', 'ΕΜΠΟΡΙΑ ΛΕΥΚΩΝ ΣΥΣΚΕΥΩΝ'),
 	('30.01.01', '193782465', '148225779', 'LOGISTICS S.A.', 'JOHN SMITH', 'EDWARD', '1984-02-15', 'MAINE STR. 84', 'LONDON', 'UNITED KINGDOM', 'MAINE STR. 84', '5551234567', '5551234577', 'smith.j@gmail.com', 'ZU1234567', '', '', 'ΚΑΤΑΣΚΕΥΗ ΣΥΣΤΗΜΑΤΩΝ ΑΣΦΑΛΕΙΑΣ');

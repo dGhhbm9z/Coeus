@@ -347,6 +347,8 @@ void CustomersComponent::receivedResults(QueryEntry *qe_)
         else {
             searchButtonPressed();
         }
+        
+        addOverlayComp->setVisible(false);
     }
 }
 
