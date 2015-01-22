@@ -260,6 +260,8 @@ void AccountChartComponent::receivedResults(QueryEntry *qe_)
             searchButtonPressed();
         }
     }
+    
+    addOverlayComp->setVisible(false);
 }
 
 void AccountChartComponent::mouseExit(const MouseEvent &event)

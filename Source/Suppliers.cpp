@@ -344,6 +344,8 @@ void SuppliersComponent::receivedResults(QueryEntry *qe_)
             searchButtonPressed();
         }
     }
+    
+    addOverlayComp->setVisible(false);
 }
 
 void SuppliersComponent::mouseExit(const MouseEvent &event)

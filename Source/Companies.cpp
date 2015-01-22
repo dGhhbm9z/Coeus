@@ -318,6 +318,8 @@ void CompaniesComponent::receivedResults(QueryEntry *qe_)
             searchButtonPressed();
         }
     }
+    
+    addOverlayComp->setVisible(false);
 }
 
 void CompaniesComponent::mouseExit(const MouseEvent &event)

@@ -400,7 +400,7 @@ void AccountsComponent::receivedResults(QueryEntry *qe_)
         }
     }
     
-    
+    addOverlayComp->setVisible(false);
 }
 
 void AccountsComponent::mouseExit(const MouseEvent &event)
