@@ -210,7 +210,7 @@ AccountChartComponent::AccountChartComponent()
     tableHeader1->setText("Code", dontSendNotification);
     tableHeader2->setText("Name", dontSendNotification);
     tableHeader3->setText("Type", dontSendNotification);
-    tableHeader4->setText("XreosPist", dontSendNotification);
+    tableHeader4->setText("Total", dontSendNotification);
     
     //searchButtonPressed();
 }
